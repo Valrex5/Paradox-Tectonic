@@ -197,6 +197,82 @@ class PokeBattle_AI
         sortedChoices = choices.sort_by{|choice| -choice[1]}
         preferredChoice = sortedChoices[0]
         PBDebug.log("[AI] #{user.pbThis} (#{user.index}) thinks #{user.moves[preferredChoice[0]].name} is the highest rated choice")
+
+        # Detects if Protect was used by the opponent
+        opposingBattler = user.pbDirectOpposing()
+        opposingBattlerLastMove = opposingBattler.lastMoveUsed
+        # Checks the following conditions:
+        # 1) STALLBREAKER policy is active
+        # 2) The opposing trainer/battler actually used a move previously
+        # THEN
+        # 3) The move the opposing trainer used previously was a protect move
+        # 4) The opposing trainer's last move did not fail (for the case of failing double protects)
+        if policies.include?(:STALLBREAKER) && !opposingBattlerLastMove.nil?
+          wasProtectMove = PokeBattle_Move.from_pokemon_move(@battle, Pokemon::Move.new(opposingBattlerLastMove)).is_a?(PokeBattle_ProtectMove)
+          if wasProtectMove && !opposingBattler.lastMoveFailed
+            PBDebug.log("[AI] Detected player using Protect-like move, calculating new move choices")
+            # Find the party member that the selected move is least effective against
+            switchInScores = Array.new(6, 0)
+            @battle.player[0].party.each_with_index do |possibleSwitchIn, idxParty|
+              # Do not calculate score on current opposing pokemon because it has already been done
+              if possibleSwitchIn == opposingBattler.pokemon
+                switchInScores[idxParty] = preferredChoice[1]
+                next
+              end
+              
+              # TODO Should turn this into a function
+              # TODO Want to actually use pokemon seen rather than party
+              # Simulate switching in the party member and calculate the move score for them
+              possibleBattler = PokeBattle_Battler.new(@battle, idxBattler)
+              possibleBattler.pbInitialize(@battle.player[0].party[idxParty],idxParty)
+              switchInScores[idxParty] = pbGetMoveScore(user.moves[preferredChoice[0]],user,possibleBattler,skill,policies)
+            end
+
+            # Check to see if it is optimal for the player to switch to the lowest scoring pokemon
+            idxOptimalSwitchIn = switchInScores.each_with_index.min[1]
+            if idxOptimalSwitchIn != opposingBattler.pokemonIndex
+              PBDebug.log("[AI] Optimal player switch in determined to be #{@battle.player[0].party[idxOptimalSwitchIn].species}")
+              # TODO Should abstract away this logic in a function
+              # Pick a move to be used on the pokemon assumed to be switching in
+              newChoices = []
+              user.eachMoveWithIndex do |_m,i|
+                next if !@battle.pbCanChooseMove?(idxBattler,i,false)
+
+                # Score all the moves against the current pokemon switching in
+                switchInBattler = PokeBattle_Battler.new(@battle, idxBattler)
+                switchInBattler.pbInitialize(@battle.player[0].party[idxOptimalSwitchIn],idxOptimalSwitchIn)
+                newChoice = pbGetMoveScore(user.moves[i],user,switchInBattler,skill,policies)
+
+                # Set up the new move choices to pick from
+                indTarget = @battle.battlers.index(opposingBattler)
+                # TODO Need to check if indTarget is nil just in case
+                newChoice = [newChoice, indTarget]
+                newChoices.push([i].concat(newChoice)) if newChoice
+              end
+
+              newSortedChoices = newChoices.sort_by{|choice| -choice[1]}
+              newPreferredChoice = newSortedChoices[0]
+              PBDebug.log("[AI] #{user.pbThis} (#{user.index}) thinks #{user.moves[newPreferredChoice[0]].name} is the highest rated choice on switch in #{@battle.player[0].party[idxOptimalSwitchIn].species}")
+              
+              # If move used on assumed switch in does nothing to current target, then switch out (this is to avoid lose-lose situations)
+              viableChoice = false
+              choices.each do |oldChoice|
+                next if oldChoice[0] != newPreferredChoice[0]
+                viableChoice = true
+              end
+              if !viableChoice
+                PBDebug.log("[AI] #{user.pbThis} (#{user.index}) sees #{user.moves[newPreferredChoice[0]].name} as not viable due to failing on current target #{opposingBattler.species}")
+                # Calculate who to switch out to
+                if pbEnemyShouldWithdrawEx?(idxBattler,2)
+                  PBDebug.log("[AI] #{user.pbThis} (#{user.index}) switching out due to nonviable choice in Protect-like use from opponent")
+                  return 
+                end 
+              else
+                preferredChoice = newPreferredChoice
+              end
+            end
+          end
+        end
       end
       if preferredChoice != nil
         @battle.pbRegisterMove(idxBattler,preferredChoice[0],false)
