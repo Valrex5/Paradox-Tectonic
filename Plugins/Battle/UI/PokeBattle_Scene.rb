@@ -1,4 +1,30 @@
 class PokeBattle_Scene
+  def getMessageWindow
+    return @sprites["messageWindow"]
+  end
+
+  def pbGraphicsUpdate
+    $PokemonGlobal.addNewFrameCount if UnrealTime::ENABLED && UnrealTime::TIME_STOPS && UnrealTime::BATTLE_PASS
+    # Update lineup animations
+    if @animations.length>0
+      shouldCompact = false
+      @animations.each_with_index do |a,i|
+        a.update
+        if a.animDone?
+          a.dispose
+          @animations[i] = nil
+          shouldCompact = true
+        end
+      end
+      @animations.compact! if shouldCompact
+    end
+    # Update other graphics
+    @sprites["battle_bg"].update if @sprites["battle_bg"].respond_to?("update")
+    Graphics.update
+    @frameCounter += 1
+    @frameCounter = @frameCounter%(Graphics.frame_rate*12/20)
+  end
+
 	#=============================================================================
 	# Window displays
 	#=============================================================================
@@ -65,9 +91,8 @@ class PokeBattle_Scene
         ball.visible = false
 		  end
 		  # Ability splash bars
-		  if PokeBattle_SceneConstants::USE_ABILITY_SPLASH
-			  @sprites["abilityBar_#{side}"] = AbilitySplashBar.new(side,@viewport)
-		  end
+      newBar = AbilitySplashBar.new(side,@viewport)
+		  @sprites["abilityBar_#{side}"] = newBar
 		end
 		# Player's and partner trainer's back sprite
 		@battle.player.each_with_index do |p,i|
@@ -79,13 +104,14 @@ class PokeBattle_Scene
 			  pbCreateTrainerFrontSprite(i,p.trainer_type,@battle.opponent.length)
 		  end
 		end
-		# Data boxes and Pokémon sprites
-		@battle.battlers.each_with_index do |b,i|
-		  next if !b
-		  @sprites["dataBox_#{i}"] = PokemonDataBox.new(b,@battle.pbSideSize(i),@viewport)
-		  pbCreatePokemonSprite(i)
+    createDataBoxes()
+
+    @battle.battlers.each_with_index do |b,i|
+      next if !b
+      pbCreatePokemonSprite(i)
       createAggroCursor(b,i)
-		end
+    end
+
 		# Wild battle, so set up the Pokémon sprite(s) accordingly
 		if @battle.wildBattle?
 		  @battle.pbParty(1).each_with_index do |pkmn,i|
@@ -101,6 +127,47 @@ class PokeBattle_Scene
 		areaUIpoint = Graphics.height/4
 		indicator_Y = Graphics.height/3
 		indicator_X = Graphics.width/30
+  end
+
+  # Databoxes get closer together the more battlers on a side
+  BASE_PIXELS_BETWEEN_DATABOXES = 2
+  SQUISH_PIXELS_PER_ADDED_BATTLER = 6
+  BASE_TRAINER_DEPTH = 40
+  BASE_PLAYER_HEIGHT = 192
+  SHIFT_PIXELS_PER_ADDED_TRAINER_BATTLER = 20
+  SHIFT_PIXELS_PER_ADDED_PLAYER_BATTLER = 24
+
+  def createDataBoxes()
+    # Trainer side databoxes
+    trainerSideSize = @battle.pbSideSize(1)
+    extraTrainerBattlers = trainerSideSize - 1
+    trainerY = BASE_TRAINER_DEPTH - extraTrainerBattlers * SHIFT_PIXELS_PER_ADDED_TRAINER_BATTLER
+    trainerY -= 12 if @battle.battlers[1].boss?
+    pixelsBetweenTrainerDataboxes = BASE_PIXELS_BETWEEN_DATABOXES - extraTrainerBattlers * SQUISH_PIXELS_PER_ADDED_BATTLER
+    @battle.battlers.each do |b|
+      next if !b || b.index.even?
+      newDataBox = PokemonDataBox.new(b,trainerSideSize,@viewport,trainerY)
+      @sprites["dataBox_#{b.index}"] = newDataBox
+      trainerY += newDataBox.getHeight + pixelsBetweenTrainerDataboxes
+    end
+
+    # Player side databoxes
+    playerSideSize = @battle.pbSideSize(0)
+    extraPlayerBattlers = playerSideSize - 1
+    playerY = Graphics.height - BASE_PLAYER_HEIGHT + extraPlayerBattlers * SHIFT_PIXELS_PER_ADDED_PLAYER_BATTLER
+    pixelsBetweenPlayerDataboxes = BASE_PIXELS_BETWEEN_DATABOXES - extraPlayerBattlers * SQUISH_PIXELS_PER_ADDED_BATTLER
+    @battle.battlers.reverse.each do |b|
+      next if !b || b.index.odd?
+      newDataBox = PokemonDataBox.new(b,playerSideSize,@viewport,playerY)
+      @sprites["dataBox_#{b.index}"] = newDataBox
+      playerY -= newDataBox.getHeight + pixelsBetweenPlayerDataboxes
+    end
+  end
+
+  def deleteDataBoxes()
+    @battle.battlers.each_with_index do |b,i|
+      @sprites["dataBox_#{i}"].dispose if @sprites["dataBox_#{i}"]
+    end
   end
 
   def createAggroCursor(battler,index)
@@ -326,10 +393,10 @@ class PokeBattle_Scene
   end
   
   def pbBattleInfoMenu
-	# Create targeting window
-	cw = BattleInfoDisplay.new(@viewport,300,@battle)
-	totalBattlers = @battle.pbSideBattlerCount + @battle.pbOpposingBattlerCount
-	doRefresh = false
+    # Create targeting window
+    cw = BattleInfoDisplay.new(@viewport,300,@battle)
+    totalBattlers = @battle.pbSideBattlerCount + @battle.pbOpposingBattlerCount
+    doRefresh = false
     loop do
       pbUpdate(cw)
       cw.refresh
@@ -351,9 +418,8 @@ class PokeBattle_Scene
         pbPlayCursorSE
       elsif Input.trigger?(Input::SPECIAL) && cw.individual.nil? && $DEBUG
         #truthifyAllEffects()
-        
-        @battle.battlers[0].effects[PBEffects::Illusion] = false
-        @battle.battlers[0].effects[PBEffects::ProtectRate] = false
+        @battle.battlers[0].disableEffect(:Illusion)
+        @battle.battlers[0].disableEffect(:ProtectFailure)
         pbPlayDecisionSE
       elsif Input.trigger?(Input::USE)
         battler = nil

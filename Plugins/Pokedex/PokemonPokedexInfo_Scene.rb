@@ -636,7 +636,6 @@ class PokemonPokedexInfo_Scene
 			break if excessWidth <= 0
 			charactersToShave += 1
 		end
-		echoln("Shaving off #{charactersToShave} characters from #{moveName}")
 		moveName = moveName[0..-charactersToShave] + "..."
 	end
 	
@@ -778,7 +777,7 @@ class PokemonPokedexInfo_Scene
 			drawTextEx(overlay,xLeft,coordinateY,450,7,_INTL("Evolves into Vaporeon with a Water Stone, " + 
 				"Jolteon with a Thunder Stone, Flareon with a Fire Stone, Espeon with a Dawn Stone, " +
 				"Umbreon with a Dusk Stone, Leafeon with a Leaf Stone, Glaceon with an Ice Stone, " +
-				"Sylveon with a Dawn Stone, and Giganteon at level 42."
+				"Sylveon with a Moon Stone, and Giganteon at level 42."
 			),base,shadow)
 		else
 			allEvolutions.each do |fromSpecies,evolutions|
@@ -939,6 +938,8 @@ class PokemonPokedexInfo_Scene
 				category = "Dance"
 			when 'p'
 				category = "Blade"
+			when 'q'
+				category = "Wind"
 			end
 		end
 		

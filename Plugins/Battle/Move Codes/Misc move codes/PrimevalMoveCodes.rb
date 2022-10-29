@@ -1,13 +1,16 @@
 module EmpoweredMove
-	def empowered?; return true; end
-	def isEmpowered?; return true; end
-	
 	def pbMoveFailed?(user,targets); return false; end
 	def pbFailsAgainstTarget?(user,target); return false; end
+
+	# There must be 2 turns without using a primeval attack to then be able to use it again
+	def turnsBetweenUses(); return 2; end
 	
 	def transformType(user,type)
 		user.pbChangeTypes(type)
 		typeName = GameData::Type.get(type).name
+		@battle.pbAnimation(:CONVERSION, user, [user])
+		user.pokemon.bossType = type
+		@battle.scene.pbChangePokemon(user.index,user.pokemon)
 		@battle.pbDisplay(_INTL("{1} transformed into the {2} type!",user.pbThis,typeName))
 	end
 end
@@ -21,7 +24,9 @@ class PokeBattle_Move_600 < PokeBattle_Move_019
 		super
 		super
 		@battle.eachSameSideBattler(user) do |b|
-			b.pbRecoverHP((b.totalhp/8.0).round)
+			healAmount = b.totalhp/2.0
+			healAmount /= BOSS_HP_BASED_EFFECT_RESISTANCE if b.boss?
+			b.pbRecoverHP(healAmount)
 		end
 		transformType(user,:NORMAL)
 	end
@@ -45,9 +50,8 @@ class PokeBattle_Move_602 < PokeBattle_Move_100
 
 	def pbEffectGeneral(user)
 		super
-		user.effects[PBEffects::AquaRing] = true
-		@battle.pbDisplay(_INTL("{1} surrounded itself with a veil of water!",user.pbThis))
 		@battle.pbAnimation(:AQUARING, user, [user])
+		user.applyEffect(:AquaRing)
 		transformType(user,:WATER)
 	end
 end
@@ -98,7 +102,7 @@ class PokeBattle_Move_606 < PokeBattle_Move_024
 	def pbEffectGeneral(user)
 		super
 		@battle.pbDisplay(_INTL("{1} gained a massive amount of mass!",user.pbThis))
-		user.effects[PBEffects::WeightChange] += 1000
+		user.incrementEffect(:WeightChange, 1000)
 		transformType(user,:FIGHTING)
 	end
 end
@@ -108,9 +112,11 @@ class PokeBattle_Move_607 < PokeBattle_Move_103
 	include EmpoweredMove
 
 	def pbEffectGeneral(user)
-		user.pbOpposingSide.effects[PBEffects::Spikes] = 3
-		@battle.pbDisplay(_INTL("3 layers of spikes were scattered all around {1}'s feet!",
-		   user.pbOpposingTeam(true)))
+		# Apply up to the maximum number of layers
+		increment = GameData::BattleEffect.get(:Spikes).maximum - user.pbOpposingSide.countEffect(:Spikes)
+		if increment > 0
+			user.pbOpposingSide.incrementEffect(:Spikes,increment)
+		end
 		transformType(user,:GROUND)
 	end
 end
@@ -120,11 +126,9 @@ class PokeBattle_Move_608 < PokeBattle_Move_05B
   include EmpoweredMove
 
   def pbEffectGeneral(user)
-    user.pbOwnSide.effects[PBEffects::Tailwind] = 99999
-	@battle.pbDisplay(_INTL("A permanent Tailwind blew from behind {1}!",user.pbTeam(true)))
+    user.pbOwnSide.applyEffect(:Tailwind,999)
 	@battle.eachSameSideBattler(user) do |b|
-		b.effects[PBEffects::ExtraTurns] = 1
-		@battle.pbDisplay(_INTL("{1} gained an extra attack!",user.pbThis))
+		b.applyEffect(:ExtraTurns,1)
 	end
 	transformType(user,:FLYING)
   end
@@ -175,8 +179,7 @@ class PokeBattle_Move_612 < PokeBattle_Move
 	def pbEffectGeneral(user)
 		super
 		@battle.eachOtherSideBattler(user) do |b|
-			@battle.pbDisplay(_INTL("{1} laid a curse on {2}!",user.pbThis,b.pbThis(true)))
-			b.effects[PBEffects::Curse] = true
+			b.applyEffect(:Curse)
 	    end
 		transformType(user,:GHOST)
 	end
@@ -207,11 +210,15 @@ class PokeBattle_Move_614 < PokeBattle_Move_0B7
 	end
 	
 	def pbEffectAgainstTarget(user,target)
-		target.effects[PBEffects::Torment] = true
-		@battle.pbDisplay(_INTL("{1} was subjected to torment!",target.pbThis))
-		target.pbItemStatusCureCheck
-		target.pbLowerStatStage(:ATTACK,1,user)
-		target.pbLowerStatStage(:SPECIAL_ATTACK,1,user)
+		target.applyEffect(:Torment)
+		showAnim = true
+		if target.pbCanLowerStatStage?(:ATTACK,user,self,true)
+			target.pbLowerStatStage(:ATTACK,1,user,showAnim)
+			showAnim = false
+		end
+		if target.pbCanLowerStatStage?(:SPECIAL_ATTACK,user,self,true)
+			target.pbLowerStatStage(:SPECIAL_ATTACK,1,user,showAnim) 
+		end
 	 end
 end
 
@@ -220,28 +227,23 @@ class PokeBattle_Move_615 < PokeBattle_Move
 	include EmpoweredMove
 
 	def pbEffectGeneral(user)
-		user.effects[PBEffects::EmpoweredLaserFocus] = true
-		@battle.pbDisplay(_INTL("{1} concentrated with extreme intensity!",user.pbThis))
+		user.applyEffect(:EmpoweredLaserFocus)
 		transformType(user,:STEEL)
 	end
 end
 
 # Empowered Moonlight
-class PokeBattle_Move_616 < PokeBattle_Move
+class PokeBattle_Move_616 < PokeBattle_HalfHealingMove
 	include EmpoweredMove
-	
-	def healingMove?;       return true; end
-	
+
 	def pbEffectGeneral(user)
-		user.pbRecoverHP((user.totalhp/8.0).round)
-		@battle.pbDisplay(_INTL("{1}'s HP was restored.",user.pbThis))
-		
+		super
 		user.attack,user.spatk = user.spatk,user.attack
 		@battle.pbDisplay(_INTL("{1} switched its Attack and Sp. Atk!",user.pbThis))
 		
 		user.defense,user.spdef = user.spdef,user.defense
 		@battle.pbDisplay(_INTL("{1} switched its Defense and Sp. Def!",user.pbThis))
-		user.effects[PBEffects::EmpoweredMoonlight] = !user.effects[PBEffects::EmpoweredMoonlight]
+		user.effects[:EmpoweredMoonlight] = !user.effects[:EmpoweredMoonlight]
 		
 		transformType(user,:FAIRY)
 	end
@@ -267,9 +269,7 @@ class PokeBattle_Move_618 < PokeBattle_Move
 	
 	def pbEffectGeneral(user)
 		super
-		@battle.pbDisplay(_INTL("{1} braced itself!",user.pbThis))
-		@battle.pbDisplay(_INTL("It will endure the next 3 hits which would faint it!",user.pbThis))
-		user.effects[PBEffects::EmpoweredEndure] = 3
+		user.applyEffect(:EmpoweredEndure,3)
 		transformType(user,:NORMAL)
 	end
 end
@@ -281,8 +281,7 @@ class PokeBattle_Move_619 < PokeBattle_Move
 	def pbEffectGeneral(user)
 		super
 		@battle.eachOtherSideBattler(user) do |b|
-			next if !b.pbCanBurn?(user,true,self)
-			b.pbBurn(user)
+			b.pbBurn(user) if b.pbCanBurn?(user,true,self)
 	    end
 		transformType(user,:FIRE)
 	end
@@ -298,8 +297,10 @@ class PokeBattle_Move_620 < PokeBattle_MultiStatUpMove
 	end
 	
 	def pbEffectGeneral(user)
-		# TO DO
 		super
+
+		user.applyEffect(:EmpoweredFlowState)
+
 		transformType(user,:WATER)
 	end
 end
@@ -322,9 +323,8 @@ class PokeBattle_Move_622 < PokeBattle_Move_154
 	
 	def pbEffectGeneral(user)
 		super
-		user.effects[PBEffects::Charge] = 2
-    	@battle.pbDisplay(_INTL("{1} began charging power!",user.pbThis))
 		@battle.pbAnimation(:CHARGE, user, [user])
+		user.applyEffect(:Charge,2)
 		transformType(user,:ELECTRIC)
 	end
 end
@@ -348,8 +348,6 @@ class PokeBattle_Move_624 < PokeBattle_Move_156
 		super
 		
 		@battle.eachSameSideBattler(user) do |b|
-			b.pbRaiseStatStage(:ATTACK,1,user)
-			b.pbRaiseStatStage(:SPECIAL_ATTACK,1,user)
 			b.pbRaiseStatStage(:DEFENSE,1,user)
 			b.pbRaiseStatStage(:SPECIAL_DEFENSE,1,user)
 		end
@@ -359,16 +357,18 @@ class PokeBattle_Move_624 < PokeBattle_Move_156
 end
 
 # Empowered Heal Order
-class PokeBattle_Move_625 < PokeBattle_Move
+class PokeBattle_Move_625 < PokeBattle_HalfHealingMove
 	include EmpoweredMove
 	
 	def healingMove?;       return true; end
 	
 	def pbEffectGeneral(user)
-		user.pbRecoverHP((user.totalhp/8.0).round)
-		@battle.pbDisplay(_INTL("{1}'s HP was restored.",user.pbThis))
-		@battle.pbDisplay(_INTL("{1} summons a helper!",user.pbThis))
-		@battle.addAvatarBattler(:COMBEE,user.level)
+		super
+
+		if @battle.pbSideSize(user.index) < 3
+			@battle.pbDisplay(_INTL("{1} summons a helper!",user.pbThis))
+			@battle.addAvatarBattler(:COMBEE,user.level,user.index % 2)
+		end
 		
 		transformType(user,:BUG)
 	end
@@ -400,10 +400,7 @@ class PokeBattle_Move_627 < PokeBattle_Move_030
 
 	def pbEffectGeneral(user)
 		super
-		user.effects[PBEffects::ExtraTurns] = 2
-
-		@battle.pbDisplay(_INTL("{1} gained two extra moves per turn!",user.pbThis))
-
+		user.applyEffect(:ExtraTurns,2)
 		transformType(user,:ROCK)
 	end
 end
@@ -420,20 +417,9 @@ end
 # Empowered Embargo
 class PokeBattle_Move_629 < PokeBattle_Move
 	include EmpoweredMove
-
-	def pbMoveFailed?(user,targets)
-		if user.pbOpposingSide.effects[PBEffects::EmpoweredEmbargo]
-		  @battle.pbDisplay(_INTL("But it failed!"))
-		  return true
-		end
-		return false
-	end
 	
 	def pbEffectGeneral(user)
-		user.pbOpposingSide.effects[PBEffects::EmpoweredEmbargo] = true
-		@battle.pbDisplay(_INTL("{1} and the rest of it's team can no longer use items!",
-			user.pbOpposingTeam(true)))
-
+		user.pbOpposingSide.applyEffect(:EmpoweredEmbargo) unless user.pbOpposingSide.effectActive?(:EmpoweredEmbargo) 
 		transformType(user,:DARK)
 	end
 end
@@ -445,8 +431,7 @@ class PokeBattle_Move_630 < PokeBattle_Move
 	def pbEffectGeneral(user)
 		super
 		@battle.eachOtherSideBattler(user) do |b|
-			next if !b.pbCanFrostbite?(user,true,self)
-			b.pbFrostbite(user)
+			b.pbFrostbite(user) if b.pbCanFrostbite?(user,true,self)
 	    end
 		transformType(user,:ICE)
 	end
@@ -458,26 +443,17 @@ class PokeBattle_Move_631 < PokeBattle_Move
 
 	def pbEffectGeneral(user)
 		super
-		user.effects[PBEffects::EmpoweredDestinyBond] = true
-
-		@battle.pbDisplay(_INTL("Attacks against {1} will incur half recoil!",user.pbThis))
-
+		user.applyEffect(:EmpoweredDestinyBond)
 		transformType(user,:GHOST)
 	end
 end
 
 # Empowered Shore Up
-class PokeBattle_Move_632 < PokeBattle_Move
+class PokeBattle_Move_632 < PokeBattle_HalfHealingMove
 	include EmpoweredMove
 	
-	def healingMove?;       return true; end
-	
 	def pbEffectGeneral(user)
-
-		# TODO
-
-		user.pbRecoverHP((user.totalhp/8.0).round)
-		@battle.pbDisplay(_INTL("{1}'s HP was restored.",user.pbThis))
+		user.applyEffect(:EmpoweredShoreUp)
 		
 		transformType(user,:GROUND)
 	end
@@ -500,9 +476,7 @@ class PokeBattle_Move_634 < PokeBattle_Move
 	
 	def pbEffectGeneral(user)
 		super
-		@battle.pbDisplay(_INTL("{1} sees everything!",user.pbThis))
-		@battle.pbDisplay(_INTL("It's protected from half of all attack damage for 3 turns!",user.pbThis))
-		user.effects[PBEffects::EmpoweredDetect] = 3
+		user.applyEffect(:EmpoweredDetect,3)
 		transformType(user,:FIGHTING)
 	end
 end
@@ -546,7 +520,7 @@ class PokeBattle_Move_642 < PokeBattle_Move_01C
 	include EmpoweredMove
 
 	def multiHitMove?;           return true; end
-  	def pbNumHits(user,targets); return 2;    end
+  	def pbNumHits(user,targets,checkingForAI=false); return 2;    end
 end
 
 # Empowered Slash
@@ -554,32 +528,22 @@ class PokeBattle_Move_643 < PokeBattle_Move_0A0
 	include EmpoweredMove
 end
 
-# Primeval Brick Break
+# Empowered Brick Break
 class PokeBattle_Move_644 < PokeBattle_TargetStatDownMove
 	include EmpoweredMove
 
 	def ignoresReflect?; return true; end
 
   	def pbEffectGeneral(user)
-		if user.pbOpposingSide.effects[PBEffects::LightScreen]>0
-		user.pbOpposingSide.effects[PBEffects::LightScreen] = 0
-		@battle.pbDisplay(_INTL("{1}'s Light Screen wore off!",user.pbOpposingTeam))
-		end
-		if user.pbOpposingSide.effects[PBEffects::Reflect]>0
-		user.pbOpposingSide.effects[PBEffects::Reflect] = 0
-		@battle.pbDisplay(_INTL("{1}'s Reflect wore off!",user.pbOpposingTeam))
-		end
-		if user.pbOpposingSide.effects[PBEffects::AuroraVeil]>0
-		user.pbOpposingSide.effects[PBEffects::AuroraVeil] = 0
-		@battle.pbDisplay(_INTL("{1}'s Aurora Veil wore off!",user.pbOpposingTeam))
+		user.pbOpposingSide.eachEffect(true) do |effect,value,data|
+			user.pbOpposingSide.disableEffect(effect) if data.is_screen?
 		end
 	end
 
 	def pbShowAnimation(id,user,targets,hitNum=0,showAnimation=true)
-		if user.pbOpposingSide.effects[PBEffects::LightScreen]>0 ||
-		user.pbOpposingSide.effects[PBEffects::Reflect]>0 ||
-		user.pbOpposingSide.effects[PBEffects::AuroraVeil]>0
-		hitNum = 1   # Wall-breaking anim
+		user.pbOpposingSide.eachEffect(true) do |effect,value,data|
+			# Wall-breaking anim
+			hitNum = 1 if data.is_screen?
 		end
 		super
 	end
@@ -594,7 +558,7 @@ end
 class PokeBattle_Move_645 < PokeBattle_Move
 	include EmpoweredMove
 
-	def pbCritialOverride(user,target)
+	def pbCriticalOverride(user,target)
 		return 1 if target.poisoned?
 		return 0
 	end
@@ -608,4 +572,15 @@ end
 # Empowered Power Gem
 class PokeBattle_Move_647 < PokeBattle_Move_402
 	include EmpoweredMove
+end
+
+# Empowered Bullet Seed
+class PokeBattle_Move_648 < PokeBattle_Move_17C
+	include EmpoweredMove
+
+	def pbRepeatHit?(hitNum = 0)
+		return hitNum < 5
+	end
+	
+	def turnsBetweenUses(); return 3; end
 end

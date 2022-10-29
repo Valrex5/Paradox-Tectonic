@@ -44,7 +44,7 @@ def isCat?(species)
 end
 
 def isAlien?(species)
-	array = [:CLEFFA,:CLEFAIRY,:CLEFABLE,:STARYU,:STARMIE,:LUNATONE,:SOLROCK,:ELGYEM,:BEHEEYEM,:KYUREM,:ETERNATUS,:DEOXYS]
+	array = [:CLEFFA,:CLEFAIRY,:CLEFABLE,:STARYU,:STARMIE,:LUNATONE,:SOLROCK,:ELGYEM,:BEHEEYEM,:KYUREM,:ETERNATUS,:DEOXYS,:MROGGENROLA,:MBOLDORE,:MGIGALITH]
 	return array.include?(species)
 end
 
@@ -104,6 +104,30 @@ def playerIsOutdoors?
 	rescue
 		return false
 	end
+end
+
+def teamEditingAllowed?()
+	begin
+		return !GameData::MapMetadata.get($game_map.map_id).no_team_editing
+	rescue
+		return true
+	end
+end
+
+def showNoTeamEditingMessage()
+	pbMessage(_INTL("Editing your team is not allowed at the moment."))
+end
+
+def savingAllowed?()
+	begin
+		return !GameData::MapMetadata.get($game_map.map_id).saving_blocked
+	rescue
+		return true
+	end
+end
+
+def showSaveBlockMessage()
+	pbMessage(_INTL("Saving is not allowed at the moment."))
 end
 
 class PokemonGlobalMetadata

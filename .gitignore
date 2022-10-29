@@ -1,4 +1,3 @@
-*.ini
 *.dat
 *.bak
 Data/debuglog.txt
@@ -23,3 +22,13 @@ switching_analysis.txt
 *_backup*
 move_distribution.txt
 changelog.txt
+*.lnk
+Game.ini
+*.code-workspace
+signature_moves.txt
+signature_abilities.txt
+game_install_.zip
+generate_install_zip.bat
+generate_patch_zip.bat
+install_files.txt
+patch_.zip

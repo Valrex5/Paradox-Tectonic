@@ -1,3 +1,5 @@
+VOLUME_FAKERY_MULT = 2.0
+
 class PokemonSystem
 	attr_accessor :followers
 	attr_accessor :autosave
@@ -7,10 +9,28 @@ class PokemonSystem
 	attr_accessor :gendered_look
 	attr_accessor :damage_numbers
 	attr_accessor :show_item_descriptions
+  attr_accessor :show_trait_unlocks
 	attr_accessor :effectiveness_messages
   attr_accessor :weather_messages
   attr_accessor :status_effect_messages
   attr_accessor :nicknaming_prompt
+  attr_accessor :color_shifts
+
+  def bgmvolume
+    return @bgmvolume / VOLUME_FAKERY_MULT
+  end
+
+  def bgmvolume=(value)
+    @bgmvolume = value
+  end
+
+  def sevolume
+    return @sevolume / VOLUME_FAKERY_MULT
+  end
+
+  def sevolume=(value)
+    @sevolume = value
+  end
 
   def initialize
     @textspeed   		          = 1 # Text speed (0=slow, 1=normal, 2=fast, 3=rapid)
@@ -22,11 +42,12 @@ class PokemonSystem
     @screensize  		          = (Settings::SCREEN_SCALE * 2).floor - 1   # 0=half size, 1=full size, 2=full-and-a-half size, 3=double size
     @language    		          = 0 # Language (see also Settings::LANGUAGES in script PokemonSystem)
     @runstyle    		          = 0 # Default movement speed (0=walk, 1=run)
-    @bgmvolume  		          = 30 # Volume of background music and ME
-    @sevolume    		          = 30 # Volume of sound effects
+    @bgmvolume  		          = 50 # Volume of background music and ME
+    @sevolume    		          = 50 # Volume of sound effects
     @textinput   		          = 1 # Text input mode (0=cursor, 1=keyboard)
     @followers   		          = 0	# Follower Pokemon enabled (0=true, 1=false)
-    @autosave	 		            = 1	# Autosave enabled (0=true, 1=false)
+    @autosave	 		            = 0	# Autosave enabled (0=true, 1=false)
+    @color_shifts             = 0 # (0=true, 1=false)
     @particle_effects 	      = 0 # (0=true, 1=false)
     @screenshake              = 0 # (0=true, 1=false)
     @skip_fades 		          = 1 # (0=true, 1=false)
@@ -37,6 +58,7 @@ class PokemonSystem
     @weather_messages         = 0 # (0=true, 1=false)
     @status_effect_messages   = 0 # (0=true, 1=false)
     @nicknaming_prompt        = 0 # (0=true, 1=false)
+    @show_trait_unlocks       = 0 # (0=true, 1=false)
   end
 end
 
@@ -56,11 +78,11 @@ class PokemonOption_Scene
     # or delete it. The game's options may be placed in any order.
     @PokemonOptions = [
        SliderOption.new(_INTL("Music Volume"),0,100,5,
-         proc { $PokemonSystem.bgmvolume },
+         proc { $PokemonSystem.bgmvolume * VOLUME_FAKERY_MULT },
          proc { |value|
-           if $PokemonSystem.bgmvolume!=value
+           if $PokemonSystem.bgmvolume * VOLUME_FAKERY_MULT != value
              $PokemonSystem.bgmvolume = value
-             if $game_system.playing_bgm!=nil && !inloadscreen
+             if $game_system.playing_bgm != nil && !inloadscreen
                playingBGM = $game_system.getPlayingBGM
                $game_system.bgm_pause
                $game_system.bgm_resume(playingBGM)
@@ -69,12 +91,12 @@ class PokemonOption_Scene
          }
        ),
        SliderOption.new(_INTL("SE Volume"),0,100,5,
-         proc { $PokemonSystem.sevolume },
+         proc { $PokemonSystem.sevolume * VOLUME_FAKERY_MULT },
          proc { |value|
-           if $PokemonSystem.sevolume!=value
+           if $PokemonSystem.sevolume * VOLUME_FAKERY_MULT != value
              $PokemonSystem.sevolume = value
-             if $game_system.playing_bgs!=nil
-               $game_system.playing_bgs.volume = value
+             if $game_system.playing_bgs != nil
+               $game_system.playing_bgs.volume = $PokemonSystem.sevolume
                playingBGS = $game_system.getPlayingBGS
                $game_system.bgs_pause
                $game_system.bgs_resume(playingBGS)
@@ -116,12 +138,6 @@ class PokemonOption_Scene
          proc { $PokemonSystem.textinput },
          proc { |value| $PokemonSystem.textinput = value }
        ),
-       EnumOption.new(_INTL("Nicknaming Prompt"),[_INTL("On"),_INTL("Off")],
-         proc { $PokemonSystem.nicknaming_prompt },
-         proc { |value|
-			    $PokemonSystem.nicknaming_prompt = value
-         }
-       ),
        EnumOption.new(_INTL("Damage Numbers"),[_INTL("On"),_INTL("Off")],
          proc { $PokemonSystem.damage_numbers },
          proc { |value|
@@ -146,18 +162,36 @@ class PokemonOption_Scene
           $PokemonSystem.status_effect_messages = value
         }
       ),
+      EnumOption.new(_INTL("Nicknaming Prompt"),[_INTL("On"),_INTL("Off")],
+        proc { $PokemonSystem.nicknaming_prompt },
+        proc { |value|
+        $PokemonSystem.nicknaming_prompt = value
+        }
+      ),
       EnumOption.new(_INTL("Item Desc Popups"),[_INTL("On"),_INTL("Off")],
          proc { $PokemonSystem.show_item_descriptions },
          proc { |value|
 			    $PokemonSystem.show_item_descriptions = value
          }
        ),
+      EnumOption.new(_INTL("Trait Unlock Popups"),[_INTL("On"),_INTL("Off")],
+       proc { $PokemonSystem.show_trait_unlocks },
+       proc { |value|
+        $PokemonSystem.show_trait_unlocks = value
+       }
+      ),
       EnumOption.new(_INTL("Autosave"),[_INTL("On"),_INTL("Off")],
         proc { $PokemonSystem.autosave },
         proc { |value|
           $PokemonSystem.autosave = value
         }
         ),
+      EnumOption.new(_INTL("Color Shifts (Adv.)"),[_INTL("On"),_INTL("Off")],
+        proc { $PokemonSystem.color_shifts },
+        proc { |value|
+            $PokemonSystem.color_shifts = value
+        }
+      ),
       EnumOption.new(_INTL("Particles (Adv.)"),[_INTL("On"),_INTL("Off")],
         proc { $PokemonSystem.particle_effects },
         proc { |value|
@@ -207,8 +241,11 @@ class PokemonOption_Scene
  end
 
  module MessageConfig
-	def self.pbSettingToTextSpeed(speed)
+	def self.pbSettingToTextSpeed(speed,slowed=false)
+    modifiedSpeed = speed
+    modifiedSpeed -= 1 if slowed
 		case speed
+    when -1 then return 3
 		when 0 then return 2
 		when 1 then return 1
 		when 2 then return -2

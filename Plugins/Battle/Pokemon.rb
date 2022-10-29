@@ -4,6 +4,7 @@ class Pokemon
   attr_accessor :dmgResist
 	attr_accessor :battlingStreak
   attr_accessor :extraMovesPerTurn
+  attr_accessor :bossType
 	
   # Creates a new Pokémon object.
   # @param species [Symbol, String, Integer] Pokémon species
@@ -74,6 +75,7 @@ class Pokemon
     @dmgResist        = 0
     @extraMovesPerTurn = 0
 	  @battlingStreak	  = 0
+    @bossType         = nil
     calc_stats
     if @form == 0 && recheck_form
       f = MultipleForms.call("getFormOnCreation", self)
@@ -136,5 +138,17 @@ class Pokemon
       return ret if ret
     end
     return nil
+  end
+end
+
+class Pokemon
+  class Owner
+    # Returns a new Owner object populated with values taken from +trainer+.
+    # @param trainer [Player, NPCTrainer] trainer object to read data from
+    # @return [Owner] new Owner object
+    def self.new_from_trainer(trainer)
+      validate trainer => [Player, NPCTrainer]
+      return new(trainer.id, trainer.nameForHashing || trainer.name, trainer.gender, trainer.language)
+    end
   end
 end

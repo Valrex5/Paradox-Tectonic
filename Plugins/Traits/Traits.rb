@@ -553,7 +553,7 @@ class Pokemon
     when "machine", "battleitem"
       gain = [1, 1, 0][happiness_range]
     else
-      echo(_INTL("Unknown happiness-changing method: {1}", method.to_s))
+      echoln(_INTL("Unknown happiness-changing method: {1}", method.to_s))
     end
     if gain > 0
       gain += 1 if @obtain_map == $game_map.map_id
@@ -562,6 +562,8 @@ class Pokemon
     end
 	prevHappiness = @happiness
     @happiness = (@happiness + gain).clamp(0, 255)
+
+	return if $PokemonSystem.show_trait_unlocks == 1
 	
 	traitUnlocked = nil
 	likeUnlocked = nil

@@ -1,5 +1,6 @@
 HIGHEST_STAT_BASE = Color.new(139,52,34)
 LOWEST_STAT_BASE = Color.new(60,55,112)
+TRIBAL_BOOSTED_BASE = Color.new(70, 130, 76)
 
 DEBUGGING_EFFECT_DISPLAY = false
 
@@ -115,39 +116,21 @@ class BattleInfoDisplay < SpriteWrapper
 	textToDraw.push([terrainMessage,256+24,weatherAndTerrainY,0,base,shadow])
 	
 	# Whole field effects
-	wholeFieldX = 332
+	wholeFieldX = 328
 	textToDraw.push([_INTL("Field Effects"),wholeFieldX+60,0,2,base,shadow])
 	
+	# Compile array of descriptors of each field effect
 	fieldEffects = []
-	for effect in 0..30
-		effectValue = @battle.field.effects[effect]
-		if !DEBUGGING_EFFECT_DISPLAY
-			next if effectValue.nil?
-			next if effectValue == false
-			next if effectValue.is_a?(Integer) && effectValue <= 0
+	pushEffectDescriptorsToArray(@battle.field,fieldEffects)
+	@battle.sides.each do |side|
+		thisSideEffects = []
+		pushEffectDescriptorsToArray(side,thisSideEffects)
+		if side.index == 1
+			thisSideEffects.map { |descriptor|
+				"#{descriptor} [O]"
+			}
 		end
-		effectName = labelBattleEffect(effect)
-		next if effectName.blank?
-		effectName += ": " + effectValue.to_s if effectValue.is_a?(Integer) || effectValue.is_a?(String) || effectValue.is_a?(Symbol)
-		fieldEffects.push(effectName)
-	end
-	
-	# One side effects
-	# Index intentionally not reset
-	for side in 0..1
-		for effect in 0..30
-			effectValue = @battle.sides[side].effects[effect]
-			if !DEBUGGING_EFFECT_DISPLAY
-				next if effectValue.nil?
-				next if effectValue == false
-				next if effectValue.is_a?(Integer) && effectValue <= 0
-			end
-			effectName = labelSideEffect(effect)
-			next if effectName.blank?
-			effectName += ": " + effectValue.to_s if effectValue.is_a?(Integer) || effectValue.is_a?(String) || effectValue.is_a?(Symbol)
-			effectName += side == 0 ? " [A]" : " [E]"
-			fieldEffects.push(effectName)
-		end
+		fieldEffects.concat(thisSideEffects)
 	end
 	
 	# Render out the field effects
@@ -216,13 +199,13 @@ class BattleInfoDisplay < SpriteWrapper
 	textToDraw.push(["Value",statValueX,statStagesSectionTopY,0,base,shadow])
 	
 	statsToNames = {
-	:ATTACK => "Atk",
-	:DEFENSE => "Def",
-	:SPECIAL_ATTACK => "Sp. Atk",
-	:SPECIAL_DEFENSE => "Sp. Def",
-	:SPEED => "Speed",
-	:ACCURACY => "Acc",
-	:EVASION => "Evade"
+		:ATTACK => "Atk",
+		:DEFENSE => "Def",
+		:SPECIAL_ATTACK => "Sp. Atk",
+		:SPECIAL_DEFENSE => "Sp. Def",
+		:SPEED => "Speed",
+		:ACCURACY => "Acc",
+		:EVASION => "Evade"
 	}
 
 	tribalBonus = TribalBonus.new
@@ -294,31 +277,37 @@ class BattleInfoDisplay < SpriteWrapper
 		y = statStagesSectionTopY + 40 + 40 * index
 		statValueAddendum = ""
 		if stat == highestStat
-			mainColor = HIGHEST_STAT_BASE
+			finalStatColor = HIGHEST_STAT_BASE
 			statValueAddendum = " H"
 		elsif stat == lowestStat
-			mainColor = LOWEST_STAT_BASE
+			finalStatColor = LOWEST_STAT_BASE
 			statValueAddendum = " L"
 		else
-			mainColor = base
+			finalStatColor = base
 		end
 
 		# Display the stat's name
-		textToDraw.push([name,statLabelX,y,0,mainColor,shadow])
+		statNameColor = base
+		if GameData::Stat.get(stat).type == :main_battle
+			tribalBoostSymbol = (stat.to_s + "_TRIBAL").to_sym
+			isTribalBoosted = statValues[tribalBoostSymbol] > 0
+			statNameColor = TRIBAL_BOOSTED_BASE if isTribalBoosted
+		end
+		textToDraw.push([name,statLabelX,y,0,statNameColor,shadow])
 
 		# Display the stat stage
 		x = statStageX
 		x -= 12 if stage != 0
 		stageLabel = stage.to_s
 		stageLabel = "+" + stageLabel if stage > 0
-		textToDraw.push([stageLabel,x,y,0,mainColor,shadow])
+		textToDraw.push([stageLabel,x,y,0,base,shadow])
 
 		# Display the stat multiplier
 		multLabel = statMult.round(2).to_s + "x"
-		textToDraw.push([multLabel,statMultX,y,0,mainColor,shadow])
+		textToDraw.push([multLabel,statMultX,y,0,base,shadow])
 
 		# Display the final calculated stat
-		textToDraw.push([statValue.to_s + statValueAddendum,statValueX,y,0,mainColor,shadow])
+		textToDraw.push([statValue.to_s + statValueAddendum,statValueX,y,0,finalStatColor,shadow])
 
 		index += 1
 	end
@@ -326,37 +315,10 @@ class BattleInfoDisplay < SpriteWrapper
 	# Effects
 	textToDraw.push(["Battler Effects",battlerEffectsX,statStagesSectionTopY,0,base,shadow])
 	
-	# Battler effects
+	# Compile a descriptor for each effect on the battler or its position
 	battlerEffects = []
-	
-	for effect in 0..150
-		effectValue = battler.effects[effect]
-		if !DEBUGGING_EFFECT_DISPLAY
-			next if effectValue.nil?
-			next if effectValue == false
-			next if effectValue.is_a?(Integer) && effectValue <= 0
-		end
-		next if effect == PBEffects::ProtectRate && effectValue <= 1
-		next if effect == PBEffects::Unburden && !battler.hasActiveAbility?(:UNBURDEN)
-		effectName = labelBattlerEffect(effect)
-		next if effectName.blank?
-		effectName += ": " + effectValue.to_s if effectValue.is_a?(Integer) || effectValue.is_a?(String) || effectValue.is_a?(Symbol)
-		battlerEffects.push(effectName)
-	end
-	
-	# Slot effects
-	for effect in 0..30
-		effectValue = @battle.positions[battler.index].effects[effect]
-		if !DEBUGGING_EFFECT_DISPLAY
-			next if effectValue.nil?
-			next if effectValue == false && !DEBUGGING_EFFECT_DISPLAY
-			next if effectValue.is_a?(Integer) && effectValue <= 0
-		end
-		effectName = labelSlotEffect(effect)
-		next if effectName.blank?
-		effectName += ": " + effectValue.to_s if effectValue.is_a?(Integer) || effectValue.is_a?(String) || effectValue.is_a?(Symbol)
-		battlerEffects.push(effectName)
-	end
+	pushEffectDescriptorsToArray(battler,battlerEffects)
+	pushEffectDescriptorsToArray(@battle.positions[battler.index],battlerEffects)
 	
 	scrolling = true if battlerEffects.length > 8
 	
@@ -388,230 +350,17 @@ class BattleInfoDisplay < SpriteWrapper
 	
 	pbDrawTextPositions(self.bitmap,textToDraw)
   end
-  
-  def labelBattlerEffect(effectNumber)
-	return [
-		"Aqua Ring",
-		"", # Attract
-		"",
-		"",
-		"Bide",
-		"",
-		"",
-		"Burn Up",
-		"Charge",
-		"", # Choice Band
-		"Confusion",
-		"",
-		"",
-		"Curse",
-		"", # Dancer
-		"",
-		"Destiny Bond",
-		"",
-		"",
-		"", # Disable
-		"Disabled Move",
-		"",
-		"Embargo",
-		"",
-		"Encored Move",
-		"",
-		"",
-		"Flash Fire",
-		"",
-		"Focus Energy",
-		"",
-		"",
-		"Foresight",
-		"Fury Cutter",
-		"Gastro Acid",
-		"",
-		"",
-		"Heal Block",
-		"",
-		"Move Recharge", # hyper beam, etc.
-		"",
-		"Imprison",
-		"Ingrain",
-		"",
-		"",
-		"",
-		"Laser Focus",
-		"Leech Seed",
-		"Lock-On",
-		"Locked On To",
-		"",
-		"",
-		"Magnet Rise",
-		"Trapped", # Mean look, etc.
-		"",
-		"Metronome Count",
-		"Micle Berry",
-		"Minimize",
-		"Miracle Eye",
-		"",
-		"",
-		"",
-		"Mud Sport",
-		"Nightmare",
-		"Locked Into Move", # Outrage, etc.
-		"",
-		"Perish Song",
-		"",
-		"",
-		"",
-		"",
-		"Black Powder",
-		"Power Trick",
-		"",
-		"",
-		"",
-		"",
-		"Protection Failure", # Protect Rate
-		"",
-		"",
-		"Rage",
-		"",
-		"Rollout",
-		"",
-		"",
-		"Sky Drop",
-		"Slow Start",
-		"Smacked Down",
-		"",
-		"",
-		"", # Spotlight
-		"Stockpile",
-		"",
-		"",
-		"Substitute",
-		"Taunt",
-		"Telekenisis",
-		"Throat Chopped",
-		"Torment",
-		"Toxic",
-		"Transform",
-		"",
-		"", # Whirlpool, etc.
-		"Trapped By Move",
-		"Trapped By User",
-		"Truant",
-		"2-Turn Attack",
-		"Added Type",
-		"Unburden",
-		"Uproar Restless",
-		"Water Sport",
-		"Weight Added",
-		"Drowzy",
-		"",
-		"",
-		"",
-		"",
-		"No Retreat",
-		"",
-		"Trapped by Jaws",
-		"Trapping With Jaws",
-		"Tar Shot",
-		"Octolocked",
-		"Octolocking",
-		"Blundered",
-		"",
-		"",
-		"",
-		"",
-		"Flinch Protection",
-		"Enlightened",
-		"Cold Conversion",
-		"Creeped Out",
-		"Lucky Star",
-		"Charmed",
-		"",
-		"Inured",
-		"No Retreat",
-		"Nerve Broken",
-		"Ice Ball",
-		"Roll Out",
-		"", # Gargantuan
-		"", # Stunning Curl
-		"", # Red-Hot Retreat
-		"Primeval Moonlight",
-		"Primeval Endure",
-		"Primeval Laser Focus",
-		"Primeval Destiny Bond",
-		"Volley Stance",
-		"Giving Dragon Ride",
-		"Riding Dragon",
-		"Shimmering Heat",
-		"Flare Witch",
-	][effectNumber] || ""
-  end
-  
-  def labelSlotEffect(effectNumber)
-	return [
-		"Attack Incoming",
-		"Delayed Attack",
-		"",
-		"",
-		"", # Healing Wish
-		"", # Lunar Dance
-		"", # Wish
-		"Wishing For",
-		"", # Wish Maker
-	][effectNumber] || ""
-  end
-  
-	def labelBattleEffect(effectNumber)
-		return [
-			"Amulet Coin",
-			"Fairy Lock",
-			"", # Fusion Bolt
-			"", # Fusion Flare
-			"Gravity",
-			"Happy Hour",
-			"", # Ion Deluge
-			"Magic Room",
-			"Mud Sport",
-			"Pay Day",
-			"Trick Room",
-			"Water Sport",
-			"Wonder Room",
-			"Fortune",
-			"Neutralizing Gas",
-			"Puzzle Room",
-			"Odd Room",
-		][effectNumber] || ""
-	end
 
-	def labelSideEffect(effectNumber)
-		return [
-			"Aurora Veil",
-			"", # Crafty Shield
-			"", # Echoed Voice Count
-			"", # Encoed Voice Used
-			"", # Last Round Fainted
-			"Light Screen",
-			"Lucky Chant",
-			"", # Mat Block,
-			"Mist",
-			"", # Quick Guard
-			"Rainbow",
-			"Reflect",
-			"", # Round
-			"Safeguard",
-			"Sea of Fire",
-			"Spikes",
-			"Stealth Rock",
-			"Sticky Web",
-			"Swamp",
-			"Tailwind",
-			"Poison Spikes", # Toxic Spikes,
-			"", # Wide Guard
-			"Flame Spikes",
-			"EmpoweredEmbargo",
-			"Frost Spikes",
-		][effectNumber] || ""
+  def pushEffectDescriptorsToArray(effectHolder,descriptorsArray)
+	effectHolder.eachEffect(!DEBUGGING_EFFECT_DISPLAY) do |effect, value, effectData|
+		next if !effectData.info_displayed
+		effectName = effectData.real_name
+		if effectData.type != :Boolean
+			effectName = "#{effectName}: #{effectData.value_to_string(value,@battle)}"
+		end
+		descriptorsArray.push(effectName)
 	end
+  end
  
   def update(frameCounter=0)
     super()
