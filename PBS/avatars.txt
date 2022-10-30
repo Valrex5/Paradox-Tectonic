@@ -2,8 +2,8 @@
 #-------------------------------
 [COMBEE]
 Ability = HONEYGATHER
-Moves1 = HELPINGHAND,SMUSH
-HPMult = 3.0
+Moves1 = HELPINGHAND,SMUSH,CREEPOUT,BUGBUZZ
+HPMult = 2.5
 #-------------------------------
 [VIGOROTH]
 Ability = VITALSPIRIT
@@ -38,7 +38,7 @@ DMGResist = 0.3
 Ability = AERODYNAMIC
 Moves1 = GALE,HEATWAVE,PRIMEVALENDURE
 Moves2 = FEATHERDANCE,WHITERAY
-HPMult = 2.0
+HPMult = 2.5
 DMGResist = 0.3
 Form = 1
 #-------------------------------
@@ -214,12 +214,12 @@ HPMult = 6.0
 [RUNERIGUS]
 Ability = STOUT
 Moves1 = SHADOWCLAW,SANDTOMB,PRIMEVALSUNNYDAY
-Moves2 = FIREPUNCH
+Moves2 = FIREPUNCH,ADAMANTINEPRESS
 HPMult = 6.0
 #-------------------------------
 [KYOGRE]
 Ability = DRIZZLE
-Moves1 = ORIGINPULSE,THUNDER,ICEBEAM,WATERSPOUT
+Moves1 = ORIGINPULSE,THUNDER,ICEBEAM,WATERSPOUT,LIQUIDATION
 HPMult = 8.0
 HealthBars = 3
 Item = BLUEORB
@@ -227,7 +227,7 @@ DMGResist = 0.3
 #-------------------------------
 [GROUDON]
 Ability = DROUGHT
-Moves1 = PRECIPICEBLADES,ERUPTION,DRAGONCLAW,SOLARBEAM
+Moves1 = PRECIPICEBLADES,ERUPTION,DRAGONCLAW,SOLARBEAM,FLAMETHROWER
 HPMult = 8.0
 HealthBars = 3
 Item = REDORB
@@ -338,6 +338,7 @@ Moves1 = AQUAJET,BITE,PRIMEVALPOISONGAS
 Moves2 = POISONFANG,BRUTALSWING,PRIMEVALCROSSPOISON
 HPMult = 6.0
 Item = MUSCLEBAND
+Agression = 4
 #-------------------------------
 [WATCHOG]
 Ability = PARANOID
@@ -506,7 +507,7 @@ HPMult = 6.0
 [GREEDENT]
 Ability = CHEEKPOUCH
 Moves1 = STOCKPILE,SWALLOW,SPITUP,PRIMEVALBULLETSEED
-HPMult = 4.0
+HPMult = 6.0
 HealthBars = 2
 Item = ORANBERRY
 #-------------------------------

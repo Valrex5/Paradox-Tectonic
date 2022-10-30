@@ -1,3 +1,6 @@
+DEFAULT_BOSS_AGRESSION = 2
+MAX_BOSS_AGRESSION = 8
+
 module GameData
 	class Avatar
 		attr_reader :id
@@ -19,6 +22,7 @@ module GameData
 		attr_reader :dmg_resist
 		attr_reader :num_phases
 		attr_reader :num_health_bars
+		attr_reader :aggression
 	
 		DATA = {}
 		DATA_FILENAME = "avatars.dat"
@@ -38,6 +42,7 @@ module GameData
 		  "DMGMult"				=> [:dmg_mult,			"F"],
 		  "DMGResist"			=> [:dmg_resist,		"F"],
 		  "HealthBars"			=> [:health_bars,		"U"],
+		  "Aggression"			=> [:aggression,		"U"],
 		}
 
 		extend ClassMethods
@@ -60,6 +65,7 @@ module GameData
 		  @hp_mult			= hash[:hp_mult] || 4.0
 		  @dmg_mult 		= hash[:dmg_mult] || 1
 		  @dmg_resist		= hash[:dmg_resist] || 0
+		  @aggression		= hash[:aggression] || DEFAULT_BOSS_AGRESSION
 
 		  @num_phases = 1
 		  if @moves2.length > 0 && @moves2.sort != @moves1.sort

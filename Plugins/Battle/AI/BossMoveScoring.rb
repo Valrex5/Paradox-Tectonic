@@ -9,108 +9,6 @@ class PokeBattle_AI
 		pbMessage(_INTL("A recoverable AI error has occured. Please report the following to a programmer."))
 		pbPrintException(error)
 	end
-
-	BossGetMoveIDScore					= MoveScoringHandlerHash.new
-	BossGetMoveCodeScore				= MoveScoringHandlerHash.new
-	BossSpeciesGetMoveScore				= MoveScoringHandlerHash.new
-
-	def self.triggerBossGetMoveIDScore(moveId,move,user,target,score)
-		ret = nil
-		begin
-			ret = BossGetMoveIDScore.trigger(moveId,move,user,target,score)
-		rescue
-			AIErrorRecovered($!)
-		end
-		return (ret!=nil) ? ret : score
-	end
-	
-	def self.triggerBossGetMoveCodeScore(moveCode,move,user,target,score)
-		ret = nil
-		begin
-			ret = BossGetMoveCodeScore.trigger(moveCode,move,user,target,score)
-		rescue
-			AIErrorRecovered($!)
-		end
-		return (ret!=nil) ? ret : score
-	end
-	
-	def self.triggerBossSpeciesGetMoveScore(bossSpecies,move,user,target,score)
-		ret = nil
-		begin
-			ret = BossSpeciesGetMoveScore.trigger(bossSpecies,move,user,target,score)
-		rescue
-			AIErrorRecovered($!)
-		end
-		return (ret!=nil) ? ret : score
-	end
-	
-	BossRejectMoveID					= MoveScoringHandlerHash.new
-	BossRejectMoveCode					= MoveScoringHandlerHash.new
-	BossSpeciesRejectMove				= MoveScoringHandlerHash.new
-	
-	def self.triggerBossRejectMoveID(moveId,move,user,target)
-		ret = nil
-		begin
-			ret = BossRejectMoveID.trigger(moveId,move,user,target)
-		rescue
-			AIErrorRecovered($!)
-		end
-		return (ret!=nil) ? ret : false
-	end
-	
-	def self.triggerBossRejectMoveCode(moveCode,move,user,target)
-		ret = nil
-		begin
-			ret = BossRejectMoveCode.trigger(moveCode,move,user,target)
-		rescue
-			AIErrorRecovered($!)
-		end
-		return (ret!=nil) ? ret : false
-	end
-	
-	def self.triggerBossSpeciesRejectMove(species,move,user,target)
-		ret = nil
-		begin
-			ret = BossSpeciesRejectMove.trigger(species,move,user,target)
-		rescue
-			AIErrorRecovered($!)
-		end
-		return (ret!=nil) ? ret : false
-	end
-	
-	BossRequireMoveID					= MoveScoringHandlerHash.new
-	BossRequireMoveCode					= MoveScoringHandlerHash.new
-	BossSpeciesRequireMove				= MoveScoringHandlerHash.new
-	
-	def self.triggerBossRequireMoveID(moveId,move,user,target)
-		ret = nil
-		begin
-			ret = BossRequireMoveID.trigger(moveId,move,user,target)
-		rescue
-			AIErrorRecovered($!)
-		end
-		return (ret!=nil) ? ret : false
-	end
-	
-	def self.triggerBossRequireMoveCode(moveCode,move,user,target)
-		ret = nil
-		begin
-			ret = BossRequireMoveCode.trigger(moveCode,move,user,target)
-		rescue
-			AIErrorRecovered($!)
-		end
-		return (ret!=nil) ? ret : false
-	end
-	
-	def self.triggerBossSpeciesRequireMove(species,move,user,target)
-		ret = nil
-		begin
-			ret = BossSpeciesRequireMove.trigger(species,move,user,target)
-		rescue
-			AIErrorRecovered($!)
-		end
-		return (ret!=nil) ? ret : false
-	end
 	
 	BossSpeciesUseMoveCodeIfAndOnlyIf			= MoveScoringHandlerHash.new
 	BossSpeciesUseMoveIDIfAndOnlyIf				= MoveScoringHandlerHash.new
@@ -171,32 +69,10 @@ class PokeBattle_AI
 
 	def pbGetMoveScoreBoss(move,user,target)
 		score = 100
-		
-		score = PokeBattle_AI.triggerBossGetMoveCodeScore(move.id,move,user,target,score)
-		score = PokeBattle_AI.triggerBossGetMoveIDScore(move.function,move,user,target,score)
-		score = PokeBattle_AI.triggerBossSpeciesGetMoveScore(user.species,move,user,target,score)
-		
-		# Use protect exactly every three turns, and as the first move of that turn
-		if move.is_a?(PokeBattle_ProtectMove)
-			score = user.battle.commandPhasesThisRound == 0 ? (@battle.turnCount % 3 == 0 ? 99999 : 0) : 0
-		end
-		
-		# Use healing moves guarenteed if low on health and its not the first move of the turn
-		if move.is_a?(PokeBattle_HealingMove)
-			if (user.hp.to_f/user.totalhp.to_f) > 0.25 || user.battle.commandPhasesThisRound != 0
-				score = 0
-			else
-				score = 99999
-			end 
-		end
-		
-		# Guarantee certain moves
-		score = 99999 if PokeBattle_AI.triggerBossRequireMoveCode(move.function,move,user,target)
-		score = 99999 if PokeBattle_AI.triggerBossRequireMoveID(move.id,move,user,target)
-		score = 99999 if PokeBattle_AI.triggerBossSpeciesRequireMove(user.species,move,user,target)
-		
+
 		# Rejecting moves
 		@battle.messagesBlocked = true
+		
 		score = 0 if PokeBattle_AI.triggerBossRejectMoveCode(move.function,move,user,target)
 		score = 0 if PokeBattle_AI.triggerBossRejectMoveID(move.id,move,user,target)
 		score = 0 if PokeBattle_AI.triggerBossSpeciesRejectMove(user.species,move,user,target)
@@ -211,16 +87,10 @@ class PokeBattle_AI
 		end
 
 		if score > 0
-			# Try very hard not to attack targets which are protected
-			if !target.nil? && target.protectedAgainst?(user,move)
-				echoln("Scoring #{move.name} a 2 due to the target being protected this turn")
-				score = 2
-			end
-
 			# Try very hard not to use a move that would fail against the target
 			if !target.nil? && move.pbFailsAgainstTarget?(user,target)
 				echoln("Scoring #{move.name} a 1 due to being predicted to fail against the target")
-				score = 1
+				score = 0
 			end
 
 			# Never use a move that would fail outright
