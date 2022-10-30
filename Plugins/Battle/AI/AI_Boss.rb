@@ -52,4 +52,8 @@ class PokeBattle_AI_Boss
 	# An array of procs
 	# All of the procs are called when the turn starts
 	@@beginTurn = []
+
+	# An array of procs
+	# All of the procs are called at the beginning of the first round
+	@@beginBattle = []
 end
