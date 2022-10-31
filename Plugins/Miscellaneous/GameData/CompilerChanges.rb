@@ -440,9 +440,9 @@ module Compiler
           if !speciesData.abilities.concat(speciesData.hidden_abilities).include?(contents["Ability"].to_sym)
             echoln(_INTL("Ability {1} is not legal for the Avatar defined in PBS/avatars.txt section {2}.", contents["Ability"], avatar_species))
           end
-        when "Agression"
-          if value < 0 || value > MAX_BOSS_AGRESSION
-            raise _INTL("Agression value {1} is not legal for the Avatar defined in PBS/avatars.txt section {2}. Agression must be between 0 and {3} (inclusive)", value, avatar_species, MAX_BOSS_AGRESSION)
+        when "Aggression"
+          if value < 0 || value > MAX_BOSS_AGGRESSION
+            raise _INTL("Aggression value {1} is not legal for the Avatar defined in PBS/avatars.txt section {2}. Aggression must be between 0 and {3} (inclusive)", value, avatar_species, MAX_BOSS_AGGRESSION)
           end
 				end
 			end
@@ -465,7 +465,7 @@ module Compiler
 				:dmg_mult			      => contents["DMGMult"],
         :dmg_resist			    => contents["DMGResist"],
 				:health_bars	 		  => contents["HealthBars"],
-        :agression          => contents["Agression"],
+        :aggression         => contents["Aggression"],
 			}
 			avatar_number += 1
 			# Add trainer avatar's data to records
@@ -2157,7 +2157,7 @@ module Compiler
         f.write(sprintf("DMGMult = %s\r\n", avatar.dmg_mult)) if avatar.dmg_mult != 1.0
         f.write(sprintf("DMGResist = %s\r\n", avatar.dmg_resist)) if avatar.dmg_resist != 0.0
         f.write(sprintf("Form = %s\r\n", avatar.form)) if avatar.form != 0
-        f.write(sprintf("Agression = %s\r\n", avatar.aggression)) if avatar.aggression != DEFAULT_BOSS_AGRESSION
+        f.write(sprintf("Aggression = %s\r\n", avatar.aggression)) if avatar.aggression != DEFAULT_BOSS_AGGRESSION
       end
     }
     pbSetWindowText(nil)

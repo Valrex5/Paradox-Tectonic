@@ -39,6 +39,9 @@ class PokeBattle_AI_Boss
 	# Also implicitly means that they can only be chosen on the first turn of a round
 	@@wholeRound = []
 
+	# An array of moves that, when chosen, the aggro cursor used is the bigger more scary one
+	@@dangerMoves = []
+
 	# Moves that have an IFF proc condition, and also show a telegraphing warning
 	# to the player when the AI decides to use them
 	# A hash, where the key is a move ID and the value is a hash describing this set of special behaviour

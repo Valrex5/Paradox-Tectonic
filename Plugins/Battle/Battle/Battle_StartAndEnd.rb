@@ -390,7 +390,7 @@ class PokeBattle_Battle
         # Allow bosses to set various things about themselves before their turn
         @battlers.each do |b|
         next if !b || b.fainted || !b.boss
-          PokeBattle_AI.triggerBossBeginTurn(b.species,b)
+          # TODO trigger boss begin turn procs
         end
         
         @commandPhasesThisRound = 0

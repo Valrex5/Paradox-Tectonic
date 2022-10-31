@@ -306,6 +306,9 @@ class PokeBattle_AI_Electrode < PokeBattle_AI_Boss
 			battle.pbDisplayBossNarration(_INTL("#{turnsRemaining} turns remain!"))
 		end
 	})
+
+	@@dangerMoves.push(:EXPLOSION)
+	@@wholeRound.push(:EXPLOSION)
 end
 
 class PokeBattle_AI_Incineroar < PokeBattle_AI_Boss
@@ -361,4 +364,7 @@ class PokeBattle_AI_Wailord < PokeBattle_AI_Boss
 			_INTL("#{user.pbThis} is flying erratically. It looks unstable!")
 		}
 	})
+
+	@@wholeRound.push(:SELFDESTRUCT)
+	@@dangerMoves.push(:SELFDESTRUCT)
 end

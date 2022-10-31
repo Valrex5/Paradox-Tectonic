@@ -62,7 +62,8 @@ class PokeBattle_Battler
 		@empowered	= false
 		@primevalTimer	= 0
 		@extraMovesPerTurn	= 0
-		@indexesTargetedThisTurn	= []
+		@indicesTargetedLastRound	= []
+		@indicesTargetedThisRound	= []
 		@dmgMult = 1
 		@dmgResist = 0
 	end
@@ -217,7 +218,8 @@ class PokeBattle_Battler
 		@avatarPhase = 1
 		@primevalTimer		   = 0
 		@extraMovesPerTurn = 0
-		@indexesTargetedThisTurn = []
+		@indicesTargetedLastRound = []
+		@indicesTargetedThisRound = []
 	end
 
 	#=============================================================================

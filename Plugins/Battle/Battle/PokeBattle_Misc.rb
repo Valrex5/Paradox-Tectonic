@@ -115,6 +115,7 @@ class PokeBattle_Battle
         end
         b.assignMoveset(movesetToAssign)
         b.primevalTimer = 0
+        b.indicesTargetedLastRound = []
         @scene.pbRefresh
       end
 	  end

@@ -105,7 +105,7 @@ def setAvatarProperties(pkmn)
 
 	pkmn.forget_all_moves()
 	avatar_data.moves1.each do |move|
-		pkmn.learn_move(move)
+		pkmn.learn_move(move,true)
 	end
 	
 	pkmn.item = avatar_data.item
