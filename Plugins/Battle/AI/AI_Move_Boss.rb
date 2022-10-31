@@ -7,7 +7,7 @@ class PokeBattle_AI
         if user.firstTurnThisRound?
             bossAggro = GameData::Avatar.get_from_pokemon(user).aggression
             bossAggro += 2 if user.hp < user.totalhp
-            targetWeak = pbAIRandom(MAX_BOSS_AGGRESSION) < bossAggro
+            targetWeak = pbAIRandom(PokeBattle_AI_Boss::MAX_BOSS_AGGRESSION) < bossAggro
             if targetWeak
                 echoln("[BOSS AI] #{user.pbThis} (#{user.index}) will value targeting low health targets this turn")
             else

@@ -338,7 +338,7 @@ Moves1 = AQUAJET,BITE,PRIMEVALPOISONGAS
 Moves2 = POISONFANG,BRUTALSWING,PRIMEVALCROSSPOISON
 HPMult = 6.0
 Item = MUSCLEBAND
-Aggression = 4
+Aggression = 8
 #-------------------------------
 [WATCHOG]
 Ability = PARANOID
@@ -381,8 +381,8 @@ HPMult = 6.0
 #-------------------------------
 [VESPIQUEN]
 Ability = UNNERVE
-Moves1 = ATTACKORDER,BOREALWIND,PRIMEVALSPIKES
-Moves2 = RUMBLE,NOBLEROAR
+Moves1 = LUNGE,SKITTERSMACK,PRIMEVALSHOREUP
+Moves2 = MUDSHOT,AIRSLASH
 HPMult = 6.0
 #-------------------------------
 [AGRAVELER]
@@ -417,9 +417,10 @@ HPMult = 6.0
 #-------------------------------
 [BEARTIC]
 Ability = POISONTOUCH
-Moves1 = COLDSNOT,VENOMDRENCH,PRIMEVALGASTROACID
-Moves2 = VENOSHOCK
+Moves1 = COLDSNOT,VENOMDRENCH,PRIMEVALSPIKES
+Moves2 = VENOMDRENCH,BULLDOZE
 HPMult = 6.0
+Aggression = 0
 #-------------------------------
 [DONSTER]
 Ability = AGGRAVATE

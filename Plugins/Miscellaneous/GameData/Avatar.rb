@@ -1,6 +1,3 @@
-DEFAULT_BOSS_AGGRESSION = 2
-MAX_BOSS_AGGRESSION = 8
-
 module GameData
 	class Avatar
 		attr_reader :id
@@ -65,7 +62,7 @@ module GameData
 		  @hp_mult			= hash[:hp_mult] || 4.0
 		  @dmg_mult 		= hash[:dmg_mult] || 1
 		  @dmg_resist		= hash[:dmg_resist] || 0
-		  @aggression		= hash[:aggression] || DEFAULT_BOSS_AGGRESSION
+		  @aggression		= hash[:aggression] || PokeBattle_AI_Boss::DEFAULT_BOSS_AGGRESSION
 
 		  @num_phases = 1
 		  if @moves2.length > 0 && @moves2.sort != @moves1.sort

@@ -5,6 +5,9 @@ class Hash
 end
 
 class PokeBattle_AI_Boss
+	DEFAULT_BOSS_AGGRESSION = 2
+	MAX_BOSS_AGGRESSION = 8
+
 	# Always or never use a move (if possible)
 	# Arrays of moves
 	@@requiredMoves = []

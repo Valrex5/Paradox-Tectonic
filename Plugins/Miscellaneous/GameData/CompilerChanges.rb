@@ -441,8 +441,8 @@ module Compiler
             echoln(_INTL("Ability {1} is not legal for the Avatar defined in PBS/avatars.txt section {2}.", contents["Ability"], avatar_species))
           end
         when "Aggression"
-          if value < 0 || value > MAX_BOSS_AGGRESSION
-            raise _INTL("Aggression value {1} is not legal for the Avatar defined in PBS/avatars.txt section {2}. Aggression must be between 0 and {3} (inclusive)", value, avatar_species, MAX_BOSS_AGGRESSION)
+          if value < 0 || value > PokeBattle_AI_Boss::MAX_BOSS_AGGRESSION
+            raise _INTL("Aggression value {1} is not legal for the Avatar defined in PBS/avatars.txt section {2}. Aggression must be between 0 and {3} (inclusive)", value, avatar_species, PokeBattle_AI_Boss::MAX_BOSS_AGGRESSION)
           end
 				end
 			end
@@ -2157,7 +2157,7 @@ module Compiler
         f.write(sprintf("DMGMult = %s\r\n", avatar.dmg_mult)) if avatar.dmg_mult != 1.0
         f.write(sprintf("DMGResist = %s\r\n", avatar.dmg_resist)) if avatar.dmg_resist != 0.0
         f.write(sprintf("Form = %s\r\n", avatar.form)) if avatar.form != 0
-        f.write(sprintf("Aggression = %s\r\n", avatar.aggression)) if avatar.aggression != DEFAULT_BOSS_AGGRESSION
+        f.write(sprintf("Aggression = %s\r\n", avatar.aggression)) if avatar.aggression != PokeBattle_AI_Boss::DEFAULT_BOSS_AGGRESSION
       end
     }
     pbSetWindowText(nil)
