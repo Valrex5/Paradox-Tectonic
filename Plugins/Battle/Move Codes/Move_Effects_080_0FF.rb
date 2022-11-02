@@ -1984,7 +1984,7 @@ class PokeBattle_Move_0C4 < PokeBattle_TwoTurnMove
   def pbIsChargingTurn?(user)
     ret = super
     if !user.effectActive?(:TwoTurnAttack)
-      if [:Sun, :HarshSun].include?(@battle.pbWeather)
+      if @battle.sunny?
         @powerHerb = false
         @chargingTurn = true
         @damagingTurn = true
@@ -1999,7 +1999,7 @@ class PokeBattle_Move_0C4 < PokeBattle_TwoTurnMove
   end
 
   def getScore(score,user,target,skill=100)
-    score += 50 if [:Sun, :HarshSun].include?(@battle.pbWeather)
+    score += 50 if @battle.sunny?
     super
   end
 end
@@ -2458,13 +2458,10 @@ end
 #===============================================================================
 class PokeBattle_Move_0D8 < PokeBattle_HealingMove
   def healRatio(user)
-    case @battle.pbWeather
-    when :Sun, :HarshSun
+    if @battle.sunny?
       return 2.0/3.0
-    when :None, :StrongWinds
-      return 1.0/2.0
     else
-      return 1.0/4.0
+      return 1.0/3.0
     end
   end
 end

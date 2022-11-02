@@ -353,4 +353,12 @@ class PokeBattle_Battle
       end
     end
   end
+
+  def sunny?
+    return [:Sun, :HarshSun].include?(pbWeather)
+  end
+
+  def rainy?
+    return [:Rain, :HeavyRain].include?(pbWeather)
+  end
 end
