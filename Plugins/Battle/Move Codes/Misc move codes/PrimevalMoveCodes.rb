@@ -38,8 +38,7 @@ class PokeBattle_Move_601 < PokeBattle_Move_0FF
 	
 	def pbEffectGeneral(user)
 		super
-		user.pbRaiseStatStage(:ATTACK,1,user)
-		user.pbRaiseStatStage(:SPECIAL_ATTACK,1,user)
+		user.pbRaiseMultipleStatStages([:ATTACK,1,:SPECIAL_ATTACK,1],user,self)
 		transformType(user,:FIRE)
 	end
 end
@@ -211,14 +210,7 @@ class PokeBattle_Move_614 < PokeBattle_Move_0B7
 	
 	def pbEffectAgainstTarget(user,target)
 		target.applyEffect(:Torment)
-		showAnim = true
-		if target.pbCanLowerStatStage?(:ATTACK,user,self,true)
-			target.pbLowerStatStage(:ATTACK,1,user,showAnim)
-			showAnim = false
-		end
-		if target.pbCanLowerStatStage?(:SPECIAL_ATTACK,user,self,true)
-			target.pbLowerStatStage(:SPECIAL_ATTACK,1,user,showAnim) 
-		end
+		target.pbLowerMultipleStatStages([:ATTACK,1,:SPECIAL_ATTACK,1],user,self)
 	 end
 end
 
@@ -335,7 +327,7 @@ class PokeBattle_Move_623 < PokeBattle_Move_173
 	
 	def pbEffectGeneral(user)
 		super
-		user.pbRaiseStatStage(:ACCURACY,3,user)
+		user.pbRaiseStatStage(:ACCURACY,3,user) if user.pbCanRaiseStatStage?(:ACCURACY,user,self)
 		transformType(user,:PSYCHIC)
 	end
 end
@@ -348,8 +340,7 @@ class PokeBattle_Move_624 < PokeBattle_Move_156
 		super
 		
 		@battle.eachSameSideBattler(user) do |b|
-			b.pbRaiseStatStage(:DEFENSE,1,user)
-			b.pbRaiseStatStage(:SPECIAL_DEFENSE,1,user)
+			b.pbRaiseMultipleStatStages([:DEFENSE,1,:SPECIAL_DEFENSE,1],user,self)
 		end
 
 		transformType(user,:FAIRY)

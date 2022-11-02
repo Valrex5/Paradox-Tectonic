@@ -351,7 +351,7 @@ class PokeBattle_Battler
 	end
 
 	def firstTurnThisRound?
-		return @battle.commandPhasesThisRound.zero?
+		return @battle.firstTurnThisRound?
 	end
 
 	# Turn check starts at 1

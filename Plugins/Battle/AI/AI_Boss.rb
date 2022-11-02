@@ -53,7 +53,7 @@ class PokeBattle_AI_Boss
 		# The inner hash must also have a :warning entry whose value is a proc which must return the string
 		# of the warning that is to be shown to the player
 	# A move given here implicitly means it can only be chosen on the first turn of a round
-	@@warnedIFFMove = {} 
+	@@warnedIFFMove = {}
 
 	# An array of procs
 	# All of the procs are called when the turn starts
@@ -62,4 +62,121 @@ class PokeBattle_AI_Boss
 	# An array of procs
 	# All of the procs are called at the beginning of the first round
 	@@beginBattle = []
+
+	def PokeBattle_AI_Boss.from_boss_battler(battler)
+		validate battler => PokeBattle_Battler
+		avatarData = GameData::Avatar.get_from_pokemon(battler.pokemon)
+		id = avatarData.id.to_s.downcase
+		id = id.capitalize
+		className = "PokeBattle_AI_#{id}"
+		if Object.const_defined?(className)
+		  return Object.const_get(className).new()
+		end
+		echoln("[BOSS AI] Unable to find AI class for avatar with id #{id}")
+		return PokeBattle_AI_Boss.new()
+	end
+
+	def startBattle(user, battle)
+		@@beginBattle.each do |beginBattleProc|
+			beginBattleProc.call(user, battle)
+		end
+	end
+
+	def startTurn(user, battle, turnCount)
+		@@beginTurn.each do |beginTurnProcs|
+			beginTurnProcs.call(user, battle, turnCount)
+		end
+	end
+
+	def rejectMoveForTiming?(move, user, battle)
+		if user.firstTurnThisRound?
+			return true if @@nonFirstTurnOnly.include?(move.id)
+		else
+			return true if @@firstTurnOnly.include?(move.id)
+			return true if @@warnedIFFMove.has_key?(move.id)
+		end
+		unless user.lastTurnThisRound?
+			return true if @@lastTurnOnly.include?(move.id)
+		end
+
+		return false
+	end
+
+	def rejectMove?(move, user, target, battle)
+		return true if rejectMoveForTiming?(move, user, battle)
+		return true if @@rejectedMoves.include?(move.id)
+		#TODO
+	end
+	
+	def requireMove?(move, user, target, battle)
+		return true if @@requiredMoves.include?(move.id)
+
+		if @@requireMoveIf.has_key?(move.id) && @@requireMoveIf[move.id].call(move, user, target, battle)
+			return true
+		end
+
+		@@requireMovesIf.each do |requireProc|
+			return true if requireProc.call(move, user, target, battle)
+		end
+
+		return true if evaluateComboConditions(move, user, target, battle) > 0
+
+		return false
+	end
+
+	def rejectMove?(move, user, target, battle)
+		return true if @@rejectedMoves.include?(move.id)
+
+		if @@rejectMoveIf.has_key?(move.id) && @@rejectMoveIf[move.id].call(move, user, target, battle)
+			return true
+		end
+
+		@@rejectMovesIf.each do |rejectProc|
+			return true if rejectProc.call(move, user, target, battle)
+		end
+
+		return true if evaluateComboConditions(move, user, target, battle) < 0
+		
+		return false
+	end
+
+	# Returns 1 if required, -1 is rejected, 0 if no opinion
+	def evaluateComboConditions(move, user, target, battle)
+		if @@warnedIFFMove.has_key?(move.id)
+			return @@warnedIFFMove[move.id][:condition].call(move, user, target, battle) ? 1 : -1
+		end
+
+		if @@useMoveIFF.has_key?(move.id)
+			return @@useMoveIFF[move.id].call(move, user, target, battle) ? 1 : -1
+		end
+
+		@@useMovesIFF.each do |iffCondition|
+			evaluation = iffCondition.call(move,user,target,battle)
+			return evaluation if evaluation != 0
+		end
+
+		return 0
+	end
+
+	def getFallbackMove
+		return @@fallback.sample
+	end
+
+	def decidedOnMove(move,user,targets,battle)
+		if @@warnedIFFMove.has_key?(move.id)
+			@@warnedIFFMove[move.id][:warning].call(move,user,targets,battle)
+		end
+
+		if @@decidedOnMove.has_key?(move.id)
+			@@decidedOnMove[move.id].call(move,user,targets,battle)
+		end
+	end
+
+	def takesUpWholeTurn?(move,user,targets,battle)
+		return @@wholeRound.include?(move.id)
+	end
+
+	def moveIsDangerous?(move,user,targets,battle)
+		return @@dangerMoves.include?(move.id)
+	end
 end

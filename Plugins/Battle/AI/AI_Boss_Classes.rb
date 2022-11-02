@@ -113,7 +113,7 @@ class PokeBattle_AI_Kyogre < PokeBattle_AI_Boss
 end
 
 class PokeBattle_AI_Rayquaza < PokeBattle_AI_Boss
-	@@beginBattle.push( proc { |move, user, target, battle|
+	@@beginBattle.push( proc { |user, battle|
 		user.battle.pbMegaEvolve(user.index)
 	})
 end
@@ -147,8 +147,7 @@ class PokeBattle_AI_Deoxys < PokeBattle_AI_Boss
 	DEFENSE_FORM_MOVESET = [:COSMICPOWER,:RECOVER]
 	SPEED_FORM_MOVESET = [:ZENHEADBUTT,:ELECTROBALL]
 
-	@@beginTurn.push( proc { |move, user, target, battle|
-		turnCount = battle.turnCount
+	@@beginTurn.push( proc { |user, battle, turnCount|
 		if turnCount != 0
             if user.hp < user.totalhp * 0.25
                 if user.form != 1
@@ -177,8 +176,7 @@ class PokeBattle_AI_Zygarde < PokeBattle_AI_Boss
 	FIFTY_PERCENT_MOVESET = [:COREENFORCER,:DISCHARGE,:FLASHCANNON,:FLAMETHROWER]
 	ONE_HUNDRED_PERCENT_MOVESET = [:THOUSANDARROWS,:THOUSANDWAVES,:TORNADO]
 
-	@@beginTurn.push( proc { |move, user, target, battle|
-		turnCount = battle.turnCount
+	@@beginTurn.push( proc { |user, battle, turnCount|
 		if turnCount == 0
 		  battle.pbDisplayBossNarration(_INTL("{1} is at 10 percent cell strength!",user.pbThis))
 		elsif turnCount <= 9
@@ -219,7 +217,7 @@ class PokeBattle_AI_Genesect < PokeBattle_AI_Boss
 
 	@@wholeRound.push(:FELLSTINGER)
 
-	@@beginBattle.push( proc { |move, user, target, battle|
+	@@beginBattle.push( proc { |user, battle|
 		battle.pbDisplayBossNarration(_INTL("The avatar of Genesect is analyzing your whole team for weaknesses..."))
 		weakToElectric 	= 0
 		weakToFire 		= 0
@@ -259,8 +257,8 @@ class PokeBattle_AI_Genesect < PokeBattle_AI_Boss
 end
 
 class PokeBattle_AI_Cresselia < PokeBattle_AI_Boss
-	@@beginTurn.push( proc { |move, user, target, battle|
-		if battle.turnCount == 4
+	@@beginTurn.push( proc { |user, battle, turnCount|
+		if turnCount == 4
 			battle.pbDisplayBossNarration(_INTL("A Shadow creeps into the dream..."))
 			battle.addAvatarBattler(:DARKRAI,user.level)
 		end
@@ -291,15 +289,11 @@ class PokeBattle_AI_Electrode < PokeBattle_AI_Boss
 			next user.turnCount == ELECTRODE_TURNS_TO_EXPLODE
 		},
 		:warning => proc { |move, user, targets, battle|
-			_INTL("#{user.pbThis} notices one of your Pokémon's flammable item!")
+			_INTL("#{user.pbThis} is fully charged. Its about to explode!")
 		}
 	})
 
-	@@decidedOnMove.add(:EXPLOSION, proc { |move, user, targets, battle|
-		_INTL("#{user.pbThis} is fully charged. Its about to explode!")
-	})
-
-	@@beginTurn.push( proc { |move, user, target, battle|
+	@@beginTurn.push( proc { |user, battle, turnCount|
 		turnsRemaining = ELECTRODE_TURNS_TO_EXPLODE - user.turnCount
 		if turnsRemaining > 0
 			battle.pbDisplayBossNarration(_INTL("#{user.pbThis} is charging up."))

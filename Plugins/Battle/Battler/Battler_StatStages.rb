@@ -426,6 +426,34 @@ class PokeBattle_Battler
 		end
 	end
 
+	# Pass in array of form
+	# [statToRaise, stagesToRaise, statToRaise2, stagesToRaise2, ...]
+	def pbRaiseMultipleStatStages(statArray, user, move = nil, showFailMsg = false, ignoreContrary = false, showAnim = true)
+		raisedAnyStages = false
+		for i in 0...statArray.length/2
+			next if !pbCanRaiseStatStage?(statArray[i*2],user,move,showFailMsg,ignoreContrary)
+			if pbRaiseStatStage(statArray[i*2],statArray[i*2+1],user,showAnim,ignoreContrary)
+				showAnim = false
+				raisedAnyStages = true
+			end
+		end
+		return raisedAnyStages
+	end
+
+	# Pass in array of form
+	# [statToRaise, stagesToRaise, statToRaise2, stagesToRaise2, ...]
+	def pbLowerMultipleStatStages(statArray, user, move = nil, showFailMsg = false, ignoreContrary = false, showAnim = true)
+		loweredAnyStages = false
+		for i in 0...statArray.length/2
+			next if !pbCanLowerStatStage?(statArray[i*2],user,move,showFailMsg,ignoreContrary)
+			if pbLowerStatStage(statArray[i*2],statArray[i*2+1],user,showAnim,ignoreContrary)
+				showAnim = false
+				loweredAnyStages = true
+			end
+		end
+		return loweredAnyStages
+	end
+
 	#=============================================================================
 	# Reset stat stages
 	#=============================================================================

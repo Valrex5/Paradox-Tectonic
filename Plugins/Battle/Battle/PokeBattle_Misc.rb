@@ -182,4 +182,8 @@ class PokeBattle_Battle
     @nextPickupUse += 1
     return @nextPickupUse
   end
+
+  def firstTurnThisRound?
+    return commandPhasesThisRound.zero?
+  end
 end

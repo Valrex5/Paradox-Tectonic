@@ -11,7 +11,8 @@ class PokeBattle_Battler
 	# The Pokémon and its properties
 	attr_reader   :pokemon
 	attr_reader :fainted # Boolean to mark whether self has fainted properly
-	attr_reader :totalhp, :dummy, :form, :hp, :status, :statusCount, :bossStatus, :bossStatusCount 
+	attr_reader :totalhp, :dummy, :form, :hp, :status, :statusCount, :bossStatus, :bossStatusCount
+	attr_reader :bossAI 
 
 	#=============================================================================
 	# Complex accessors
