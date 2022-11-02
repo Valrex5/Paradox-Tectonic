@@ -119,13 +119,13 @@ class PokeBattle_AI
         end
 
         # Trigger things that happen after the boss has made a choice
-        choice = @battle.choices[idxBattler]
-        move = choice[2]
-        target = choice[3]
-        bossMovesChosen(user,move,target,bossAI)
+        bossMovesChosen(user,@battle.choices[idxBattler],bossAI)
     end
 
-    def bossMovesChosen(user, move, target, bossAI)
+    def bossMovesChosen(user, choice, bossAI)
+        move = choice[2]
+        target = choice[3]
+
         # Log the result
         user.lastMoveChosen = move.id
         PBDebug.log("[BOSS AI] #{user.pbThis} (#{user.index}) will use #{move.name} with target #{target}")
@@ -142,15 +142,15 @@ class PokeBattle_AI
             empoweredAttack = true
         else
             user.resetExtraMovesPerTurn
-            bossAI.decidedOnMove(move,user,targets,battle)
+            bossAI.decidedOnMove(move,user,targets,@battle)
         end
 
-        if empoweredAttack || bossAI.moveIsDangerous?(move,user,targets,battle)
+        if empoweredAttack || bossAI.moveIsDangerous?(move,user,targets,@battle)
             extraAggro = true
             user.primevalTimer = 0
         end
 
-        if empoweredAttack || bossAI.takesUpWholeTurn?(move,user,targets,battle)
+        if empoweredAttack || bossAI.takesUpWholeTurn?(move,user,targets,@battle)
             user.extraMovesPerTurn = 0
         end
 
@@ -286,7 +286,7 @@ class PokeBattle_AI
 
         if bossAI.requireMove?(move, user, target, @battle)
             echoln("[BOSS AI] #{user.pbThis} (#{user.index}) custom AI requires move #{move.name} be used")
-            return 0
+            return 99999
         end
 
 		# Rejecting moves based on failure
