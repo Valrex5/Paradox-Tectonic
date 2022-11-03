@@ -575,3 +575,31 @@ class PokeBattle_Move_648 < PokeBattle_Move_17C
 	
 	def turnsBetweenUses(); return 3; end
 end
+
+########################################################
+### Specific avatar only moves
+########################################################
+
+#===============================================================================
+# Targets struck lose their flinch immunity. Only usable by the Avatar of Rayquaza (Stratosphere Scream)
+#===============================================================================
+class PokeBattle_Move_700 < PokeBattle_StatDownMove
+    def ignoresSubstitute?(user); return true; end
+  
+    def pbMoveFailed?(user,targets)
+      if !user.countsAs?(:RAYQUAZA) || !user.boss?
+        @battle.pbDisplay(_INTL("But {1} can't use the move!",user.pbThis(true)))
+        return true
+      end
+      return false
+    end
+
+	def pbEffectAfterAllHits(user,target)
+		return if target.fainted?
+		return if target.damageState.unaffected
+		if target.effectActive?(:FlinchedAlready)
+			target.disableEffect(:FlinchedAlready)
+			@battle.pbDisplay(_INTL("#{target.pbThis} is newly afraid. It can be flinched again!"))
+		end
+	end
+end

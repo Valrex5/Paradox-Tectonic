@@ -97,7 +97,7 @@ class PokeBattle_AI_Groudon < PokeBattle_AI_Boss
 
 		@warnedIFFMove.add(:PRECIPICEBLADES, {
 			:condition => proc { |move, user, target, battle|
-				next turnCount > 0 && turnCount % 3 == 0
+				next turnCount > 0 && turnCount % 4 == 0
 			},
 			:warning => proc { |move, user, targets, battle|
 				_INTL("#{user.pbThis} is gathering energy for a big attack!")
@@ -122,7 +122,7 @@ class PokeBattle_AI_Kyogre < PokeBattle_AI_Boss
 
 		@warnedIFFMove.add(:ORIGINPULSE, {
 			:condition => proc { |move, user, target, battle|
-				next turnCount > 0 && turnCount % 3 == 0
+				next turnCount > 0 && turnCount % 4 == 0
 			},
 			:warning => proc { |move, user, targets, battle|
 				_INTL("#{user.pbThis} is gathering energy for a big attack!")
@@ -137,6 +137,32 @@ class PokeBattle_AI_Rayquaza < PokeBattle_AI_Boss
 		@beginBattle.push( proc { |user, battle|
 			user.battle.pbMegaEvolve(user.index)
 		})
+
+		@wholeRound.concat([:DRAGONASCENT,:STRATOSPHERESCREAM])
+
+		@warnedIFFMove.add(:DRAGONASCENT, {
+			:condition => proc { |move, user, target, battle|
+				next battle.turnCount == 0
+			},
+			:warning => proc { |move, user, targets, battle|
+				_INTL("#{user.pbThis} looks to the Ozone Layer above!")
+			}
+		})
+
+		@warnedIFFMove.add(:STRATOSPHERESCREAM, {
+			:condition => proc { |move, user, target, battle|
+				next battle.turnCount > 0 && battle.turnCount % 4 == 0
+			},
+			:warning => proc { |move, user, targets, battle|
+				_INTL("#{user.pbThis}'s rage is at at its peak!")
+			}
+		})
+		
+		PokeBattle_AI::BossSpeciesUseMoveIDIfAndOnlyIf.add([:RAYQUAZA,:DRAGONASCENT],
+			proc { |speciesAndMoveCode,user,target,move|
+				next user.battle.turnCount > 0 && user.battle.turnCount % 3 == 0
+			}
+		)
 	end
 end
 

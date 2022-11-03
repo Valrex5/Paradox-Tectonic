@@ -233,6 +233,14 @@ HealthBars = 3
 Item = REDORB
 DMGResist = 0.3
 #-------------------------------
+[RAYQUAZA]
+Ability = AIRLOCK
+Moves1 = DRAGONASCENT,HYPERVOICE,TORNADO,METEORMASH,AIRSLASH,STRATOSPHERESCREAM
+HPMult = 10.0
+HealthBars = 3
+DMGResist = 0.3
+Aggression = 4
+#-------------------------------
 [MAGNEZONE]
 Ability = NOGUARD
 Moves1 = FLASHCANNON,LOCKON,ZAPCANNON
