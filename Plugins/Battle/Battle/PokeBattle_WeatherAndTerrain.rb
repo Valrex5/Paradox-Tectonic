@@ -156,7 +156,7 @@ class PokeBattle_Battle
       pbDisplay(_INTL("All Pokemon are healed each turn!"))
     when :Misty
       pbDisplay(_INTL("Fae mist swirled about the battlefield!"))
-      pbDisplay(_INTL("Pokemon cannot be burned or poisoned!"))
+      pbDisplay(_INTL("Pokemon cannot be burned, frostbitten, or poisoned!"))
     when :Psychic
       pbDisplay(_INTL("The battlefield got weird!"))
       pbDisplay(_INTL("Priority moves are prevented!"))
