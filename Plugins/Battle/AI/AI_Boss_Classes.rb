@@ -173,12 +173,12 @@ class PokeBattle_AI_Jirachi < PokeBattle_AI_Boss
 	def initialize(user,battle)
 		super
 		@useMoveIFF.add(:DOOMDESIRE, proc { |move, user, target, battle|
-			next user.battle.turnCount % 3 == 0 && user.lastTurnThisRound?
+			next battle.turnCount % 3 == 0 && user.lastTurnThisRound?
 		})
 
 		@warnedIFFMove.add(:LIFEDEW, {
 			:condition => proc { |move, user, target, battle|
-				next user.battle.turnCount % 3 == 1 && user.hp < user.totalhp/2
+				next battle.turnCount % 3 == 1 && user.hp < user.totalhp/2
 			},
 			:warning => proc { |move, user, targets, battle|
 				_INTL("#{user.pbThis} takes a passive stance, inspecting its wounds.")
@@ -191,7 +191,7 @@ class PokeBattle_AI_Xerneas < PokeBattle_AI_Boss
 	def initialize(user,battle)
 		super
 		@useMoveIFF.add(:GEOMANCY, proc { |move, user, target, battle|
-			next user.turnCount == 0 && user.lastTurnThisRound?
+			next battle.turnCount == 0 && user.lastTurnThisRound?
 		})
 	end
 end
@@ -363,7 +363,7 @@ class PokeBattle_AI_Electrode < PokeBattle_AI_Boss
 		super
 		@warnedIFFMove.add(:EXPLOSION, {
 			:condition => proc { |move, user, target, battle|
-				next user.turnCount == TURNS_TO_EXPLODE
+				next battle.turnCount >= TURNS_TO_EXPLODE
 			},
 			:warning => proc { |move, user, targets, battle|
 				_INTL("#{user.pbThis} is fully charged. Its about to explode!")
@@ -371,7 +371,7 @@ class PokeBattle_AI_Electrode < PokeBattle_AI_Boss
 		})
 
 		@beginTurn.push( proc { |user, battle, turnCount|
-			turnsRemaining = TURNS_TO_EXPLODE - user.turnCount
+			turnsRemaining = TURNS_TO_EXPLODE - battle.turnCount
 			if turnsRemaining > 0
 				battle.pbDisplayBossNarration(_INTL("#{user.pbThis} is charging up."))
 				battle.pbDisplayBossNarration(_INTL("#{turnsRemaining} turns remain!"))
