@@ -363,7 +363,7 @@ class PokeBattle_AI_Electrode < PokeBattle_AI_Boss
 		super
 		@warnedIFFMove.add(:EXPLOSION, {
 			:condition => proc { |move, user, target, battle|
-				next user.turnCount == ELECTRODE_TURNS_TO_EXPLODE
+				next user.turnCount == TURNS_TO_EXPLODE
 			},
 			:warning => proc { |move, user, targets, battle|
 				_INTL("#{user.pbThis} is fully charged. Its about to explode!")
@@ -371,7 +371,7 @@ class PokeBattle_AI_Electrode < PokeBattle_AI_Boss
 		})
 
 		@beginTurn.push( proc { |user, battle, turnCount|
-			turnsRemaining = ELECTRODE_TURNS_TO_EXPLODE - user.turnCount
+			turnsRemaining = TURNS_TO_EXPLODE - user.turnCount
 			if turnsRemaining > 0
 				battle.pbDisplayBossNarration(_INTL("#{user.pbThis} is charging up."))
 				battle.pbDisplayBossNarration(_INTL("#{turnsRemaining} turns remain!"))
