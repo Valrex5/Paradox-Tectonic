@@ -470,11 +470,11 @@ class PokeBattle_TargetMultiStatDownMove < PokeBattle_Move
 
   def pbEffectAgainstTarget(user,target)
     return if damagingMove?
-    user.pbLowerMultipleStatStages(@statup,user,self)
+    user.pbLowerMultipleStatStages(@statDown,user,self)
   end
 
   def pbAdditionalEffect(user,target)
-    user.pbLowerMultipleStatStages(@statup,user,self)
+    user.pbLowerMultipleStatStages(@statDown,user,self)
   end
 
   def getScore(score,user,target,skill=100)
