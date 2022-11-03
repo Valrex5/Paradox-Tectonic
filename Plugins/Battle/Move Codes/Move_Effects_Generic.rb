@@ -318,11 +318,11 @@ class PokeBattle_MultiStatUpMove < PokeBattle_Move
 
   def pbEffectGeneral(user)
     return if damagingMove?
-    user.pbRaiseMultipleStatStages(@statUp,user,move)
+    user.pbRaiseMultipleStatStages(@statUp,user,self)
   end
 
   def pbAdditionalEffect(user,target)
-    user.pbRaiseMultipleStatStages(@statUp,user,move)
+    user.pbRaiseMultipleStatStages(@statUp,user,self)
   end
 
   def getScore(score,user,target,skill=100)
@@ -470,11 +470,11 @@ class PokeBattle_TargetMultiStatDownMove < PokeBattle_Move
 
   def pbEffectAgainstTarget(user,target)
     return if damagingMove?
-    user.pbLowerMultipleStatStages(@statup,user,move)
+    user.pbLowerMultipleStatStages(@statup,user,self)
   end
 
   def pbAdditionalEffect(user,target)
-    user.pbLowerMultipleStatStages(@statup,user,move)
+    user.pbLowerMultipleStatStages(@statup,user,self)
   end
 
   def getScore(score,user,target,skill=100)
@@ -1051,12 +1051,12 @@ class PokeBattle_TargetMultiStatUpMove < PokeBattle_Move
 
   def pbEffectAgainstTarget(user,target)
     return if damagingMove?
-    target.pbRaiseMultipleStatStages(@statUp,user,move)
+    target.pbRaiseMultipleStatStages(@statUp,user,self)
   end
 
   def pbAdditionalEffect(user,target)
     return if target.damageState.substitute
-    target.pbRaiseMultipleStatStages(@statUp,user,move)
+    target.pbRaiseMultipleStatStages(@statUp,user,self)
   end
   
   def getScore(score,user,target,skill=100)
@@ -1292,8 +1292,8 @@ class PokeBattle_StatUpDownMove < PokeBattle_Move
 	end
   
 	def pbEffectGeneral(user)
-	  user.pLowerMultipleStages(@statDown,user,move)
-	  user.pbRaiseMultipleStatStages(@statUp,user,move)
+	  user.pLowerMultipleStages(@statDown,user,self)
+	  user.pbRaiseMultipleStatStages(@statUp,user,self)
 	end
   
 	def getScore(score,user,target,skill=100)
