@@ -138,8 +138,7 @@ class PokeBattle_Move_609 < PokeBattle_Move_02C
 	 include EmpoweredMove
 
 	def pbEffectGeneral(user)
-		GameData::Stat.each_battle { |s| user.stages[s.id] = 0 if user.stages[s.id] < 0 }
-		@battle.pbDisplay(_INTL("{1}'s negative stat changes were eliminated!", user.pbThis))
+		user.pbRaiseStatStage(:ACCURACY,3,user) if user.pbCanRaiseStatStage?(:ACCURACY,user,self)
 		super
 		transformType(user,:PSYCHIC)
 	end
@@ -327,7 +326,8 @@ class PokeBattle_Move_623 < PokeBattle_Move_173
 	
 	def pbEffectGeneral(user)
 		super
-		user.pbRaiseStatStage(:ACCURACY,3,user) if user.pbCanRaiseStatStage?(:ACCURACY,user,self)
+		GameData::Stat.each_battle { |s| user.stages[s.id] = 0 if user.stages[s.id] < 0 }
+		@battle.pbDisplay(_INTL("{1}'s negative stat changes were eliminated!", user.pbThis))
 		transformType(user,:PSYCHIC)
 	end
 end
