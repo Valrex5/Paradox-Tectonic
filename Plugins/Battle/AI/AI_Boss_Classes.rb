@@ -435,10 +435,18 @@ class PokeBattle_AI_Magnezone < PokeBattle_AI_Boss
 	end
 end
 
-class PokeBattle_AI_PorygonZ < PokeBattle_AI_Boss
+class PokeBattle_AI_Porygonz < PokeBattle_AI_Boss
 	def initialize(user,battle)
 		super
 		@firstTurnOnly.concat([:CONVERSION,:CONVERSION2])
+	end
+end
+
+class PokeBattle_AI_Greedent < PokeBattle_AI_Boss
+	def initialize(user,battle)
+		super
+		@firstTurnOnly.concat([:SWALLOT,:SPITUP])
+		@fallback.push(:STOCKPILE)
 	end
 end
 

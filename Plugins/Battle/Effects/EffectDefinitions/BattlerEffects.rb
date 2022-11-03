@@ -822,11 +822,11 @@ GameData::BattleEffect.register_effect(:Battler,{
 		statArray = []
 		if battler.effectActive?(:StockpileDef)
 			statArray.push(:DEFENSE)
-			statArray.push(:battler.countEffect(:StockpileDef))
+			statArray.push(battler.countEffect(:StockpileDef))
 		end
 		if battler.effectActive?(:StockpileSpDef)
 			statArray.push(:SPECIAL_DEFENSE)
-			statArray.push(:battler.countEffect(:StockpileSpDef))
+			statArray.push(battler.countEffect(:StockpileSpDef))
 		end
 
 		battler.pbLowerMultipleStatStages(statArray, battler)
