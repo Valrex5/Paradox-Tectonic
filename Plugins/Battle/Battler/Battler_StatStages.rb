@@ -97,6 +97,7 @@ class PokeBattle_Battler
 
 	def pbRaiseStatStageByAbility(stat, increment, user, splashAnim = true)
 		return false if fainted?
+		return false if statStageAtMax?(stat)
 		ret = false
 		@battle.pbShowAbilitySplash(user) if splashAnim
 		if pbCanRaiseStatStage?(stat, user, nil, true)
@@ -274,6 +275,8 @@ class PokeBattle_Battler
 	end
 
 	def pbLowerStatStageByAbility(stat, increment, user, splashAnim = true, checkContact = false)
+		return false if fainted?
+		return false if statStageAtMin?(stat)
 		ret = false
 		@battle.pbShowAbilitySplash(user) if splashAnim
 		if pbCanLowerStatStage?(stat, user, nil, true) &&

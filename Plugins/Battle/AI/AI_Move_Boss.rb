@@ -44,7 +44,9 @@ class PokeBattle_AI
             empoweredDamagingChoices, choices = choices.partition {|choice| user.moves[choice[0]].empoweredMove?}
             guaranteedChoices, regularChoices = choices.partition {|choice| choice[1] >= 5000}
 
-            echoln("[BOSS AI] #{user.pbThis} (#{user.index}) has more than one guarenteed choices! THIS IS BAD")
+            if guaranteedChoices.length > 1
+                echoln("[BOSS AI] #{user.pbThis} (#{user.index}) has more than one guarenteed choices! THIS IS BAD")
+            end
 
             empoweredDamagingChoices.reject!{|choice| user.primevalTimer < user.moves[choice[0]].turnsBetweenUses}
 
@@ -60,7 +62,8 @@ class PokeBattle_AI
                         targetingSize = 2 if targetingSize > 2
                         regularChoices.reject!{ |regular_choice|
                             numTargets = user.moves[regular_choice[0]].pbTarget(user).num_targets
-                            next numTargets != 0 && numTargets != targetingSize
+                            next false if numTargets == 0
+                            next numTargets != targetingSize
                         }
                         PBDebug.log("[BOSS AI] #{user.pbThis} (#{user.index}) will not use moves with a number of targets other than #{targetingSize}. It's left with the following:")
                         logMoveChoices(user,regularChoices)
