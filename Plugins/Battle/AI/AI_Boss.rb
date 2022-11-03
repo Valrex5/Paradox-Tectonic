@@ -154,7 +154,7 @@ class PokeBattle_AI_Boss
 
 		@useMovesIFF.each do |iffCondition|
 			evaluation = iffCondition.call(move,user,target,battle)
-			return evaluation if evaluation != 0
+			return evaluation if evaluation && evaluation != 0
 		end
 
 		return 0
@@ -166,7 +166,8 @@ class PokeBattle_AI_Boss
 
 	def decidedOnMove(move,user,targets,battle)
 		if @warnedIFFMove.has_key?(move.id)
-			@warnedIFFMove[move.id][:warning].call(move,user,targets,battle)
+			warningMessage = @warnedIFFMove[move.id][:warning].call(move,user,targets,battle)
+			@battle.pbDisplayBossNarration(warningMessage) if warningMessage
 		end
 
 		if @decidedOnMove.has_key?(move.id)

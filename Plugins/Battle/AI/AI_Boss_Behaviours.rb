@@ -11,7 +11,13 @@ class PokeBattle_AI_Boss
 
     def spaceOutProtecting
         @useMovesIFF.push(proc { |move, user, battle|
-            next move.is_a?(PokeBattle_ProtectMove) && @battle.turnCount % 3 && user.firstTurnThisRound?
+            if move.is_a?(PokeBattle_ProtectMove)
+                if @battle.turnCount % 3 == 0 && user.firstTurnThisRound?
+                    next 1
+                else
+                    next -1
+                end
+            end
         })
     end
 end
