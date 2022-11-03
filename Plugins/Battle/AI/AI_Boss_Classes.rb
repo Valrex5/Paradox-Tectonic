@@ -445,7 +445,7 @@ end
 class PokeBattle_AI_Greedent < PokeBattle_AI_Boss
 	def initialize(user,battle)
 		super
-		@firstTurnOnly.concat([:SWALLOT,:SPITUP])
+		@firstTurnOnly.concat([:SWALLOW,:SPITUP])
 		@fallback.push(:STOCKPILE)
 	end
 end
