@@ -84,7 +84,7 @@ end
 class PokeBattle_AI_Groudon < PokeBattle_AI_Boss
 	def initialize(user,battle)
 		super
-		@wholeRound.concat([:ERUPTION,:PRECIPICEBLADES])
+		@wholeRound += [:ERUPTION,:PRECIPICEBLADES]
 
 		@warnedIFFMove.add(:ERUPTION, {
 			:condition => proc { |move, user, target, battle|
@@ -109,7 +109,7 @@ end
 class PokeBattle_AI_Kyogre < PokeBattle_AI_Boss
 	def initialize(user,battle)
 		super
-		@wholeRound.concat([:WATERSPOUT,:ORIGINPULSE])
+		@wholeRound += [:WATERSPOUT,:ORIGINPULSE]
 
 		@warnedIFFMove.add(:WATERSPOUT, {
 			:condition => proc { |move, user, target, battle|
@@ -138,7 +138,7 @@ class PokeBattle_AI_Rayquaza < PokeBattle_AI_Boss
 			user.battle.pbMegaEvolve(user.index)
 		})
 
-		@wholeRound.concat([:DRAGONASCENT,:STRATOSPHERESCREAM])
+		@wholeRound += [:DRAGONASCENT,:STRATOSPHERESCREAM]
 
 		@warnedIFFMove.add(:DRAGONASCENT, {
 			:condition => proc { |move, user, target, battle|
@@ -386,7 +386,7 @@ end
 class PokeBattle_AI_Incineroar < PokeBattle_AI_Boss
 	def initialize(user,battle)
 		super
-		@lastTurnOnly.concat([:SWAGGER,:TAUNT])
+		@lastTurnOnly += [:SWAGGER,:TAUNT]
 	end
 end
 
@@ -438,14 +438,15 @@ end
 class PokeBattle_AI_Porygonz < PokeBattle_AI_Boss
 	def initialize(user,battle)
 		super
-		@firstTurnOnly.concat([:CONVERSION,:CONVERSION2])
+		@firstTurnOnly += [:CONVERSION,:CONVERSION2]
 	end
 end
 
 class PokeBattle_AI_Greedent < PokeBattle_AI_Boss
 	def initialize(user,battle)
 		super
-		@firstTurnOnly.concat([:SWALLOW,:SPITUP])
+		@requiredMoves.push(:STOCKPILE)
+		@firstTurnOnly += [:SWALLOW,:SPITUP]
 		@fallback.push(:STOCKPILE)
 	end
 end

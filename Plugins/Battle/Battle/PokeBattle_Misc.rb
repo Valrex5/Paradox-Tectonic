@@ -184,6 +184,6 @@ class PokeBattle_Battle
   end
 
   def firstTurnThisRound?
-    return commandPhasesThisRound.zero?
+    return @commandPhasesThisRound.zero?
   end
 end
