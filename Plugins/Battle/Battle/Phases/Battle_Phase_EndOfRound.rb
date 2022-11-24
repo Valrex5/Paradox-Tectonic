@@ -181,18 +181,8 @@ class PokeBattle_Battle
     perishSongUsers = []
     priority.each do |b|
       next if b.fainted? || !b.effectActive?(:PerishSong)
-      b.effects[:PerishSong] -= 1
-      pbDisplay(_INTL("{1}'s perish count fell to {2}!",b.pbThis,b.effects[:PerishSong]))
-      if b.tickDownAndProc(:PerishSong)
-        perishSongUsers.push(b.effects[:PerishSongUser])
-      end
-    end
-    if perishSongUsers.length>0
-      # If all remaining Pokemon fainted by a Perish Song triggered by a single side
-      if (perishSongUsers.find_all { |idxBattler| opposes?(idxBattler) }.length==perishSongUsers.length) ||
-         (perishSongUsers.find_all { |idxBattler| !opposes?(idxBattler) }.length==perishSongUsers.length)
-        pbJudgeCheckpoint(@battlers[perishSongUsers[0]])
-      end
+      pbDisplay(_INTL("{1}'s perish count fell to {2}!",b.pbThis,b.effects[:PerishSong]-1))
+      b.tickDownAndProc(:PerishSong)
     end
   end
 
