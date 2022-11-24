@@ -54,7 +54,7 @@ BattleHandlers::TargetAbilityAfterMoveUse.add(:BRILLIANTFLURRY,
   proc { |ability,target,user,move,switched,battle|
     next if !move.damagingMove?
     next if !target.knockedBelowHalf?
-    user.pbLowerMultipleStatStages([:ATTACK,1,:SPECIAL_ATTACK,1,:SPEED,1], user, showAbilitySplash: true)
+    user.pbLowerMultipleStatStages([:ATTACK,1,:SPECIAL_ATTACK,1,:SPEED,1], target, showAbilitySplash: true)
   }
 )
 
@@ -76,6 +76,6 @@ BattleHandlers::TargetAbilityAfterMoveUse.add(:REAWAKENEDPOWER,
   proc { |ability,target,user,move,switched,battle|
     next if !move.damagingMove?
     next if !target.knockedBelowHalf?
-    target.pbMaximizeStatStage(:SPECIAL_ATTACK,user,self,false,true)
+    target.pbMaximizeStatStage(:SPECIAL_ATTACK,target,self,false,true)
   }
 )
