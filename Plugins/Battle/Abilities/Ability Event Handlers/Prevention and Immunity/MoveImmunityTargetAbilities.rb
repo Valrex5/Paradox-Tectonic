@@ -181,3 +181,9 @@ BattleHandlers::MoveImmunityTargetAbility.add(:FINESUGAR,
     next pbBattleMoveImmunityHealAbility(user,target,move,type,:FIRE,battle,showMessages)
   }
 )
+
+BattleHandlers::MoveImmunityTargetAbility.add(:UNSTONED,
+  proc { |ability,user,target,move,type,battle,showMessages|
+    next pbBattleMoveImmunityHealAbility(user,target,move,type,:ROCK,:DEFENSE,1,battle,showMessages)
+  }
+)
