@@ -178,9 +178,9 @@ class PokeBattle_Battle
   
   def countDownPerishSong(priority)
     # Perish Song
-    perishSongUsers = []
     priority.each do |b|
-      next if b.fainted? || !b.effectActive?(:PerishSong)
+      next if b.fainted?
+      next unless b.effectActive?(:PerishSong)
       pbDisplay(_INTL("{1}'s perish count fell to {2}!",b.pbThis,b.effects[:PerishSong]-1))
       b.tickDownAndProc(:PerishSong)
     end
