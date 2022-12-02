@@ -371,7 +371,7 @@ class PokeBattle_Move_626 < PokeBattle_Move_068
 	
 	def pbFailsAgainstTarget?(user,target,show_message)
 	  if target.unstoppableAbility? && !target.pbCanLowerStatStage?(:SPECIAL_DEFENSE,user,self)
-		@battle.pbDisplay(_INTL("But it failed!"))
+		@battle.pbDisplay(_INTL("But it failed!")) if show_message
 		return true
 	  end
 	  return false

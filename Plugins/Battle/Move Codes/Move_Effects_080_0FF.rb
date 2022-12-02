@@ -594,6 +594,8 @@ class PokeBattle_Move_09C < PokeBattle_Move
     return false
   end
 
+  def pbFailsAgainstTargetAI?(user,target); return false; end
+
   def pbEffectAgainstTarget(user,target)
     target.applyEffect(:HelpingHand)
     @battle.pbDisplay(_INTL("{1} is ready to help {2}!",user.pbThis,target.pbThis(true)))
@@ -1173,10 +1175,22 @@ class PokeBattle_Move_0B0 < PokeBattle_Move
     return false
   end
 
+  def pbFailsAgainstTargetAI?(user,target); return false; end
+
   def pbEffectAgainstTarget(user,target)
     user.applyEffect(:MeFirst)
     user.pbUseMoveSimple(@battle.choices[target.index][2].id)
     user.disableEffect(:MeFirst)
+  end
+
+  def getScore(score,user,target,skill=100)
+    return 0 unless target.hasDamagingAttack?
+    if user.hp < user.totalhp / 2
+      score -= 20
+    else
+      score += 20
+    end
+    return score
   end
 end
 

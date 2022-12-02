@@ -326,7 +326,11 @@ class PokeBattle_Battler
 
 		# Move-specific failures
 		
-		return false if move.pbFailsAgainstTarget?(user, target, show_message) # TODO give every single definition of this a show_message bool
+		if ai_check
+			return false if move.pbFailsAgainstTargetAI?(user, target)
+		else
+			return false if move.pbFailsAgainstTarget?(user, target, show_message)
+		end
 
 		# Immunity to priority moves because of Psychic Terrain
 		if @battle.field.terrain == :Psychic && target.affectedByTerrain? && target.opposes?(user) &&

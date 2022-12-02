@@ -298,7 +298,7 @@ class PokeBattle_AI
 		# Rejecting moves based on failure
         
         # Don't use a move that would fail against the target
-        if !target.nil? && move.pbFailsAgainstTarget?(user,target,false)
+        if !target.nil? && move.pbFailsAgainstTargetAI?(user,target)
             PBDebug.log("[BOSS AI] Scoring #{move.name} a 0 due to being predicted to fail against the target against target #{target.pbThis(true)}")
             score = 0
         end

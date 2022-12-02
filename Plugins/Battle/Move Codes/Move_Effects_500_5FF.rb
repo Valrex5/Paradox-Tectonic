@@ -160,7 +160,7 @@ class PokeBattle_Move_50A < PokeBattle_Move
   def pbFailsAgainstTarget?(user,target,show_message)
     return false if damagingMove?
     if !target.canBurn?(user,true,self) && !target.canFrostbite?(user,true,self)
-		@battle.pbDisplay(_INTL("But it failed, since #{target.pbThis(true)} can neither be burned or frostbitten!")) 
+		@battle.pbDisplay(_INTL("But it failed, since #{target.pbThis(true)} can neither be burned or frostbitten!")) if show_message
 		return true
 	end
 	return false
@@ -480,7 +480,7 @@ end
 class PokeBattle_Move_51D < PokeBattle_Move
 	def pbFailsAgainstTarget?(user,target,show_message)
 		if target.effectActive?(:CreepOut)
-		  @battle.pbDisplay(_INTL("But it failed, since #{target.pbThis(true)} is already afraid of bug type moves!"))
+		  @battle.pbDisplay(_INTL("But it failed, since #{target.pbThis(true)} is already afraid of bug type moves!")) if show_message
 		  return true
 		end
 		return false
@@ -568,7 +568,7 @@ class PokeBattle_Move_522 < PokeBattle_TargetMultiStatDownMove
       @statArray.push(s.id) if target.pbCanLowerStatStage?(s.id,user,self)
     end
     if @statArray.length==0
-      @battle.pbDisplay(_INTL("But it fails, since none of {1}'s stats can be lowered!",target.pbThis))
+      @battle.pbDisplay(_INTL("But it fails, since none of {1}'s stats can be lowered!",target.pbThis)) if show_message
       return true
     end
     return false
@@ -652,12 +652,12 @@ class PokeBattle_Move_527 < PokeBattle_Move_004
 				target.pbCanLowerStatStage?(:SPECIAL_ATTACK,user,self))
 			fails = false
 		end
-        if fails
-			@battle.pbDisplay(_INTL("But it failed!"))
+		if fails
+			@battle.pbDisplay(_INTL("But it failed!")) if show_message
 			return true
 		end
 		return false
-    end
+	end
     
     def pbEffectAgainstTarget(user,target)
 		target.applyEffect(:Yawn,2)
@@ -683,7 +683,7 @@ end
 class PokeBattle_Move_528 < PokeBattle_SleepMove
 	def pbFailsAgainstTarget?(user,target,show_message)
 		if target.hp > target.totalhp / 2
-			@battle.pbDisplay(_INTL("But it failed, #{target.pbThis(true)} is above half health!"))
+			@battle.pbDisplay(_INTL("But it failed, #{target.pbThis(true)} is above half health!")) if show_message
 			return true
 		end
 		return !target.canSleep?(user,true,self)
@@ -696,16 +696,19 @@ end
 class PokeBattle_Move_529 < PokeBattle_SleepMove
 	def pbFailsAgainstTarget?(user,target,show_message)
 		if !user.lastAttacker.include?(target.index)
-			@battle.pbDisplay(_INTL("But it failed, since the #{target.pbThis(true)} didn't attack #{user.pbThis(true)} this turn!"))
+			@battle.pbDisplay(_INTL("But it failed, since the #{target.pbThis(true)} didn't attack #{user.pbThis(true)} this turn!")) if show_message
 			return true
 		end
 		return !target.canSleep?(user,true,self)
 	end
+
+	def pbFailsAgainstTargetAI?(user,target); return false; end
 	
 	def getScore(score,user,target,skill=100)
 		userSpeed = user.pbSpeed(true)
 		targetSpeed = target.pbSpeed(true)
 		return 0 if userSpeed > targetSpeed
+		return 0 unless target.hasDamagingAttack?
 		super
 	end
 end
@@ -904,7 +907,7 @@ end
 class PokeBattle_Move_534 < PokeBattle_SleepMove
 	def pbFailsAgainstTarget?(user,target,show_message)
 		if !target.dizzy?
-			@battle.pbDisplay(_INTL("But it failed, since #{target.pbThis(true)} isn't dizzy!"))
+			@battle.pbDisplay(_INTL("But it failed, since #{target.pbThis(true)} isn't dizzy!")) if show_message
 			return true
 		end
 		return !target.canSleep?(user,true,self,true)
@@ -922,7 +925,7 @@ end
 class PokeBattle_Move_535 < PokeBattle_Move
 	def pbMoveFailed?(user,targets)
 		if !user.firstTurn?
-			@battle.pbDisplay(_INTL("But it failed, since it isn't #{user.pbThis(true)} first turn out!"))
+			@battle.pbDisplay(_INTL("But it failed, since it isn't #{user.pbThis(true)} first turn out!")) if show_message
 			return true
 		end
 		return false
@@ -1279,7 +1282,7 @@ end
 class PokeBattle_Move_54A < PokeBattle_Move
 	def pbFailsAgainstTarget?(user,target,show_message)
 		if target.effectActive?(:Curse)
-			@battle.pbDisplay(_INTL("But it failed, since #{target.pbThis(true)} is already cursed!"))
+			@battle.pbDisplay(_INTL("But it failed, since #{target.pbThis(true)} is already cursed!")) if show_message
 			return true
 		end
 		return false
@@ -1943,11 +1946,11 @@ end
 class PokeBattle_Move_575 < PokeBattle_Move
 	def pbFailsAgainstTarget?(user,target,show_message)
 	  if target.effectActive?(:OnDragonRide)
-		@battle.pbDisplay(_INTL("But it failed, since #{target.pbThis(true)} is already on a dragon ride!"))
+		@battle.pbDisplay(_INTL("But it failed, since #{target.pbThis(true)} is already on a dragon ride!")) if show_message
 		return true
 	  end
 	  if user.effectActive?(:GivingDragonRideTo)
-		@battle.pbDisplay(_INTL("But it failed, since #{user.pbThis} is already giving a dragon ride!"))
+		@battle.pbDisplay(_INTL("But it failed, since #{user.pbThis} is already giving a dragon ride!")) if show_message
 		return true
 	  end
 	  return false
@@ -2026,10 +2029,10 @@ class PokeBattle_Move_579 < PokeBattle_Move
 	def pbFailsAgainstTarget?(user,target,show_message)
 		if target.numbed?
 			if target.effectActive?(:Curse)
-				@battle.pbDisplay(_INTL("But it failed, since #{target.pbThis(true)} is already cursed!"))
+				@battle.pbDisplay(_INTL("But it failed, since #{target.pbThis(true)} is already cursed!")) if show_message
 			end
 		else
-			return !target.canNumb?(user,true,self)
+			return !target.canNumb?(user,show_message,self)
 		end
 	end
   
@@ -2087,7 +2090,7 @@ end
 #===============================================================================
 class PokeBattle_Move_581 < PokeBattle_SleepMove
 	def pbFailsAgainstTarget?(user,target,show_message)
-		return !target.canSleep?(user,true,self,true)
+		return !target.canSleep?(user,show_message,self,true)
 	end
 
 	def pbEffectAgainstTarget(user,target)
@@ -2150,7 +2153,7 @@ class PokeBattle_Move_584 < PokeBattle_Move
 		  @statArray.push(s.id) if target.pbCanRaiseStatStage?(s.id,user,self)
 		end
 		if @statArray.length==0
-		  @battle.pbDisplay(_INTL("{1}'s stats won't go any higher!",target.pbThis))
+		  @battle.pbDisplay(_INTL("{1}'s stats won't go any higher!",target.pbThis)) if show_message
 		  return true
 		end
 		return false
@@ -2373,7 +2376,7 @@ class PokeBattle_Move_592 < PokeBattle_Move
 	def pbFailsAgainstTarget?(user,target,show_message)
 		return false if !@buffing
 		if !target.pbCanRaiseStatStage?(:SPEED,user,self) && !target.pbCanRaiseStatStage?(:SPECIAL_DEFENSE,user,self)
-			@battle.pbDisplay(_INTL("But it failed!"))
+			@battle.pbDisplay(_INTL("But it failed!")) if show_message
 			return true 
 		end
     	return false
@@ -2467,7 +2470,7 @@ end
 class PokeBattle_Move_596 < PokeBattle_Move
 	def pbFailsAgainstTarget?(user,target,show_message)
 		if target.effectActive?(:MeanLook) && !user.pbCanRaiseStatStage?(:ATTACK) && !user.pbCanLowerStatStage?(:SPEED)
-		  @battle.pbDisplay(_INTL("But it failed!"))
+		  @battle.pbDisplay(_INTL("But it failed!")) if show_message
 		  return true
 		end
 		return false
@@ -2736,10 +2739,17 @@ end
 class PokeBattle_Move_5A8 < PokeBattle_Move
 	def pbFailsAgainstTarget?(user,target,show_message)
 		if target.item == :BLACKSLUDGE
-			@battle.pbDisplay(_INTL("But {1} is already holding a Black Sludge!",target.pbThis(true)))
+			@battle.pbDisplay(_INTL("But {1} is already holding a Black Sludge!",target.pbThis(true))) if show_message
 			return true
 		end
 		return !canRemoveItem?(user,target)
+	end
+
+	def pbFailsAgainstTargetAI?(user,target)
+		if target.item == :BLACKSLUDGE
+			return true
+		end
+		return !canRemoveItem?(user,target,true)
 	end
 
 	def pbEffectAgainstTarget(user,target)

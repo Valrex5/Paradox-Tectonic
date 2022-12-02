@@ -83,7 +83,7 @@ end
 class PokeBattle_SleepMove < PokeBattle_Move
   def pbFailsAgainstTarget?(user,target,show_message)
     return false if damagingMove?
-    return !target.canSleep?(user,true,self)
+    return !target.canSleep?(user,show_message,self)
   end
 
   def pbEffectAgainstTarget(user,target)
@@ -110,7 +110,7 @@ class PokeBattle_PoisonMove < PokeBattle_Move
 
   def pbFailsAgainstTarget?(user,target,show_message)
     return false if damagingMove?
-    return !target.canPoison?(user,true,self)
+    return !target.canPoison?(user,show_message,self)
   end
 
   def pbEffectAgainstTarget(user,target)
@@ -132,7 +132,7 @@ end
 class PokeBattle_NumbMove < PokeBattle_Move
   def pbFailsAgainstTarget?(user,target,show_message)
     return false if damagingMove?
-    return !target.canNumb?(user,true,self)
+    return !target.canNumb?(user,show_message,self)
   end
 
   def pbEffectAgainstTarget(user,target)
@@ -154,7 +154,7 @@ end
 class PokeBattle_BurnMove < PokeBattle_Move
   def pbFailsAgainstTarget?(user,target,show_message)
     return false if damagingMove?
-    return !target.canBurn?(user,true,self)
+    return !target.canBurn?(user,show_message,self)
   end
 
   def pbEffectAgainstTarget(user,target)
@@ -176,7 +176,7 @@ end
 class PokeBattle_FreezeMove < PokeBattle_Move
   def pbFailsAgainstTarget?(user,target,show_message)
     return false if damagingMove?
-    return !target.pbCanFreeze?(user,true,self)
+    return !target.pbCanFreeze?(user,show_message,self)
   end
 
   def pbEffectAgainstTarget(user,target)
@@ -220,7 +220,7 @@ end
 class PokeBattle_ConfuseMove < PokeBattle_Move
   def pbFailsAgainstTarget?(user,target,show_message)
     return false if damagingMove?
-    return !target.canConfuse?(user,true,self)
+    return !target.canConfuse?(user,show_message,self)
   end
 
   def pbEffectAgainstTarget(user,target)
@@ -356,7 +356,7 @@ class PokeBattle_TargetStatDownMove < PokeBattle_Move
 
   def pbFailsAgainstTarget?(user,target,show_message)
     return false if damagingMove?
-    return !target.pbCanLowerStatStage?(@statDown[0],user,self,true)
+    return !target.pbCanLowerStatStage?(@statDown[0],user,self,show_message)
   end
 
   def pbEffectAgainstTarget(user,target)
@@ -448,14 +448,14 @@ class PokeBattle_TargetMultiStatDownMove < PokeBattle_Move
           canLower = true
           break
         end
-        @battle.pbDisplay(_INTL("{1}'s stats won't go any higher!",user.pbThis)) if !canLower
+        @battle.pbDisplay(_INTL("{1}'s stats won't go any higher!",user.pbThis)) if !canLower && show_message
       else
         for i in 0...@statDown.length/2
           next if target.statStageAtMin?(@statDown[i*2])
           canLower = true
           break
         end
-        @battle.pbDisplay(_INTL("{1}'s stats won't go any lower!",user.pbThis)) if !canLower
+        @battle.pbDisplay(_INTL("{1}'s stats won't go any lower!",user.pbThis)) if !canLower && show_message
       end
       if canLower
         target.pbCanLowerStatStage?(@statDown[0],user,self,true)
@@ -903,7 +903,7 @@ end
 class PokeBattle_DizzyMove < PokeBattle_Move
 	def pbFailsAgainstTarget?(user,target,show_message)
 	  return false if damagingMove?
-	  return !target.canDizzy?(user,true,self)
+	  return !target.canDizzy?(user,show_message,self)
 	end
   
 	def pbEffectAgainstTarget(user,target)
@@ -929,7 +929,7 @@ end
 class PokeBattle_LeechMove < PokeBattle_Move
 	def pbFailsAgainstTarget?(user,target,show_message)
 	  return false if damagingMove?
-	  return !target.canLeech?(user,true,self)
+	  return !target.canLeech?(user,show_message,self)
 	end
   
 	def pbEffectAgainstTarget(user,target)
@@ -955,7 +955,7 @@ end
 class PokeBattle_CharmMove < PokeBattle_Move
   def pbFailsAgainstTarget?(user,target,show_message)
     return false if damagingMove?
-    return !target.canCharm?(user,true,self)
+    return !target.canCharm?(user,show_message,self)
   end
 
   def pbEffectAgainstTarget(user,target)
@@ -986,7 +986,7 @@ end
 class PokeBattle_FrostbiteMove < PokeBattle_Move
 	def pbFailsAgainstTarget?(user,target,show_message)
 	  return false if damagingMove?
-	  return !target.canFrostbite?(user,true,self)
+	  return !target.canFrostbite?(user,show_message,self)
 	end
   
 	def pbEffectAgainstTarget(user,target)
@@ -1026,14 +1026,14 @@ class PokeBattle_TargetMultiStatUpMove < PokeBattle_Move
           canRaise = true
           break k
         end
-        @battle.pbDisplay(_INTL("{1}'s stats won't go any lower!",target.pbThis)) if !canRaise
+        @battle.pbDisplay(_INTL("{1}'s stats won't go any lower!",target.pbThis)) if !canRaise && show_message
       else
         for i in 0...@statUp.length/2
           next if target.statStageAtMax?(@statUp[i*2])
           canRaise = true
           break
         end
-        @battle.pbDisplay(_INTL("{1}'s stats won't go any higher!",target.pbThis)) if !canRaise
+        @battle.pbDisplay(_INTL("{1}'s stats won't go any higher!",target.pbThis)) if !canRaise && show_message
       end
       if canRaise
         target.pbCanRaiseStatStage?(@statUp[0],user,self,true)
@@ -1152,7 +1152,7 @@ class PokeBattle_InvokeMove < PokeBattle_Move
 
   def pbFailsAgainstTarget?(user,target,show_message)
     if @battle.primevalWeatherPresent?(false) && target.pbCanInflictStatus?(@statusToApply,user,false,self)
-      @battle.pbDisplay(_INTL("But it failed!"))
+      @battle.pbDisplay(_INTL("But it failed!")) if show_message
     end
   end
 

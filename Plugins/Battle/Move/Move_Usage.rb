@@ -163,6 +163,10 @@ class PokeBattle_Move
     def pbMoveFailed?(user,targets); return false; end
     # Checks whether the move will be ineffective against the target.
     def pbFailsAgainstTarget?(user,target,show_message); return false; end
+
+    def pbFailsAgainstTargetAI?(user,target)
+        return pbFailsAgainstTarget?(user,target,false)
+    end
   
     def pbMoveFailedLastInRound?(user)
       unmoved = false

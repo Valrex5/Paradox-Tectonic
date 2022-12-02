@@ -16,11 +16,11 @@ end
 class PokeBattle_Move_181 < PokeBattle_Move
   def pbFailsAgainstTarget?(user, target, show_message)
     if target.effectActive?(:Octolock)
-      @battle.pbDisplay(_INTL("But it failed!"))
+      @battle.pbDisplay(_INTL("But it failed, since #{target.pbThis(true)} is already octolocked!")) if show_message
       return true
     end
     if target.pbHasType?(:GHOST)
-      @battle.pbDisplay(_INTL("But {1} isn't affected because it's a Ghost...", target.pbThis(true)))
+      @battle.pbDisplay(_INTL("But {1} isn't affected because it's a Ghost...", target.pbThis(true))) if show_message
       return true
     end
     return false
@@ -126,7 +126,7 @@ end
 class PokeBattle_Move_186 < PokeBattle_Move
   def pbFailsAgainstTarget?(user, target, show_message)
     if !target.pbCanLowerStatStage?(:SPEED, target, self) && target.effectActive?(:TarShot)
-      @battle.pbDisplay(_INTL("But it failed!"))
+      @battle.pbDisplay(_INTL("But it failed!")) if show_message
       return true
     end
     return false
@@ -353,10 +353,10 @@ end
 class PokeBattle_Move_192 < PokeBattle_Move
   def pbFailsAgainstTarget?(user, target, show_message)
     if target.item
-      @battle.pbDisplay(_INTL("{1} is about to be attacked by its {2}!", target.pbThis, target.itemName))
+      @battle.pbDisplay(_INTL("{1} is about to be attacked by its {2}!", target.pbThis, target.itemName)) if show_message
       return false
     end
-    @battle.pbDisplay(_INTL("But it failed!"))
+    @battle.pbDisplay(_INTL("But it failed!")) if show_message
     return true
   end
 
@@ -453,11 +453,14 @@ end
   #===============================================================================
 class PokeBattle_Move_197 < PokeBattle_Move
   def pbFailsAgainstTarget?(user, target, show_message)
-    if !target.canChangeType? ||
-       !target.pbHasOtherType?(:PSYCHIC)
-      @battle.pbDisplay(_INTL("But it failed!"))
+    unless target.canChangeType?
+      @battle.pbDisplay(_INTL("But it failed, since #{target.pbThis(true)}'s type can't be changed!")) if show_message
       return true
     end
+    if target.pbHasOtherType?(:PSYCHIC)
+     @battle.pbDisplay(_INTL("But it failed, since #{target.pbThis(true)} is already Psychic-type!")) if show_message
+     return true
+   end
     return false
   end
 
@@ -476,22 +479,9 @@ class PokeBattle_Move_197 < PokeBattle_Move
 end
 
   #===============================================================================
-  # Target's last move used loses 3 PP. (Eerie Spell - Galarian Slowking)
+  # Target's last move used loses 3 PP. (Eerie Spell)
   #===============================================================================
 class PokeBattle_Move_198 < PokeBattle_Move
-  def pbFailsAgainstTarget?(user, target, show_message)
-    failed = true
-    target.eachMove do |m|
-      next if m.id != target.lastRegularMoveUsed || m.pp == 0 || m.totalpp <= 0
-      failed = false; break
-    end
-    if failed
-      @battle.pbDisplay(_INTL("But it failed!"))
-      return true
-    end
-    return false
-  end
-
   def pbEffectAgainstTarget(user, target)
     target.eachMove do |m|
       next if m.id != target.lastRegularMoveUsed
