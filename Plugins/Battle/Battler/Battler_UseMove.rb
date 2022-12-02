@@ -416,8 +416,13 @@ class PokeBattle_Battler
 			# Reset whole damage state, perform various success checks (not accuracy)
 			user.initialHP = user.hp
 			targets.each do |b|
+				
 				b.damageState.reset
 				b.damageState.initialHP = b.hp
+
+				typeMod = move.pbCalcTypeMod(move.calcType, user, b)
+				b.damageState.typeMod = typeMod
+
 				showFailMessages = move.pbShowFailMessages?(targets)
 				unless pbSuccessCheckAgainstTarget(move, user, b, showFailMessages)
 					b.damageState.unaffected = true

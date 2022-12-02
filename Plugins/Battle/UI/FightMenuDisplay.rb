@@ -262,7 +262,6 @@ class FightMenuDisplay < BattleMenuBase
     effectivenessTextPos = nil
     effectivenessTextX = 448
     effectivenessTextY = 44
-    @battler.battle.messagesBlocked = true
     if move.damagingMove?
       begin
         typeOfMove = move.pbCalcType(@battler)
@@ -295,7 +294,6 @@ class FightMenuDisplay < BattleMenuBase
     else
       effectivenessTextPos = ["Status",effectivenessTextX,44,2,TEXT_BASE_COLOR,TEXT_SHADOW_COLOR]
     end
-    @battler.battle.messagesBlocked = false
 
     pbDrawTextPositions(@infoOverlay.bitmap,[effectivenessTextPos]) if !effectivenessTextPos.nil?
 	

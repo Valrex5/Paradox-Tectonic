@@ -114,8 +114,7 @@ class PokeBattle_AI
 		end
 		
 		# Never use a move that would fail outright
-		@battle.messagesBlocked = true
-
+        
 		# Falsify the turn count so that the AI is calculated as though we are actually
         # in the midst of performing the move (turnCount is incremented as the attack phase begins)
         user.turnCount += 1 
@@ -124,20 +123,14 @@ class PokeBattle_AI
 			score = 0
             echoln("#{user.pbThis} scores the move #{move.id} as 0 due to it being predicted to fail.")
 		end
-		
-        if move.pbFailsAgainstTarget?(user,target)
+            
+        # Don't prefer moves that are ineffective because of abilities or effects
+        unless user.pbSuccessCheckAgainstTarget(move, user, target, false, true)
             score = 0
-            echoln("#{user.pbThis} scores the move #{move.id} as 0 against target #{target.pbThis(false)} due to it being predicted to fail against that target.")
+            echoln("#{user.pbThis} scores the move #{move.id} as 0 due to it being predicted to fail or be ineffective against target #{target.pbThis(false)}.")
         end
 
         user.turnCount -= 1
-        @battle.messagesBlocked = false
-            
-        # Don't prefer moves that are ineffective because of abilities or effects
-        if pbCheckMoveImmunity(move,user,target,skill)
-            score = 0
-            echoln("#{user.pbThis} scores the move #{move.id} as 0 due to it being ineffective against target #{target.pbThis(false)}.")
-        end
 		
 		# If user is asleep, prefer moves that are usable while asleep
 		if user.status == :SLEEP && !move.usableWhenAsleep?

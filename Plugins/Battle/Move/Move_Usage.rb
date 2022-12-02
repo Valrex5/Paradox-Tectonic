@@ -140,7 +140,7 @@ class PokeBattle_Move
     #=============================================================================
     # Check if target is immune to the move because of its ability
     #=============================================================================
-    def pbImmunityByAbility(user,target, showMessages=true)
+    def pbImmunityByAbility(user, target, showMessages=true)
         return false if @battle.moldBreaker
         ret = false
         if target.abilityActive?
