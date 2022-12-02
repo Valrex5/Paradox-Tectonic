@@ -119,13 +119,17 @@ class PokeBattle_AI
         # in the midst of performing the move (turnCount is incremented as the attack phase begins)
         user.turnCount += 1 
 
+        @battle.messagesBlocked = true
 		if move.pbMoveFailed?(user,[target])
 			score = 0
             echoln("#{user.pbThis} scores the move #{move.id} as 0 due to it being predicted to fail.")
 		end
+        @battle.messagesBlocked = false
             
         # Don't prefer moves that are ineffective because of abilities or effects
-        unless user.pbSuccessCheckAgainstTarget(move, user, target, false, true)
+        type = pbRoughType(move,user)
+        typeMod = pbCalcTypeModAI(type,user,target,move)
+        unless user.pbSuccessCheckAgainstTarget(move, user, target, typeMod, false, true)
             score = 0
             echoln("#{user.pbThis} scores the move #{move.id} as 0 due to it being predicted to fail or be ineffective against target #{target.pbThis(false)}.")
         end

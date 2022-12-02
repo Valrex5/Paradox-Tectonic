@@ -925,7 +925,7 @@ end
 class PokeBattle_Move_535 < PokeBattle_Move
 	def pbMoveFailed?(user,targets)
 		if !user.firstTurn?
-			@battle.pbDisplay(_INTL("But it failed, since it isn't #{user.pbThis(true)} first turn out!")) if show_message
+			@battle.pbDisplay(_INTL("But it failed, since it isn't #{user.pbThis(true)} first turn out!"))
 			return true
 		end
 		return false

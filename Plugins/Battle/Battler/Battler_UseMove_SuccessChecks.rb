@@ -320,7 +320,7 @@ class PokeBattle_Battler
 	# Initial success check against the target. Done once before the first hit.
 	# Includes move-specific failure conditions, protections and type immunities.
 	#=============================================================================
-	def pbSuccessCheckAgainstTarget(move, user, target, show_message = true, ai_check = false)
+	def pbSuccessCheckAgainstTarget(move, user, target, typeMod, show_message = true, ai_check = false)
 		# Two-turn attacks can't fail here in the charging turn
 		return true if user.effectActive?(:TwoTurnAttack)
 
@@ -333,10 +333,17 @@ class PokeBattle_Battler
 		end
 
 		# Immunity to priority moves because of Psychic Terrain
-		if @battle.field.terrain == :Psychic && target.affectedByTerrain? && target.opposes?(user) &&
-					@battle.choices[user.index][4] > 0 # Move priority saved from pbCalculatePriority
-			@battle.pbDisplay(_INTL('{1} surrounds itself with psychic terrain!', target.pbThis)) if show_message
-			return false
+		if @battle.field.terrain == :Psychic && target.affectedByTerrain? && target.opposes?(user)
+			if ai_check
+				if move.priority > 0
+					return false
+				end
+			else
+				if @battle.choices[user.index][4] > 0
+					@battle.pbDisplay(_INTL('{1} surrounds itself with psychic terrain!', target.pbThis)) if show_message
+					return false
+				end
+			end
 		end
 
 		###	Protect Style Moves

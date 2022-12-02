@@ -424,7 +424,7 @@ class PokeBattle_Battler
 				b.damageState.typeMod = typeMod
 
 				showFailMessages = move.pbShowFailMessages?(targets)
-				unless pbSuccessCheckAgainstTarget(move, user, b, showFailMessages)
+				unless pbSuccessCheckAgainstTarget(move, user, b, typeMod, showFailMessages)
 					b.damageState.unaffected = true
 				end
 			end
