@@ -14,7 +14,7 @@ end
   # turn. Prevents target from retreating. (Octolock)
   #===============================================================================
 class PokeBattle_Move_181 < PokeBattle_Move
-  def pbFailsAgainstTarget?(user, target)
+  def pbFailsAgainstTarget?(user, target, show_message)
     if target.effectActive?(:Octolock)
       @battle.pbDisplay(_INTL("But it failed!"))
       return true
@@ -89,7 +89,7 @@ class PokeBattle_Move_184 < PokeBattle_Move
       @battle.pbDisplay(_INTL("It's tea time! Everyone dug in to their Berries!"))
     end
 
-    def pbFailsAgainstTarget?(user, target)
+    def pbFailsAgainstTarget?(user, target, show_message)
         return !isValidTarget?(target)
     end
 
@@ -124,7 +124,7 @@ end
   # Decrease 1 stage of speed and weakens target to fire moves. (Tar Shot)
   #===============================================================================
 class PokeBattle_Move_186 < PokeBattle_Move
-  def pbFailsAgainstTarget?(user, target)
+  def pbFailsAgainstTarget?(user, target, show_message)
     if !target.pbCanLowerStatStage?(:SPEED, target, self) && target.effectActive?(:TarShot)
       @battle.pbDisplay(_INTL("But it failed!"))
       return true
@@ -351,7 +351,7 @@ end
   # Fails if the Target has no Item (Poltergeist)
   #===============================================================================
 class PokeBattle_Move_192 < PokeBattle_Move
-  def pbFailsAgainstTarget?(user, target)
+  def pbFailsAgainstTarget?(user, target, show_message)
     if target.item
       @battle.pbDisplay(_INTL("{1} is about to be attacked by its {2}!", target.pbThis, target.itemName))
       return false
@@ -452,7 +452,7 @@ end
   # Target becomes Psychic type. (Magic Powder)
   #===============================================================================
 class PokeBattle_Move_197 < PokeBattle_Move
-  def pbFailsAgainstTarget?(user, target)
+  def pbFailsAgainstTarget?(user, target, show_message)
     if !target.canChangeType? ||
        !target.pbHasOtherType?(:PSYCHIC)
       @battle.pbDisplay(_INTL("But it failed!"))
@@ -479,7 +479,7 @@ end
   # Target's last move used loses 3 PP. (Eerie Spell - Galarian Slowking)
   #===============================================================================
 class PokeBattle_Move_198 < PokeBattle_Move
-  def pbFailsAgainstTarget?(user, target)
+  def pbFailsAgainstTarget?(user, target, show_message)
     failed = true
     target.eachMove do |m|
       next if m.id != target.lastRegularMoveUsed || m.pp == 0 || m.totalpp <= 0

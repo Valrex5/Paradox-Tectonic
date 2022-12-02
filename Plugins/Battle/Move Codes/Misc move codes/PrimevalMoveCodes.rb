@@ -1,6 +1,6 @@
 module EmpoweredMove
 	def pbMoveFailed?(user,targets); return false; end
-	def pbFailsAgainstTarget?(user,target); return false; end
+	def pbFailsAgainstTarget?(user,target,show_message); return false; end
 
 	# There must be 2 turns without using a primeval attack to then be able to use it again
 	def turnsBetweenUses(); return 2; end
@@ -369,7 +369,7 @@ end
 class PokeBattle_Move_626 < PokeBattle_Move_068
 	include EmpoweredMove
 	
-	def pbFailsAgainstTarget?(user,target)
+	def pbFailsAgainstTarget?(user,target,show_message)
 	  if target.unstoppableAbility? && !target.pbCanLowerStatStage?(:SPECIAL_DEFENSE,user,self)
 		@battle.pbDisplay(_INTL("But it failed!"))
 		return true

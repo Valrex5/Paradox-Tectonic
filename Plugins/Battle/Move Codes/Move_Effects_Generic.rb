@@ -81,7 +81,7 @@ end
 # Generic status problem-inflicting classes.
 #===============================================================================
 class PokeBattle_SleepMove < PokeBattle_Move
-  def pbFailsAgainstTarget?(user,target)
+  def pbFailsAgainstTarget?(user,target,show_message)
     return false if damagingMove?
     return !target.canSleep?(user,true,self)
   end
@@ -108,7 +108,7 @@ class PokeBattle_PoisonMove < PokeBattle_Move
     @toxic = false
   end
 
-  def pbFailsAgainstTarget?(user,target)
+  def pbFailsAgainstTarget?(user,target,show_message)
     return false if damagingMove?
     return !target.canPoison?(user,true,self)
   end
@@ -130,7 +130,7 @@ class PokeBattle_PoisonMove < PokeBattle_Move
 end
 
 class PokeBattle_NumbMove < PokeBattle_Move
-  def pbFailsAgainstTarget?(user,target)
+  def pbFailsAgainstTarget?(user,target,show_message)
     return false if damagingMove?
     return !target.canNumb?(user,true,self)
   end
@@ -152,7 +152,7 @@ class PokeBattle_NumbMove < PokeBattle_Move
 end
 
 class PokeBattle_BurnMove < PokeBattle_Move
-  def pbFailsAgainstTarget?(user,target)
+  def pbFailsAgainstTarget?(user,target,show_message)
     return false if damagingMove?
     return !target.canBurn?(user,true,self)
   end
@@ -174,7 +174,7 @@ class PokeBattle_BurnMove < PokeBattle_Move
 end
 
 class PokeBattle_FreezeMove < PokeBattle_Move
-  def pbFailsAgainstTarget?(user,target)
+  def pbFailsAgainstTarget?(user,target,show_message)
     return false if damagingMove?
     return !target.pbCanFreeze?(user,true,self)
   end
@@ -218,7 +218,7 @@ class PokeBattle_FlinchMove < PokeBattle_Move
 end
 
 class PokeBattle_ConfuseMove < PokeBattle_Move
-  def pbFailsAgainstTarget?(user,target)
+  def pbFailsAgainstTarget?(user,target,show_message)
     return false if damagingMove?
     return !target.canConfuse?(user,true,self)
   end
@@ -354,7 +354,7 @@ end
 class PokeBattle_TargetStatDownMove < PokeBattle_Move
   attr_accessor :statDown
 
-  def pbFailsAgainstTarget?(user,target)
+  def pbFailsAgainstTarget?(user,target,show_message)
     return false if damagingMove?
     return !target.pbCanLowerStatStage?(@statDown[0],user,self,true)
   end
@@ -430,7 +430,7 @@ class PokeBattle_TargetStatDownMove < PokeBattle_Move
 end
 
 class PokeBattle_TargetMultiStatDownMove < PokeBattle_Move
-  def pbFailsAgainstTarget?(user,target)
+  def pbFailsAgainstTarget?(user,target,show_message)
     return false if damagingMove?
     failed = true
     for i in 0...@statDown.length/2
@@ -901,7 +901,7 @@ end
 # Dizzies the target.
 #===============================================================================
 class PokeBattle_DizzyMove < PokeBattle_Move
-	def pbFailsAgainstTarget?(user,target)
+	def pbFailsAgainstTarget?(user,target,show_message)
 	  return false if damagingMove?
 	  return !target.canDizzy?(user,true,self)
 	end
@@ -927,7 +927,7 @@ end
 # Leeches the target
 #===============================================================================
 class PokeBattle_LeechMove < PokeBattle_Move
-	def pbFailsAgainstTarget?(user,target)
+	def pbFailsAgainstTarget?(user,target,show_message)
 	  return false if damagingMove?
 	  return !target.canLeech?(user,true,self)
 	end
@@ -953,7 +953,7 @@ end
 # Charms the target.
 #===============================================================================
 class PokeBattle_CharmMove < PokeBattle_Move
-  def pbFailsAgainstTarget?(user,target)
+  def pbFailsAgainstTarget?(user,target,show_message)
     return false if damagingMove?
     return !target.canCharm?(user,true,self)
   end
@@ -984,7 +984,7 @@ end
 # Frostbite's the target.
 #===============================================================================
 class PokeBattle_FrostbiteMove < PokeBattle_Move
-	def pbFailsAgainstTarget?(user,target)
+	def pbFailsAgainstTarget?(user,target,show_message)
 	  return false if damagingMove?
 	  return !target.canFrostbite?(user,true,self)
 	end
@@ -1008,7 +1008,7 @@ end
 
 class PokeBattle_TargetMultiStatUpMove < PokeBattle_Move
   # Each subclass of this must initialize a @statUp in its initialization method
-  def pbFailsAgainstTarget?(user,target)
+  def pbFailsAgainstTarget?(user,target,show_message)
     return false if damagingMove?
     failed = true
     for i in 0...@statUp.length/2
@@ -1150,7 +1150,7 @@ class PokeBattle_InvokeMove < PokeBattle_Move
     @statusToApply = nil
   end
 
-  def pbFailsAgainstTarget?(user,target)
+  def pbFailsAgainstTarget?(user,target,show_message)
     if @battle.primevalWeatherPresent?(false) && target.pbCanInflictStatus?(@statusToApply,user,false,self)
       @battle.pbDisplay(_INTL("But it failed!"))
     end

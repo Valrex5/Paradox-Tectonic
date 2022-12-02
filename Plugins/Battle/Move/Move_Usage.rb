@@ -162,7 +162,7 @@ class PokeBattle_Move
     # Check whether the move fails completely due to move-specific requirements.
     def pbMoveFailed?(user,targets); return false; end
     # Checks whether the move will be ineffective against the target.
-    def pbFailsAgainstTarget?(user,target); return false; end
+    def pbFailsAgainstTarget?(user,target,show_message); return false; end
   
     def pbMoveFailedLastInRound?(user)
       unmoved = false
@@ -180,10 +180,10 @@ class PokeBattle_Move
       return false
     end
   
-    def pbMoveFailedTargetAlreadyMoved?(target)
+    def pbMoveFailedTargetAlreadyMoved?(target,showMessage=true)
       if (@battle.choices[target.index][0]!=:UseMove &&
          @battle.choices[target.index][0]!=:Shift) || target.movedThisRound?
-        @battle.pbDisplay(_INTL("But it failed!"))
+        @battle.pbDisplay(_INTL("But it failed!")) if showMessage
         return true
       end
       return false
