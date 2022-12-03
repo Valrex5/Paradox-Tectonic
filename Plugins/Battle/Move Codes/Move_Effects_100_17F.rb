@@ -34,7 +34,7 @@ class PokeBattle_Move_100 < PokeBattle_WeatherMove
   class PokeBattle_Move_103 < PokeBattle_Move
     def pbMoveFailed?(user,targets,show_message)
       if user.pbOpposingSide.effectAtMax?(:Spikes)
-        @battle.pbDisplay(_INTL("But it failed, since there is no room for more Spikes!"))
+        @battle.pbDisplay(_INTL("But it failed, since there is no room for more Spikes!")) if show_message
         return true
       end
       return false
@@ -66,7 +66,7 @@ class PokeBattle_Move_100 < PokeBattle_WeatherMove
   class PokeBattle_Move_105 < PokeBattle_Move
     def pbMoveFailed?(user,targets,show_message)
       if user.pbOpposingSide.effectActive?(:StealthRock)
-        @battle.pbDisplay(_INTL("But it failed, since pointed stones already float around the opponent!"))
+        @battle.pbDisplay(_INTL("But it failed, since pointed stones already float around the opponent!")) if show_message
         return true
       end
       return false
@@ -196,12 +196,12 @@ class PokeBattle_Move_100 < PokeBattle_WeatherMove
   class PokeBattle_Move_10C < PokeBattle_Move
     def pbMoveFailed?(user,targets,show_message)
       if user.substituted?
-        @battle.pbDisplay(_INTL("{1} already has a substitute!",user.pbThis))
+        @battle.pbDisplay(_INTL("{1} already has a substitute!",user.pbThis)) if show_message
         return true
       end
       
       if user.hp <= getSubLife(user)
-        @battle.pbDisplay(_INTL("But it does not have enough HP left to make a substitute!"))
+        @battle.pbDisplay(_INTL("But it failed, since #{user.pbThis(true)} does not have enough HP left to make a substitute!")) if show_message
         return true
       end
       return false
@@ -253,7 +253,7 @@ class PokeBattle_Move_100 < PokeBattle_WeatherMove
       if !user.pbCanLowerStatStage?(:SPEED,user,self) &&
          !user.pbCanRaiseStatStage?(:ATTACK,user,self) &&
          !user.pbCanRaiseStatStage?(:DEFENSE,user,self)
-        @battle.pbDisplay(_INTL("But it failed!"))
+        @battle.pbDisplay(_INTL("But it failed!")) if show_message
         return true
       end
       return false
@@ -452,7 +452,7 @@ class PokeBattle_Move_100 < PokeBattle_WeatherMove
     
     def pbMoveFailed?(user,targets,show_message)
       if user.effectAtMax?(:Stockpile)
-        @battle.pbDisplay(_INTL("{1} can't stockpile any more!",user.pbThis))
+        @battle.pbDisplay(_INTL("{1} can't stockpile any more!",user.pbThis)) if show_message
         return true
       end
       return false
@@ -478,7 +478,7 @@ class PokeBattle_Move_100 < PokeBattle_WeatherMove
   class PokeBattle_Move_113 < PokeBattle_Move
     def pbMoveFailed?(user,targets,show_message)
       if !user.effectActive?(:Stockpile)
-        @battle.pbDisplay(_INTL("But it failed to spit up a thing!"))
+        @battle.pbDisplay(_INTL("But it failed to spit up a thing!")) if show_message
         return true
       end
       return false
@@ -516,7 +516,7 @@ class PokeBattle_Move_100 < PokeBattle_WeatherMove
     def pbMoveFailed?(user,targets,show_message)
       return true if super
       if !user.effectActive?(:Stockpile)
-        @battle.pbDisplay(_INTL("But it failed to swallow a thing!"))
+        @battle.pbDisplay(_INTL("But it failed to swallow a thing!")) if show_message
         return true
       end
       return false
@@ -565,11 +565,13 @@ class PokeBattle_Move_100 < PokeBattle_WeatherMove
   
     def pbMoveFailed?(user,targets,show_message)
       if user.effectActive?(:FocusPunch) && user.lastHPLost > 0
-        @battle.pbDisplay(_INTL("{1} lost its focus and couldn't move!",user.pbThis))
+        @battle.pbDisplay(_INTL("{1} lost its focus and couldn't move!",user.pbThis)) if show_message
         return true
       end
       return false
     end
+
+    def pbMoveFailedAI?(user,targets); return false; end
 
     def getScore(score,user,target,skill=100)
       score += 30 if user.substituted?
@@ -644,7 +646,7 @@ class PokeBattle_Move_100 < PokeBattle_WeatherMove
   class PokeBattle_Move_118 < PokeBattle_Move
     def pbMoveFailed?(user,targets,show_message)
       if @battle.field.effectActive?(:Gravity)
-        @battle.pbDisplay(_INTL("But it failed, since gravity is already intense!"))
+        @battle.pbDisplay(_INTL("But it failed, since gravity is already intense!")) if show_message
         return true
       end
       return false
@@ -674,8 +676,16 @@ class PokeBattle_Move_100 < PokeBattle_WeatherMove
     def unusableInGravity?; return true; end
   
     def pbMoveFailed?(user,targets,show_message)
-      if user.effectActive?(:Ingrain) || user.effectActive?(:SmackDown) || user.effectActive?(:MagnetRise)
-        @battle.pbDisplay(_INTL("But it failed!"))
+      if user.effectActive?(:Ingrain)
+        @battle.pbDisplay(_INTL("But it failed, since #{user.pbThis(true)}'s roots keep it stuck in the ground!")) if show_message
+        return true
+      end
+      if user.effectActive?(:SmackDown)
+        @battle.pbDisplay(_INTL("But it failed, since #{user.pbThis(true)} was smacked down to the ground!")) if show_message
+        return true
+      end
+      if user.effectActive?(:MagnetRise)
+        @battle.pbDisplay(_INTL("But it failed, since #{user.pbThis(true)} is already risen up through magnetism!")) if show_message
         return true
       end
       return false
@@ -905,7 +915,7 @@ class PokeBattle_Move_100 < PokeBattle_WeatherMove
       eachValidSwitch(user) do |ally|
         return false
       end
-      @battle.pbDisplay(_INTL("But it failed!"))
+      @battle.pbDisplay(_INTL("But it failed, since #{user.pbThis(true)} has no valid allies to switch with!")) if show_message
       return true
     end
 
@@ -1002,8 +1012,16 @@ class PokeBattle_Move_100 < PokeBattle_WeatherMove
         hasOtherMoves  = true if m.id!=@id
         hasUnusedMoves = true if m.id!=@id && !user.movesUsed.include?(m.id)
       end
-      if !hasThisMove || !hasOtherMoves || hasUnusedMoves
-        @battle.pbDisplay(_INTL("But it failed!"))
+      unless hasThisMove
+        @battle.pbDisplay(_INTL("But it failed, since #{user.pbThis(true)} doesn't know Last Resort!")) if show_message
+        return true
+      end
+      unless hasOtherMoves
+        @battle.pbDisplay(_INTL("But it failed, since #{user.pbThis(true)} has no other moves!")) if show_message
+        return true
+      end
+      if hasUnusedMoves
+        @battle.pbDisplay(_INTL("But it failed, since #{user.pbThis(true)} hasn't yet used all its other moves!")) if show_message
         return true
       end
       return false
@@ -1103,7 +1121,7 @@ class PokeBattle_Move_12E < PokeBattle_Move
       break
     end
     if failed
-      @battle.pbDisplay(_INTL("But it failed!"))
+      @battle.pbDisplay(_INTL("But it failed!")) if show_message
       return true
     end
     return false
@@ -1190,15 +1208,15 @@ end
         break
       end
       if !hasAlly
-        @battle.pbDisplay(_INTL("But it failed!"))
+        @battle.pbDisplay(_INTL("But it failed!")) if show_message
         return true
       end
       return false
     end
 
-    def pbEffectGeneral(user)
+    def getScore(score,user,target,skill=100)
       echoln("The AI will never use Hold Hands.")
-      return 0
+      super
     end
   end
   
@@ -1300,10 +1318,10 @@ end
   
     def pbMoveFailed?(user,targets,show_message)
       if !user.countsAs?(:HOOPA)
-        @battle.pbDisplay(_INTL("But {1} can't use the move!",user.pbThis(true)))
+        @battle.pbDisplay(_INTL("But {1} can't use the move!",user.pbThis(true))) if show_message
         return true
       elsif user.form != 1
-        @battle.pbDisplay(_INTL("But {1} can't use it the way it is now!",user.pbThis(true)))
+        @battle.pbDisplay(_INTL("But {1} can't use it the way it is now!",user.pbThis(true))) if show_message
         return true
       end
       return false
@@ -1349,7 +1367,7 @@ end
       @battle.eachBattler do |b|
         return false if isValidTarget?(user,b)
       end
-      @battle.pbDisplay(_INTL("But it failed!"))
+      @battle.pbDisplay(_INTL("But it failed, since it has no valid targets!")) if show_message
       return true
     end
 
@@ -1387,7 +1405,7 @@ end
       @battle.eachBattler do |b|
         return false if isValidTarget?(user,b)
       end
-      @battle.pbDisplay(_INTL("But it failed!"))
+      @battle.pbDisplay(_INTL("But it failed, since it has no valid targets!")) if show_message
       return true
     end
 
@@ -1430,7 +1448,7 @@ end
       @battle.eachBattler do |b|
         return false if isValidTarget?(user,b)
       end
-      @battle.pbDisplay(_INTL("But it failed!"))
+      @battle.pbDisplay(_INTL("But it failed, since it has no valid targets!")) if show_message
       return true
     end
 
@@ -1598,10 +1616,10 @@ end
     def pbMoveFailed?(user,targets,show_message)
       return false if damagingMove?
       if @battle.field.effectActive?(:IonDeluge)
-        @battle.pbDisplay(_INTL("But it failed, since ions already shower the field!"))
+        @battle.pbDisplay(_INTL("But it failed, since ions already shower the field!")) if show_message
         return true
       end
-      return true if pbMoveFailedLastInRound?(user)
+      return true if pbMoveFailedLastInRound?(user,show_message)
       return false
     end
   
@@ -1656,11 +1674,15 @@ end
   #===============================================================================
   class PokeBattle_Move_149 < PokeBattle_Move
     def pbMoveFailed?(user,targets,show_message)
-      if !user.firstTurn? || user.pbOwnSide.effectActive?(:MatBlock)
-        @battle.pbDisplay(_INTL("But it failed!"))
+      unless user.firstTurn?
+        @battle.pbDisplay(_INTL("But it failed, since it isn't #{user.pbThis(true)}'s first turn!")) if show_message
         return true
       end
-      return true if pbMoveFailedLastInRound?(user)
+      if user.pbOwnSide.effectActive?(:MatBlock)
+        @battle.pbDisplay(_INTL("But it failed, since a Mat was already thrown up on #{user.pbThis(true)}'s side of the field!")) if show_message
+        return true
+      end
+      return true if pbMoveFailedLastInRound?(user,show_message)
       return false
     end
   
@@ -1685,10 +1707,10 @@ end
   class PokeBattle_Move_14A < PokeBattle_Move
     def pbMoveFailed?(user,targets,show_message)
       if user.pbOwnSide.effectActive?(:CraftyShield)
-        @battle.pbDisplay(_INTL("But it failed, since a crafty shield is already protecting #{user.pbTeam(true)}!"))
+        @battle.pbDisplay(_INTL("But it failed, since a crafty shield is already protecting #{user.pbTeam(true)}!")) if show_message
         return true
       end
-      return true if pbMoveFailedLastInRound?(user)
+      return true if pbMoveFailedLastInRound?(user,show_message)
       return false
     end
   
@@ -1771,7 +1793,7 @@ end
       if !user.pbCanRaiseStatStage?(:SPECIAL_ATTACK,user,self) &&
          !user.pbCanRaiseStatStage?(:SPECIAL_DEFENSE,user,self) &&
          !user.pbCanRaiseStatStage?(:SPEED,user,self)
-        @battle.pbDisplay(_INTL("{1}'s stats won't go any higher!",user.pbThis))
+        @battle.pbDisplay(_INTL("{1}'s stats won't go any higher!",user.pbThis)) if show_message
         return true
       end
       return false
@@ -1861,7 +1883,7 @@ end
   class PokeBattle_Move_152 < PokeBattle_Move
     def pbMoveFailed?(user,targets,show_message)
       if @battle.field.effectActive?(:FairyLock)
-        @battle.pbDisplay(_INTL("But it failed, since a Fairy Lock is already active!"))
+        @battle.pbDisplay(_INTL("But it failed, since a Fairy Lock is already active!")) if show_message
         return true
       end
       return false
@@ -1884,7 +1906,7 @@ end
   class PokeBattle_Move_153 < PokeBattle_Move
     def pbMoveFailed?(user,targets,show_message)
       if user.pbOpposingSide.effectActive?(:StickyWeb)
-        @battle.pbDisplay(_INTL("But it failed, since a Sticky Web is already laid out!"))
+        @battle.pbDisplay(_INTL("But it failed, since a Sticky Web is already laid out!")) if show_message
         return true
       end
       return false
@@ -1967,7 +1989,7 @@ end
   
     def pbMoveFailed?(user,targets,show_message)
       if !user.belched?
-        @battle.pbDisplay(_INTL("But it failed!"))
+        @battle.pbDisplay(_INTL("But it failed, since #{user.pbThis(true)} hasn't eaten a berry yet!")) if show_message
         return true
       end
       return false
@@ -2190,7 +2212,7 @@ end
   class PokeBattle_Move_162 < PokeBattle_Move
     def pbMoveFailed?(user,targets,show_message)
       if !user.pbHasType?(:FIRE)
-        @battle.pbDisplay(_INTL("But it failed!"))
+        @battle.pbDisplay(_INTL("But it failed, since #{user.pbThis(true)} isn't Fire-type!")) if show_message
         return true
       end
       return false
@@ -2277,11 +2299,11 @@ end
   class PokeBattle_Move_167 < PokeBattle_Move
     def pbMoveFailed?(user,targets,show_message)
       if @battle.pbWeather != :Hail
-        @battle.pbDisplay(_INTL("But it failed, since it's not Hailing!"))
+        @battle.pbDisplay(_INTL("But it failed, since it's not Hailing!")) if show_message
         return true
       end
       if user.pbOwnSide.effectActive?(:AuroraVeil)
-        @battle.pbDisplay(_INTL("But it failed, since Aurora Veil is already active!"))
+        @battle.pbDisplay(_INTL("But it failed, since Aurora Veil is already active!")) if show_message
         return true
       end
       return false
@@ -2579,14 +2601,18 @@ end
       if !@battle.moldBreaker
         bearer = @battle.pbCheckGlobalAbility(:DAMP)
         if bearer!=nil
-          @battle.pbShowAbilitySplash(bearer)
-          @battle.pbDisplay(_INTL("{1} cannot use {2}!",user.pbThis,@name))
-          @battle.pbHideAbilitySplash(bearer)
+          if show_message
+            @battle.pbShowAbilitySplash(bearer)
+            @battle.pbDisplay(_INTL("{1} cannot use {2}!",user.pbThis,@name))
+            @battle.pbHideAbilitySplash(bearer)
+          end
           return true
         end
       end
       return false
     end
+
+    def pbMoveFailedAI?(user,targets); return false; end
   
     def pbSelfKO(user)
       return if !user.takesIndirectDamage?
@@ -2618,15 +2644,17 @@ end
   
     def pbMoveFailed?(user,targets,show_message)
       if !user.effectActive?(:ShellTrap)
-        @battle.pbDisplay(_INTL("But it failed!"))
+        @battle.pbDisplay(_INTL("But it failed!")) if show_message
         return true
       end
       if !user.tookPhysicalHit
-        @battle.pbDisplay(_INTL("{1}'s shell trap didn't work!",user.pbThis))
+        @battle.pbDisplay(_INTL("{1}'s shell trap didn't work!",user.pbThis)) if show_message
         return true
       end
       return false
     end
+
+    def pbMoveFailedAI?(user,targets); return false; end
 
     def getScore(score,user,target,skill=100)
       score = 0 if !target.hasPhysicalAttack?
@@ -2662,12 +2690,12 @@ end
   end
   
   #===============================================================================
-  # Fails if this isn't the user's first turn. (First Impression, Breach)
+  # Fails if this isn't the user's first turn. (First Impression, Breach, Ambush)
   #===============================================================================
   class PokeBattle_Move_174 < PokeBattle_Move
     def pbMoveFailed?(user,targets,show_message)
       if !user.firstTurn?
-        @battle.pbDisplay(_INTL("But it failed!"))
+        @battle.pbDisplay(_INTL("But it failed, since it isn't #{user.pbThis(true)}'s first turn!")) if show_message
         return true
       end
       return false
@@ -2689,7 +2717,7 @@ end
 class PokeBattle_Move_176 < PokeBattle_NumbMove
   def pbMoveFailed?(user,targets,show_message)
     if @id == :AURAWHEEL && !user.countsAs?(:MORPEKO)
-      @battle.pbDisplay(_INTL("But {1} can't use the move!",user.pbThis))
+      @battle.pbDisplay(_INTL("But {1} can't use the move!",user.pbThis(true))) if show_message
       return true
     end
     return false
@@ -2750,7 +2778,7 @@ class PokeBattle_Move_179 < PokeBattle_Move
 
   def pbMoveFailed?(user,targets,show_message)
     if user.hp <= (user.totalhp/3)
-      @battle.pbDisplay(_INTL("But it failed!"))
+      @battle.pbDisplay(_INTL("But it failed, since #{user.pbThis(true)}'s HP is too low!")) if show_message
       return true
     end
     super
@@ -2782,7 +2810,7 @@ class PokeBattle_Move_17A < PokeBattle_Move
       id = effectData.id
       return false if playerSide.effectActive?(id) || trainerSide.effectActive?(id)
     end
-    @battle.pbDisplay(_INTL("But it failed, since there were no effects to swap!"))
+    @battle.pbDisplay(_INTL("But it failed, since there were no effects to swap!")) if show_message
     return true
   end
 
@@ -2910,7 +2938,7 @@ class PokeBattle_Move_17E < PokeBattle_Move
       break
     end
     if failed
-      @battle.pbDisplay(_INTL("But it failed!"))
+      @battle.pbDisplay(_INTL("But it failed, since there was no one to heal!")) if show_message
       return true
     end
     return false
@@ -2954,7 +2982,7 @@ class PokeBattle_Move_17F < PokeBattle_MultiStatUpMove
 
   def pbMoveFailed?(user,targets,show_message)
     if user.effectActive?(:NoRetreat)
-      @battle.pbDisplay(_INTL("But it failed, since #{user.pbThis(true)} is already committed to the battle!"))
+      @battle.pbDisplay(_INTL("But it failed, since #{user.pbThis(true)} is already committed to the battle!")) if show_message
       return true
     end
     super
