@@ -4,7 +4,7 @@
 # Status moves always fail.
 #===============================================================================
 class PokeBattle_UnimplementedMove < PokeBattle_Move
-  def pbMoveFailed?(user,targets)
+  def pbMoveFailed?(user,targets,show_message)
     if statusMove?
       @battle.pbDisplay(_INTL("But it failed!"))
       return true
@@ -249,7 +249,7 @@ end
 # Generic user's stat increase/decrease classes.
 #===============================================================================
 class PokeBattle_StatUpMove < PokeBattle_Move
-  def pbMoveFailed?(user,targets)
+  def pbMoveFailed?(user,targets,show_message)
     return false if damagingMove?
     return !user.pbCanRaiseStatStage?(@statUp[0],user,self,true)
   end
@@ -299,7 +299,7 @@ end
 class PokeBattle_MultiStatUpMove < PokeBattle_Move
   # Each subclass of this must initialize a @statUp in its initialization method
 
-  def pbMoveFailed?(user,targets)
+  def pbMoveFailed?(user,targets,show_message)
     return false if damagingMove?
     failed = true
     for i in 0...@statUp.length/2
@@ -615,7 +615,7 @@ class PokeBattle_HealingMove < PokeBattle_Move
     return 1
   end
 
-  def pbMoveFailed?(user,targets)
+  def pbMoveFailed?(user,targets,show_message)
     if user.hp == user.totalhp
       @battle.pbDisplay(_INTL("{1}'s HP is full!",user.pbThis))
       return true
@@ -684,7 +684,7 @@ class PokeBattle_ProtectMove < PokeBattle_Move
     user.applyEffect(:ProtectFailure) if failure
   end
 
-  def pbMoveFailed?(user,targets)
+  def pbMoveFailed?(user,targets,show_message)
     shouldFail = false
     if @sidedEffect
       if user.pbOwnSide.effectActive?(@effect)
@@ -754,7 +754,7 @@ class PokeBattle_WeatherMove < PokeBattle_Move
     @durationSet = 5
   end
 
-  def pbMoveFailed?(user,targets)
+  def pbMoveFailed?(user,targets,show_message)
     return false if damagingMove?
     return @battle.primevalWeatherPresent?
   end
@@ -1185,7 +1185,7 @@ class PokeBattle_TerrainMove < PokeBattle_Move
     @durationSet = 5
   end
 
-  def pbMoveFailed?(user,targets)
+  def pbMoveFailed?(user,targets,show_message)
     if @battle.field.terrain == @terrainType
       @battle.pbDisplay(_INTL("But it failed, since that Terrain is already present!"))
       return true
@@ -1227,7 +1227,7 @@ class PokeBattle_StatusSpikeMove < PokeBattle_Move
     @spikeData = GameData::BattleEffect.get(@spikeEffect)
   end
 
-  def pbMoveFailed?(user,targets)
+  def pbMoveFailed?(user,targets,show_message)
     return false if damagingMove?
     if user.pbOpposingSide.effectAtMax?(@spikeEffect)
       maximum = @spikeData.maximum
@@ -1277,7 +1277,7 @@ end
 
 # Each subclass must define a @statUp and @statDown array in their initialization method
 class PokeBattle_StatUpDownMove < PokeBattle_Move 
-	def pbMoveFailed?(user,targets)
+	def pbMoveFailed?(user,targets,show_message)
     return false if user.pbCanRaiseAnyOfStats?(@statUp,user,move: self)
     return false if user.pbCanRaiseAnyOfStats?(@statDown,user,move: self)
 		@battle.pbDisplay(_INTL("{1}'s stats can't be changed further!",user.pbThis))
@@ -1315,7 +1315,7 @@ class PokeBattle_PartyMemberEffectMove < PokeBattle_Move
     return true
 	end
 
-	def pbMoveFailed?(user,targets)
+	def pbMoveFailed?(user,targets,show_message)
     return true if @battle.autoTesting
 		@battle.pbParty(user.index).each do |pkmn|
 			return false if legalChoice(pkmn)

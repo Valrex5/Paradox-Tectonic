@@ -12,12 +12,10 @@ class PokeBattle_Move
   end
 
   def shouldShade?(user,target)
-    @battle.messagesBlocked = true
-    if pbMoveFailed?(user,[target])
+    if pbMoveFailed?(user,[target],false)
       @battle.messagesBlocked = false
       return true
     end
-    @battle.messagesBlocked = false
     return true if pbFailsAgainstTargetAI?(user,target)
     return false
   end

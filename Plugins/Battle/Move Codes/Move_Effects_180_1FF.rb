@@ -77,7 +77,7 @@ class PokeBattle_Move_184 < PokeBattle_Move
       return target.item && target.item.is_berry? && !target.semiInvulnerable?
     end
 
-    def pbMoveFailed?(user, targets, messages = true)
+    def pbMoveFailed?(user,targets,show_message)
       @battle.eachBattler do |b|
         return false if isValidTarget?(b)
       end
@@ -180,7 +180,7 @@ end
 class PokeBattle_Move_189 < PokeBattle_Move
   def healingMove?; return true; end
 
-  def pbMoveFailed?(user, targets, messages = true)
+  def pbMoveFailed?(user,targets,show_message)
     jglheal = 0
     for i in 0...targets.length
       jglheal += 1 if (targets[i].hp == targets[i].totalhp || !targets[i].canHeal?) && targets[i].status == :NONE
@@ -396,7 +396,7 @@ end
 # Removes all Terrain. Fails if there is no Terrain (Steel Roller)
 #===============================================================================
 class PokeBattle_Move_195 < PokeBattle_Move
-  def pbMoveFailed?(user, _targets, messages = true)
+  def pbMoveFailed?(user,targets,show_message)
     if @battle.field.terrain == :None
       @battle.pbDisplay(_INTL("But it failed!")) if messages
       return true

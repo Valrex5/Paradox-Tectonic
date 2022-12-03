@@ -303,13 +303,11 @@ class PokeBattle_AI
             score = 0
         end
 
-        @battle.messagesBlocked = true
         # Don't use a move that would fail outright
-        if move.pbMoveFailed?(user,[target])
+        if move.pbMoveFailedAI?(user,[target])
             PBDebug.log("[BOSS AI] Scoring #{move.name} a 0 due to being predicted to fail entirely")
             score = 0
         end
-        @battle.messagesBlocked = false
 
         if bossAI.requireMove?(move, user, target, @battle)
             PBDebug.log(addTargetIfPresent("[BOSS AI] #{user.pbThis} (#{user.index}) custom AI requires move #{move.name}",target))

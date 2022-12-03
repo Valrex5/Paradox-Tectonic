@@ -319,7 +319,7 @@ class PokeBattle_Battler
 			@battle.pbDisplay(_INTL("{1} snatched {2}'s move!", user.pbThis, pbThis(true)))
 		end
 		# "But it failed!" checks
-		if move.pbMoveFailed?(user, targets)
+		if move.pbMoveFailed?(user, targets, true)
 			PBDebug.log(format("[Move failed] In function code %s's def pbMoveFailed?", move.function))
 			user.lastMoveFailed = true
 			move.moveFailed(user,targets)

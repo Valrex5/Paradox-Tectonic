@@ -1,5 +1,5 @@
 module EmpoweredMove
-	def pbMoveFailed?(user,targets); return false; end
+	def pbMoveFailed?(user,targets,show_message); return false; end
 	def pbFailsAgainstTarget?(user,target,show_message); return false; end
 
 	# There must be 2 turns without using a primeval attack to then be able to use it again
@@ -588,7 +588,7 @@ end
 class PokeBattle_Move_700 < PokeBattle_Move
     def ignoresSubstitute?(user); return true; end
   
-    def pbMoveFailed?(user,targets)
+    def pbMoveFailed?(user,targets,show_message)
       if !user.countsAs?(:RAYQUAZA) || !user.boss?
         @battle.pbDisplay(_INTL("But {1} can't use the move!",user.pbThis(true)))
         return true

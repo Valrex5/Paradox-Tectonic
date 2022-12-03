@@ -160,9 +160,14 @@ class PokeBattle_Move
     # Move failure checks
     #=============================================================================
     # Check whether the move fails completely due to move-specific requirements.
-    def pbMoveFailed?(user,targets); return false; end
+    def pbMoveFailed?(user,targets,show_message); return false; end
+
     # Checks whether the move will be ineffective against the target.
     def pbFailsAgainstTarget?(user,target,show_message); return false; end
+
+    def pbMoveFailedAI?(user,targets)
+        return pbMoveFailed?(user,targets,false)
+    end
 
     def pbFailsAgainstTargetAI?(user,target)
         return pbFailsAgainstTarget?(user,target,false)
