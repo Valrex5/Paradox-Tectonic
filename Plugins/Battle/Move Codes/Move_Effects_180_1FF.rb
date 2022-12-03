@@ -81,7 +81,7 @@ class PokeBattle_Move_184 < PokeBattle_Move
       @battle.eachBattler do |b|
         return false if isValidTarget?(b)
       end
-      @battle.pbDisplay(_INTL("But it failed!")) if messages
+      @battle.pbDisplay(_INTL("But it failed, because no one has any berries!")) if show_message
       return true
     end
 
@@ -186,7 +186,7 @@ class PokeBattle_Move_189 < PokeBattle_Move
       jglheal += 1 if (targets[i].hp == targets[i].totalhp || !targets[i].canHeal?) && targets[i].status == :NONE
     end
     if jglheal == targets.length
-      @battle.pbDisplay(_INTL("But it failed!")) if messages
+      @battle.pbDisplay(_INTL("But it failed!")) if show_message
       return true
     end
     return false
@@ -398,7 +398,7 @@ end
 class PokeBattle_Move_195 < PokeBattle_Move
   def pbMoveFailed?(user,targets,show_message)
     if @battle.field.terrain == :None
-      @battle.pbDisplay(_INTL("But it failed!")) if messages
+      @battle.pbDisplay(_INTL("But it failed, since there is no active terrain!")) if show_message
       return true
     end
     return false

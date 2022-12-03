@@ -590,7 +590,7 @@ class PokeBattle_Move_700 < PokeBattle_Move
   
     def pbMoveFailed?(user,targets,show_message)
       if !user.countsAs?(:RAYQUAZA) || !user.boss?
-        @battle.pbDisplay(_INTL("But {1} can't use the move!",user.pbThis(true)))
+        @battle.pbDisplay(_INTL("But {1} can't use the move!",user.pbThis(true))) if show_message
         return true
       end
       return false
