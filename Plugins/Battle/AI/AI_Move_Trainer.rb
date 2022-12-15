@@ -110,7 +110,7 @@ class PokeBattle_AI
 
         return 0 if aiPredictsFailure?(move,user,target)
         
-		effectScore = pbGetMoveScoreFunctionCode(100,move,user,target,policies)
+		effectScore = pbGetMoveScoreFunctionCode(0,move,user,target,policies)
 
 		if effectScore.nil?
 			echoln("ERROR! #{user.pbThis} unable to score #{move.id} against target #{target.pbThis(false)}. Assuming an effect score of 0.")

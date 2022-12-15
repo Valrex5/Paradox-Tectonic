@@ -47,7 +47,7 @@ class PokeBattle_Move_581 < PokeBattle_SleepMove
 		user.pbMinimizeStatStage(:SPEED,user,self)
 	end
 
-	def getEffectScore(score,user,target)
+	def getEffectScore(user,target)
 		score -= user.stages[:SPEED] * 5
 		super
 	end
@@ -84,7 +84,7 @@ class PokeBattle_Move_583 < PokeBattle_HealingMove
 		user.tryRaiseStat(:SPEED,user, move: self)
 	end
 
-	def getEffectScore(score,user,target)
+	def getEffectScore(user,target)
 		score = super
 		score += 20
 		score -= user.stages[:SPEED] * 20
@@ -118,7 +118,7 @@ class PokeBattle_Move_584 < PokeBattle_Move
 		target.tryRaiseStat(statsRanked[2],user, move: self) if statsRanked.length > 2
 	end
 	
-	def getEffectScore(score,user,target)
+	def getEffectScore(user,target)
 		score += 20 if user.firstTurn?
 		stats = [:ATTACK,:DEFENSE,:SPECIAL_ATTACK,:SPECIAL_DEFENSE,:SPEED]
 		stats.each do |s|
@@ -264,7 +264,7 @@ class PokeBattle_Move_58E < PokeBattle_Move_0EE
 		user.pbOpposingSide.incrementEffect(:Spikes)
 	end
 
-	def getEffectScore(score,user,target)
+	def getEffectScore(user,target)
 		score -= 30 if user.pbOpposingSide.effectAtMax?(:Spikes)
 		super
 	end
@@ -377,7 +377,7 @@ class PokeBattle_Move_593 < PokeBattle_ProtectMove
 	  @effect = :MirrorShield
 	end
 
-	def getEffectScore(score,user,target)
+	def getEffectScore(user,target)
 		score = super
 		# Check only special attackers
 		user.eachPotentialAttacker(1) do |b|
@@ -575,7 +575,7 @@ class PokeBattle_Move_5A1 < PokeBattle_Move
 		user.pbOpposingSide.applyEffect(:FeatherWard)
 	end
 
-	def getEffectScore(score,user,target)
+	def getEffectScore(user,target)
 		score = getHazardSettingEffectScore(score,user,target)
 		return score
 	end
@@ -670,7 +670,7 @@ end
       user.pbChangeForm(1,_INTL("{1} transcended its limits and transformed!",user.pbThis))
     end
 
-    def getEffectScore(score,user,target)
+    def getEffectScore(user,target)
       score += 30 if user.firstTurn?
 	  score += 20
       super
@@ -828,7 +828,7 @@ class PokeBattle_Move_5AC < PokeBattle_Move
 	  end
 	end
 	
-	def getEffectScore(score,user,target)
+	def getEffectScore(user,target)
 	  score += target.canLeech?(user,false,self) ? 20 : -20
 	  score += target.canNumb?(user,false,self) ? 20 : -20
 	  return score
