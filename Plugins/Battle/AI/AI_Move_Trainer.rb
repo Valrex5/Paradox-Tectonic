@@ -67,7 +67,7 @@ class PokeBattle_AI
             totalScore = 0
             targets = []
             @battle.eachBattler do |b|
-                next if !@battle.pbMoveCanTarget?(user.index,b.index,target_data)
+                next unless @battle.pbMoveCanTarget?(user.index,b.index,target_data)
                 targets.push(b)
             end
             targets.each do |b|
@@ -87,7 +87,7 @@ class PokeBattle_AI
             # If move affects one battler and you have to choose which one
             scoresAndTargets = []
             @battle.eachBattler do |b|
-                next if !@battle.pbMoveCanTarget?(user.index,b.index,target_data)
+                next unless @battle.pbMoveCanTarget?(user.index,b.index,target_data)
                 next if target_data.targets_foe && !user.opposes?(b)
                 score = pbGetMoveScore(move,user,b,policies)
                 scoresAndTargets.push([score,b.index]) if score>0

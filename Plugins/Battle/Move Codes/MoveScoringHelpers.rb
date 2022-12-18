@@ -5,27 +5,27 @@ STATUS_UPSIDE_ABILITIES = [:GUTS,:AUDACITY,:MARVELSCALE,:MARVELSKIN,:QUICKFEET]
 ALL_STATUS_SCORE_BONUS = 0
 STATUS_UPSIDE_MALUS = 60
 
-def getStatusSettingEffectScore(statusApplying,user,target,policies=[])
+def getStatusSettingEffectScore(statusApplying,user,target,ignoreCheck: false)
 	case statusApplying
 	when :SLEEP
-		return getSleepEffectScore(user,target,policies)
+		return getSleepEffectScore(user,target,policies: policies, ignoreCheck: ignoreCheck)
 	when :POISON
-		return getPoisonEffectScore(user,target,policies)
+		return getPoisonEffectScore(user,target,policies: policies, ignoreCheck: ignoreCheck)
 	when :BURN
-		return getBurnEffectScore(user,target,policies)
+		return getBurnEffectScore(user,target,policies: policies, ignoreCheck: ignoreCheck)
 	when :FROSTBITE
-		return getFrostbiteEffectScore(user,target,policies)
+		return getFrostbiteEffectScore(user,target,policies: policies, ignoreCheck: ignoreCheck)
 	when :NUMB
-		return getNumbEffectScore(user,target,policies)
+		return getNumbEffectScore(user,target,policies: policies, ignoreCheck: ignoreCheck, ignoreCheck: ignoreCheck)
 	when :DIZZY
-		return getDizzyEffectScore(user,target,policies)
+		return getDizzyEffectScore(user,target,policies: policies)
 	end
 
 	return score
 end
 
-def getNumbEffectScore(user,target,policies=[])
-	if target && target.canNumb?(user,false)
+def getNumbEffectScore(user,target,ignoreCheck: false)
+	if target && (ignoreCheck || target.canNumb?(user,false))
 		score = 0
 		if target.hasDamagingAttack?
 			score += 60
@@ -42,9 +42,9 @@ def getNumbEffectScore(user,target,policies=[])
 	return score
 end
 
-def getPoisonEffectScore(user,target,policies=[])
-	if target && target.canPoison?(user,false)
-		return 9999 if policies.include?(:PRIORITIZEDOTS)
+def getPoisonEffectScore(user,target,ignoreCheck: false)
+	if target && (ignoreCheck || target.canPoison?(user,false))
+		return 9999 if user.ownersPolicies.include?(:PRIORITIZEDOTS) && user.opposes?(target)
 		score = 40
 		score += 20 if target.hp == target.totalhp
 		score += 20 if target.hp >= target.totalhp / 2 || target.hp <= target.totalhp / 8
@@ -59,9 +59,9 @@ def getPoisonEffectScore(user,target,policies=[])
 	return score
 end
 
-def getBurnEffectScore(user,target,policies=[])
-	if target && target.canBurn?(user,false)
-		return 9999 if policies.include?(:PRIORITIZEDOTS)
+def getBurnEffectScore(user,target,ignoreCheck: false)
+	if target && (ignoreCheck || target.canBurn?(user,false))
+		return 9999 if user.ownersuser.ownersPolicies.include?(:PRIORITIZEDOTS) && user.opposes?(target)
 		score = 40
 		if target.hasPhysicalAttack?
 			score += 30
@@ -78,9 +78,9 @@ def getBurnEffectScore(user,target,policies=[])
 	return score
 end
 
-def getFrostbiteEffectScore(user,target,policies=[])
-	if target && target.canFrostbite?(user,false)
-		return 9999 if policies.include?(:PRIORITIZEDOTS)
+def getFrostbiteEffectScore(user,target,ignoreCheck: false)
+	if target && (ignoreCheck || target.canFrostbite?(user,false))
+		return 9999 if user.ownersPolicies.include?(:PRIORITIZEDOTS) && user.opposes?(target)
 		score = 40
 		if target.hasSpecialAttack?
 			score += 30
@@ -97,16 +97,9 @@ def getFrostbiteEffectScore(user,target,policies=[])
 	return score
 end
 
-def getSleepEffectScore(user,target,policies=[])
-	score = 200
-	score -= 100 if target.hasSleepAttack?
-	score += STATUS_PUNISHMENT_BONUS if user.hasStatusPunishMove?
-	return score
-end
-
-def getDizzyEffectScore(user,target,policies=[])
+def getDizzyEffectScore(user,target,ignoreCheck: false)
 	canDizzy = target.canDizzy?(user,false) && !target.hasActiveAbility?(:MENTALBLOCK)
-	if canDizzy
+	if (ignoreCheck || canDizzy)
 		score = 60 # TODO: Some sort of basic AI for rating abilities?
 		score += 20 if target.hp >= target.totalhp / 2
 		score += 20 if user.hasDamagingAttack?
@@ -118,10 +111,10 @@ def getDizzyEffectScore(user,target,policies=[])
 	return score
 end
 
-def getLeechEffectScore(user,target,policies=[])
+def getLeechEffectScore(user,target,ignoreCheck: false)
 	canLeech = target.canLeech?(user,false)
-	if canLeech
-		return 9999 if policies.include?(:PRIORITIZEDOTS)
+	if (ignoreCheck || canLeech)
+		return 9999 if user.ownersPolicies.include?(:PRIORITIZEDOTS) && user.opposes?(target)
 		score = 40
 		score += NON_ATTACKER_BONUS * 2 unless user.hasDamagingAttack?
 		score += 20 if target.hp >= target.totalhp / 2
@@ -138,6 +131,15 @@ def getLeechEffectScore(user,target,policies=[])
 	end
 	return score
 end
+
+def getSleepEffectScore(user,target,policies=[])
+	score = 200
+	score -= 100 if target.hasSleepAttack?
+	score += STATUS_PUNISHMENT_BONUS if user.hasStatusPunishMove?
+	return score
+end
+
+
 
 def getFlinchingEffectScore(baseScore,user,target,policies)
 	userSpeed = user.pbSpeed(true)
@@ -162,15 +164,13 @@ def getWantsToBeSlowerScore(user,other,magnitude=1)
 	userSpeed = user.pbSpeed(true)
 	otherSpeed = other.pbSpeed(true)
 	if userSpeed < otherSpeed
-		score += 10 * magnitude
+		return 10 * magnitude
 	else
-		score -= 10 * magnitude
+		return -10 * magnitude
 	end
-	return score
 end
 
 def getHazardSettingEffectScore(user,target)
-	score -= 40
 	canChoose = false
 	user.eachOpposing do |b|
 		next if !user.battle.pbCanChooseNonActive?(b.index)
@@ -178,19 +178,16 @@ def getHazardSettingEffectScore(user,target)
 		break
 	end
 	return 0 if !canChoose # Opponent can't switch in any Pokemon
-		
-	score += 15 * user.enemiesInReserveCount
-	score += 15 * user.alliesInReserveCount
+	score = 0
+	score += 20 * user.enemiesInReserveCount
+	score += 20 * user.alliesInReserveCount
 	return score
 end
 
 def getSelfKOMoveScore(user,target)
 	reserves = user.battle.pbAbleNonActiveCount(user.idxOwnSide)
-	return 0 if reserves == 0 # don't want to lose or draw
-	return 0 if user.hp > user.totalhp / 2
-	score -= 50
-	score -= 30 if user.hp > user.totalhp / 8
-	return score
+	return -200 if reserves == 0 # don't want to lose or draw
+	return ((-user.hp / user.totalhp.to_f) * 100).round
 end
 
 def statusSpikesWeightOnSide(side,excludeEffects=[])
@@ -211,7 +208,7 @@ def hazardWeightOnSide(side,excludeEffects=[])
 end
 
 def getSwitchOutEffectScore(user,target)
-	score -= 10
+	score = 30
 	score -= hazardWeightOnSide(user.pbOwnSide)
 	return score
 end
@@ -223,22 +220,30 @@ def getForceOutEffectScore(user,target)
 		count += 1 if @battle.pbCanSwitchLax?(target.index,i)
 	end
 	return 0 if count
-	score += hazardWeightOnSide(target.pbOwnSide)
-	return score
+	return hazardWeightOnSide(target.pbOwnSide)
 end
 
 def getHealingEffectScore(user,target,magnitude=5)
-	return 0 if user.opposes?(target) && !target.effectActive?(:NerveBreak)
-    return 0 if !user.opposes?(target) && target.effectActive?(:NerveBreak)
-    if target.hp <= target.totalhp / 2
-      	score += magnitude * 10
-	  	score *= 1.5 if target.hasActiveAbilityAI?(:ROOTED)
-    	score *= 1.3 if target.hasActiveItem?(:BIGROOT)
+	score = 0
+
+	if target.hp <= (target.totalhp * 2) / 3
+      	score += magnitude * 5
     end
-	if !user.opposes?(target)
-		score += target.stages[:DEFENSE] * 2 * magnitude
-		score += target.stages[:SPECIAL_DEFENSE] * 2 * magnitude
-	end
+
+	if target.hp <= target.totalhp / 3
+		score += magnitude * 5
+  	end
+
+	score *= 1.5 if target.hasActiveAbilityAI?(:ROOTED)
+	score *= 1.3 if target.hasActiveItem?(:BIGROOT)
+
+	score *= -1 if target.effectActive?(:NerveBreak)
+
+	score *= 1 + (target.stages[:DEFENSE] / 5)
+	score *= 1 + (target.stages[:SPECIAL_DEFENSE] / 5)
+
+	score *= -1 if user.opposes?(target)
+	
 	return score
 end
 
@@ -263,8 +268,6 @@ def getMultiStatUpEffectScore(statUpArray,user,target)
 		increase *= statIncreaseAmount
 		increase -= target.stages[statSymbol] * 10 # Reduce the score for each existing stage
 
-		increase *= -1 if target.hasActiveAbilityAI?(:CONTRARY)
-
 		score += increase
 	end
 
@@ -281,6 +284,62 @@ def getMultiStatUpEffectScore(statUpArray,user,target)
     target.eachPotentialAttacker do |b|
       score *= 0.8
     end
+
+	score *= -1 if target.hasActiveAbility?(:CONTRARY)
+    score *= -1 if !user.opposes?(target)
 	
 	return score
+end
+
+def getMultiStatDownEffectScore(statDownArray,user,target)
+    score = 0
+
+    for i in 0...statDownArray.length/2
+		statSymbol = statDownArray[i*2]
+		statDecreaseAmount = statDownArray[i*2 + 1]
+
+		if statSymbol == :ACCURACY
+			echoln("The AI will never use a move that reduces accuracy.")
+			return -100
+		end
+
+		# Give no extra points for attacking stats you can't use
+		next if statSymbol == :ATTACK && !target.hasPhysicalAttack?
+		next if statSymbol == :SPECIAL_ATTACK && !target.hasSpecialAttack?
+
+		# Increase the score more for boosting attacking stats
+		if statSymbol == :ATTACK || statSymbol == :SPECIAL_ATTACK
+			scoreIncrease = 40
+		else
+			scoreIncrease = 30
+		end
+
+		scoreIncrease *= statDecreaseAmount
+		scoreIncrease += target.stages[statSymbol] * 10 # Increase the score for each existing stage
+
+		score += scoreIncrease
+	end
+
+	# Stat up moves tend to be strong on the first turn
+    score *= 1.2 if target.firstTurn?
+
+	# Stat up moves tend to be strong when you have HP to use
+    score *= 1.2 if target.hp > target.totalhp / 2
+
+    score *= 2 if @battle.pbIsTrapped?(target.index)
+
+    score *= -1 if target.hasActiveAbility?(:CONTRARY)
+    score *= -1 if !user.opposes?(target)
+
+	return score
+end
+
+def getWeatherSettingEffectScore(weatherType,user,battle,duration=4)
+	return 0 if battle.primevalWeatherPresent? || battle.pbCheckGlobalAbility(:AIRLOCK) ||
+		battle.pbCheckGlobalAbility(:CLOUDNINE) || battle.pbWeather == @weatherType
+    score = 20 * user.getWeatherSettingDuration(weatherType,duration,true)
+	if user.firstTurn?
+      score += 20
+    end
+    return score
 end

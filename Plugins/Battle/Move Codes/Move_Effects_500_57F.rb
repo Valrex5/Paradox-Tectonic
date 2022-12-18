@@ -19,8 +19,10 @@ class PokeBattle_Move_501 < PokeBattle_Move
   end
   
   def getEffectScore(user,target)
+	score = 60
 	score -= (user.stages[:ACCURACY] - 6) * 10
-	score = 0 if user.statStageAtMax?(:ACCURACY)
+	score += 20 if user.hasInaccurateAttack?
+	score += 40 if user.hasLowAccuracyAttack?
 	return score
   end
 end
@@ -56,7 +58,7 @@ class PokeBattle_Move_504 < PokeBattle_Move
   end
   
   def getEffectScore(user,target)
-	return getWantsToBeSlowerScore(score,user,target,2)
+	return getWantsToBeSlowerScore(user,target,2)
   end
 end
 
@@ -75,18 +77,8 @@ class PokeBattle_Move_505 < PokeBattle_Move
   end
   
   def getEffectScore(user,target)
-	if !target.opposes? # Targeting a player's pokemon
-		# If damage looks like its going to kill the enemy, allow the move, otherwise don't
-		damage = @battle.battleAI.pbTotalDamageAI(self,user,target,1)
-		score = damage >= target.hp ? 150 : 0
-	else
-		# If damage looks like its going to kill or mostly kill the ally, don't allow the move
-		damage = @battle.battleAI.pbTotalDamageAI(self,user,target,1)
-		return 0 if damage >= target.hp * 0.8
-		score += target.level*4
-		score -= target.pbSpeed(true) * 2
-	end
-	return score
+	echoln("The AI will never use Kickstart.")
+	return -100
   end
 end
 
@@ -141,6 +133,7 @@ class PokeBattle_Move_509 < PokeBattle_Move
   def ignoresDefensiveStageBoosts?(user,target); return true; end
   
   def getEffectScore(user,target)
+	score = 0
 	score += target.stages[:DEFENSE] * 10 if physicalMove?
 	score += target.stages[:SPECIAL_DEFENSE] * 10 if specialMove?
 	score += target.stages[:EVASION] * 10
@@ -188,8 +181,14 @@ class PokeBattle_Move_50A < PokeBattle_Move
   end
   
   def getEffectScore(user,target)
-	score += target.canBurn?(user,false,self) ? 20 : -20
-	score += target.canFrostbite?(user,false,self) ? 20 : -20
+	score = 0
+	real_attack = target.pbAttack
+	real_special_attack = target.pbSpAtk
+	if target.canBurn?(user,false,self) && real_attack >= real_special_attack
+		score += getBurnEffectScore(user,target)
+	elsif target.canFrostbite?(user,false,self) && real_special_attack >= real_attack
+		score += getFrostbiteEffectScore(user,target)
+	end
 	return score
   end
 end
@@ -253,10 +252,6 @@ class PokeBattle_Move_50F < PokeBattle_StatDownMove
     super
     @statDown = [:ATTACK,2]
   end
-  
-  def getEffectScore(user,target)
-	return score + user.stages[:ATTACK]*10
-  end
 end
 
 #===============================================================================
@@ -271,8 +266,7 @@ class PokeBattle_Move_510 < PokeBattle_Move
 	end
 	
 	def getEffectScore(user,target)
-		score += 50 - ((user.hp.to_f / user.totalhp.to_f) * 100).floor
-		return score
+		return -((user.hp.to_f / user.totalhp.to_f) * 50).floor
 	end
 end
 
@@ -288,8 +282,7 @@ class PokeBattle_Move_511 < PokeBattle_Move
 	end
 	
 	def getEffectScore(user,target)
-		score += 30 - ((user.hp.to_f / user.totalhp.to_f) * 80).floor
-		return score
+		return -((user.hp.to_f / user.totalhp.to_f) * 30).floor
 	end
 end
 
@@ -324,11 +317,7 @@ class PokeBattle_Move_514 < PokeBattle_Move
   end
   
   def getEffectScore(user,target)
-	score -= ((user.hp.to_f / user.totalhp.to_f) * 40).floor
-	if [:LUMBERRY,:PECHABERRY].include?(user.item) || user.hasActiveAbility?(:IMMUNITY) || user.hasActiveAbility?(:POISONHEAL) || user.hasActiveAbility?(:GUTS) || user.hasActiveAbility?(:AUDACITY)
-		score += 60
-	end
-	return score
+	return -getPoisonEffectScore(user,user,user.ownersPolicies,true)
   end
 end
 
@@ -339,6 +328,12 @@ class PokeBattle_Move_515 < PokeBattle_Move
   def pbEffectAfterAllHits(user,target)
     return if target.damageState.unaffected
 	user.applyEffect(:Enlightened)
+  end
+
+  def getEffectScore(user,target)
+	score = 10
+	score += 10 if user.aboveHalfHealth?
+	return score
   end
 end
 
@@ -365,7 +360,7 @@ end
 #===============================================================================
 class PokeBattle_Move_517 < PokeBattle_Move
 	def getsPriorityAgainst?(target)
-		return target.hp < target.totalhp/2
+		return target.belowHalfHealth?
 	end
 	
 	def priorityModification(user,targets);
@@ -415,14 +410,6 @@ class PokeBattle_Move_519 < PokeBattle_StatDownMove
   end
   
   def pbAccuracyCheck(user,target); return true; end
-  
-  def getEffectScore(user,target)
-	score += user.stages[:SPEED]*5
-	score += user.stages[:DEFENSE]*5
-	score += 40 if user.stages[:ACCURACY] < 0
-	score += 40 if target.stages[:EVASION] > 0
-	return score
-  end
 end
 
 #===============================================================================
@@ -452,8 +439,7 @@ class PokeBattle_Move_51B < PokeBattle_Move
 	end
 	
 	def getEffectScore(user,target)
-		score -= 20
-		return score
+		return -20
 	end
 end
 
@@ -469,7 +455,7 @@ class PokeBattle_Move_51C < PokeBattle_HalfHealingMove
 	end
 	
 	def getEffectScore(user,target)
-		score += 40 if user.hp < user.totalhp/2
+		score += 40 if user.belowHalfHealth?
 		return score
 	end
 end
@@ -491,8 +477,8 @@ class PokeBattle_Move_51D < PokeBattle_Move
 	end
 	
 	def getEffectScore(user,target)
-		score += 20 if target.hp > target.totalhp/2
-		score += 20 if user.hp > user.totalhp/2
+		score = 60
+		score += 40 if target.aboveHalfHealth?
 		return score
 	end
 end
@@ -634,7 +620,7 @@ class PokeBattle_Move_526 < PokeBattle_SleepMove
 	end
   
     def getEffectScore(user,target)
-		score -= 50 if user.hp <= user.totalhp/2
+		score -= 50 if user.belowHalfHealth?
 		super
 	end
 end
@@ -745,7 +731,7 @@ class PokeBattle_Move_52C < PokeBattle_DrainMove
   
 	def getEffectScore(user,target)
 		score += 20 if target.pbCanLowerStatStage?(:SPECIAL_DEFENSE,user,self)
-		score += 20 if target.hp > target.totalhp/2
+		score += 20 if target.aboveHalfHealth?
 		super
 	end
 end
@@ -938,7 +924,7 @@ class PokeBattle_Move_535 < PokeBattle_Move
 	
 	def getEffectScore(user,target)
 		score += 50
-		score = getWantsToBeSlowerScore(score,user,target,1)
+		score = getWantsToBeSlowerScore(user,target,1)
 		score = 0 if user.firstTurn?
 		return score
 	end
@@ -957,7 +943,7 @@ class PokeBattle_Move_536 < PokeBattle_TwoTurnMove
   end
   
   def getEffectScore(user,target)
-	score += user.hp > user.totalhp/2 ? 50 : -50
+	score += user.aboveHalfHealth? ? 50 : -50
 	score -= user.stages[:SPECIAL_DEFENSE] * 10
 	return score
   end
@@ -1065,7 +1051,7 @@ class PokeBattle_Move_53C < PokeBattle_Move
 	end
   
 	def getEffectScore(user,target)
-		return getWantsToBeSlowerScore(score,user,target,2)
+		return getWantsToBeSlowerScore(user,target,2)
 	end
 end
 
@@ -1219,10 +1205,10 @@ class PokeBattle_Move_547 < PokeBattle_Move
 
   def getEffectScore(user,target)
     policies = user.ownersPolicies
-    poisonScore = getPoisonEffectScore(100,user,target,policies)
-    dizzyScore = getDizzyEffectScore(100,user,target,policies)
-    dizzyScore = getLeechEffectScore(100,user,target,policies)
-    return (poisonScore + dizzyScore + dizzyScore)/3
+    poisonScore = getPoisonEffectScore(user,target,policies)
+    dizzyScore = getDizzyEffectScore(user,target,policies)
+    leechScore = getLeechEffectScore(user,target,policies)
+    return (poisonScore + dizzyScore + leechScore)/3
   end
 end
 
@@ -1546,7 +1532,7 @@ class PokeBattle_Move_557 < PokeBattle_Move
   end
 
   def getEffectScore(user,target)
-	return getWantsToBeSlowerScore(score,user,target,3)
+	return getWantsToBeSlowerScore(user,target,3)
   end
 end
 
@@ -1674,6 +1660,10 @@ class PokeBattle_Move_55F < PokeBattle_Move
 	  end
 	  user.tickDownAndProc(:Outrage)
 	end
+
+	def getEffectScore(user,target)
+		return -20
+	end
 end
 
 #===============================================================================
@@ -1715,6 +1705,21 @@ class PokeBattle_Move_564 < PokeBattle_Move
 	def pbEffectAgainstTarget(user,target)
 		@battle.forceUseMove(user,:REST)
 		@battle.forceUseMove(target,:REST)
+	end
+
+	def getEffectScore(user,target)
+		score = 0
+
+		score += 50 if user.belowHalfHealth?
+		score += 30 if user.hp < user.totalhp/4
+		score += 30 if user.pbHasAnyStatus?
+		score -= 50 unless user.hasSleepAttack?
+
+		score -= 50 if target.belowHalfHealth?
+		score -= 30 if target.hp < target.totalhp/4
+		score -= 30 if target.pbHasAnyStatus?
+		score += 50 unless target.hasSleepAttack?
+		return score
 	end
 end
 
@@ -1759,7 +1764,8 @@ class PokeBattle_Move_567 < PokeBattle_ProtectMove
 		score = super
 		# Check only special attackers
 		user.eachPotentialAttacker(true) do |b|
-		  score += getPoisonEffectScore(0,user,b,user.ownersPolicies)
+			next unless b.hasSpecialAttack?
+		  	score += getBurnEffectScore(user,b,user.ownersPolicies) * 0.75
 		end
 		return score
 	end
@@ -1867,7 +1873,7 @@ class PokeBattle_Move_56F < PokeBattle_Move
 	end
 	
 	def getEffectScore(user,target)
-	  return getWantsToBeSlowerScore(score,user,target,2)
+	  return getWantsToBeSlowerScore(user,target,2)
 	end
 end
 
@@ -1895,7 +1901,7 @@ end
 class PokeBattle_Move_571 < PokeBattle_Move
 	def pbBaseDamage(baseDmg,user,target)
 	  ret = baseDmg
-	  if user.hp <= user.totalhp / 2
+	  if user.belowHalfHealth?
 		ret *= 2
 	  end
 	  return ret
@@ -1971,7 +1977,7 @@ class PokeBattle_Move_575 < PokeBattle_Move
 	end
 	
 	def getEffectScore(user,target)
-	  return 0 if user.hp < user.totalhp / 2
+	  return 0 if user.belowHalfHealth?
 	end
 end
 
@@ -2008,7 +2014,7 @@ class PokeBattle_Move_577 < PokeBattle_Move
 	end
 
 	def getEffectScore(user,target)
-		return getWantsToBeFasterScore(score,user,target,3)
+		return getWantsToBeFasterScore(user,target,3)
 	end
 end
 

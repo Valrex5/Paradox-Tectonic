@@ -97,8 +97,7 @@ class PokeBattle_SleepMove < PokeBattle_Move
   end
   
   def getEffectScore(user,target)
-    score = getSleepEffectScore(score,user,target,user.ownersPolicies)
-    return score
+    return getSleepEffectScore(user,target)
   end
 end
 
@@ -124,8 +123,7 @@ class PokeBattle_PoisonMove < PokeBattle_Move
   end
 
   def getEffectScore(user,target)
-    score = getPoisonEffectScore(score,user,target,user.ownersPolicies)
-    return score
+    return getPoisonEffectScore(user,target)
   end
 end
 
@@ -146,8 +144,7 @@ class PokeBattle_NumbMove < PokeBattle_Move
   end
 
   def getEffectScore(user,target)
-    score = getNumbEffectScore(score,user,target,user.ownersPolicies)
-    return score
+    return getNumbEffectScore(user,target)
   end
 end
 
@@ -168,8 +165,7 @@ class PokeBattle_BurnMove < PokeBattle_Move
   end
 
   def getEffectScore(user,target)
-    score = getBurnEffectScore(score,user,target,user.ownersPolicies)
-    return score
+    return getBurnEffectScore(user,target)
   end
 end
 
@@ -265,8 +261,7 @@ class PokeBattle_StatUpMove < PokeBattle_Move
   end
 
   def getEffectScore(user,target)
-    score = getMultiStatUpEffectScore(@statUp,score,user,target)
-		return score
+    return getMultiStatUpEffectScore(@statUp,user,target)
 	end
 end
 
@@ -298,8 +293,7 @@ class PokeBattle_MultiStatUpMove < PokeBattle_Move
   end
 
   def getEffectScore(user,target)
-    score = getMultiStatUpEffectScore(@statUp,score,user,target)
-		return score
+    return getMultiStatUpEffectScore(@statUp,user,target)
 	end
 end
 
@@ -310,11 +304,7 @@ class PokeBattle_StatDownMove < PokeBattle_Move
   end
 
   def getEffectScore(user,target)
-    score = 0
-    for i in 0...@statDown.length/2
-			score -= 10 * @statDown[i * 2 + 1]
-		end
-    return score
+    return -getMultiStatUpEffectScore(@statDown,user,user)
   end
 end
 
@@ -348,62 +338,7 @@ class PokeBattle_TargetStatDownMove < PokeBattle_Move
   end
 
   def getEffectScore(user,target)
-    statReducing = @statDown[0]
-    reductionAmount = @statDown[1]
-
-    if statReducing == :ACCURACY
-      echoln("The AI will never use a move that reduces accuracy.")
-      return 0
-    end
-
-    if target.hasActiveAbilityAI?(:CONTRARY) && target.opposes?(user) && statusMove?
-      return 0
-    end
-
-    reverse = target.hasActiveAbility?(:CONTRARY) && !target.opposes?(user)
-    if statusMove?
-			if !target.pbCanLowerStatStage?(statReducing,user)
-				score = 0 if !reverse
-			else
-				score += target.stages[statReducing]*20
-        score += 20 * (reductionAmount - 1)
-        if statReducing == :ATTACK
-				  if target.hasPhysicalAttack?
-					  score += 20
-				  else
-					  score = 0
-				  end
-        elsif statReducing == :SPECIAL_ATTACK
-          if target.hasSpecialAttack?
-					  score += 20
-				  else
-					  score = 0
-				  end
-        elsif statReducing == :SPEED
-          aspeed = user.pbSpeed(true)
-          ospeed = target.pbSpeed(true)
-          if !statReducing
-            if aspeed < ospeed
-              score += 20
-            else
-              score = 0
-            end
-          end
-        end
-			end
-		else
-			score += 20 if target.stages[statReducing] > 0
-      if statReducing == :ATTACK
-			  score += 20 if target.hasPhysicalAttack?
-      elsif statReducing == :SPECIAL_ATTACK
-        score += 20 if target.hasSpecialAttack?
-      elsif statReducing == :SPEED
-        aspeed = user.pbSpeed(true)
-				ospeed = target.pbSpeed(true)
-				score += 20 if aspeed < ospeed
-      end
-		end
-    return score
+    return getMultiStatDownEffectScore(@statDown,user,target)
   end
 end
 
@@ -453,7 +388,7 @@ class PokeBattle_TargetMultiStatDownMove < PokeBattle_Move
   end
 
   def getEffectScore(user,target)
-    return score # TODO: write this
+    return getMultiStatDownEffectScore(@statDown,user,target)
   end
 end
 
@@ -608,7 +543,7 @@ class PokeBattle_HealingMove < PokeBattle_Move
     scoringMagnitude = 3
     ratio = healRatio(user)
     scoringMagnitude = 10 * ratio if ratio > 0
-    score = getHealingEffectScore(score,user,target,scoringMagnitude)
+    score = getHealingEffectScore(user,target,scoringMagnitude)
     return score
   end
 end
@@ -644,8 +579,8 @@ class PokeBattle_RecoilMove < PokeBattle_Move
     user.applyRecoilDamage(recoilDamage, false, true)
   end
 
-  def getEffectScore(score,user,target)
-    downSideScore = -50 * finalRecoilFactor(true)
+  def getEffectScore(user,target)
+    downSideScore = -50 * finalRecoilFactor(user,true)
     return downSideScore
   end
 end
@@ -747,13 +682,7 @@ class PokeBattle_WeatherMove < PokeBattle_Move
   end
 
   def getEffectScore(user,target)
-    return 0 if @battle.primevalWeatherPresent? || @battle.pbCheckGlobalAbility(:AIRLOCK) ||
-      @battle.pbCheckGlobalAbility(:CLOUDNINE) || @battle.pbWeather == @weatherType
-    if user.firstTurn?
-      score += 20
-    end
-    score += 20
-    return score
+    return getWeatherSettingEffectScore(@weatherType,user,@battle,@durationSet)
   end
 end
 
@@ -895,8 +824,7 @@ class PokeBattle_DizzyMove < PokeBattle_Move
 	end
 
   def getEffectScore(user,target)
-      score = getDizzyEffectScore(score,user,target,user.ownersPolicies)
-      return score
+    return getDizzyEffectScore(user,target)
   end
 end
 
@@ -921,7 +849,7 @@ class PokeBattle_LeechMove < PokeBattle_Move
 	end
 
   def getEffectScore(user,target)
-      score = getLeechEffectScore(score,user,target,user.ownersPolicies)
+      score = getLeechEffectScore(user,target)
       return score
   end
 end
@@ -978,8 +906,7 @@ class PokeBattle_FrostbiteMove < PokeBattle_Move
 	end
 
   def getEffectScore(user,target)
-    score = getFrostbiteEffectScore(score,user,target,user.ownersPolicies)
-    return score
+    return getFrostbiteEffectScore(user,target)
   end
 end
 
@@ -1031,8 +958,7 @@ class PokeBattle_TargetMultiStatUpMove < PokeBattle_Move
   end
   
   def getEffectScore(user,target)
-    score = getMultiStatUpEffectScore(@statUp,score,user,target)
-		return score
+		return getMultiStatUpEffectScore(@statUp,user,target)
 	end
 end
 
@@ -1106,7 +1032,7 @@ class PokeBattle_DrainMove < PokeBattle_Move
     drainScore = 40 * drainFactor(user,target)
     drainScore *= 1.5 if user.hasActiveAbilityAI?(:ROOTED)
     drainScore *= 1.3 if user.hasActiveItem?(:BIGROOT)
-    drainScore *= 2 if user.hp <= user.totalhp/2
+    drainScore *= 2 if user.belowHalfHealth?
     if target.hasActiveAbilityAI?(:LIQUIDOOZE) || user.effectActive?(:NerveBreak)
       drainScore *= -1
     end
@@ -1137,16 +1063,9 @@ class PokeBattle_InvokeMove < PokeBattle_Move
 	end
 
   def getEffectScore(user,target)
-    if @battle.pbCheckGlobalAbility(:AIRLOCK) || @battle.pbCheckGlobalAbility(:CLOUDNINE) || @battle.primevalWeatherPresent?(false)
-			score -= 40
-		elsif @battle.pbWeather == @weatherType
-			score -= 20
-    elsif user.firstTurn?
-      score += 20
-    end
+    weatherScore = getWeatherSettingEffectScore(@weatherType,user,@battle,@durationSet)
     statusScore = getStatusSettingEffectScore(@statusToApply,0,user,target,user.ownersPolicies)
-    score += statusScore
-    return score
+    return weatherScore + statusScore
   end
 end
 
@@ -1173,6 +1092,7 @@ class PokeBattle_TerrainMove < PokeBattle_Move
   end
 
   def getEffectScore(user,target)
+    score = 100
     if user.firstTurn?
       score += 20
     end
@@ -1230,7 +1150,7 @@ class PokeBattle_StatusSpikeMove < PokeBattle_Move
   def getEffectScore(user,target)
     side = damagingMove? ? target.pbOwnSide : user.pbOpposingSide
     score -= statusSpikesWeightOnSide(side,[@spikeEffect])
-    score = getHazardSettingEffectScore(score,user,target)
+    score = getHazardSettingEffectScore(user,target)
     return score
   end
 
@@ -1261,16 +1181,9 @@ class PokeBattle_StatUpDownMove < PokeBattle_Move
 	def getEffectScore(user,target)
 	  score = 0
 
-    #TODO: Create a helper method for this, mirroring getMultiStatUpEffectScore
-    for i in 0...@statDown.length/2
-      stat = @statDown[i*2]
-      amount = @statDown[i*2+1]
-      score -= 30 * amount
-      score += user.stages[stat] * 10 * amount
-	  end
+    score -= getMultiStatDownEffectScore(@statDown,user,target)
 
-    upScore = getMultiStatUpEffectScore(@statUp,score,user,target)
-    score += upScore
+    score += getMultiStatUpEffectScore(@statUp,user,target)
 
 	  return score
   end

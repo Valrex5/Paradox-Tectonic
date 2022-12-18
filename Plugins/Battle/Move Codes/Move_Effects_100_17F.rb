@@ -45,7 +45,7 @@ class PokeBattle_Move_100 < PokeBattle_WeatherMove
     end
 
     def getEffectScore(user,target)
-        return getHazardSettingEffectScore(score,user,target)
+        return getHazardSettingEffectScore(user,target)
     end
   end
   
@@ -77,7 +77,7 @@ class PokeBattle_Move_100 < PokeBattle_WeatherMove
     end
 
     def getEffectScore(user,target)
-      score = getHazardSettingEffectScore(score,user,target)
+      score = getHazardSettingEffectScore(user,target)
       return score
     end
   end
@@ -289,9 +289,9 @@ class PokeBattle_Move_100 < PokeBattle_WeatherMove
 
     def getEffectScore(user,target)
       if user.pbHasTypeAI?(:GHOST)
-        return 0 if target.hp <= target.totalhp / 2
+        return 0 if target.belowHalfHealth?
 
-				if user.hp <= user.totalhp / 2
+				if user.belowHalfHealth?
 					if !user.alliesInReserve?
 					  return 0
 					else
@@ -300,7 +300,7 @@ class PokeBattle_Move_100 < PokeBattle_WeatherMove
 				end
 			else
         statUp = [:ATTACK,1,:DEFENSE,1]
-        score = getMultiStatUpEffectScore(statUp,score,user,target)
+        score = getMultiStatUpEffectScore(statUp,user,target)
         score -= user.stages[:SPEED] * 10
 			end
       return score
@@ -574,12 +574,12 @@ class PokeBattle_Move_100 < PokeBattle_WeatherMove
     def pbMoveFailedAI?(user,targets); return false; end
 
     def getEffectScore(user,target)
-      score += 30 if user.substituted?
-      score += 20 if user.hasAlly?
+      score = 0
+      score -= 30 unless user.substituted?
+      score -= 20 unless user.hasAlly?
       user.eachPotentialAttacker do |b|
         score -= 20
       end
-      score -= 50 if target.hp <= target.totalhp / 2	 # If target is weak, don't risk it
       return score
     end
   end
@@ -608,7 +608,7 @@ class PokeBattle_Move_100 < PokeBattle_WeatherMove
 
     def getEffectScore(user,target)
       return 0 unless target.hasDamagingAttack?
-      if user.hp < user.totalhp / 2
+      if user.belowHalfHealth?
         score -= 20
       else
         score += 20
@@ -1660,12 +1660,10 @@ end
     end
 
     def getEffectScore(user,target)
-      if target.pbHasMoveType?(:FIRE)
-        score += 50 
-      else
-        score -= 50 
+      if !target.pbHasMoveType?(:FIRE)
+        return 20
       end
-      return score
+      return 80
     end
   end
   
@@ -1872,7 +1870,8 @@ end
     end
 
     def getEffectScore(user,target)
-      score = getSwitchOutEffectScore(score,user,target)
+      score = super
+      score += getSwitchOutEffectScore(user,target)
       return score
     end
   end
@@ -1917,7 +1916,7 @@ end
     end
 
     def getEffectScore(user,target)
-      return getHazardSettingEffectScore(score,user,target)
+      return getHazardSettingEffectScore(user,target)
     end
   end
   
@@ -2057,7 +2056,7 @@ end
 
     def getEffectScore(user,target)
       # The target for this is set as the user since its the user that heals
-      score = getHealingEffectScore(score,user,user,5)
+      score = getHealingEffectScore(user,user,5)
       score += 30
       return score
     end
@@ -2096,9 +2095,10 @@ end
     end
 
     def getEffectScore(user,target)
+      score = 0
 			GameData::Stat.each_battle do |s|
 				next if target.stages[s.id] <= 0
-				score += target.stages[s.id] * 15
+				score += target.stages[s.id] * 20
 			end
       return score
     end
@@ -2184,7 +2184,7 @@ end
           score += 20
         end
       end
-      score = getHealingEffectScore(score,user,user,2)
+      score = getHealingEffectScore(user,user,2)
       return score
     end
   end
@@ -2201,7 +2201,7 @@ end
     end
 
     def getEffectScore(user,target)
-      score = getWantsToBeSlowerScore(score,user,target,magnitude=8)
+      score = getWantsToBeSlowerScore(user,target,magnitude=8)
       return score
     end
   end
@@ -2223,8 +2223,7 @@ end
     end
 
     def getEffectScore(user,target)
-      score -= 20
-      return score
+      return -20
     end
   end
   
@@ -2276,7 +2275,7 @@ end
 
     def getEffectScore(user,target)
       if !target.substituted? && !target.effectActive?(:GastroAcid)
-        score = getWantsToBeSlowerScore(score,user,target,3)
+        score = getWantsToBeSlowerScore(user,target,3)
       end
       return score
     end
@@ -2334,9 +2333,10 @@ end
 
     def getEffectScore(user,target)
       score = super
-      # Check only physical attackers
-      user.eachPotentialAttacker(0) do |b|
-        score += getPoisonEffectScore(0,user,b,user.ownersPolicies)
+      # Check only special attackers
+      user.eachPotentialAttacker(true) do |b|
+        next unless b.hasPhysicalAttack?
+        score += getPoisonEffectScore(user,b,user.ownersPolicies) * 0.75
       end
       return score
     end
@@ -2484,7 +2484,7 @@ end
 
     def getEffectScore(user,target)
       score += 30 if @battle.field.terrain == :Grassy
-      score = getHealingEffectScore(score,user,target)
+      score = getHealingEffectScore(user,target)
       return score
     end
 
@@ -2538,7 +2538,7 @@ end
 
     def getEffectScore(user,target)
       if !user.opposes?(target)
-        score = getHealingEffectScore(score,user,target)
+        score = getHealingEffectScore(user,target)
       end
       return score
     end
@@ -2574,7 +2574,7 @@ end
     end
 
     def getEffectScore(user,target)
-      if user.hp <= user.totalhp / 2
+      if user.belowHalfHealth?
         return 0 if !user.alliesInReserve?
       end
       score -= 40
@@ -2744,7 +2744,7 @@ class PokeBattle_Move_179 < PokeBattle_Move
   
   def getEffectScore(user,target)
     score -= 20
-    score -= 50 if user.hp < user.totalhp/2
+    score -= 50 if user.belowHalfHealth?
     super
   end
 end
@@ -2914,12 +2914,11 @@ class PokeBattle_Move_17E < PokeBattle_Move
   end
   
   def getEffectScore(user,target)
-    score += 20 if user.hp < user.totalhp
-    score += 20 if user.hp < user.totalhp/2
-    score += 20 if target.hp < target.totalhp
-    score += 20 if target.hp < target.totalhp/2
-    score -= 80 if !user.canHeal?
-    score -= 80 if !target.canHeal?
+    score = 0
+    if target.canHeal?
+      score += 20
+      score += 40 if target.belowHalfHealth?
+    end
     return score
   end
 end

@@ -59,7 +59,7 @@ class PokeBattle_Move_183 < PokeBattle_Move
   end
 
   def getEffectScore(user,target)
-    score += 40 if user.hp > user.totalhp / 2
+    score += 40 if user.aboveHalfHealth?
     score -= user.stages[:DEFENSE] * 10
     score = 0 if !user.item || !user.item.is_berry?
     return score
@@ -157,11 +157,6 @@ class PokeBattle_Move_187 < PokeBattle_Move_005
 
     def calculateCategory(user, targets)
       return selectBestCategory(user,targets[0])
-    end
-
-    def getEffectScore(user,target)
-        score = getPoisonEffectScore(score, user, target, [], statusMove?)
-        return score
     end
 end
 
@@ -273,7 +268,7 @@ class PokeBattle_Move_18C < PokeBattle_Move
         score -= 20
         if @battle.field.terrain == :Grassy
             score += 50
-            score += 50 if target.hp <= target.totalhp / 2
+            score += 50 if target.belowHalfHealth?
         end
         return score
     end
