@@ -166,6 +166,11 @@ class PokeBattle_Move_088 < PokeBattle_Move
     baseDmg *= 2 if @battle.switching
     return baseDmg
   end
+
+  def getEffectScore(user,target)
+    return 0 if @battle.pbIsTrapped?(target.index)
+    return 20
+  end
 end
 
 #===============================================================================
@@ -742,6 +747,10 @@ class PokeBattle_Move_0A1 < PokeBattle_Move
   def pbEffectGeneral(user)
     user.pbOwnSide.applyEffect(:LuckyChant,5)
   end
+
+  def getEffectScore(user,target)
+    return 40
+  end
 end
 
 #===============================================================================
@@ -913,6 +922,10 @@ class PokeBattle_Move_0A6 < PokeBattle_Move
     user.applyEffect(:LockOn,2)
     user.pointAt(:LockOnPos,target)
     @battle.pbDisplay(_INTL("{1} took aim at {2}!",user.pbThis,target.pbThis(true)))
+  end
+
+  def getEffectScore(user,target)
+    return 40
   end
 end
 
@@ -1228,6 +1241,11 @@ class PokeBattle_Move_0B2 < PokeBattle_Move
     end
     user.applyEffect(:Snatch,maxSnatch + 1)
   end
+
+  def getEffectScore(user,target)
+    echoln("The AI will never use Snatch.")
+    return -1000
+  end
 end
 
 #===============================================================================
@@ -1239,55 +1257,59 @@ end
 class PokeBattle_Move_0B3 < PokeBattle_Move
   def callsAnotherMove?; return true; end
 
-  def pbOnStartUse(user,targets)
-    # NOTE: It's possible in theory to not have the move Nature Power wants to
-    #       turn into, but what self-respecting game wouldn't at least have Tri
-    #       Attack in it?
-    @npMove = :TRIATTACK
+  def calculateNaturePower
+    npMove = :RUIN
     case @battle.field.terrain
     when :Electric
-      @npMove = :THUNDERBOLT if GameData::Move.exists?(:THUNDERBOLT)
+      npMove = :THUNDERBOLT if GameData::Move.exists?(:THUNDERBOLT)
     when :Grassy
-      @npMove = :ENERGYBALL if GameData::Move.exists?(:ENERGYBALL)
+      npMove = :ENERGYBALL if GameData::Move.exists?(:ENERGYBALL)
     when :Fairy
-      @npMove = :MOONBLAST if GameData::Move.exists?(:MOONBLAST)
+      npMove = :MOONBLAST if GameData::Move.exists?(:MOONBLAST)
     when :Psychic
-      @npMove = :PSYCHIC if GameData::Move.exists?(:PSYCHIC)
+      npMove = :PSYCHIC if GameData::Move.exists?(:PSYCHIC)
     else
       case @battle.environment
       when :Grass, :TallGrass, :Forest, :ForestGrass
-        @npMove = :ENERGYBALL if GameData::Move.exists?(:ENERGYBALL)
+        npMove = :ENERGYBALL if GameData::Move.exists?(:ENERGYBALL)
       when :MovingWater, :StillWater, :Underwater
-        @npMove = :HYDROPUMP if GameData::Move.exists?(:HYDROPUMP)
+        npMove = :HYDROPUMP if GameData::Move.exists?(:HYDROPUMP)
       when :Puddle
-        @npMove = :MUDBOMB if GameData::Move.exists?(:MUDBOMB)
+        npMove = :MUDBOMB if GameData::Move.exists?(:MUDBOMB)
       when :Cave
-        @npMove = :POWERGEM if GameData::Move.exists?(:POWERGEM)
+        npMove = :POWERGEM if GameData::Move.exists?(:POWERGEM)
       when :Rock
-        @npMove = :EARTHPOWER if GameData::Move.exists?(:EARTHPOWER)
+        npMove = :EARTHPOWER if GameData::Move.exists?(:EARTHPOWER)
       when :Sand
-        @npMove = :EARTHPOWER if GameData::Move.exists?(:EARTHPOWER)
+        npMove = :EARTHPOWER if GameData::Move.exists?(:EARTHPOWER)
       when :Snow
-        @npMove = :FROSTBREATH if GameData::Move.exists?(:FROSTBREATH)
+        npMove = :FROSTBREATH if GameData::Move.exists?(:FROSTBREATH)
       when :Ice
-        @npMove = :ICEBEAM if GameData::Move.exists?(:ICEBEAM)
+        npMove = :ICEBEAM if GameData::Move.exists?(:ICEBEAM)
       when :Volcano
-        @npMove = :LAVAPLUME if GameData::Move.exists?(:LAVAPLUME)
+        npMove = :LAVAPLUME if GameData::Move.exists?(:LAVAPLUME)
       when :Graveyard
-        @npMove = :SHADOWBALL if GameData::Move.exists?(:SHADOWBALL)
+        npMove = :SHADOWBALL if GameData::Move.exists?(:SHADOWBALL)
       when :Sky
-        @npMove = :AIRSLASH if GameData::Move.exists?(:AIRSLASH)
+        npMove = :AIRSLASH if GameData::Move.exists?(:AIRSLASH)
       when :Space
-        @npMove = :DRACOMETEOR if GameData::Move.exists?(:DRACOMETEOR)
+        npMove = :DRACOMETEOR if GameData::Move.exists?(:DRACOMETEOR)
       when :UltraSpace
-        @npMove = :PSYSHOCK if GameData::Move.exists?(:PSYSHOCK)
+        npMove = :PSYSHOCK if GameData::Move.exists?(:PSYSHOCK)
       end
     end
+    return npMove
   end
 
   def pbEffectAgainstTarget(user,target)
-    @battle.pbDisplay(_INTL("{1} turned into {2}!", @name, GameData::Move.get(@npMove).name))
-    user.pbUseMoveSimple(@npMove, target.index)
+    moveToUse = calculateNaturePower()
+    @battle.pbDisplay(_INTL("{1} turned into {2}!", @name, GameData::Move.get(moveToUse).name))
+    user.pbUseMoveSimple(moveToUse, target.index)
+  end
+
+  def getEffectScore(user,target)
+    pseudoMove = calculateNaturePower
+    return @battle.getBattleMoveInstanceFromID(pseudoMove).getEffectScore(user,target)
   end
 end
 
@@ -1623,6 +1645,11 @@ class PokeBattle_Move_0B6 < PokeBattle_Move
   def pbEffectGeneral(user)
     choice = getMetronomeMoves.sample
     user.pbUseMoveSimple(choice)
+  end
+
+  def getEffectScore(user,target)
+    echoln("The AI will never use Metronome")
+    return -1000
   end
 end
 
@@ -2944,6 +2971,13 @@ class PokeBattle_Move_0E7 < PokeBattle_Move
   def pbEffectGeneral(user)
     user.applyEffect(:DestinyBond)
     @battle.pbDisplay(_INTL("{1} is hoping to take its attacker down with it!",user.pbThis))
+  end
+
+  def getEffectScore(user,target)
+    score = 40
+    score += 40 if user.belowHalfHealth?
+    score += 40 unless user.hasDamagingAttack?
+    return score
   end
 end
 

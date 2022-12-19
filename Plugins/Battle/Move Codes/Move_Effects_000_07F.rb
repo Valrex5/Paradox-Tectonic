@@ -1892,6 +1892,12 @@ class PokeBattle_Move_063 < PokeBattle_Move
     @battle.pbHideAbilitySplash(target)
     target.pbOnAbilityChanged(oldAbil)
   end
+
+  def getEffectScore(user,target)
+    score = getSuppressAbilityEffectScore(user,target)
+    score += user.opposes?(target) ? -20 : 20
+    return
+  end
 end
 
 #===============================================================================
@@ -1926,6 +1932,10 @@ class PokeBattle_Move_064 < PokeBattle_Move
     @battle.pbDisplay(_INTL("{1} acquired {2}!",target.pbThis,target.abilityName))
     @battle.pbHideAbilitySplash(target)
     target.pbOnAbilityChanged(oldAbil)
+  end
+
+  def getEffectScore(user,target)
+    return getSuppressAbilityEffectScore(user,target)
   end
 end
 
@@ -1973,8 +1983,8 @@ class PokeBattle_Move_065 < PokeBattle_Move
 
   def getEffectScore(user,target)
     return 0 if target.hasActiveAbilityAI?(DOWNSIDE_ABILITIES)
-		score += 100 if user.hasActiveAbilityAI?(DOWNSIDE_ABILITIES)
-    return score
+		return 100 if user.hasActiveAbilityAI?(DOWNSIDE_ABILITIES)
+    return 50
   end
 end
 
@@ -2122,10 +2132,7 @@ class PokeBattle_Move_068 < PokeBattle_Move
   end
 
   def getEffectScore(user,target)
-    if target.hasActiveAbilityAI?(DOWNSIDE_ABILITIES)
-      score = 120
-    end
-    return score
+    return getSuppressAbilityEffectScore(user,target)
   end
 end
 
@@ -2453,8 +2460,8 @@ class PokeBattle_Move_075 < PokeBattle_Move
   end
 
   def getEffectScore(user,target)
-    score += 50 if user.canGulpMissile?
-    return score
+    return 50 if user.canGulpMissile?
+    return 0
   end
 end
 
@@ -2578,6 +2585,11 @@ class PokeBattle_Move_07C < PokeBattle_Move
     return if target.damageState.unaffected || target.damageState.substitute
     target.pbCureStatus(true,:NUMB)
   end
+
+  def getEffectScore(user,target)
+    return -30 if target.numbed?
+    return 0
+  end
 end
 
 #===============================================================================
@@ -2593,6 +2605,11 @@ class PokeBattle_Move_07D < PokeBattle_Move
     return if target.fainted?
     return if target.damageState.unaffected || target.damageState.substitute
     target.pbCureStatus(true,:SLEEP)
+  end
+
+  def getEffectScore(user,target)
+    return -60 if target.asleep?
+    return 0
   end
 end
 

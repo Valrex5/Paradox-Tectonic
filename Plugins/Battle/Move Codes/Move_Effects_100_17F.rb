@@ -189,6 +189,10 @@ class PokeBattle_Move_100 < PokeBattle_WeatherMove
       recoilMessage = _INTL("{1} kept going and crashed!",user.pbThis)
       user.applyRecoilDamage(recoilDamage,true,true,recoilMessage)
     end
+
+    def getEffectScore(user,target)
+      return (@accuracy - 100) * 2
+    end
   end
   
   #===============================================================================
@@ -1546,6 +1550,10 @@ end
     def pbEffectAgainstTarget(user,target)
       target.applyEffect(:Type3,:GHOST)
     end
+
+    def getEffectScore(user,target)
+      return 80
+    end
   end
   
   #===============================================================================
@@ -1570,6 +1578,10 @@ end
   
     def pbEffectAgainstTarget(user,target)
       target.applyEffect(:Type3,:GRASS)
+    end
+
+    def getEffectScore(user,target)
+      return 80
     end
   end
   
@@ -2028,6 +2040,7 @@ end
     end
 
     def getEffectScore(user,target)
+      score = 0
       if !target.substituted? && target.burned?
         if target.opposes?(user)
           score -= 30
@@ -2363,6 +2376,8 @@ end
 
     def getEffectScore(user,target)
       return 0 if !target.hasAlly?
+      score = 50
+      score += 25 if target.aboveHalfHealth?
       return score
     end
   end
@@ -2534,7 +2549,7 @@ end
 
     def getEffectScore(user,target)
       if !user.opposes?(target)
-        score = getHealingEffectScore(user,target)
+        return getHealingEffectScore(user,target)
       end
       return score
     end
@@ -2602,8 +2617,8 @@ end
     def pbMoveFailedAI?(user,targets); return false; end
 
     def getEffectScore(user,target)
-      score = 0 if !target.hasPhysicalAttack?
-      return score
+      return -1000 unless target.hasPhysicalAttack?
+      return -30
     end
   end
   
@@ -2718,7 +2733,7 @@ end
 # Raises all user's stats by 1 stage in exchange for the user losing 1/3 of its
 # maximum HP, rounded down. Fails if the user would faint. (Clangorous Soul)
 #===============================================================================
-class PokeBattle_Move_179 < PokeBattle_Move
+class PokeBattle_Move_179 < PokeBattle_MultiStatUpMove
   def initialize(battle,move)
 		super
 		@statUp = [:ATTACK,1,:DEFENSE,1,:SPECIAL_ATTACK,1,:SPECIAL_DEFENSE,1,:SPEED,1]
@@ -2862,6 +2877,11 @@ class PokeBattle_Move_17D < PokeBattle_Move
       target.pointAt(:JawLockUser,user)
       @battle.pbDisplay(_INTL("Neither Pokémon can escape!"))
     end
+  end
+
+  def getEffectScore(user,target)
+    return 20 unless target.effectActive?(:JawLock)
+    return 0
   end
 end
 

@@ -5,6 +5,7 @@ STATUS_UPSIDE_ABILITIES = [:GUTS,:AUDACITY,:MARVELSCALE,:MARVELSKIN,:QUICKFEET]
 ALL_STATUS_SCORE_BONUS = 0
 STATUS_UPSIDE_MALUS = 60
 NON_ATTACKER_BONUS = 30
+STATUS_PUNISHMENT_BONUS = 40
 
 def getStatusSettingEffectScore(statusApplying,user,target,ignoreCheck: false)
 	case statusApplying
@@ -22,7 +23,7 @@ def getStatusSettingEffectScore(statusApplying,user,target,ignoreCheck: false)
 		return getDizzyEffectScore(user,target,ignoreCheck: ignoreCheck)
 	end
 
-	return score
+	raise _INTL("Given status #{statusApplying} is not valid.")
 end
 
 def getNumbEffectScore(user,target,ignoreCheck: false)
@@ -358,5 +359,18 @@ def getHPLossEffectScore(user,fraction)
 		return 0 if !user.alliesInReserve?
 		score *= 2
 	end
+	return score
+end
+
+def getSuppressAbilityEffectScore(user,target)
+	score = 0
+    if target.hasActiveAbilityAI?(DOWNSIDE_ABILITIES)
+      score = -70
+    else
+      score = 70
+    end
+    
+    score *= -1 if !user.opposes?(target)
+
 	return score
 end

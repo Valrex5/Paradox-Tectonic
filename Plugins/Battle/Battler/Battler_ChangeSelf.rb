@@ -109,6 +109,10 @@ class PokeBattle_Battler
 	end
 
 	def pbRecoverHP(amt, anim = true, anyAnim = true, showMessage = true, customMessage = nil)
+		if @battle.autoTesting
+			anim = false
+			anyAnim = false
+		end
 		raise _INTL('Told to recover a negative amount') if amt.negative?
 		amt *= 1.5 if hasActiveAbility?(:ROOTED)
 		amt = amt.round
@@ -179,10 +183,6 @@ class PokeBattle_Battler
 
 	def applyFractionalHealing(fraction, showAbilitySplash: false, anim: true, anyAnim: true, showMessage: true, customMessage: nil, item: nil)
 		return 0 unless canHeal?
-		if @battle.autoTesting
-			anim = false
-			anyAnim = false
-		end
 		if item
 			@battle.pbCommonAnimation("UseItem",self) unless @battle.autoTesting
 			unless customMessage

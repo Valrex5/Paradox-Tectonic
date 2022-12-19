@@ -1201,7 +1201,7 @@ class PokeBattle_JealousyMove < PokeBattle_Move
   def pbAdditionalEffect(user, target)
     return if target.damageState.substitute
     if target.pbCanInflictStatus?(@statusToApply, user, false, self) && target.hasRaisedStatStages?
-      target.applyStatus(@statusToApply,user,nil,user)
+      target.pbInflictStatus(@statusToApply,0,nil,user)
     end
   end
 

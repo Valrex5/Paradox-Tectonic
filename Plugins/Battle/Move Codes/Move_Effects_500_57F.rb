@@ -442,7 +442,8 @@ class PokeBattle_Move_51C < PokeBattle_HalfHealingMove
 	end
 	
 	def getEffectScore(user,target)
-		score += 40 if user.belowHalfHealth?
+		score = super
+		score += getMultiStatUpEffectScore([:ATTACK,1,:SPECIAL_ATTACK,1],user,target) * 0.5
 		return score
 	end
 end
