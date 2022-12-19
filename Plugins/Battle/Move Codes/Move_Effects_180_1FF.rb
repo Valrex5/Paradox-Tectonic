@@ -60,7 +60,7 @@ class PokeBattle_Move_183 < PokeBattle_Move
   end
 
   def getEffectScore(user,target)
-    score += getMultiStatUpEffectScore([:DEFENSE,2],user,target)
+    score = getMultiStatUpEffectScore([:DEFENSE,2],user,target)
     score += 40 if user.item&.is_berry?
     return score
   end
@@ -99,8 +99,7 @@ class PokeBattle_Move_184 < PokeBattle_Move
     end
 
     def getEffectScore(user,target)
-        score -= 30 unless isValidTarget?(target)
-        return score
+        return 60 # I don't understand the utility of this move
     end
 end
 
@@ -350,6 +349,7 @@ class PokeBattle_Move_193 < PokeBattle_Move_0C0
   end
 
   def getEffectScore(user,target)
+    score = super
     score += getMultiStatUpEffectScore([:SPEED,1],user,target)
     score -= getMultiStatDownEffectScore([:DEFENSE,1],user,target)
     return score
@@ -409,8 +409,7 @@ class PokeBattle_Move_196 < PokeBattle_Move_0E0
   end
 
   def getEffectScore(user,target)
-      score -= ((user.hp.to_f / user.totalhp.to_f) * 50).floor
-      return score
+      return getHPLossEffectScore(user,0.5)
   end
 
   def pbSelfKO(user)

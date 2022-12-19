@@ -21,8 +21,8 @@ class PokeBattle_Move_501 < PokeBattle_Move
   def getEffectScore(user,target)
 	score = 60
 	score -= (user.stages[:ACCURACY] - 6) * 10
-	score += 20 if user.hasInaccurateAttack?
-	score += 40 if user.hasLowAccuracyAttack?
+	score += 20 if user.hasInaccurateMove?
+	score += 40 if user.hasLowAccuracyMove?
 	return score
   end
 end
@@ -338,21 +338,9 @@ class PokeBattle_Move_515 < PokeBattle_Move
 end
 
 #===============================================================================
-# Burns opposing Pokemon that have increased their stats. (Burning Jealousy)
+# (Not currenly used)
 #===============================================================================
 class PokeBattle_Move_516 < PokeBattle_Move
-  def pbAdditionalEffect(user,target)
-    return if target.damageState.substitute
-    if target.canBurn?(user,false,self) && target.hasRaisedStatStages?
-      target.applyBurn(user)
-    end
-  end
-  
-  def getEffectScore(user,target)
-    score -= 20
-	score += 50 if target.hasRaisedStatStages? && target.canBurn?(user,false,self)
-	return score
-  end
 end
 
 #===============================================================================
@@ -363,7 +351,7 @@ class PokeBattle_Move_517 < PokeBattle_Move
 		return target.belowHalfHealth?
 	end
 	
-	def priorityModification(user,targets);
+	def priorityModification(user,targets)
 		targets.each do |b|
 			return 1 if getsPriorityAgainst?(b)
 		end
@@ -371,9 +359,8 @@ class PokeBattle_Move_517 < PokeBattle_Move
 	end
 	
 	def getEffectScore(user,target)
-		score -= 20
-		score += 50 if getsPriorityAgainst?(target)
-		return score
+		return 30 if getsPriorityAgainst?(target)
+		return 0
     end
 
 	def shouldHighlight?(user,target)
@@ -487,7 +474,6 @@ end
 # If the move misses, the user gains 2 stages of speed. (Mudslide)
 #===============================================================================
 class PokeBattle_Move_51E < PokeBattle_Move
-
 	#This method is called if a move fails to hit all of its targets
 	def pbCrashDamage(user,targets=[])
 		@battle.pbDisplay(_INTL("{1} kept going and picked up speed!",user.pbThis))
@@ -495,8 +481,7 @@ class PokeBattle_Move_51E < PokeBattle_Move
 	end
 	
 	def getEffectScore(user,target)
-		score -= user.stages[:SPEED] * 10
-		return score
+		return getMultiStatUpEffectScore([:SPEED,2],user,user) * 0.5
 	end
 end
 
@@ -520,9 +505,11 @@ class PokeBattle_Move_520 < PokeBattle_Move
   end
   
   def getEffectScore(user,target)
-	score += 30
-	score -= 60 if user.effectActive?(:LuckyStar)
-	return score
+	if user.effectActive?(:LuckyStar)
+		return 0
+	else
+		return getCriticalRateBuffEffectScore(user)
+	end
   end
 end
 
@@ -549,7 +536,7 @@ end
 #===============================================================================
 class PokeBattle_Move_522 < PokeBattle_Move
   def pbFailsAgainstTarget?(user,target,show_message)
-    return !target.pbCanLowerStatStage?(target.highestStat,user,self, showFailMsg: true)
+    return !target.pbCanLowerStatStage?(target.highestStat,user,self, true)
   end
   
   def pbEffectAgainstTarget(user,target)
@@ -570,8 +557,7 @@ class PokeBattle_Move_523 < PokeBattle_Move
 	end
 
 	def getEffectScore(user,target)
-		score -= 30
-		return score
+		return -30
 	end
 end
 
@@ -616,8 +602,7 @@ class PokeBattle_Move_526 < PokeBattle_SleepMove
 	end
   
     def getEffectScore(user,target)
-		score -= 50 if user.belowHalfHealth?
-		super
+		return getHPLossEffectScore(user,0.5)
 	end
 end
 
@@ -650,7 +635,7 @@ class PokeBattle_Move_527 < PokeBattle_Move_004
     
     def getEffectScore(user,target)
         score = super
-		score += 20 if @battle.sunny?
+		score += getMultiStatDownEffectScore([:ATTACK,1,:SPECIAL_ATTACK,1],user,target) if @battle.sunny?
 		return score
     end
 
@@ -726,9 +711,9 @@ class PokeBattle_Move_52C < PokeBattle_DrainMove
 	end
   
 	def getEffectScore(user,target)
-		score += 20 if target.pbCanLowerStatStage?(:SPECIAL_DEFENSE,user,self)
-		score += 20 if target.aboveHalfHealth?
-		super
+		score = super
+		score += getMultiStatDownEffectScore([:SPECIAL_DEFENSE,1],user,target)
+		return score
 	end
 end
 
@@ -744,11 +729,12 @@ class PokeBattle_Move_52D < PokeBattle_Move
 	end
   
   def getEffectScore(user,target)
-		score -= 50 if @battle.field.weather == :None
+		score = 0
+		score += 30 if @battle.field.weather != :None
 		@battle.battlers.each do |b|
 			pkmn = b.pokemon
 			next if !pkmn || !pkmn.able? || pkmn.status == :NONE
-			score += b.opposes? ? 20 : -20 
+			score += b.opposes? ? 30 : -30 
 		end
 		return score
   end
@@ -762,14 +748,8 @@ class PokeBattle_Move_52E < PokeBattle_TargetMultiStatDownMove
     super
     @statDown = [:DEFENSE,2,:EVASION,2]
   end
+
   def pbAccuracyCheck(user,target); return true; end
-  
-  def getEffectScore(user,target)
-		score -= 50
-		score += target.stages[:EVASION] * 20
-		score += target.stages[:DEFENSE] * 20
-		return score
-  end
 end
 
 #===============================================================================
@@ -783,45 +763,24 @@ class PokeBattle_Move_52F < PokeBattle_Move_042
 	end
 	
 	def getEffectScore(user,target)
-		score -= 50 if @battle.field.weather = :None
+		score = 0
+		score += 30 if @battle.field.weather != :None
 		@battle.battlers.each do |b|
 			pkmn = b.pokemon
 			next if !pkmn || !pkmn.able? || b.opposes?
-			score += b.stages[:ATTACK] * 10
+			score += getMultiStatDownEffectScore([:ATTACK,1],user,b)
 		end
 		return score
 	end
 end
 
 #===============================================================================
-# Raises Attack of user and team (new!Howl)
+# Raises Attack of user and team (Howl)
 #===============================================================================
-class PokeBattle_Move_530 < PokeBattle_Move
-  def pbMoveFailed?(user,targets,show_message)
-    return false if damagingMove?
-	failed = true
-	@battle.eachSameSideBattler(user) do |b|
-      next if !b.pbCanRaiseStatStage?(:ATTACK,user,self)
-      failed = false
-      break
-    end
-	@battle.pbDisplay(_INTL("But it failed!")) if failed && show_message
-    return failed
-  end
-
-  def pbEffectGeneral(user)
-    @battle.eachSameSideBattler(user) do |b|
-		b.tryRaiseStat(:ATTACK,user, showFailMsg: true, move: self)
-    end
-  end
-  
-	def getEffectScore(user,target)
-		@battle.battlers.each do |b|
-			pkmn = b.pokemon
-			next if !pkmn || !pkmn.able? || !b.opposes?
-			score -= b.stages[:ATTACK] * 10
-		end
-		return score
+class PokeBattle_Move_530 < PokeBattle_TeamStatBuffMove
+	def initialize(battle,move)
+		super
+		@statUp = [:ATTACK,1]
 	end
 end
 
@@ -842,8 +801,11 @@ class PokeBattle_Move_531 < PokeBattle_Move
 	end
 	
 	def getEffectScore(user,target)
-		score += 30 if user.firstTurn?
-		return score
+		if user.firstTurn?
+			return 100
+		else
+			return 80
+		end
 	end
 end
 
@@ -873,7 +835,9 @@ class PokeBattle_Move_532 < PokeBattle_Move
 		user.tryRaiseStat(statsRanked[1][0],user, move: self) if statsRanked.length > 1
 	end
 	
+	# TODO
 	def getEffectScore(user,target)
+		score = 100
 		score += 20 if user.firstTurn?
 		GameData::Stat.each_main_battle do |statData|
 			score -= user.stages[statData.id] * 5
@@ -919,9 +883,8 @@ class PokeBattle_Move_535 < PokeBattle_Move
 	end
 	
 	def getEffectScore(user,target)
-		score += 50
-		score = getWantsToBeSlowerScore(user,target,1)
-		score = 0 if user.firstTurn?
+		score = 50
+		score += getWantsToBeSlowerScore(user,target,3)
 		return score
 	end
 end
@@ -975,8 +938,11 @@ class PokeBattle_Move_538 < PokeBattle_Move
   end
   
   def getEffectScore(user,target)
-		score += @battle.field.terrain != :None ? 30 : -30
-		return score
+		if @battle.field.terrain == :None
+			return 0
+		else
+			return 30
+		end
   end
 end
 
@@ -1000,10 +966,14 @@ class PokeBattle_Move_53A < PokeBattle_Move
 	end
 	
 	def getEffectScore(user,target)
-		score -= 30
-		score += (target.totalhp - target.hp)/target.totalhp * 60
-
-		return score
+		if target.hasHealingMove?
+			if target.belowHalfHealth?
+				return 50
+			else
+				return 20
+			end
+		end
+		return 0
 	end
 end
 
@@ -1189,10 +1159,9 @@ class PokeBattle_Move_547 < PokeBattle_Move
   end
 
   def getEffectScore(user,target)
-    policies = user.ownersPolicies
-    poisonScore = getPoisonEffectScore(user,target,policies)
-    dizzyScore = getDizzyEffectScore(user,target,policies)
-    leechScore = getLeechEffectScore(user,target,policies)
+    poisonScore = getPoisonEffectScore(user,target)
+    dizzyScore = getDizzyEffectScore(user,target)
+    leechScore = getLeechEffectScore(user,target)
     return (poisonScore + dizzyScore + leechScore)/3
   end
 end
@@ -1224,36 +1193,12 @@ end
 #===============================================================================
 # Raises Sp.Attack of user and team (Mind Link)
 #===============================================================================
-class PokeBattle_Move_549 < PokeBattle_Move
-  def pbMoveFailed?(user,targets,show_message)
-    return false if damagingMove?
-	failed = true
-	@battle.eachSameSideBattler(user) do |b|
-      next if !b.pbCanRaiseStatStage?(:SPECIAL_ATTACK,user,self)
-      failed = false
-      break
-    end
-	@battle.pbDisplay(_INTL("But it failed!")) if failed && show_message
-    return failed
-  end
-
-  def pbEffectGeneral(user)
-    @battle.eachSameSideBattler(user) do |b|
-        b.tryRaiseStat(:SPECIAL_ATTACK, user, showFailMsg: true, move: self)
-    end
-  end
-  
-	def getEffectScore(user,target)
-		@battle.battlers.each do |b|
-			pkmn = b.pokemon
-			next if !pkmn || !pkmn.able? || !b.opposes?
-			score -= b.stages[:SPECIAL_ATTACK] * 10
-		end
-		return score
+class PokeBattle_Move_549 < PokeBattle_TeamStatBuffMove
+	def initialize(battle,move)
+		super
+		@statUp = [:SPECIAL_ATTACK,1]
 	end
 end
-
-
 
 #===============================================================================
 # Curses the target. (Spooky Snuggling)
@@ -1294,6 +1239,7 @@ class PokeBattle_Move_54B < PokeBattle_StatUpMove
 	end
   
 	def getEffectScore(user,target)
+		score = super
 		if user.alliesInReserve?
 			score += hazardWeightOnSide(user.pbOwnSide)
 		end
@@ -1416,33 +1362,10 @@ end
 #===============================================================================
 # Raises Defense of user and team (Stand Together)
 #===============================================================================
-class PokeBattle_Move_554 < PokeBattle_Move
-  def pbMoveFailed?(user,targets,show_message)
-    return false if damagingMove?
-	failed = true
-	@battle.eachSameSideBattler(user) do |b|
-      next if !b.pbCanRaiseStatStage?(:DEFENSE,user,self)
-      failed = false
-      break
-    end
-	@battle.pbDisplay(_INTL("But it failed!")) if failed && show_message
-    return failed
-  end
-
-  def pbEffectGeneral(user)
-    @battle.eachSameSideBattler(user) do |b|
-        b.tryRaiseStat(:DEFENSE,user, showFailMsg: true, move: self)
-    end
-  end
-  
-	def getEffectScore(user,target)
-		score = 0
-		@battle.battlers.each do |b|
-			pkmn = b.pokemon
-			next if !pkmn || !pkmn.able? || !b.opposes?
-			score += getMultiStatUpEffectScore([:DEFENSE,1],user,target)
-		end
-		return score
+class PokeBattle_Move_554 < PokeBattle_TeamStatBuffMove
+	def initialize(battle,move)
+		super
+		@statUp = [:DEFENSE,1]
 	end
 end
 
@@ -1450,34 +1373,10 @@ end
 #===============================================================================
 # Raises Sp. Def of user and team (Camaraderie)
 #===============================================================================
-class PokeBattle_Move_555 < PokeBattle_Move
-  def pbMoveFailed?(user,targets,show_message)
-    return false if damagingMove?
-	failed = true
-	@battle.eachSameSideBattler(user) do |b|
-      next if !b.pbCanRaiseStatStage?(:SPECIAL_DEFENSE,user,self)
-      failed = false
-      break
-    end
-	@battle.pbDisplay(_INTL("But it failed!")) if failed && show_message
-    return failed
-  end
-
-  def pbEffectGeneral(user)
-    @battle.eachSameSideBattler(user) do |b|
-		b.tryRaiseStat(:SPECIAL_DEFENSE,user, showFailMsg: true, move: self)
-    end
-  end
-  
-	def getEffectScore(user,target)
-		score = 0
-		@battle.battlers.each do |b|
-			pkmn = b.pokemon
-			next if !pkmn || !pkmn.able? || !b.opposes?
-			score += 50
-			score += getMultiStatUpEffectScore([:SPECIAL_DEFENSE,1],user,target)
-		end
-		return score
+class PokeBattle_Move_555 < PokeBattle_TeamStatBuffMove
+	def initialize(battle,move)
+		super
+		@statUp = [:SPECIAL_DEFENSE,1]
 	end
 end
 

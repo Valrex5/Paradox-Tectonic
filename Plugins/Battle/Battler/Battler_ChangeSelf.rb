@@ -179,8 +179,12 @@ class PokeBattle_Battler
 
 	def applyFractionalHealing(fraction, showAbilitySplash: false, anim: true, anyAnim: true, showMessage: true, customMessage: nil, item: nil)
 		return 0 unless canHeal?
+		if @battle.autoTesting
+			anim = false
+			anyAnim = false
+		end
 		if item
-			@battle.pbCommonAnimation("UseItem",self)
+			@battle.pbCommonAnimation("UseItem",self) unless @battle.autoTesting
 			unless customMessage
 				if fraction <= 1.0 / 8.0
 					customMessage =_INTL("{1} restored a little HP using its {2}!",pbThis,itemName)

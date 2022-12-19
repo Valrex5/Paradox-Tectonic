@@ -1050,7 +1050,7 @@ class PokeBattle_InvokeMove < PokeBattle_Move
 
   def getEffectScore(user,target)
     weatherScore = getWeatherSettingEffectScore(@weatherType,user,@battle,@durationSet)
-    statusScore = getStatusSettingEffectScore(@statusToApply,0,user,target)
+    statusScore = getStatusSettingEffectScore(@statusToApply,user,target)
     return weatherScore + statusScore
   end
 end
@@ -1200,7 +1200,7 @@ end
 class PokeBattle_JealousyMove < PokeBattle_Move
   def pbAdditionalEffect(user, target)
     return if target.damageState.substitute
-    if target.canInflictStatus?(@statusToApply, user, false, self) && target.hasRaisedStatStages?
+    if target.pbCanInflictStatus?(@statusToApply, user, false, self) && target.hasRaisedStatStages?
       target.applyStatus(@statusToApply,user,nil,user)
     end
   end
@@ -1215,4 +1215,40 @@ class PokeBattle_JealousyMove < PokeBattle_Move
   def shouldHighlight?(user,target)
     return target.hasRaisedStatStages?
   end
+end
+
+# Each subclass must have an initialization method that defines the @statUp array
+class PokeBattle_TeamStatBuffMove < PokeBattle_Move
+	def pbMoveFailed?(user,targets,show_message)
+		return false if damagingMove?
+		failed = true
+		@battle.eachSameSideBattler(user) do |b|
+		  for i in 0..@statUp.length/2 do
+        statSym = @statUp[i]
+        next unless b.pbCanRaiseStatStage?(statSym, user, self)
+        failed = false
+        break
+      end
+      break if !failed
+		end
+    if failed
+		  @battle.pbDisplay(_INTL("But it failed!")) if show_message
+		  return true
+    end
+    return false
+	end
+
+	def pbEffectGeneral(user)
+		@battle.eachSameSideBattler(user) do |b|
+      b.pbRaiseMultipleStatStages(@statUp, user, move: self, showFailMsg: true)
+		end
+	end
+  
+	def getEffectScore(user,target)
+		score = 0
+		@battle.eachSameSideBattler(user) do |b|
+			score += getMultiStatUpEffectScore(@statUp,user,b)
+		end
+		return score
+	end
 end

@@ -285,10 +285,9 @@ class PokeBattle_Move_017 < PokeBattle_Move
   end
 
   def getEffectScore(user,target)
-    policies = user.ownersPolicies
-    burnScore = getBurnEffectScore(user,target,policies)
-    frostBiteScore = getFrostbiteEffectScore(user,target,policies)
-    numbScore = getNumbEffectScore(user,target,policies)
+    burnScore = getBurnEffectScore(user,target)
+    frostBiteScore = getFrostbiteEffectScore(user,target)
+    numbScore = getNumbEffectScore(user,target)
     return (burnScore + frostBiteScore + numbScore)/3
   end
 end
@@ -568,11 +567,7 @@ class PokeBattle_Move_023 < PokeBattle_Move
   end
 
   def getEffectScore(user,target)
-    score = 40
-    score += 30 if user.firstTurn?
-    score += 60 if user.hasActiveAbilityAI?([:SUPERLUCK,:SNIPER])
-    score += 30 if user.hasHighCritAttack?
-    return score
+    return getCriticalRateBuffEffectScore(user,2)
   end
 end
 
@@ -825,7 +820,7 @@ class PokeBattle_Move_037 < PokeBattle_Move
   end
 
   def getEffectScore(user,target)
-    score -= 20 # Annoying moves tax
+    score = 80 # Annoying moves tax
     statStageTotal = 0
     GameData::Stat.each_battle do |s|
       statStageTotal += target.stages[s.id]

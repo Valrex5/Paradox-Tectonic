@@ -4,23 +4,22 @@ STATUS_UPSIDE_ABILITIES = [:GUTS,:AUDACITY,:MARVELSCALE,:MARVELSKIN,:QUICKFEET]
 
 ALL_STATUS_SCORE_BONUS = 0
 STATUS_UPSIDE_MALUS = 60
+NON_ATTACKER_BONUS = 30
 
 def getStatusSettingEffectScore(statusApplying,user,target,ignoreCheck: false)
-	policies = user.ownersPolicies
-
 	case statusApplying
 	when :SLEEP
-		return getSleepEffectScore(user,target,policies: policies, ignoreCheck: ignoreCheck)
+		return getSleepEffectScore(user,target,ignoreCheck: ignoreCheck)
 	when :POISON
-		return getPoisonEffectScore(user,target,policies: policies, ignoreCheck: ignoreCheck)
+		return getPoisonEffectScore(user,target,ignoreCheck: ignoreCheck)
 	when :BURN
-		return getBurnEffectScore(user,target,policies: policies, ignoreCheck: ignoreCheck)
+		return getBurnEffectScore(user,target,ignoreCheck: ignoreCheck)
 	when :FROSTBITE
-		return getFrostbiteEffectScore(user,target,policies: policies, ignoreCheck: ignoreCheck)
+		return getFrostbiteEffectScore(user,target,ignoreCheck: ignoreCheck)
 	when :NUMB
-		return getNumbEffectScore(user,target,policies: policies, ignoreCheck: ignoreCheck, ignoreCheck: ignoreCheck)
+		return getNumbEffectScore(user,target,ignoreCheck: ignoreCheck)
 	when :DIZZY
-		return getDizzyEffectScore(user,target,policies: policies)
+		return getDizzyEffectScore(user,target,ignoreCheck: ignoreCheck)
 	end
 
 	return score
@@ -342,4 +341,22 @@ def getWeatherSettingEffectScore(weatherType,user,battle,duration=4)
       score += 20
     end
     return score
+end
+
+def getCriticalRateBuffEffectScore(user,stages=1)
+	score = 20
+    score += 15 if user.firstTurn?
+    score += 30 if user.hasActiveAbilityAI?([:SUPERLUCK,:SNIPER])
+    score += 15 if user.hasHighCritAttack?
+	score *= stages
+	return score
+end
+
+def getHPLossEffectScore(user,fraction)
+	score = -80 * fraction
+	if user.hp <= user.totalhp * fraction
+		return 0 if !user.alliesInReserve?
+		score *= 2
+	end
+	return score
 end

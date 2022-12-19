@@ -234,7 +234,7 @@
 233,SUNNYDAY,Sunny Day,0FF,0,FIRE,Status,0,10,0,BothSides,0,,"Intensifies the sun for five turns, boosting Fire-type attacks and hindering most other attacks.",
 234,WILLOWISP,Will-O-Wisp,00A,0,GHOST,Status,100,12,0,NearOther,0,bce,"The user shoots a sinister, bluish-white flame at the target to inflict a burn.",
 235,PYROBALL,Pyro Ball,00A,120,FIRE,Physical,80,5,10,NearOther,0,bef,"Attacks by igniting a small stone and launching it as a fiery ball. It has a 10% chance to burn.",
-236,BURNINGJEALOUSY,Burning Jealousy,516,70,FIRE,Special,100,12,100,AllNearFoes,0,bef,"Attacks with energy from jealousy. All opposing Pokémon with stat boosts get burned.",
+236,BURNINGJEALOUSY,Burning Jealousy,18B,70,FIRE,Special,100,12,100,AllNearFoes,0,bef,"Attacks with energy from jealousy. All opposing Pokémon with stat boosts get burned.",
 237,ZEPHYRWING,Zephyr Wing,536,130,FLYING,Physical,100,5,30,Other,0,bef,"The user flies up to sharply raise its Sp. Def in the first turn, then rams the foe on the second.",
 238,BRAVEBIRD,Brave Bird,0FB,120,FLYING,Physical,100,12,0,Other,0,abef,"The user tucks in its wings and charges from a low altitude. The user also takes 33% recoil.",
 239,DRAGONASCENT,Dragon Ascent,03C,120,FLYING,Physical,100,5,0,NearOther,0,abef,"The user soars upward and drops at high speeds. This lowers the user's defenses.",

@@ -103,18 +103,18 @@ end
 #===============================================================================
 class PokeBattle_Move_584 < PokeBattle_Move
 	def pbFailsAgainstTarget?(user,target,show_message)
-		if statUp(target).length == 0
+		if statUp(user,target).length == 0
 		  @battle.pbDisplay(_INTL("{1}'s stats won't go any higher!",target.pbThis)) if show_message
 		  return true
 		end
 		return false
 	end
 
-	def statUp(target)
+	def statUp(user,target)
 		statsTargetCanRaise = target.finalStats.select { |stat, finalValue|
 			next target.pbCanRaiseStatStage?(stat, user, self)
 		}
-		statsRanked = statsTargetCanRaise.sort_by { |s, v| v}
+		statsRanked = statsTargetCanRaise.sort_by { |s, v| v}.to_h.keys
 		statUp = []
 		statsRanked.each_with_index do |stat,index|
 			break if index > 2
@@ -125,11 +125,12 @@ class PokeBattle_Move_584 < PokeBattle_Move
 	end
 	
 	def pbEffectAgainstTarget(user,target)
-		target.pbRaiseMultipleStatStages(statUp(target), user, move: self)
+		target.pbRaiseMultipleStatStages(statUp(user,target), user, move: self)
 	end
 	
 	def getEffectScore(user,target)
-		return getMultiStatUpEffectScore(statUp(target),user,target)
+		return 0 if statUp(user,target).length == 0
+		return getMultiStatUpEffectScore(statUp(user,target),user,target)
 	end
 end
 

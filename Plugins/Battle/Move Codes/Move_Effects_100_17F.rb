@@ -292,20 +292,16 @@ class PokeBattle_Move_100 < PokeBattle_WeatherMove
     def getEffectScore(user,target)
       if user.pbHasTypeAI?(:GHOST)
         return 0 if target.belowHalfHealth?
-
-				if user.belowHalfHealth?
-					if !user.alliesInReserve?
-					  return 0
-					else
-            score -= 50
-					end
-				end
+        score = 80
+        score *= 2 if user.hasActiveAbilityAI?(:AGGRAVATE)
+        score += getHPLossEffectScore(user,0.5)
+        return score
 			else
         statUp = [:ATTACK,1,:DEFENSE,1]
         score = getMultiStatUpEffectScore(statUp,user,target)
         score -= user.stages[:SPEED] * 10
+        return score
 			end
-      return score
     end
   end
   
@@ -437,7 +433,7 @@ class PokeBattle_Move_100 < PokeBattle_WeatherMove
     def getEffectScore(user,target)
       score = 0
       score -=50 if !user.alliesInReserve?
-      score += 20 if user.firstTurn?
+      score -=20 unless user.firstTurn?
       return score
     end
   end
@@ -500,8 +496,7 @@ class PokeBattle_Move_100 < PokeBattle_WeatherMove
     end
 
     def getEffectScore(user,target)
-      score -= 20 * user.countEffect(:Stockpile)
-      return score
+      return -20 * user.countEffect(:Stockpile)
     end
 
     def shouldHighlight?(user,target)
@@ -638,7 +633,8 @@ class PokeBattle_Move_100 < PokeBattle_WeatherMove
 
     def getEffectScore(user,target)
       return 0 if !user.hasAlly?
-      # TODO: Add a calculation for if tankier than ally
+      score = 50
+      score += 25 if user.aboveHalfHealth?
       return score
     end
   end
@@ -745,8 +741,7 @@ class PokeBattle_Move_100 < PokeBattle_WeatherMove
 
     def getEffectScore(user,target)
       return 0 if !user.opposes?(target)
-      score -= 40 # Move is very bad
-      return score
+      return 40 # Move is very bad
     end
   end
 
@@ -793,6 +788,7 @@ class PokeBattle_Move_100 < PokeBattle_WeatherMove
     end
 
     def getEffectScore(user,target)
+      score = 0
       if canSmackDown?(target)
         if !target.effectActive?(:SmackDown)
           score += 20
@@ -1369,6 +1365,11 @@ end
   # 1 stage each. (Rototiller)
   #===============================================================================
   class PokeBattle_Move_13E < PokeBattle_Move
+    def initialize(battle, move)
+      super
+      @statUp = [:ATTACK,1,:SPECIAL_ATTACK,1]
+    end
+
     def pbMoveFailed?(user,targets,show_message)
       @battle.eachBattler do |b|
         return false if isValidTarget?(user,b)
@@ -1389,16 +1390,14 @@ end
     end
   
     def pbEffectAgainstTarget(user,target)
-      target.pbRaiseMultipleStatStages([:ATTACK,1,:SPECIAL_ATTACK,1],user,move: self)
+      target.pbRaiseMultipleStatStages(@statUp,user,move: self)
     end
 
     def getEffectScore(user,target)
 			if isValidTarget?(user,target)
-        score += 30
-				score -= user.stages[:DEFENSE] * 5
-        score -= user.stages[:SPECIAL_DEFENSE] * 5
+        return getMultiStatUpEffectScore(@statUp, user, target)
 			end
-      return score
+      return 0
     end
   end
   
@@ -1407,6 +1406,11 @@ end
   # (Flower Shield)
   #===============================================================================
   class PokeBattle_Move_13F < PokeBattle_Move
+    def initialize(battle, move)
+      super
+      @statUp = [:DEFENSE,1,:SPECIAL_DEFENSE,1]
+    end
+
     def pbMoveFailed?(user,targets,show_message)
       @battle.eachBattler do |b|
         return false if isValidTarget?(user,b)
@@ -1427,16 +1431,14 @@ end
     end
   
     def pbEffectAgainstTarget(user,target)
-      target.pbRaiseMultipleStatStages([:DEFENSE,1,:SPECIAL_DEFENSE,1],user,move: self)
+      target.pbRaiseMultipleStatStages(@statUp,user,move: self)
     end
 
     def getEffectScore(user,target)
 			if isValidTarget?(user,target)
-        score += 30
-				score -= user.stages[:DEFENSE] * 5
-        score -= user.stages[:SPECIAL_DEFENSE] * 5
+        return getMultiStatUpEffectScore(@statUp, user, target)
 			end
-      return score
+      return 0
     end
   end
   
@@ -1477,12 +1479,9 @@ end
 
     def getEffectScore(user,target)
 			if isValidTarget?(user,target)
-        score += 30
-        score += target.stages[:ATTACK] * 5
-        score += target.stages[:SPECIAL_ATTACK] * 5
-        score += target.stages[:SPEED] * 5
+        return getMultiStatDownEffectScore(@statDown, user, target)
 			end
-      return score
+      return 0
     end
   end
   
@@ -1510,7 +1509,7 @@ end
     end
 
     def getEffectScore(user,target)
-      score -= 40
+      score = 0
       netStages = 0
       GameData::Stat.each_battle do |s|
         netStages += target.stages[s.id]
@@ -1609,8 +1608,7 @@ end
     end
 
     def getEffectScore(user,target)
-      score -= 40 # Move sucks
-      return score
+      return 40 # Move sucks
     end
   end
   
@@ -1695,11 +1693,12 @@ end
     end
 
     def getEffectScore(user,target)
-      score += 20 if user.hasAlly?
+      score = 0
       # Check only status having pokemon
-      user.eachOpposing() do |b|
-        next if !b.hasDamagingAttack?
-        score += 20
+      user.eachOpposing do |b|
+        next unless b.hasDamagingAttack?
+        score += 40
+        score += 40 if user.hasAlly?
       end
       return score
     end
@@ -1723,12 +1722,12 @@ end
     end
 
     def getEffectScore(user,target)
-      score -= 20
-      score -= 20 if !user.hasAlly?
+      score = 0
       # Check only status having pokemon
       user.eachOpposing do |b|
-        next if !b.hasStatusMove?
-        score += 20
+        next unless b.hasStatusMove?
+        score += 40
+        score += 40 if user.hasAlly?
       end
       return score
     end
@@ -1813,11 +1812,9 @@ end
     end
 
     def getEffectScore(user,target)
-      score += 30 if user.firstTurn? && user.hasSpecialAttack?
-      score -= user.stages[:SPECIAL_ATTACK] * 10
-      score -= user.stages[:SPECIAL_DEFENSE] * 10
-      score -= user.stages[:SPEED] * 10
-      super
+      score = super
+      score += getMultiStatUpEffectScore(@statUp,user,target)
+      return score
     end
   end
   
@@ -2126,8 +2123,7 @@ end
 
     def getEffectScore(user,target)
       return 0 if user.effectActive?(:LaserFocus)
-      score -= 20 # Move isn't very strong
-      return score
+      return 80
     end
   end
   
@@ -2184,13 +2180,8 @@ end
     end
 
     def getEffectScore(user,target)
-      if target.pbCanLowerStatStage?(:ATTACK,user)
-        score += target.stages[:ATTACK] * 20
-        if target.hasPhysicalAttack?
-          score += 20
-        end
-      end
-      score = getHealingEffectScore(user,user,2)
+      score = getMultiStatDownEffectScore([:ATTACK,1],user,target)
+      score += getHealingEffectScore(user,user,2)
       return score
     end
   end
@@ -2244,8 +2235,7 @@ end
     end
 
     def getEffectScore(user,target)
-      score += 10
-      return score
+      return 10
     end
   end
   
@@ -2319,9 +2309,8 @@ end
     end
 
     def getEffectScore(user,target)
-      score += 50
-      score += 30 if user.firstTurn?
-      score += 5 * user.getScreenDuration()
+      score = 40 * user.getScreenDuration()
+      score += 60 if user.firstTurn?
       return score
     end
   end
@@ -2439,9 +2428,9 @@ end
 
     def getEffectScore(user,target)
       if !target.effectActive?(:ThroatChop) && target.hasSoundMove? && !target.substituted?
-        score += 30
+        return 30
       end
-      return score
+      return 0
     end
   end
   
@@ -2581,11 +2570,7 @@ end
     end
 
     def getEffectScore(user,target)
-      if user.belowHalfHealth?
-        return 0 if !user.alliesInReserve?
-      end
-      score -= 40
-      return score
+      return getHPLossEffectScore(user,0.5)
     end
   end
   
@@ -2632,9 +2617,11 @@ end
     end
 
     def getEffectScore(user,target)
-      score = 0
-      score += 30 if target.hasPhysicalAttack?
-      return score
+      if target.hasPhysicalAttack?
+        return getBurnEffectScore(user,target) / 2
+      else
+        return 0
+      end
     end
   end
   
@@ -2751,9 +2738,9 @@ class PokeBattle_Move_179 < PokeBattle_Move
   end
   
   def getEffectScore(user,target)
-    score -= 20
-    score -= 50 if user.belowHalfHealth?
-    super
+    score = super
+    score += getHPLossEffectScore(user,0.33)
+    return score
   end
 end
 

@@ -52,7 +52,16 @@ class PokeBattle_Battler
 		return pbHasMoveFunction?('07F') # Hex, Cruelty
 	end
 
-	def hasInaccurateAttack?
+	def hasHealingMove?
+		eachMove do |m|
+			battleMove = @battle.getBattleMoveInstanceFromID(m.id)
+			next unless battleMove.healingMove?
+			return true
+		end
+		return false
+	end
+
+	def hasInaccurateMove?
 		eachMove do |m|
 			next unless m.accuracy <= 85
 			return true
@@ -60,7 +69,7 @@ class PokeBattle_Battler
 		return false
 	end
 
-	def hasLowAccuracyAttack?
+	def hasLowAccuracyMove?
 		eachMove do |m|
 			next unless m.accuracy <= 65
 			return true
