@@ -187,7 +187,7 @@ class PokeBattle_FreezeMove < PokeBattle_Move
 
   def getEffectScore(user,target)
     echoln("AI should never use freezing moves")
-    return 0
+    return -1000
   end
 end
 
@@ -209,7 +209,7 @@ class PokeBattle_FlinchMove < PokeBattle_Move
 
   def getEffectScore(user,target)
     baseScore = baseDamage * 10 / user.level
-    score = getFlinchingEffectScore(baseScore,user,target,user.ownersPolicies)
+    score = getFlinchingEffectScore(baseScore,user,target)
     return score
   end
 end
@@ -232,13 +232,8 @@ class PokeBattle_ConfuseMove < PokeBattle_Move
   end
 
   def getEffectScore(user,target)
-    canConfuse = target.canConfuse?(user,false) && !target.hasActiveAbilityAI?(:MENTALBLOCK)
-		if canConfuse
-			score += 20
-		elsif statusMove?
-			score = 0
-		end
-    return score
+    return 100 if target.canConfuse?(user,false) && !target.hasActiveAbilityAI?(:MENTALBLOCK)
+    return 0
   end
 end
 
@@ -543,8 +538,7 @@ class PokeBattle_HealingMove < PokeBattle_Move
     scoringMagnitude = 3
     ratio = healRatio(user)
     scoringMagnitude = 10 * ratio if ratio > 0
-    score = getHealingEffectScore(user,target,scoringMagnitude)
-    return score
+    return getHealingEffectScore(user,target,scoringMagnitude)
   end
 end
 
@@ -580,8 +574,7 @@ class PokeBattle_RecoilMove < PokeBattle_Move
   end
 
   def getEffectScore(user,target)
-    downSideScore = -50 * finalRecoilFactor(user,true)
-    return downSideScore
+    return -50 * finalRecoilFactor(user,true)
   end
 end
 
@@ -849,8 +842,7 @@ class PokeBattle_LeechMove < PokeBattle_Move
 	end
 
   def getEffectScore(user,target)
-      score = getLeechEffectScore(user,target)
-      return score
+      return getLeechEffectScore(user,target)
   end
 end
 
@@ -875,13 +867,8 @@ class PokeBattle_CharmMove < PokeBattle_Move
   end
 
   def getEffectScore(user,target)
-    canCharm = target.canCharm?(user,false) && !target.hasActiveAbility?(:MENTALBLOCK)
-    if canCharm
-      score += 20
-    elsif statusMove?
-      score = 0
-    end
-    return score
+    return 100 if target.canCharm?(user,false) && !target.hasActiveAbility?(:MENTALBLOCK)
+    return 0
   end
 end
 
@@ -1010,8 +997,7 @@ class PokeBattle_RoomMove < PokeBattle_Move
 
   def getEffectScore(user,target)
     return -100 if @battle.field.effectActive?(@roomEffect)
-    score += 5 * user.getRoomDuration()
-    return score
+    return 5 * user.getRoomDuration()
   end
 end
 
@@ -1029,14 +1015,14 @@ class PokeBattle_DrainMove < PokeBattle_Move
   end
 
   def getEffectScore(user,target)
-    drainScore = 40 * drainFactor(user,target)
-    drainScore *= 1.5 if user.hasActiveAbilityAI?(:ROOTED)
-    drainScore *= 1.3 if user.hasActiveItem?(:BIGROOT)
-    drainScore *= 2 if user.belowHalfHealth?
+    score = 40 * drainFactor(user,target)
+    score *= 1.5 if user.hasActiveAbilityAI?(:ROOTED)
+    score *= 1.3 if user.hasActiveItem?(:BIGROOT)
+    score *= 2 if user.belowHalfHealth?
     if target.hasActiveAbilityAI?(:LIQUIDOOZE) || user.effectActive?(:NerveBreak)
-      drainScore *= -1
+      score *= -1
     end
-    return drainScore
+    return score
   end
 end
 
@@ -1064,7 +1050,7 @@ class PokeBattle_InvokeMove < PokeBattle_Move
 
   def getEffectScore(user,target)
     weatherScore = getWeatherSettingEffectScore(@weatherType,user,@battle,@durationSet)
-    statusScore = getStatusSettingEffectScore(@statusToApply,0,user,target,user.ownersPolicies)
+    statusScore = getStatusSettingEffectScore(@statusToApply,0,user,target)
     return weatherScore + statusScore
   end
 end
@@ -1092,12 +1078,12 @@ class PokeBattle_TerrainMove < PokeBattle_Move
   end
 
   def getEffectScore(user,target)
+    if @battle.field.terrain == @weatherType
+      return 0
+    end
     score = 100
     if user.firstTurn?
       score += 20
-    end
-    if @battle.field.terrain == @weatherType
-      return 0
     end
     return score
   end
@@ -1148,9 +1134,10 @@ class PokeBattle_StatusSpikeMove < PokeBattle_Move
   end
 
   def getEffectScore(user,target)
+    score = 0
     side = damagingMove? ? target.pbOwnSide : user.pbOpposingSide
     score -= statusSpikesWeightOnSide(side,[@spikeEffect])
-    score = getHazardSettingEffectScore(user,target)
+    score += getHazardSettingEffectScore(user,target)
     return score
   end
 
@@ -1180,11 +1167,8 @@ class PokeBattle_StatUpDownMove < PokeBattle_Move
   
 	def getEffectScore(user,target)
 	  score = 0
-
     score -= getMultiStatDownEffectScore(@statDown,user,target)
-
     score += getMultiStatUpEffectScore(@statUp,user,target)
-
 	  return score
   end
 end
@@ -1210,4 +1194,25 @@ class PokeBattle_PartyMemberEffectMove < PokeBattle_Move
 		selectedPokemon = selectPartyMemberForEffect(user.index,proc { |pkmn| next legalChoice(pkmn) })
     effectOnPartyMember(selectedPokemon)
 	end
+end
+
+# Each subclass must have an initialization method that defines the statusToApply variable
+class PokeBattle_JealousyMove < PokeBattle_Move
+  def pbAdditionalEffect(user, target)
+    return if target.damageState.substitute
+    if target.canInflictStatus?(@statusToApply, user, false, self) && target.hasRaisedStatStages?
+      target.applyStatus(@statusToApply,user,nil,user)
+    end
+  end
+
+  def getEffectScore(user,target)
+		if target.hasRaisedStatStages?
+	  		return getStatusSettingEffectScore(@statusToApply,user,target)
+		end
+    return 0
+	end
+
+  def shouldHighlight?(user,target)
+    return target.hasRaisedStatStages?
+  end
 end

@@ -52,8 +52,10 @@ class PokeBattle_Move_581 < PokeBattle_SleepMove
 	end
 
 	def getEffectScore(user,target)
+		score = super
+		score -= 30
 		score -= user.stages[:SPEED] * 5
-		super
+		return score
 	end
 end
 
@@ -101,34 +103,33 @@ end
 #===============================================================================
 class PokeBattle_Move_584 < PokeBattle_Move
 	def pbFailsAgainstTarget?(user,target,show_message)
-		@statArray = []
-		GameData::Stat.each_main_battle do |s|
-		  @statArray.push(s.id) if target.pbCanRaiseStatStage?(s.id,user,self)
-		end
-		if @statArray.length==0
+		if statUp(target).length == 0
 		  @battle.pbDisplay(_INTL("{1}'s stats won't go any higher!",target.pbThis)) if show_message
 		  return true
 		end
 		return false
 	end
-	
-	def pbEffectAgainstTarget(user,target)
+
+	def statUp(target)
 		statsTargetCanRaise = target.finalStats.select { |stat, finalValue|
 			next target.pbCanRaiseStatStage?(stat, user, self)
 		}
 		statsRanked = statsTargetCanRaise.sort_by { |s, v| v}
-		target.tryRaiseStat(statsRanked[0],user, move: self) if statsRanked.length > 0
-		target.tryRaiseStat(statsRanked[1],user, move: self) if statsRanked.length > 1
-		target.tryRaiseStat(statsRanked[2],user, move: self) if statsRanked.length > 2
+		statUp = []
+		statsRanked.each_with_index do |stat,index|
+			break if index > 2
+			statUp.push(stat)
+			statUp.push(1)
+		end
+		return statUp
+	end
+	
+	def pbEffectAgainstTarget(user,target)
+		target.pbRaiseMultipleStatStages(statUp(target), user, move: self)
 	end
 	
 	def getEffectScore(user,target)
-		score += 20 if user.firstTurn?
-		stats = [:ATTACK,:DEFENSE,:SPECIAL_ATTACK,:SPECIAL_DEFENSE,:SPEED]
-		stats.each do |s|
-			score -= target.stages[s] * 5
-		end
-		return score
+		return getMultiStatUpEffectScore(statUp(target),user,target)
 	end
 end
 
@@ -269,8 +270,9 @@ class PokeBattle_Move_58E < PokeBattle_Move_0EE
 	end
 
 	def getEffectScore(user,target)
-		score -= 30 if user.pbOpposingSide.effectAtMax?(:Spikes)
-		super
+		score = super
+		score += getHazardSettingEffectScore(user,target) unless user.pbOpposingSide.effectAtMax?(:Spikes)
+		return score
 	end
 end
 
@@ -563,7 +565,7 @@ class PokeBattle_Move_5A0 < PokeBattle_Move
 	end
 end
 
- #===============================================================================
+#===============================================================================
 # Entry hazard. Lays Feather Ward on the opposing side. (Feather Ward)
 #===============================================================================
 class PokeBattle_Move_5A1 < PokeBattle_Move
@@ -674,9 +676,10 @@ end
     end
 
     def getEffectScore(user,target)
-      score += 30 if user.firstTurn?
-	  score += 20
-      super
+		score = super
+		score += 100
+		score += 50 if user.firstTurn?
+		return score
     end
 
 	def pbShowAnimation(id,user,targets,hitNum=0,showAnimation=true)
@@ -832,8 +835,13 @@ class PokeBattle_Move_5AC < PokeBattle_Move
 	end
 	
 	def getEffectScore(user,target)
-	  score += target.canLeech?(user,false,self) ? 20 : -20
-	  score += target.canNumb?(user,false,self) ? 20 : -20
-	  return score
+		target_speed = target.pbSpeed
+		user_speed = user.pbSpeed
+		
+		if target.canNumb?(user,false,self) && target_speed >= user_speed
+			return getNumbEffectScore(user,target)
+		elsif target.canLeech?(user,false,self) && user_speed >= target_speed
+			return getLeechEffectScore(user,target)
+		end
 	end
 end

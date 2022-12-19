@@ -113,8 +113,9 @@ class PokeBattle_Move_009 < PokeBattle_Move
   end
 
   def getEffectScore(user,target)
-    score = 0.1 * getNumbEffectScore(user,target)
-		score += 0.1 * getFlinchingEffectScore(60,user,target,user.ownersPolicies)
+    score = 0
+    score += 0.1 * getNumbEffectScore(user,target)
+		score += 0.1 * getFlinchingEffectScore(60,user,target)
     return score
   end
 end
@@ -142,8 +143,9 @@ class PokeBattle_Move_00B < PokeBattle_Move
   end
 
   def getEffectScore(user,target)
-    score = 0.1 * getBurnEffectScore(user,target)
-		score += 0.1 * getFlinchingEffectScore(60,user,target,user.ownersPolicies)
+    score = 0
+    score += 0.1 * getBurnEffectScore(user,target)
+		score += 0.1 * getFlinchingEffectScore(60,user,target)
     return score
   end
 end
@@ -181,8 +183,9 @@ class PokeBattle_Move_00E < PokeBattle_Move
   end
 
   def getEffectScore(user,target)
-    score = 0.1 * getFrostbiteEffectScore(user,target)
-		score += 0.1 * getFlinchingEffectScore(60,user,target,user.ownersPolicies)
+    score = 0
+    score += 0.1 * getFrostbiteEffectScore(user,target)
+		score += 0.1 * getFlinchingEffectScore(60,user,target)
     return score
   end
 end
@@ -228,7 +231,7 @@ class PokeBattle_Move_012 < PokeBattle_FlinchMove
   end
 
   def getEffectScore(user,target)
-    score = getFlinchingEffectScore(150,user,target,user.ownersPolicies)
+    score = getFlinchingEffectScore(150,user,target)
     return score
   end
 end
@@ -443,6 +446,7 @@ class PokeBattle_Move_01B < PokeBattle_Move
 
   def getEffectScore(user,target)
     status = statusBeingMoved(user)
+    score = 0
     score += getStatusSettingEffectScore(status,user,target,ignoreCheck: true)
     score += getStatusSettingEffectScore(status,target,user,ignoreCheck: true)
     return score
@@ -526,12 +530,13 @@ class PokeBattle_Move_021 < PokeBattle_StatUpMove
 			foundMove = true
 			break
 		end
+    score = super
     if foundMove
       score += 20
     else
       score -= 20
     end
-    super
+    return score
   end
 end
 
@@ -715,8 +720,9 @@ class PokeBattle_Move_030 < PokeBattle_StatUpMove
   end
 
   def getEffectScore(user,target)
+    score = super
     score += 40 if user.hasActiveAbilityAI?(:STAMPEDE)
-    super
+    return score
   end
 end
 
@@ -1233,6 +1239,7 @@ class PokeBattle_Move_050 < PokeBattle_Move
   end
   
   def getEffectScore(user,target)
+    score = 0
     if !target.substituted? && target.hasAlteredStatStages?
 			GameData::Stat.each_battle do |s|
 				score += target.stages[s.id] * 10
@@ -1265,13 +1272,14 @@ class PokeBattle_Move_051 < PokeBattle_Move
   end
 
   def getEffectScore(user,target)
+    score = 0
 		@battle.eachBattler do |b|
 			totalStages = 0
 			GameData::Stat.each_battle { |s| totalStages += b.stages[s.id] }
 			if b.opposes?(user)
-				score += totalStages * 10
+				score += totalStages * 20
 			else
-				score -= totalStages * 10
+				score -= totalStages * 20
 			end
 		end
     return score
@@ -2012,7 +2020,7 @@ class PokeBattle_Move_066 < PokeBattle_Move
   end
 
   def getEffectScore(user,target)
-    score -= 30
+    score = 60
 		if user.hasActiveAbilityAI?(DOWNSIDE_ABILITIES)
       if user.opposes?(target)
         score += 60
@@ -2092,7 +2100,7 @@ class PokeBattle_Move_067 < PokeBattle_Move
 
   def getEffectScore(user,target)
     return 0 if target.hasActiveAbilityAI?(DOWNSIDE_ABILITIES)
-    score -= 40
+    score = 60
 		score += 100 if user.hasActiveAbilityAI?(DOWNSIDE_ABILITIES)
     return score
   end
@@ -2120,13 +2128,9 @@ class PokeBattle_Move_068 < PokeBattle_Move
 
   def getEffectScore(user,target)
     if target.hasActiveAbilityAI?(DOWNSIDE_ABILITIES)
-      if user.opposes?(target)
-        return 0
-      else
-        score += 40
-      end
+      score = 120
     end
-    return 80
+    return score
   end
 end
 
@@ -2159,8 +2163,7 @@ class PokeBattle_Move_069 < PokeBattle_Move
   end
 
   def getEffectScore(user,target)
-    score += 100
-    return score
+    return 80
   end
 end
 

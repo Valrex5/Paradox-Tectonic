@@ -34,9 +34,9 @@ class PokeBattle_Move_082 < PokeBattle_Move
   end
 
   def getEffectScore(user,target)
-    score -= 20
+    score = 0
     user.eachAlly do |b|
-      next if !b.hasDamagingAttack?
+      next unless b.hasDamagingAttack?
       score += 40 if b.pbSpeed(true) > user.pbSpeed(true)
     end
     return score
@@ -64,6 +64,7 @@ class PokeBattle_Move_083 < PokeBattle_Move
   end
 
   def getEffectScore(user,target)
+    score = 0
     user.eachAlly do |b|
       next if !b.pbHasMove?(@id)
       score += 30
@@ -307,6 +308,7 @@ class PokeBattle_Move_093 < PokeBattle_Move
   end
 
   def getEffectScore(user,target)
+    score = 0
     score += 30 if user.aboveHalfHealth?
     return score
   end
@@ -760,8 +762,8 @@ class PokeBattle_Move_0A2 < PokeBattle_Move
   end
 
   def getEffectScore(user,target)
+    score = 20 * user.getScreenDuration()
     score += 30 if user.firstTurn?
-    score += 5 * user.getScreenDuration()
     return score
   end
 end
@@ -783,8 +785,8 @@ class PokeBattle_Move_0A3 < PokeBattle_Move
   end
 
   def getEffectScore(user,target)
+    score = 20 * user.getScreenDuration()
     score += 30 if user.firstTurn?
-    score += 5 * user.getScreenDuration()
     return score
   end
 end
@@ -934,11 +936,9 @@ class PokeBattle_Move_0A7 < PokeBattle_Move
   end
 
   def getEffectScore(user,target)
-    if target.pbHasTypeAI?(:GHOST)
-      score += 60
-    elsif target.stages[:EVASION]<=0
-      score -= 60
-    end
+    score = 0
+    score += 40 if target.pbHasTypeAI?(:GHOST)
+    score += 20 * target.stages[:EVASION]
     return score
   end
 end
@@ -963,11 +963,9 @@ class PokeBattle_Move_0A8 < PokeBattle_Move
   end
 
   def getEffectScore(user,target)
-    if target.pbHasTypeAI?(:DARK)
-      score += 70
-    elsif target.stages[:EVASION]<=0
-      score -= 60
-    end
+    score = 0
+    score += 40 if target.pbHasTypeAI?(:DARK)
+    score += 20 * target.stages[:EVASION]
     return score
   end
 end
@@ -1200,13 +1198,8 @@ class PokeBattle_Move_0B0 < PokeBattle_Move
   end
 
   def getEffectScore(user,target)
-    return 0 unless target.hasDamagingAttack?
-    if user.belowHalfHealth?
-      score -= 20
-    else
-      score += 20
-    end
-    return score
+    echoln("The AI will never use Me First.")
+    return -1000
   end
 end
 
@@ -1845,6 +1838,8 @@ class PokeBattle_Move_0BC < PokeBattle_Move
 
   def getEffectScore(user,target)
     return 0 if target.hasActiveAbilityAI?(:MENTALBLOCK)
+    score = 60
+    score += 40 if @battle.pbIsTrapped?(target)
     userSpeed = user.pbSpeed(true)
     targetSpeed = target.pbSpeed(true)
     if userSpeed > targetSpeed
@@ -2042,8 +2037,9 @@ class PokeBattle_Move_0C4 < PokeBattle_TwoTurnMove
   end
 
   def getEffectScore(user,target)
+    score = super
     score += 50 if @battle.sunny?
-    super
+    return score
   end
 
   def shouldHighlight?(user,target)
@@ -2106,7 +2102,7 @@ class PokeBattle_Move_0C7 < PokeBattle_TwoTurnMove
   end
 
   def getEffectScore(user,target)
-    score = getFlinchingEffectScore(80,user,target,user.ownersPolicies)
+    score = getFlinchingEffectScore(80,user,target)
     return score
   end
 end
@@ -2125,7 +2121,8 @@ class PokeBattle_Move_0C8 < PokeBattle_TwoTurnMove
   end
 
   def getEffectScore(user,target)
-    score += user.aboveHalfHealth? ? 50 : -50
+    score = super
+    score += 20 if user.aboveHalfHealth?
     score -= user.stages[:DEFENSE] * 10
     return score
   end
@@ -2178,8 +2175,8 @@ class PokeBattle_Move_0CA < PokeBattle_TwoTurnMove
   end
 
   def getEffectScore(user,target)
-    score += 50 if canBecomeReaper?(user)
-    return score
+    return 50 if canBecomeReaper?(user)
+    return 0
   end
 end
 
@@ -2198,8 +2195,8 @@ class PokeBattle_Move_0CB < PokeBattle_TwoTurnMove
   end
 
   def getEffectScore(user,target)
-    score += 40 if user.canGulpMissile?
-    return score
+    return 40 if user.canGulpMissile?
+    return 0
   end
 end
 
@@ -2337,8 +2334,8 @@ class PokeBattle_Move_0CF < PokeBattle_Move
   end
 
   def getEffectScore(user,target)
-    score += 20 unless target.effectActive?(:Trapping) || target.substituted?
-    return score
+    return 0 if target.effectActive?(:Trapping) || target.substituted?
+    return 40
   end
 end
 
@@ -2450,14 +2447,11 @@ class PokeBattle_Move_0D4 < PokeBattle_FixedDamageMove
   end
 
   def getEffectScore(user,target)
-    if user.hp <= user.totalhp / 4
-      score = 0
-    elsif user.belowHalfHealth?
-      score -= 30
+    if user.belowHalfHealth?
+      score 0
     else
-      score += 30
+      return 100
     end
-    return score
   end
 end
 
@@ -2504,8 +2498,7 @@ class PokeBattle_Move_0D7 < PokeBattle_Move
   end
 
   def getEffectScore(user,target)
-    score += (user.totalhp / user.level) * 5
-    return score
+    return (user.totalhp / user.level) * 30
   end
 end
 
@@ -2603,7 +2596,10 @@ class PokeBattle_Move_0DB < PokeBattle_Move
   end
 
   def getEffectScore(user,target)
+    score = 50
+    score += 30 if @battle.pbIsTrapped?(user.index)
     score += 20 if user.firstTurn?
+    score += 20 if user.aboveHalfHealth?
     return score
   end
 end
@@ -2635,6 +2631,7 @@ class PokeBattle_Move_0DC < PokeBattle_Move
   end
 
   def getEffectScore(user,target)
+    score = 100
     score += 20 if user.firstTurn?
     return score
   end
@@ -3259,8 +3256,8 @@ class PokeBattle_Move_0F0 < PokeBattle_Move
   end
 
   def getEffectScore(user,target)
-    score += 20 if canRemoveItem?(user,target,true)
-    return score
+    return 20 if canRemoveItem?(user,target,true)
+    return 0
   end
 end
 
@@ -3343,13 +3340,12 @@ class PokeBattle_Move_0F2 < PokeBattle_Move
 
   def getEffectScore(user,target)
     if user.hasActiveItem?([:FLAMEORB,:POISONORB,:STICKYBARB,:IRONBALL])
-      score += 50
+      return 130
     elsif user.hasActiveItem?(CHOICE_LOCKING_ITEMS)
-      score += 100
+      return 100
     elsif !user.item && target.item
       return 0 if user.lastMoveUsed && GameData::Move.get(user.lastMoveUsed).function_code == "0F2"	 # Trick/Switcheroo
     end
-    return score
   end
 end
 
@@ -3398,12 +3394,12 @@ class PokeBattle_Move_0F3 < PokeBattle_Move
   def getEffectScore(user,target)
     if user.hasActiveItem?([:FLAMEORB,:POISONORB,:STICKYBARB,:IRONBALL]) || user.hasActiveitem?(CHOICE_LOCKING_ITEMS)
       if user.opposes?(target)
-        score += 50
+        return 100
       else
         return 0
       end
     end
-    return score
+    return 50
   end
 end
 

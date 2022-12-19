@@ -164,6 +164,7 @@ class PokeBattle_Move_100 < PokeBattle_WeatherMove
 
     def getEffectScore(user,target)
       side = target.pbOwnSide
+      score = 0
       side.eachEffect(true) do |effect,value,data|
         score += 10 if data.is_screen?
       end
@@ -222,6 +223,7 @@ class PokeBattle_Move_100 < PokeBattle_WeatherMove
     end
 
     def getEffectScore(user,target)
+      score = 80
       score += 20 if user.firstTurn?
       user.eachOpposing(true) do |b|
         if !b.canActThisTurn?
@@ -366,8 +368,8 @@ class PokeBattle_Move_100 < PokeBattle_WeatherMove
     end
 
     def getEffectScore(user,target)
-      score -= 30
-      score += 30 * target.statusCount
+      score = 100
+      score += 50 if target.aboveHalfHealth?
       return score
     end
   end
@@ -433,7 +435,8 @@ class PokeBattle_Move_100 < PokeBattle_WeatherMove
     end
 
     def getEffectScore(user,target)
-      return 0 if !user.alliesInReserve?
+      score = 0
+      score -=50 if !user.alliesInReserve?
       score += 20 if user.firstTurn?
       return score
     end
@@ -608,6 +611,7 @@ class PokeBattle_Move_100 < PokeBattle_WeatherMove
 
     def getEffectScore(user,target)
       return 0 unless target.hasDamagingAttack?
+      score = 0
       if user.belowHalfHealth?
         score -= 20
       else
@@ -657,14 +661,16 @@ class PokeBattle_Move_100 < PokeBattle_WeatherMove
     end
 
     def getEffectScore(user,target)
+      score = 0
       @battle.eachBattler do |b|
-        if user.opposes?(b)
-          score += 20 if b.airborne?(true)
-        else
-          score -= 20 if b.airborne?(true)
-        end
+        bScore = 0
+        bScore -= 20 if b.airborne?(true)
+        bScore += 20 if b.hasInaccurateMove?
+        bScore += 40 if b.hasLowAccuracyMove?
+        bScore *= 1 if b.opposes?(user)
+
+        score += bScore
       end
-      # TODO: Add a section that cares about accuracy
       return score
     end
   end
@@ -696,8 +702,8 @@ class PokeBattle_Move_100 < PokeBattle_WeatherMove
     end
 
     def getEffectScore(user,target)
-      score -= 20
-      score -= 20 if !user.firstTurn?
+      score = 20
+      score += 20 if user.firstTurn?
       user.eachOpposing(true) do |b|
         if b.pbHasAttackingType?(:GROUND)
           score += 50
@@ -2336,7 +2342,7 @@ end
       # Check only special attackers
       user.eachPotentialAttacker(true) do |b|
         next unless b.hasPhysicalAttack?
-        score += getPoisonEffectScore(user,b,user.ownersPolicies) * 0.75
+        score += getPoisonEffectScore(user,b) * 0.75
       end
       return score
     end
@@ -2455,6 +2461,7 @@ end
     end
   end
   
+  # TODO create a "targeting healing move" parent class
   #===============================================================================
   # Heals target by 1/2 of its max HP, or 2/3 of its max HP in Grassy Terrain.
   # (Floral Healing)
@@ -2483,9 +2490,9 @@ end
     end
 
     def getEffectScore(user,target)
-      score += 30 if @battle.field.terrain == :Grassy
-      score = getHealingEffectScore(user,target)
-      return score
+      magnitude = 3
+      magnitude = 6 if @battle.field.terrain == :Grassy
+      return getHealingEffectScore(user,target,magnitude)
     end
 
     def shouldHighlight?(user,target)
@@ -2625,6 +2632,7 @@ end
     end
 
     def getEffectScore(user,target)
+      score = 0
       score += 30 if target.hasPhysicalAttack?
       return score
     end

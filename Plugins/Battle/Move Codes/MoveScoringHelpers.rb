@@ -6,6 +6,8 @@ ALL_STATUS_SCORE_BONUS = 0
 STATUS_UPSIDE_MALUS = 60
 
 def getStatusSettingEffectScore(statusApplying,user,target,ignoreCheck: false)
+	policies = user.ownersPolicies
+
 	case statusApplying
 	when :SLEEP
 		return getSleepEffectScore(user,target,policies: policies, ignoreCheck: ignoreCheck)
@@ -61,7 +63,7 @@ end
 
 def getBurnEffectScore(user,target,ignoreCheck: false)
 	if target && (ignoreCheck || target.canBurn?(user,false))
-		return 9999 if user.ownersuser.ownersPolicies.include?(:PRIORITIZEDOTS) && user.opposes?(target)
+		return 9999 if user.ownersPolicies.include?(:PRIORITIZEDOTS) && user.opposes?(target)
 		score = 40
 		if target.hasPhysicalAttack?
 			score += 30
@@ -139,9 +141,7 @@ def getSleepEffectScore(user,target,policies=[])
 	return score
 end
 
-
-
-def getFlinchingEffectScore(baseScore,user,target,policies)
+def getFlinchingEffectScore(baseScore,user,target)
 	userSpeed = user.pbSpeed(true)
     targetSpeed = target.pbSpeed(true)
     

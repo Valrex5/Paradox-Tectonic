@@ -317,7 +317,7 @@ class PokeBattle_Move_514 < PokeBattle_Move
   end
   
   def getEffectScore(user,target)
-	return -getPoisonEffectScore(user,user,user.ownersPolicies,true)
+	return -getPoisonEffectScore(user,user, ignoreCheck: true)
   end
 end
 
@@ -545,23 +545,19 @@ class PokeBattle_Move_521 < PokeBattle_Move
 end
 
 #===============================================================================
-# Target's highest move is drastically reduced. (Loom Over)
+# Target's highest stat is drastically reduced. (Loom Over)
 #===============================================================================
-class PokeBattle_Move_522 < PokeBattle_TargetMultiStatDownMove
+class PokeBattle_Move_522 < PokeBattle_Move
   def pbFailsAgainstTarget?(user,target,show_message)
-    @statArray = []
-    GameData::Stat.each_battle do |s|
-      @statArray.push(s.id) if target.pbCanLowerStatStage?(s.id,user,self)
-    end
-    if @statArray.length==0
-      @battle.pbDisplay(_INTL("But it fails, since none of {1}'s stats can be lowered!",target.pbThis)) if show_message
-      return true
-    end
-    return false
+    return !target.pbCanLowerStatStage?(target.highestStat,user,self, showFailMsg: true)
   end
   
   def pbEffectAgainstTarget(user,target)
     target.tryLowerStat(target.highestStat,user,increment: 2, move: self)
+  end
+
+  def getEffectScore(user,target)
+    return getMultiStatDownEffectScore([target.highestStat,2],user,target)
   end
 end
 
@@ -943,31 +939,20 @@ class PokeBattle_Move_536 < PokeBattle_TwoTurnMove
   end
   
   def getEffectScore(user,target)
-	score += user.aboveHalfHealth? ? 50 : -50
-	score -= user.stages[:SPECIAL_DEFENSE] * 10
-	return score
+    score = super
+    score += 20 if user.aboveHalfHealth?
+    score -= user.stages[:DEFENSE] * 10
+    return score
   end
 end
 
 #===============================================================================
 # Frostbites opposing Pokemon that have increased their stats. (Freezing Jealousy)
 #===============================================================================
-class PokeBattle_Move_537 < PokeBattle_Move
-	def pbAdditionalEffect(user,target)
-	  return if target.damageState.substitute
-	  if target.canFrostbite?(user,false,self) && target.hasRaisedStatStages?
-		target.applyFrostbite(user)
-	  end
-	end
-	
-	def getEffectScore(user,target)
-	  score -= 20
-	  score += 50 if target.hasRaisedStatStages? && target.canFrostbite?(user,false,self)
-	  return score
-	end
-
-	def shouldHighlight?(user,target)
-		return target.hasRaisedStatStages?
+class PokeBattle_Move_537 < PokeBattle_JealousyMove
+	def initialize(battle, move)
+	  @statusToApply = :FROSTBITE
+	  super
 	end
 end
 
@@ -1418,29 +1403,15 @@ class PokeBattle_Move_552 < PokeBattle_WeatherMove
 	end
 end
 
-
 #===============================================================================
 # Poisons opposing Pokemon that have increased their stats. (Stinging Jealousy)
 #===============================================================================
-class PokeBattle_Move_553 < PokeBattle_Move
-	def pbAdditionalEffect(user,target)
-	  return if target.damageState.substitute
-	  if target.canPoison?(user,false,self) && target.hasRaisedStatStages?
-		target.applyPoison(user)
-	  end
-	end
-	
-	def getEffectScore(user,target)
-	  score -= 20
-	  score += 50 if target.hasRaisedStatStages? && target.canPoison?(user,false,self)
-	  return score
-	end
-
-	def shouldHighlight?(user,target)
-		return target.hasRaisedStatStages?
+class PokeBattle_Move_553  < PokeBattle_JealousyMove
+	def initialize(battle, move)
+	  @statusToApply = :POISON
+	  super
 	end
 end
-
 
 #===============================================================================
 # Raises Defense of user and team (Stand Together)
@@ -1465,10 +1436,11 @@ class PokeBattle_Move_554 < PokeBattle_Move
   end
   
 	def getEffectScore(user,target)
+		score = 0
 		@battle.battlers.each do |b|
 			pkmn = b.pokemon
 			next if !pkmn || !pkmn.able? || !b.opposes?
-			score -= b.stages[:DEFENSE] * 10
+			score += getMultiStatUpEffectScore([:DEFENSE,1],user,target)
 		end
 		return score
 	end
@@ -1498,10 +1470,12 @@ class PokeBattle_Move_555 < PokeBattle_Move
   end
   
 	def getEffectScore(user,target)
+		score = 0
 		@battle.battlers.each do |b|
 			pkmn = b.pokemon
 			next if !pkmn || !pkmn.able? || !b.opposes?
-			score -= b.stages[:SPECIAL_DEFENSE] * 10
+			score += 50
+			score += getMultiStatUpEffectScore([:SPECIAL_DEFENSE,1],user,target)
 		end
 		return score
 	end
@@ -1622,11 +1596,8 @@ class PokeBattle_Move_55D < PokeBattle_Move
 	end
 
 	def getEffectScore(user,target)
-		if !target.hasPhysicalAttack?
-			score += 30
-		else
-			score -= 30
-		end
+		score = 160
+		score -= getMultiStatUpEffectScore([:ATTACK,2],user,target)
 		return score
 	end
 end
@@ -1641,11 +1612,8 @@ class PokeBattle_Move_55E < PokeBattle_Move
 	end
 
 	def getEffectScore(user,target)
-		if !target.hasSpecialAttack?
-			score += 30
-		else
-			score -= 30
-		end
+		score = 160
+		score -= getMultiStatUpEffectScore([:SPECIAL_ATTACK,2],user,target)
 		return score
 	end
 end
@@ -1765,7 +1733,7 @@ class PokeBattle_Move_567 < PokeBattle_ProtectMove
 		# Check only special attackers
 		user.eachPotentialAttacker(true) do |b|
 			next unless b.hasSpecialAttack?
-		  	score += getBurnEffectScore(user,b,user.ownersPolicies) * 0.75
+		  	score += getBurnEffectScore(user,b) * 0.75
 		end
 		return score
 	end
@@ -1918,8 +1886,9 @@ class PokeBattle_Move_572 < PokeBattle_Move_528
 	end
 
 	def getEffectScore(user,target)
-		score += 30 if user.hasPhysicalAttack?
-		super
+		score = super
+		score += getMultiStatUpEffectScore([:ATTACK,1],user,target)
+		return score
 	end
 end
 
@@ -1978,6 +1947,8 @@ class PokeBattle_Move_575 < PokeBattle_Move
 	
 	def getEffectScore(user,target)
 	  return 0 if user.belowHalfHealth?
+	  return 0 unless target.hasPhysicalAttack?
+	  return 120
 	end
 end
 
@@ -1995,11 +1966,7 @@ class PokeBattle_Move_576 < PokeBattle_TwoTurnMove
 	end
 
 	def getEffectScore(user,target)
-		if @battle.field.weather != :Rain
-			score += 50
-		else
-			score -= 50
-		end
+		score = getWeatherSettingEffectScore(:Rain,user,battle,5)
 		return score
 	end
 end

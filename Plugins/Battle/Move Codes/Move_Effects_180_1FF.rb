@@ -32,7 +32,8 @@ class PokeBattle_Move_181 < PokeBattle_Move
   end
 
   def getEffectScore(user,target)
-    score += 40 if target.hp > target.totalhp / 2
+    score = 60
+    score += 60 if target.aboveHalfHealth?
     return score
   end
 end
@@ -59,9 +60,8 @@ class PokeBattle_Move_183 < PokeBattle_Move
   end
 
   def getEffectScore(user,target)
-    score += 40 if user.aboveHalfHealth?
-    score -= user.stages[:DEFENSE] * 10
-    score = 0 if !user.item || !user.item.is_berry?
+    score += getMultiStatUpEffectScore([:DEFENSE,2],user,target)
+    score += 40 if user.item&.is_berry?
     return score
   end
 end
@@ -138,9 +138,9 @@ class PokeBattle_Move_186 < PokeBattle_Move
   end
 
   def getEffectScore(user,target)
-    score += 30 if target.hp > target.totalhp / 2
-    score += target.stages[:SPEED] * 10
-    score -= 60 if target.effectActive?(:TarShot)
+    score = 0
+    score += getMultiStatDownEffectScore([:SPEED,1],user,target)
+    score += 60 unless target.effectActive?(:TarShot)
     return score
   end
 end
@@ -236,22 +236,10 @@ end
   #===============================================================================
   # Burns opposing Pokemon that have increased their stats. (Burning Jealousy)
   #===============================================================================
-class PokeBattle_Move_18B < PokeBattle_Move
-  def pbAdditionalEffect(user, target)
-    return if target.damageState.substitute
-    if target.canBurn?(user, false, self) && target.hasRaisedStatStages?
-      target.applyBurn(user)
-    end
-  end
-
-  def getEffectScore(user,target)
-    score -= 30
-    score += 60 if target.canBurn?(user, false, self) && target.hasRaisedStatStages?
-    return score
-  end
-
-  def shouldHighlight?(user,target)
-    return target.hasRaisedStatStages?
+class PokeBattle_Move_18B < PokeBattle_JealousyMove
+  def initialize(battle, move)
+    @statusToApply = :BURN
+    super
   end
 end
 
@@ -265,12 +253,8 @@ class PokeBattle_Move_18C < PokeBattle_Move
     end
 
     def getEffectScore(user,target)
-        score -= 20
-        if @battle.field.terrain == :Grassy
-            score += 50
-            score += 50 if target.belowHalfHealth?
-        end
-        return score
+        return 50 if @battle.field.terrain == :Grassy
+        return 0
     end
 
     def shouldHighlight?(user,target)
@@ -354,12 +338,6 @@ class PokeBattle_Move_192 < PokeBattle_Move
     @battle.pbDisplay(_INTL("But it failed!")) if show_message
     return true
   end
-
-  def getEffectScore(user,target)
-    score += 20
-    score = 0 if !target.item
-    return score
-  end
 end
 
   #===============================================================================
@@ -367,12 +345,13 @@ end
   #===============================================================================
 class PokeBattle_Move_193 < PokeBattle_Move_0C0
   def pbEffectAfterAllHits(user, target)
-    user.pbLowerMultipleStatStages([:DEFENSE,1,:SPEED,1], user, move: self)
+    user.tryLowerStat(:DEFENSE,user,move: self)
+    user.tryRaiseStat(:SPEED,user,move: self)
   end
 
   def getEffectScore(user,target)
-    score -= user.stages[:SPEED] * 10
-    score += user.stages[:DEFENSE] * 10
+    score += getMultiStatUpEffectScore([:SPEED,1],user,target)
+    score -= getMultiStatDownEffectScore([:DEFENSE,1],user,target)
     return score
   end
 end
@@ -414,9 +393,7 @@ class PokeBattle_Move_195 < PokeBattle_Move
   end
 
   def getEffectScore(user,target)
-    score += 30
-    score = 0 if battle.field.terrain == :NONE
-    return score
+    return 20
   end
 end
 
@@ -432,8 +409,7 @@ class PokeBattle_Move_196 < PokeBattle_Move_0E0
   end
 
   def getEffectScore(user,target)
-      score += 50
-      score -= ((user.hp.to_f / user.totalhp.to_f) * 100).floor
+      score -= ((user.hp.to_f / user.totalhp.to_f) * 50).floor
       return score
   end
 
@@ -467,9 +443,7 @@ class PokeBattle_Move_197 < PokeBattle_Move
   end
 
   def getEffectScore(user,target)
-    score += 50
-    score = 0 if !target.canChangeType? || !target.pbHasOtherType?(:PSYCHIC)
-    return score
+    return 50
   end
 end
 
