@@ -625,6 +625,11 @@ class PokeBattle_Move_09D < PokeBattle_Move
   def pbEffectGeneral(user)
     @battle.field.applyEffect(:MudSportField,5)
   end
+
+  def getEffectScore(user,target)
+    echoln("The AI will never use Mud Sport.")
+    return -1000
+  end
 end
 
 #===============================================================================
@@ -641,6 +646,11 @@ class PokeBattle_Move_09E < PokeBattle_Move
 
   def pbEffectGeneral(user)
     @battle.field.applyEffect(:WaterSportField,5)
+  end
+
+  def getEffectScore(user,target)
+    echoln("The AI will never use Water Sport.")
+    return -1000
   end
 end
 
@@ -1226,6 +1236,11 @@ end
 class PokeBattle_Move_0B1 < PokeBattle_Move
   def pbEffectGeneral(user)
     user.applyEffect(:MagicCoat)
+  end
+
+  def getEffectScore(user,target)
+    echoln("The AI will never use Magic Coat.")
+    return -1000
   end
 end
 
@@ -2042,6 +2057,10 @@ end
 class PokeBattle_Move_0C2 < PokeBattle_Move
   def pbEffectGeneral(user)
     user.applyEffect(:HyperBeam,2)
+  end
+
+  def getEffectScore(user,target)
+    return -30
   end
 end
 

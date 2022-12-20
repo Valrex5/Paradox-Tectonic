@@ -495,6 +495,10 @@ class PokeBattle_Move_51F < PokeBattle_Move
 		return unless user.tryRaiseStat(:ACCURACY,user, move: self)
 		@battle.pbDisplay(_INTL("{1} adjusted its aim!",user.pbThis))
 	end
+
+	def getEffectScore(user,target)
+		return getMultiStatUpEffectScore([:SPECIAL_ATTACK,1,:ACCURACY,1],user,user) * 0.5
+	end
 end
 
 #===============================================================================
@@ -529,6 +533,10 @@ class PokeBattle_Move_521 < PokeBattle_Move
          target.pbThis(true),m.name,reduction))
       break
     end
+  end
+
+  def getEffectScore(user,target)
+    return 20
   end
 end
 

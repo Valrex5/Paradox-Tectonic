@@ -1552,7 +1552,7 @@ end
     end
 
     def getEffectScore(user,target)
-      return 80
+      return 60
     end
   end
   
@@ -1581,7 +1581,7 @@ end
     end
 
     def getEffectScore(user,target)
-      return 80
+      return 60
     end
   end
   

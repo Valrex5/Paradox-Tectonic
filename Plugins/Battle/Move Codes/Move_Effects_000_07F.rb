@@ -1823,6 +1823,10 @@ class PokeBattle_Move_061 < PokeBattle_Move
     typeName = GameData::Type.get(:WATER).name
     @battle.pbDisplay(_INTL("{1} transformed into the {2} type!",target.pbThis,typeName))
   end
+
+  def getEffectScore(user,target)
+    return 80
+  end
 end
 
 #===============================================================================
@@ -1896,7 +1900,7 @@ class PokeBattle_Move_063 < PokeBattle_Move
   def getEffectScore(user,target)
     score = getSuppressAbilityEffectScore(user,target)
     score += user.opposes?(target) ? -20 : 20
-    return
+    return score
   end
 end
 

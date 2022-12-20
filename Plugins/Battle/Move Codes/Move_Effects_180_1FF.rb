@@ -300,6 +300,11 @@ class PokeBattle_Move_18F < PokeBattle_Move
     return unless canRemoveItem?(user,target)
     removeItem(user,target,false,removalMessageForTarget(target))
   end
+
+  def getEffectScore(user,target)
+    return 30 if canRemoveItem?(user,target)
+    return 0
+  end
 end
 
   #===============================================================================

@@ -498,8 +498,8 @@ class PokeBattle_TwoTurnMove < PokeBattle_Move
 
   def getEffectScore(user,target)
     score = 0
-    score -= 30 unless user.firstTurn?
-    score -= 30 unless user.hasActiveItem?(:POWERHERB)
+    score -= 20 unless user.firstTurn?
+    score -= 40 unless user.hasActiveItem?(:POWERHERB)
     return score
   end
 end
@@ -648,8 +648,10 @@ class PokeBattle_ProtectMove < PokeBattle_Move
   def getEffectScore(user,target)
     score = 0
     user.eachPotentialAttacker do |b|
-      score += 80
+      score += 50
       score += 50 if b.effectActive?(:TwoTurnAttack)
+      score += 50 if b.poisoned? || b.leeched?
+      score += 30 if b.burned? || b.frostbitten?
     end
     return score
   end
@@ -971,6 +973,11 @@ class PokeBattle_SnowballingMove < PokeBattle_Move
 
   def pbBaseDamageAI(baseDmg,user,target)
       return damageAtCount(baseDmg,user.effects[@usageCountEffect])
+  end
+
+  def getEffectScore(user,target)
+    return 20 if user.firstTurn?
+    return 0
   end
 end
 
