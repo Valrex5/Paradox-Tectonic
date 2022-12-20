@@ -223,7 +223,7 @@ class PokeBattle_AI
         
         # Adjust score
         if damagePercentage >= 100   # Prefer lethal damage
-            damagePercentage = 150
+            damagePercentage = 200
             damagePercentage = 300 if move.hasKOEffect?(user,target)
         end
         

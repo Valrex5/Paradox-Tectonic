@@ -161,7 +161,7 @@ class PokeBattle_Battle
           if @choices[b.index][0] == :UseMove
             move = @choices[b.index][2]
             targets = b.pbFindTargets(@choices[b.index],move,b)
-            pri = getMovePriority(move,user,targets)
+            pri = getMovePriority(move,b,targets)
             bArray[3] = pri
             @choices[b.index][4] = pri
           end

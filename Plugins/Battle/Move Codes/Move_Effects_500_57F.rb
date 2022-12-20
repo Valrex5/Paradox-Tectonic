@@ -78,7 +78,7 @@ class PokeBattle_Move_505 < PokeBattle_Move
   
   def getEffectScore(user,target)
 	echoln("The AI will never use Kickstart.")
-	return -100
+	return -1000
   end
 end
 
@@ -133,11 +133,7 @@ class PokeBattle_Move_509 < PokeBattle_Move
   def ignoresDefensiveStageBoosts?(user,target); return true; end
   
   def getEffectScore(user,target)
-	score = 0
-	score += target.stages[:DEFENSE] * 10 if physicalMove?
-	score += target.stages[:SPECIAL_DEFENSE] * 10 if specialMove?
-	score += target.stages[:EVASION] * 10
-	return score
+	return 10
   end
 
   def shouldHighlight?(user,target)
@@ -378,12 +374,6 @@ class PokeBattle_Move_518 < PokeBattle_HealingMove
   
 	def pbMoveFailed?(user,targets,show_message)
 		return false
-	end
-	
-	def getEffectScore(user,target)
-		score = super
-		score += 30
-		return score
 	end
 end
 
@@ -811,9 +801,9 @@ class PokeBattle_Move_531 < PokeBattle_Move
 	
 	def getEffectScore(user,target)
 		if user.firstTurn?
-			return 100
-		else
 			return 80
+		else
+			return 60
 		end
 	end
 end
@@ -892,11 +882,10 @@ class PokeBattle_Move_535 < PokeBattle_Move
 	end
 	
 	def getEffectScore(user,target)
-		score = 50
-		score += getWantsToBeSlowerScore(user,target,3)
-		return score
+		return getWantsToBeSlowerScore(user,target,3)
 	end
 end
+
 #===============================================================================
 # Two turn attack. Ups user's Special Defense by 2 stage first turn, attacks second turn.
 # (Zephyr Wing)
@@ -912,8 +901,7 @@ class PokeBattle_Move_536 < PokeBattle_TwoTurnMove
   
   def getEffectScore(user,target)
     score = super
-    score += 20 if user.aboveHalfHealth?
-    score -= user.stages[:DEFENSE] * 10
+    score += getMultiStatUpEffectScore([:SPECIAL_DEFENSE,2],user,user)
     return score
   end
 end
@@ -962,6 +950,11 @@ class PokeBattle_Move_539 < PokeBattle_Move
   def pbEffectAfterAllHits(user,target)
 	return unless target.item&.is_berry? || target.item&.is_gem?
 	stealItem(user,target)
+  end
+
+  def getEffectScore(user,target)
+    return 0 unless canStealItem?(user,target,true) && (target.item&.is_berry? || target.item&.is_gem?)
+    return 60
   end
 end
 
@@ -1020,22 +1013,9 @@ class PokeBattle_Move_53C < PokeBattle_Move
 end
 
 #===============================================================================
-# Heals user by 1/8 of their max health, but does not fail at full health. (???)
+# (Not currently used)
 #===============================================================================
 class PokeBattle_Move_53D < PokeBattle_HealingMove
-	def healRatio(user)
-		return 1.0/8.0
-	end
-  
-	def pbMoveFailed?(user,targets,show_message)
-		return false
-	end
-	
-	def getEffectScore(user,target)
-		score = super
-		score += 30
-		return score
-	end
 end
 
 #===============================================================================
@@ -1076,6 +1056,10 @@ class PokeBattle_Move_53F < PokeBattle_Move
 		  end
 		end
 	end
+
+	def getEffectScore(user,target)
+		return getForceOutEffectScore(user,target) * 0.5
+	end
 end
 
 #===============================================================================
@@ -1101,6 +1085,11 @@ class PokeBattle_Move_541 < PokeBattle_Move
     target.pbRemoveItem
     @battle.pbDisplay(_INTL("{1}'s {2} went up in flames!",target.pbThis,itemName))
   end
+
+  def getEffectScore(user,target)
+    return 30 if canRemoveItem?(user,target,true) && CLOTHING_ITEMS.include?(target.item.id)
+    return 0
+  end
 end
 
 #===============================================================================
@@ -1110,6 +1099,11 @@ class PokeBattle_Move_542 < PokeBattle_Move
   def pbAdditionalEffect(user,target)
     return if target.damageState.substitute
     target.tryRaiseStat(:SPEED, user, increment: 2, move: self)
+  end
+
+  def getEffectScore(user,target)
+	return 0 if target.damageState.substitute
+	return -getMultiStatUpEffectScore([:SPEED,2],user,target)
   end
 end
 
@@ -1197,6 +1191,15 @@ class PokeBattle_Move_548 < PokeBattle_Move
 		super
 		@battle.pbDisplay(_INTL("The area was purified!"))
 	end
+
+	def getEffectScore(user,target)
+		score = 0
+		statuses = 0
+			@battle.pbParty(user.index).each do |pkmn|
+				score += 40 if pkmn && pkmn.status != :NONE
+			end
+		return score
+	end
 end
 
 #===============================================================================
@@ -1223,6 +1226,10 @@ class PokeBattle_Move_54A < PokeBattle_Move
 
 	def pbEffectAgainstTarget(user,target)
 		target.applyEffect(:Curse)
+	end
+
+	def getEffectScore(user,target)
+		return getCurseEffectScore(user,target)
 	end
 end
 
@@ -1258,7 +1265,7 @@ class PokeBattle_Move_54B < PokeBattle_StatUpMove
 	end
 end
 
-
+# TODO: remove
 #===============================================================================
 # Increases the user's Sp. Attack by 1 and Sp. Def by 1 stage each.
 # In sandstorm, increases are 2 stages each instead. (Desert Dance)
@@ -1278,8 +1285,7 @@ class PokeBattle_Move_54C < PokeBattle_MultiStatUpMove
   end
 end
 
-
-
+# TODO: remove
 #===============================================================================
 # Decreases a random stat. Can't miss in sandstorm. (Dust Force)
 #===============================================================================
@@ -1657,6 +1663,12 @@ class PokeBattle_Move_568 < PokeBattle_Move_0EE
 		return if target.damageState.substitute
 		target.tryLowerStat(:DEFENSE, user, move: self)
 	end
+
+	def getEffectScore(user,target)
+		score = super
+		score += getMultiStatDownEffectScore([:DEFENSE,1],user,target)
+		return score
+	end
 end
 
 #===============================================================================
@@ -1681,7 +1693,7 @@ class PokeBattle_Move_56A < PokeBattle_Move
 end
 
 #===============================================================================
-# 100% Recoil Move
+# 100% Recoil Move (Thunder Belly)
 #===============================================================================
 class PokeBattle_Move_56B < PokeBattle_RecoilMove
     def recoilFactor;  return 1.0; end
@@ -1713,6 +1725,10 @@ class PokeBattle_Move_56D < PokeBattle_Move
   
 	def pbEffectGeneral(user)
 	  user.applyEffect(:VolleyStance)
+	end
+
+	def getEffectScore(user,target)
+		return getMultiStatUpEffectScore([:SPECIAL_ATTACK,2],user,target) + 10
 	end
 end
 
@@ -1874,8 +1890,7 @@ class PokeBattle_Move_576 < PokeBattle_TwoTurnMove
 	end
 
 	def getEffectScore(user,target)
-		score = getWeatherSettingEffectScore(:Rain,user,battle,5)
-		return score
+		return getWeatherSettingEffectScore(:Rain,user,battle,5)
 	end
 end
 
@@ -1909,6 +1924,10 @@ class PokeBattle_Move_578 < PokeBattle_PartyMemberEffectMove
 		pokemon.heal_status
 		@battle.pbDisplay(_INTL("{1} recovered all the way to full health!",pokemon.name))
 	end
+
+	def getScore(user,target)
+		return 200
+	end
 end
 
 #===============================================================================
@@ -1936,6 +1955,14 @@ class PokeBattle_Move_579 < PokeBattle_Move
 	def shouldHighlight?(user,target)
 		return target.numbed?
 	end
+
+	def getScore(user,target)
+		if target.numbed?
+			return getNumbEffectScore(user,target)
+		else
+			return getCurseEffectScore(user,target)
+		end
+	end
 end
 
 #===============================================================================
@@ -1960,5 +1987,10 @@ class PokeBattle_Move_57A < PokeBattle_Move
 
 	def pbEffectAgainstTarget(user,target)
 		@battle.forceUseMove(target,getFirstSlotMove(user).id)
+	end
+
+	def getScore(user,target)
+		echoln("The AI will never use Hivemind.")
+		return -1000
 	end
 end

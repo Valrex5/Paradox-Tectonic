@@ -1701,7 +1701,7 @@ end
 class PokeBattle_Move_0B8 < PokeBattle_Move
   def pbMoveFailed?(user,targets,show_message)
     if user.effectActive?(:Imprison)
-      @battle.pbDisplay(_INTL("But it failed, since #{target.pbThis(true)}'s moves are already Imprisoned!")) if show_message
+      @battle.pbDisplay(_INTL("But it failed, since #{user.pbThis(true)}'s is already imprisoning shared moves!")) if show_message
       return true
     end
     return false
@@ -2182,8 +2182,7 @@ class PokeBattle_Move_0C8 < PokeBattle_TwoTurnMove
 
   def getEffectScore(user,target)
     score = super
-    score += 20 if user.aboveHalfHealth?
-    score -= user.stages[:DEFENSE] * 10
+    score += getMultiStatUpEffectScore([:DEFENSE,2],user,user)
     return score
   end
 end

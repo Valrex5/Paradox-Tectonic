@@ -295,9 +295,7 @@ class PokeBattle_Move_100 < PokeBattle_WeatherMove
 
     def getEffectScore(user,target)
       if user.pbHasTypeAI?(:GHOST)
-        return 0 if target.belowHalfHealth?
-        score = 80
-        score *= 2 if user.hasActiveAbilityAI?(:AGGRAVATE)
+        score = getCurseEffectScore(user,target)
         score += getHPLossEffectScore(user,0.5)
         return score
 			else
@@ -2551,7 +2549,7 @@ end
       if !user.opposes?(target)
         return getHealingEffectScore(user,target)
       end
-      return score
+      return 0
     end
   end
   

@@ -36,7 +36,8 @@ def getNumbEffectScore(user,target,ignoreCheck: false)
 			score += 60
 		end
 		score -= STATUS_UPSIDE_MALUS if target.hasActiveAbilityAI?(STATUS_UPSIDE_ABILITIES)
-		score += STATUS_PUNISHMENT_BONUS if user.hasStatusPunishMove? || user.pbHasMoveFunction?('07C') # Smelling Salts
+		score += STATUS_PUNISHMENT_BONUS if user.hasStatusPunishMove? ||
+			user.pbHasMoveFunction?('07C', '579') # Smelling Salts, Spectral Tongue
 		score += 60 if user.hasActiveAbilityAI?(:TENDERIZE)
 	else
 		return 0
@@ -372,5 +373,12 @@ def getSuppressAbilityEffectScore(user,target)
     
     score *= -1 if !user.opposes?(target)
 
+	return score
+end
+
+def getCurseEffectScore(user,target)
+	score = 50
+	score += 50 if target.aboveHalfHealth?
+	score *= 2 if user.hasActiveAbilityAI?(:AGGRAVATE)
 	return score
 end
