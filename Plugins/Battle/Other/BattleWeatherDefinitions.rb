@@ -52,13 +52,13 @@ GameData::BattleWeather.register({
 })
 
 GameData::BattleWeather.register({
-    :id        => :AcidRain,
-    :name      => _INTL("Acid Rain"),
+    :id        => :Eclipse,
+    :name      => _INTL("Eclipse"),
     :animation => "ShadowSky"
 })
   
 GameData::BattleWeather.register({
-  :id        => :Swarm,
-  :name      => _INTL("Swarm"),
-  :animation => "StrongWinds"
+  :id        => :Moonlight,
+  :name      => _INTL("Moonlight"),
+  :animation => "Moonblast"
 })

@@ -142,7 +142,7 @@
 144,FLOWERSHIELD,Flower Shield,13F,0,FAIRY,Status,0,10,0,UserAndAllies,0,,"The user raises the Defense and Sp. Def of all Grass-type Pokémon on its side.",
 145,GEOMANCY,Geomancy,14E,0,FAIRY,Status,0,10,0,User,0,,"The user absorbs energy and sharply raises its Sp. Atk, Sp. Def, and Speed stats on the next turn.",
 146,FAIRYTERRAIN,Fairy Terrain,156,0,FAIRY,Status,0,10,0,BothSides,0,,"For five turns, Fairy-type moves are boosted, and grounded Pokémon can't be burned/poisoned.",
-147,MOONLIGHT,Moonlight,0D8,0,FAIRY,Status,0,5,0,User,0,d,"The user restores 1/2 of its HP, or 2/3rds in Sunshine.",
+147,MOONBASK,Moon Bask,0F9,0,FAIRY,Status,0,5,0,User,0,d,"The user restores 1/2 of its HP, or 2/3rds in Moonlight.",
 148,NATURESMADNESS,Nature's Madness,06C,0,FAIRY,Status,90,10,0,NearOther,0,bef,"The user hits the target with the force of nature. It halves the target's HP.",
 149,ANGELSKISS,Angel's Kiss,401,0,FAIRY,Status,100,10,0,NearOther,0,bce,"The user kisses the target with a sweet, angelic cuteness that dizzies the target.",
 150,SPIRITBREAK,Spirit Break,045,75,FAIRY,Physical,100,12,100,NearOther,0,abef,"Attacks the target and breaks its spirit. Lowers the target's Sp. Atk stat.",
@@ -228,7 +228,7 @@
 230,EMBER,Ember,00A,40,FIRE,Special,100,20,10,NearOther,0,bef,"The target is attacked with small flames. It has a 10% chance to burn.",
 231,FIRESPIN,Fire Spin,0CF,50,FIRE,Special,100,15,0,NearOther,0,bef,"The user engulfs the target in fierce flames, trapping and damaging it for three turns.",
 232,HEATCRASH,Heat Crash,09B,1,FIRE,Physical,100,10,0,NearOther,0,abef,"The user slams the foe with its flaming body. The heavier the user is, the greater the damage.",
-233,SUNSHINE,Sunshine,0FF,0,FIRE,Status,0,10,0,BothSides,0,,"Intensifies the sun for five turns, boosting Fire-type attacks and hindering most other attacks.",
+233,SUNSHINE,Sunshine,0FF,0,FIRE,Status,0,10,0,BothSides,0,,"Summons sunshine for five turns, boosting Fire-type attacks and hindering most other attacks.",
 234,WILLOWISP,Will-O-Wisp,00A,0,GHOST,Status,100,12,0,NearOther,0,bce,"The user shoots a sinister, bluish-white flame at the target to inflict a burn.",
 235,PYROBALL,Pyro Ball,00A,120,FIRE,Physical,80,5,10,NearOther,0,bef,"Attacks by igniting a small stone and launching it as a fiery ball. It has a 10% chance to burn.",
 236,BURNINGJEALOUSY,Burning Jealousy,18B,70,FIRE,Special,100,12,100,AllNearFoes,0,bef,"Attacks with energy from jealousy. All opposing Pokémon with stat boosts get burned.",
@@ -1057,3 +1057,5 @@
 1094,PATIENTTRAINING,Patient Training,508,0,BUG,Status,0,12,0,User,0,d,"The user prepares its weapons, drastically raising Attack but drastically lowering Speed.",SWORDSDANCE
 1095,MARTIALMASTERY,Martial Mastery,5AD,0,FIGHTING,Status,0,15,0,User,0,d,"The user tenses recalls martial techniques, boosting its Attack, Defense and critical strike chance.",FOCUSENERGY
 1096,REVERBWARD,Reverb Ward,5AE,0,PSYCHIC,Status,0,3,0,User,4,,"Protects the user from all attacks. Special attacks harshly lower the attacker's Sp. Def stat.",PROTECT
+1097,MOON,Moon,09D,0,FAIRY,Status,0,10,0,BothSides,0,,"Summons moonlight for five turns, healing Fairy-types and heralding the Full Moon.",
+1098,ECLIPSE,Eclipse,09E,0,PSYCHIC,Status,0,10,0,BothSides,0,,"Summons eclipse for five turns, boosting Psychic-type attacks and heralding the Total Eclipse.",

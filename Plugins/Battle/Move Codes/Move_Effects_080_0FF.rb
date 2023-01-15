@@ -629,15 +629,23 @@ class PokeBattle_Move_09C < PokeBattle_Move
 end
 
 #===============================================================================
-# (Currently unused.)
+# Starts eclipse weather. (Eclipse)
 #===============================================================================
-class PokeBattle_Move_09D < PokeBattle_Move
+class PokeBattle_Move_09D < PokeBattle_WeatherMove
+    def initialize(battle, move)
+        super
+        @weatherType = :Eclipse
+    end
 end
 
 #===============================================================================
-# (Currently unused.)
+# Starts moonlight weather. (Moon)
 #===============================================================================
-class PokeBattle_Move_09E < PokeBattle_Move
+class PokeBattle_Move_09E < PokeBattle_WeatherMove
+    def initialize(battle, move)
+        super
+        @weatherType = :Moonlight
+    end
 end
 
 #===============================================================================
@@ -2482,8 +2490,7 @@ class PokeBattle_Move_0D7 < PokeBattle_Move
 end
 
 #===============================================================================
-# Heals user by an amount depending on the weather. (Moonlight, Morning Sun,
-# Synthesis)
+# Heals user by an amount depending on the weather. (Morning Sun, Synthesis)
 #===============================================================================
 class PokeBattle_Move_0D8 < PokeBattle_HealingMove
     def healRatio(_user)
@@ -3688,9 +3695,20 @@ class PokeBattle_Move_0F8 < PokeBattle_Move
 end
 
 #===============================================================================
-# (Not Currently used.)
+# Heals user by an amount depending on the weather. (Moon Bask)
 #===============================================================================
-class PokeBattle_Move_0F9 < PokeBattle_Move
+class PokeBattle_Move_0F9 < PokeBattle_HealingMove
+    def healRatio(_user)
+        if @battle.pbWeather == :Moonlight
+            return 2.0 / 3.0
+        else
+            return 1.0 / 2.0
+        end
+    end
+
+    def shouldHighlight?(_user, _target)
+        return @battle.pbWeather == :Moonlight
+    end
 end
 
 #===============================================================================

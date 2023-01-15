@@ -2,6 +2,7 @@ class PokeBattle_ActiveField
     include EffectHolder
 
     attr_accessor :effects, :defaultWeather, :weather, :weatherDuration, :defaultTerrain, :terrain, :terrainDuration
+    attr_accessor :specialTimer
 
     def initialize(battle)
         @defaultWeather  = :None
@@ -10,6 +11,7 @@ class PokeBattle_ActiveField
         @defaultTerrain  = :None
         @terrain         = :None
         @terrainDuration = 0
+        @specialTimer    = 0
         @battle = battle
 
         @effects = {}
