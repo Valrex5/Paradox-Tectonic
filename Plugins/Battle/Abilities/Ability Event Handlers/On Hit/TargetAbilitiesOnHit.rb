@@ -54,15 +54,15 @@ BattleHandlers::TargetAbilityOnHit.add(:FROSTSCATTER,
     }
 )
 
-BattleHandlers::TargetAbilityOnHit.add(:SWARMMOUTH,
+BattleHandlers::TargetAbilityOnHit.add(:SUNEATER,
     proc { |_ability, _target, battler, _move, battle|
-        pbBattleWeatherAbility(:Swarm, battler, battle, false, true)
+        pbBattleWeatherAbility(:Eclipse, battler, battle, false, true)
     }
 )
 
-BattleHandlers::TargetAbilityOnHit.add(:ACIDBODY,
+BattleHandlers::TargetAbilityOnHit.add(:LUNARLOYALTY,
     proc { |_ability, _target, battler, _move, battle|
-        pbBattleWeatherAbility(:AcidRain, battler, battle, false, true)
+        pbBattleWeatherAbility(:Moonlight, battler, battle, false, true)
     }
 )
 

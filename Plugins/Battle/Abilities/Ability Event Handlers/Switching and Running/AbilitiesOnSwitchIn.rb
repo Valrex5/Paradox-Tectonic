@@ -3,6 +3,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:AIRLOCK,
       battle.pbShowAbilitySplash(battler)
       battle.pbDisplay(_INTL("The effects of the weather disappeared."))
       battle.pbHideAbilitySplash(battler)
+      battle.field.specialTimer = 0
   }
 )
 
@@ -86,6 +87,18 @@ BattleHandlers::AbilityOnSwitchIn.add(:DOWNLOAD,
       end
       stat = (oDef < oSpDef) ? :ATTACK : :SPECIAL_ATTACK
       battler.tryRaiseStat(stat, battler, showAbilitySplash: true)
+  }
+)
+
+BattleHandlers::AbilityOnSwitchIn.add(:MOONGAZE,
+  proc { |_ability, battler, battle|
+      pbBattleWeatherAbility(:Moonlight, battler, battle)
+  }
+)
+
+BattleHandlers::AbilityOnSwitchIn.add(:HARBINGER,
+  proc { |_ability, battler, battle|
+      pbBattleWeatherAbility(:Eclipse, battler, battle)
   }
 )
 
@@ -531,18 +544,6 @@ BattleHandlers::AbilityOnSwitchIn.add(:AQUASNEAK,
 BattleHandlers::AbilityOnSwitchIn.add(:CONVICTION,
   proc { |_ability, battler, battle|
       battle.forceUseMove(battler, :ENDURE, -1, true, nil, nil, true)
-  }
-)
-
-BattleHandlers::AbilityOnSwitchIn.add(:SWARMCALL,
-  proc { |_ability, battler, battle|
-      pbBattleWeatherAbility(:Swarm, battler, battle)
-  }
-)
-
-BattleHandlers::AbilityOnSwitchIn.add(:POLLUTION,
-  proc { |_ability, battler, battle|
-      pbBattleWeatherAbility(:AcidRain, battler, battle)
   }
 )
 

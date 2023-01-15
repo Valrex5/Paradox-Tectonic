@@ -61,15 +61,23 @@ checkingForAI) || shouldAbilityApply?(synergyAbilities, checkingForAI)
         return true
     end
 
-    def takesAcidRainDamage?(checkingForAI = false)
+    def debuffedByEclipse?(checkingForAI = false)
         return false unless affectedByWeatherDownsides?(checkingForAI)
-        return false unless takesIndirectDamage?
-        return false if hasActiveItem?(:SAFETYGOGGLES)
-        return false if shouldTypeApply?(:POISON,	checkingForAI) || shouldTypeApply?(:DARK, checkingForAI)
-        setterAbilities = %i[POLLUTION ACIDBODY]
-        synergyAbilities = [:OVERCOAT]
-        return false if shouldAbilityApply?(setterAbilities,
-checkingForAI) || shouldAbilityApply?(synergyAbilities, checkingForAI)
+        return false if shouldTypeApply?(:PSYCHIC, checkingForAI) || shouldTypeApply?(:DRAGON, checkingForAI)
+        setterAbilities = %i[HARBINGER SUNEATER]
+        synergyAbilities = %i[]
+        return false if shouldAbilityApply?(setterAbilities,checkingForAI) ||
+            shouldAbilityApply?(synergyAbilities, checkingForAI)
+        return true
+    end
+
+    def debuffedByMoonlight?(checkingForAI = false)
+        return false unless affectedByWeatherDownsides?(checkingForAI)
+        return false if shouldTypeApply?(:FAIRY, checkingForAI) || shouldTypeApply?(:DARK, checkingForAI)
+        setterAbilities = %i[MOONGAZE LUNARLOYALTY]
+        synergyAbilities = %i[]
+        return false if shouldAbilityApply?(setterAbilities,checkingForAI) ||
+            shouldAbilityApply?(synergyAbilities, checkingForAI)
         return true
     end
 

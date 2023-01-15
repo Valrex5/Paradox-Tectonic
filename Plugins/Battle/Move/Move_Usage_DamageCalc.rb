@@ -182,6 +182,11 @@ class PokeBattle_Move
                 defenseAddition *= 2 if @battle.curseActive?(:CURSE_BOOSTED_HAIL)
                 multipliers[:defense_multiplier] *= (1 + defenseAddition)
             end
+        when :Eclipse
+            if type == :PSYCHIC
+                damageBonus = 0.3
+                multipliers[:final_damage_multiplier] *= (1 + damageBonus)
+            end
         end
     end
 

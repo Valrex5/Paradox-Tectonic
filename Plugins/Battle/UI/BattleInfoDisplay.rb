@@ -103,7 +103,11 @@ class BattleInfoDisplay < SpriteWrapper
 		weatherName = GameData::BattleWeather.get(@battle.field.weather).real_name
 		weatherDuration = @battle.field.weatherDuration
 		weatherDuration = "Infinite" if weatherDuration < 0
-		weatherMessage = _INTL("{1} ({2})",weatherName,weatherDuration)
+		if [:Eclipse,:Moonlight].include?(@battle.field.weather)
+			weatherMessage = _INTL("{1} ({2},{3})",weatherName,weatherDuration,@battle.field.specialTimer + 1)
+		else
+			weatherMessage = _INTL("{1} ({2})",weatherName,weatherDuration)
+		end
 	end
 	
 	textToDraw.push([weatherMessage,24,weatherAndTerrainY,0,base,shadow])

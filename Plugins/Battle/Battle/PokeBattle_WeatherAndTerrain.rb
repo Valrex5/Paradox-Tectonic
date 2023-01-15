@@ -29,6 +29,8 @@ class PokeBattle_Battle
             @field.weatherDuration = duration
         end
 
+        @field.specialTimer = 0 unless resetExisting
+
         # Show animation, if desired
         weather_data = GameData::BattleWeather.try_get(@field.weather)
         pbCommonAnimation(weather_data.animation) if showAnim && weather_data
@@ -60,8 +62,8 @@ class PokeBattle_Battle
         when :Sandstorm   then pbDisplay(_INTL("The sandstorm returns to full strength!"))
         when :Hail        then pbDisplay(_INTL("The hail keeps coming!"))
         when :ShadowSky   then pbDisplay(_INTL("The darkened sky darkens even further!"))
-        when :AcidRain    then pbDisplay(_INTL("The acid rain won't quit!"))
-        when :Swarm       then pbDisplay(_INTL("The bugs insatiable, and keep swarming!"))
+        when :Eclipse     then pbDisplay(_INTL("The eclipse extends unnaturally!"))
+        when :Moonlight   then pbDisplay(_INTL("The bright moon doesn't wane!"))
         end
     end
 
@@ -75,8 +77,8 @@ class PokeBattle_Battle
         when :HeavyRain   then pbDisplay(_INTL("A heavy rain began to fall!"))
         when :StrongWinds then pbDisplay(_INTL("Mysterious strong winds are protecting Flying-type Pokémon!"))
         when :ShadowSky   then pbDisplay(_INTL("A shadow sky appeared!"))
-        when :AcidRain    then pbDisplay(_INTL("Acidic rain began to fall!"))
-        when :Swarm       then pbDisplay(_INTL("A swarm of bugs gathers!"))
+        when :Eclipse     then pbDisplay(_INTL("An eclipse covers the sun!"))
+        when :Moonlight   then pbDisplay(_INTL("The light of the moon shines down!"))
         end
     end
 
@@ -88,8 +90,8 @@ class PokeBattle_Battle
         when :Sandstorm   then pbDisplay(_INTL("The sandstorm subsided."))
         when :Hail        then pbDisplay(_INTL("The hail stopped."))
         when :ShadowSky   then pbDisplay(_INTL("The shadow sky faded."))
-        when :AcidRain    then pbDisplay(_INTL("The acid rain stopped."))
-        when :Swarm       then pbDisplay(_INTL("The swarm dissipates."))
+        when :Eclipse     then pbDisplay(_INTL("The eclipse ended."))
+        when :Moonlight   then pbDisplay(_INTL("The moonlight faded."))
         when :HeavyRain   then pbDisplay(_INTL("The heavy rain has lifted!"))
         when :HarshSun    then pbDisplay(_INTL("The harsh sunlight faded!"))
         when :StrongWinds then pbDisplay(_INTL("The mysterious air current has dissipated!"))
@@ -97,6 +99,7 @@ class PokeBattle_Battle
         oldWeather = @field.weather
         @field.weather	= :None
         @field.weatherDuration = 0
+        @field.specialTimer = 0
         triggerWeatherChangeDialogue(oldWeather, :None)
     end
 
@@ -284,15 +287,10 @@ class PokeBattle_Battle
                 pbDisplay(_INTL("{1} is hurt by the shadow sky!", b.pbThis)) if showWeatherMessages
                 fraction = 1.0 / 16.0
                 b.applyFractionalDamage(fraction)
-            when :AcidRain
-                if !b.takesAcidRainDamage?
-                    pbDisplay(_INTL("{1} is hurt by the acid rain!", b.pbThis)) if showWeatherMessages
-                    fraction = 1.0 / 16.0
-                    b.applyFractionalDamage(fraction)
-                elsif b.pbHasType?(:POISON) || b.hasActiveAbility?(:POISONHEAL)
-                    healingMessage = _INTL("{1} absorbs the acid rain!", b.pbThis)
-                    battler.applyFractionalHealing(1.0 / 16.0, showAbilitySplash: statusEffectMessages,
-        showMessage: statusEffectMessages, customMessage: healingMessage)
+            when :Moonlight
+                if b.pbHasType?(:FAIRY)
+                    healingMessage = _INTL("{1} absorbs the moonlight!", b.pbThis)
+                    b.applyFractionalHealing(1.0 / 16.0, showMessage: showWeatherMessages, customMessage: healingMessage)
                 end
             end
         end
@@ -305,6 +303,28 @@ class PokeBattle_Battle
                 b.pbRecoverHP(hailDamage, true, true, true, healingMessage)
                 pbHideAbilitySplash(b)
             end
+        end
+
+        # Eclipse and Moonlight specials
+        @field.specialTimer += 1 if [:Moonlight,:Eclipse].include?(curWeather)
+        if @field.specialTimer == 3
+            case curWeather
+            when :Eclipse
+                pbCommonAnimation("ShadowSky")
+                priority.each do |b|
+                    next unless b.debuffedByEclipse?
+                    pbDisplay(_INTL("{1} is panicked by the Total Eclipse!", b.pbThis))
+                    allStats = [:ATTACK, 1, :DEFENSE, 1, :SPECIAL_ATTACK, 1, :SPECIAL_DEFENSE, 1, :SPEED, 1]
+                    b.pbLowerMultipleStatStages(allStats, b)
+                end
+            when :Moonlight
+                pbAnimation(:MOONLIGHT, @battlers[0], [])
+                priority.each do |b|
+                    next unless b.debuffedByMoonlight?
+                    b.applyEffect(:MoonStruck)
+                end
+            end
+            @field.specialTimer = 0
         end
     end
 
