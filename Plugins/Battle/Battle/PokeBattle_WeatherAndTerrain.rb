@@ -320,8 +320,9 @@ class PokeBattle_Battle
             when :Moonlight
                 pbAnimation(:MOONLIGHT, @battlers[0], [])
                 priority.each do |b|
-                    next unless b.debuffedByMoonlight?
-                    b.applyEffect(:MoonStruck)
+                    next unless b.flinchedByMoonlight?
+                    battle.pbDisplay(_INTL("{1} is moonstruck! It'll flinch!", b.pbThis))
+                    b.pbFlinch
                 end
             end
             @field.specialTimer = 0

@@ -71,7 +71,8 @@ checkingForAI) || shouldAbilityApply?(synergyAbilities, checkingForAI)
         return true
     end
 
-    def debuffedByMoonlight?(checkingForAI = false)
+    def flinchedByMoonlight?(checkingForAI = false)
+        return false if shouldAbilityApply?(:INNERFOCUS, checkingForAI)
         return false unless affectedByWeatherDownsides?(checkingForAI)
         return false if shouldTypeApply?(:FAIRY, checkingForAI) || shouldTypeApply?(:DARK, checkingForAI)
         setterAbilities = %i[MOONGAZE LUNARLOYALTY]
