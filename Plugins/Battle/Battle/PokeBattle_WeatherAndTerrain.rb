@@ -231,7 +231,7 @@ class PokeBattle_Battle
             case curWeather
             when :Eclipse
                 pbDisplay(_INTL("The Total Eclipse arrives!"))
-                pbCommonAnimation("ShadowSky")
+                pbCommonAnimation("Eclipse")
                 anyAffected = false
                 priority.each do |b|
                     next unless b.debuffedByEclipse?
