@@ -485,6 +485,10 @@ class PokeBattle_Battle
         @curses.each do |curse_policy|
             triggerBeginningOfTurnCurseEffect(curse_policy, self)
         end
+
+        pbCalculatePriority           # recalculate speeds
+        priority = pbPriority(true)   # in order of fastest -> slowest speeds only
+        pbSORWeather(priority)
     end
 
     #=============================================================================

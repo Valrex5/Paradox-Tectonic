@@ -220,6 +220,46 @@ class PokeBattle_Battle
     #=============================================================================
     # End Of Round weather
     #=============================================================================
+
+    def pbSORWeather(priority)
+        curWeather = pbWeather
+        showWeatherMessages = $PokemonSystem.weather_messages == 0
+
+        # Eclipse and Moonlight specials
+        @field.specialTimer += 1 if [:Moonlight,:Eclipse].include?(curWeather)
+        if @field.specialTimer == 3
+            case curWeather
+            when :Eclipse
+                pbDisplay(_INTL("The Total Eclipse arrives!"))
+                pbCommonAnimation("ShadowSky")
+                anyAffected = false
+                priority.each do |b|
+                    next unless b.debuffedByEclipse?
+                    pbDisplay(_INTL("{1} is panicked!", b.pbThis))
+                    allStats = [:ATTACK, 1, :DEFENSE, 1, :SPECIAL_ATTACK, 1, :SPECIAL_DEFENSE, 1, :SPEED, 1]
+                    b.pbLowerMultipleStatStages(allStats, b)
+                    anyAffected = true
+                end
+                pbDisplay(_INTL("But no one was affected...")) unless anyAffected
+            when :Moonlight
+                pbDisplay(_INTL("The Full Moon rises!"))
+                pbAnimation(:MOONLIGHT, @battlers[0], [])
+                anyAffected = false
+                priority.each do |b|
+                    next unless b.flinchedByMoonlight?
+                    pbDisplay(_INTL("{1} is moonstruck! It'll flinch this turn!", b.pbThis))
+                    b.pbFlinch
+                    anyAffected = true
+                end
+                pbDisplay(_INTL("But no one was affected...")) unless anyAffected
+            end
+            @field.specialTimer = 0
+        end
+    end
+
+    #=============================================================================
+    # End Of Round weather
+    #=============================================================================
     def pbEORWeather(priority)
         PBDebug.log("[DEBUG] Counting down weathers")
 
@@ -303,29 +343,6 @@ class PokeBattle_Battle
                 b.pbRecoverHP(hailDamage, true, true, true, healingMessage)
                 pbHideAbilitySplash(b)
             end
-        end
-
-        # Eclipse and Moonlight specials
-        @field.specialTimer += 1 if [:Moonlight,:Eclipse].include?(curWeather)
-        if @field.specialTimer == 3
-            case curWeather
-            when :Eclipse
-                pbCommonAnimation("ShadowSky")
-                priority.each do |b|
-                    next unless b.debuffedByEclipse?
-                    pbDisplay(_INTL("{1} is panicked by the Total Eclipse!", b.pbThis))
-                    allStats = [:ATTACK, 1, :DEFENSE, 1, :SPECIAL_ATTACK, 1, :SPECIAL_DEFENSE, 1, :SPEED, 1]
-                    b.pbLowerMultipleStatStages(allStats, b)
-                end
-            when :Moonlight
-                pbAnimation(:MOONLIGHT, @battlers[0], [])
-                priority.each do |b|
-                    next unless b.flinchedByMoonlight?
-                    battle.pbDisplay(_INTL("{1} is moonstruck! It'll flinch!", b.pbThis))
-                    b.pbFlinch
-                end
-            end
-            @field.specialTimer = 0
         end
     end
 
