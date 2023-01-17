@@ -407,6 +407,7 @@ class PokeBattle_Battler
         ret = 5
         ret += 3 if hasActiveItem?(:LIGHTCLAY)
         ret += 6 if hasActiveItem?(:BRIGHTCLAY)
+        ret *= 2 if hasActiveAbility?(:RESONANCE) && @battle.pbWeather == :Eclipse
         return ret
     end
 

@@ -1,4 +1,6 @@
 class PokeBattle_Battle
+    SPECIAL_EFFECT_WAIT_TURNS = 4
+
     def defaultWeather=(value)
         @field.defaultWeather = value
         @field.weather         = value
@@ -29,7 +31,7 @@ class PokeBattle_Battle
             @field.weatherDuration = duration
         end
 
-        @field.specialTimer = 0 unless resetExisting
+        @field.resetSpecialEffect unless resetExisting
 
         # Show animation, if desired
         weather_data = GameData::BattleWeather.try_get(@field.weather)
@@ -99,7 +101,7 @@ class PokeBattle_Battle
         oldWeather = @field.weather
         @field.weather	= :None
         @field.weatherDuration = 0
-        @field.specialTimer = 0
+        @field.resetSpecialEffect
         triggerWeatherChangeDialogue(oldWeather, :None)
     end
 
@@ -218,16 +220,15 @@ class PokeBattle_Battle
     end
 
     #=============================================================================
-    # End Of Round weather
+    # Start Of Round weather
     #=============================================================================
 
     def pbSORWeather(priority)
         curWeather = pbWeather
-        showWeatherMessages = $PokemonSystem.weather_messages == 0
 
         # Eclipse and Moonlight specials
         @field.specialTimer += 1 if [:Moonglow,:Eclipse].include?(curWeather)
-        if @field.specialTimer == 3
+        if @field.specialTimer == SPECIAL_EFFECT_WAIT_TURNS
             case curWeather
             when :Eclipse
                 pbDisplay(_INTL("The Total Eclipse arrives!"))
@@ -240,7 +241,11 @@ class PokeBattle_Battle
                     b.pbLowerMultipleStatStages(allStats, b)
                     anyAffected = true
                 end
-                pbDisplay(_INTL("But no one was affected...")) unless anyAffected
+                pbDisplay(_INTL("But no one was panicked.")) unless anyAffected
+                @battlers.each do |b|
+                    next unless b.abilityActive?
+                    BattleHandlers.triggerTotalEclipseAbility(b.ability, b, self)
+                end
             when :Moonglow
                 pbDisplay(_INTL("The Full Moon rises!"))
                 pbAnimation(:Moonglow, @battlers[0], [])
@@ -251,9 +256,16 @@ class PokeBattle_Battle
                     b.pbFlinch
                     anyAffected = true
                 end
-                pbDisplay(_INTL("But no one was affected...")) unless anyAffected
+                pbDisplay(_INTL("But no one was moon struck.")) unless anyAffected
+                @battlers.each do |b|
+                    next unless b.abilityActive?
+                    BattleHandlers.triggerFullMoonAbility(b.ability, b, self)
+                end
             end
-            @field.specialTimer = 0
+            @field.specialTimer = 1
+            @field.specialWeatherEffect = true
+        else
+            @field.specialWeatherEffect = false
         end
     end
 
@@ -277,9 +289,11 @@ class PokeBattle_Battle
             pbStartWeather(nil, @field.defaultWeather) if @field.defaultWeather != :None
             return if @field.weather == :None
         end
+
         # Weather continues
         weather_data = GameData::BattleWeather.try_get(@field.weather)
-        pbCommonAnimation(weather_data.animation) if weather_data
+        pbCommonAnimation(weather_data.animation) if weather_data && @field.specialTimer < SPECIAL_EFFECT_WAIT_TURNS - 1
+
         # Effects due to weather
         curWeather = pbWeather
         showWeatherMessages = $PokemonSystem.weather_messages == 0
@@ -398,5 +412,21 @@ class PokeBattle_Battle
 
     def rainy?
         return %i[Rain HeavyRain].include?(pbWeather)
+    end
+
+    def partialEclipse?
+        return pbWeather == :Eclipse && !@field.specialWeatherEffect
+    end
+
+    def totalEclipse?
+        return pbWeather == :Eclipse && @field.specialWeatherEffect
+    end
+
+    def waxingMoon?
+        return pbWeather == :Moonglow && !@field.specialWeatherEffect
+    end
+
+    def fullMoon?
+        return pbWeather == :Moonglow && @field.specialWeatherEffect
     end
 end

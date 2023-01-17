@@ -111,3 +111,9 @@ BattleHandlers::SpeedCalcAbility.add(:LIGHTTRICK,
       next mult
   }
 )
+
+BattleHandlers::SpeedCalcAbility.add(:PHENOMENAL,
+  proc { |_ability, battler, mult|
+      next mult * 2 if battler.battle.pbWeather == :Eclipse
+  }
+)

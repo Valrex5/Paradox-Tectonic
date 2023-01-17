@@ -399,3 +399,9 @@ BattleHandlers::DamageCalcUserAbility.add(:RECKLESS,
       mults[:base_damage_multiplier] *= 2.0 if move.recoilMove?
   }
 )
+
+BattleHandlers::DamageCalcUserAbility.add(:WORLDQUAKE,
+  proc { |_ability, user, _target, _move, mults, _baseDmg, type, _aiCheck|
+      mults[:base_damage_multiplier] *= 1.5 if user.battle.pbWeather == :Eclipse && type == :GROUND
+  }
+)

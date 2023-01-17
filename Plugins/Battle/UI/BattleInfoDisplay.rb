@@ -104,7 +104,8 @@ class BattleInfoDisplay < SpriteWrapper
 		weatherDuration = @battle.field.weatherDuration
 		weatherDuration = "Infinite" if weatherDuration < 0
 		if [:Eclipse,:Moonglow].include?(@battle.field.weather)
-			weatherMessage = _INTL("{1} ({2},{3})",weatherName,weatherDuration,@battle.field.specialTimer + 1)
+			turnsTillActivation = SPECIAL_EFFECT_WAIT_TURNS - @battle.field.specialTimer
+			weatherMessage = _INTL("{1} ({2},{3})",weatherName,weatherDuration,turnsTillActivation)
 		else
 			weatherMessage = _INTL("{1} ({2})",weatherName,weatherDuration)
 		end

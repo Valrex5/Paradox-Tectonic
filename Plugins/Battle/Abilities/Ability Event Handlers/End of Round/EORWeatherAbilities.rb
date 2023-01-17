@@ -62,3 +62,11 @@ BattleHandlers::EORWeatherAbility.add(:FINESUGAR,
         end
     }
 )
+
+BattleHandlers::EORWeatherAbility.add(:EXTREMOPHILE,
+    proc { |_ability, _weather, battler, battle|
+        next unless battle.pbWeather == :Eclipse
+        healingMessage = battle.pbDisplay(_INTL("{1} revels in the unusual conditions.", battler.pbThis))
+        battler.applyFractionalHealing(1.0 / 8.0, showAbilitySplash: true, customMessage: healingMessage)
+    }
+)
