@@ -43,7 +43,7 @@
 44,THIEF,Thief,0F1,60,DARK,Physical,100,20,0,NearOther,0,abef,"The user attacks and steals the foe's held item simultaneously. Items stolen from wild Pokémon are stored.",
 45,SNARL,Snarl,045,55,DARK,Special,100,12,100,AllNearFoes,0,befk,"The user yells as if it is ranting about something, making the target's Sp. Atk stat decrease.",
 46,PAYBACK,Payback,084,50,DARK,Physical,100,10,0,NearOther,0,abef,"If the user moves after the target, this attack's power will be doubled.",
-47,PURSUIT,Pursuit,088,40,DARK,Physical,100,15,0,NearOther,0,abef,"An attack move that inflicts double damage if used on a target that is switching out of battle.",
+47,PURSUIT,Pursuit,088,40,DARK,Physical,100,15,0,NearOther,0,abef,"Inflicts double damage on a target that is switching out, and double in moonglow.",
 48,BEATUP,Beat Up,0C1,1,DARK,Physical,100,10,0,NearOther,0,bef,"The user gets all the party Pokémon to attack the foe. The more party Pokémon, the more damage.",
 49,FLING,Fling,0F7,1,DARK,Physical,100,10,0,NearOther,0,bef,"The user flings its held item at the target to attack. Its power and effects depend on the item.",
 50,POWERTRIP,Power Trip,08E,1,DARK,Physical,100,10,0,NearOther,0,abef,"The user boasts of its strength. Power increases the more the user's stats are raised.",
@@ -122,7 +122,6 @@
 124,OVERDRIVE,Overdrive,000,80,ELECTRIC,Special,100,10,0,AllNearFoes,0,befk,"Attacks opposing Pokémon by twanging a guitar or bass guitar.",
 125,AURAWHEEL,Aura Wheel,176,100,ELECTRIC,Physical,100,10,10,NearOther,0,bef,"Type changes depending on the user's form. It has a 10% chance to numb.",
 126,BOLTBEAK,Bolt Beak,178,85,ELECTRIC,Physical,100,10,0,NearOther,0,abef,"Attacks with an electrified beak. Power is doubled if the user moves before the target.",
-127,RISINGVOLTAGE,Rising Voltage,18D,70,ELECTRIC,Special,100,15,0,NearOther,0,bef,"Attacks with electric voltage rising from the ground. Power doubles on Electric Terrain.",
 128,THUNDEROUSKICK,Thunderous Kick,043,90,FIGHTING,Physical,100,10,100,NearOther,0,abef,"The user kicks the target with lightning-like movement. It lowers the target's Defense.",
 129,THUNDERCAGE,Thunder Cage,0CF,75,ELECTRIC,Special,100,12,0,NearOther,0,bef,"The user throws a cage of electricity around the target, trapping and damaging it for three turns.",
 130,LIGHTOFRUIN,Light of Ruin,0FC,130,FAIRY,Special,100,5,0,NearOther,0,bef,"Fires a powerful beam of light drawn from the Eternal Flower. The user also takes 50% recoil.",
@@ -142,12 +141,12 @@
 144,FLOWERSHIELD,Flower Shield,13F,0,FAIRY,Status,0,10,0,UserAndAllies,0,,"The user raises the Defense and Sp. Def of all Grass-type Pokémon on its side.",
 145,GEOMANCY,Geomancy,14E,0,FAIRY,Status,0,10,0,User,0,,"The user absorbs energy and sharply raises its Sp. Atk, Sp. Def, and Speed stats on the next turn.",
 146,FAIRYTERRAIN,Fairy Terrain,156,0,FAIRY,Status,0,10,0,BothSides,0,,"For five turns, Fairy-type moves are boosted, and grounded Pokémon can't be burned/poisoned.",
-147,MOONBASK,Moon Bask,0F9,0,FAIRY,Status,0,5,0,User,0,d,"The user restores 1/2 of its HP, or 2/3rds in Moonlight.",
+147,MOONBASK,Moon Bask,0F9,0,FAIRY,Status,0,5,0,User,0,d,"The user restores 1/2 of its HP, or 2/3rds in moonglow.",
 148,NATURESMADNESS,Nature's Madness,06C,0,FAIRY,Status,90,10,0,NearOther,0,bef,"The user hits the target with the force of nature. It halves the target's HP.",
 149,ANGELSKISS,Angel's Kiss,401,0,FAIRY,Status,100,10,0,NearOther,0,bce,"The user kisses the target with a sweet, angelic cuteness that dizzies the target.",
 150,SPIRITBREAK,Spirit Break,045,75,FAIRY,Physical,100,12,100,NearOther,0,abef,"Attacks the target and breaks its spirit. Lowers the target's Sp. Atk stat.",
 151,DECORATE,Decorate,17B,0,FAIRY,Status,0,12,0,NearAlly,0,,"The user sharply raises the target's Attack and Sp. Atk stats by decorating the target.",
-152,MISTYEXPLOSION,Misty Explosion,196,150,FAIRY,Special,100,5,0,AllNearFoes,0,bef,"Attacks nearby enemies. Deals 50% more on Misty Terrain. User loses 50% max HP.",
+152,MISTYEXPLOSION,Misty Explosion,196,150,FAIRY,Special,100,5,0,AllNearFoes,0,bef,"Attacks nearby enemies. Deals 50% more in moonglow. User loses 50% max HP.",
 153,STRANGESTEAM,Strange Steam,401,90,FAIRY,Special,100,10,20,NearOther,0,bef,"The user attacks the target by emitting steam. It has a 20% chance to dizzy.",
 154,FOCUSPUNCH,Focus Punch,115,150,FIGHTING,Physical,100,15,0,NearOther,-3,abfj,"The user focuses its mind before launching a punch. It will fail if the user is hit before it is used.",
 155,HIGHJUMPKICK,High Jump Kick,10B,130,FIGHTING,Physical,85,10,0,NearOther,0,abef,"The target is attacked with a knee kick from a jump. If it misses, the user is hurt instead.",
@@ -281,7 +280,6 @@
 286,ASTRALBARRAGE,Astral Barrage,000,120,GHOST,Special,100,5,0,AllNearFoes,0,bef,"The user attacks by sending a frightful amount of small ghosts at opposing Pokémon.",
 287,FRENZYPLANT,Frenzy Plant,0C2,170,GRASS,Special,100,5,0,NearOther,0,bef,"The user slams the target with an enormous tree. The user can't move on the next turn.",
 288,LEAFSTORM,Leaf Storm,03F,130,GRASS,Special,100,5,0,NearOther,0,bef,"A storm of sharp leaves is whipped up. Harshly reduces the user's Sp. Atk stat.",
-289,SOLARBLADE,Solar Blade,0C4,125,GRASS,Physical,100,10,0,NearOther,0,abefp,"The user charges, then attacks on the second turn. Charges instantly in Sunshine.",
 290,PETALDANCE,Petal Dance,55F,120,GRASS,Special,100,10,0,RandomNearFoe,0,abefo,"The user attacks by scattering petals for three turns.",
 291,POWERWHIP,Power Whip,53C,120,GRASS,Physical,70,10,0,NearOther,0,abef,"The user violently whirls to lash the target. Can't miss if the target has already attacked this turn.",
 292,SEEDFLARE,Seed Flare,04F,100,GRASS,Special,100,5,30,NearOther,0,bef,"The user generates a shock wave from within its body. It has a 30% chance to harshly lower Sp. Def.",
@@ -321,7 +319,7 @@
 329,DRUMBEATING,Drum Beating,044,80,GRASS,Physical,100,10,100,NearOther,0,bef,"The user controls the drum's roots to attack the target. This also lowers the target's Speed stat.",
 330,GRAVAPPLE,Grav Apple,185,80,GRASS,Physical,100,10,100,NearOther,0,bef,"Inflicts damage by dropping an apple from high above. Lowers the target's Defense stat.",
 331,APPLEACID,Apple Acid,046,80,GRASS,Special,100,10,100,NearOther,0,bef,"Attacks with an acidic liquid created from tart apples. Lowers the target's Sp. Def stat.",
-332,GRASSYGLIDE,Grassy Glide,18C,70,GRASS,Physical,100,15,0,NearOther,0,abef,"Attacks by gliding on the ground. This move always goes first on Grassy Terrain.",
+332,SOLARGLIDE,Solar Glide,18C,70,GRASS,Physical,100,15,0,NearOther,0,abef,"Attacks by gliding on the ground. This move always goes first in sun.",
 333,JUNGLEHEALING,Jungle Healing,189,0,GRASS,Status,0,5,0,UserAndAllies,0,,"Restores HP and heals status of itself and its ally Pokémon in battle by using Jungle Powers.",
 334,PRECIPICEBLADES,Precipice Blades,000,120,GROUND,Physical,85,10,0,AllNearFoes,0,befp,"The user attacks its foes by manifesting the power of the land in fearsome blades of stone.",
 335,EARTHQUAKE,Earthquake,076,95,GROUND,Physical,100,10,0,AllNearOthers,0,bef,"The user sets off an earthquake that strikes every Pokémon around it and underground.",
@@ -625,7 +623,7 @@
 652,TRICKROOM,Trick Room,11F,0,PSYCHIC,Status,0,5,0,BothSides,-7,e,"The user creates a bizarre area in which slower Pokémon get to move first for five turns.",
 653,WONDERROOM,Wonder Room,124,0,PSYCHIC,Status,0,10,0,BothSides,0,e,"The user creates a bizarre area in which Pokémon's Defense and Sp. Def stats are swapped for 5 turns.",
 654,MAGICPOWDER,Magic Powder,197,0,PSYCHIC,Status,100,15,0,NearOther,0,bcel,"The user scatters a cloud of magic powder that changes the target to Psychic type.",
-655,EXPANDINGFORCE,Expanding Force,190,80,PSYCHIC,Special,100,15,0,AllNearOthers,0,bef,"Attacks with its psychic power. Power increases and damages all opponents on Psychic Terrain.",
+655,SHATTEREDFORCE,Shattered Force,190,80,PSYCHIC,Special,100,15,0,AllNearOthers,0,bef,"Attacks with its psychic power. Power increases and damages all opponents in eclipse.",
 656,EERIESPELL,Eerie Spell,521,70,PSYCHIC,Special,100,10,0,NearOther,0,bef,"The user casts a horrible spell on the opponent. This removes 4 PP from their last used move.",
 657,FREEZINGGLARE,Freezing Glare,403,90,PSYCHIC,Special,100,10,20,NearOther,0,ef,"The user shoots its psychic power from its eyes to attack. It has a 20% chance to frostbite.",
 658,HEADSMASH,Head Smash,0FC,120,ROCK,Physical,100,5,0,NearOther,0,abef,"The user attacks the foe with a hazardous, full-power headbutt. The user also takes 50% recoil.",
@@ -881,7 +879,7 @@
 913,AIRDART,Air Dart,00F,60,FLYING,Special,100,12,30,Other,0,beq,"The user strikes the target with a sudden wind. It has a 40% chance to flinch the target.",
 914,MIASMA,Miasma,046,90,POISON,Special,100,12,10,NearOther,0,befq,"The user envelops the target in a foul wind. It has a 10% chance to lower Sp. Def.",ACIDSPRAY
 915,VENOMORTAR,Venomortar,005,100,POISON,Physical,50,5,100,NearOther,0,bef,"The user blasts a bundle of venom at the target, poisoning it.",GUNKSHOT
-916,MOONIMPACT,Moon Impact,000,110,FAIRY,Physical,85,12,0,NearOther,0,abef,"The user attacks the target with the power of the moon.",SPIRITBREAK
+916,MOONIMPACT,Moon Impact,516,110,FAIRY,Physical,85,12,0,NearOther,0,abef,"Cannot miss in Moonglow. 30% chance to dizzy the target.",SPIRITBREAK
 917,AURATRICK,Aura Trick,540,80,FAIRY,Special,100,10,0,NearOther,0,bef,"The user attacks with its aura, dealing damage based on the user's Sp. Def stat.",FAIRYWIND
 918,DISTORT,Distort,043,40,FIGHTING,Special,100,30,10,NearOther,0,abef,"The user distorts the target's aura, damaging it. This has a 10% chance of reducing the target's Defense.",VACUUMWAVE
 919,ADRENALASH,Adrenalash,020,90,FIGHTING,Special,100,12,20,NearOther,0,bef,"The user forms their excitement into a lash with a 10% chance of raising the user's Sp. Atk.",FOCUSBLAST
