@@ -62,7 +62,7 @@ BattleHandlers::TargetAbilityOnHit.add(:SUNEATER,
 
 BattleHandlers::TargetAbilityOnHit.add(:LUNARLOYALTY,
     proc { |_ability, _target, battler, _move, battle|
-        pbBattleWeatherAbility(:Moonlight, battler, battle, false, true)
+        pbBattleWeatherAbility(:Moonglow, battler, battle, false, true)
     }
 )
 

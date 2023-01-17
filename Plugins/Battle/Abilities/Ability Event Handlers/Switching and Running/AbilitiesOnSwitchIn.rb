@@ -92,7 +92,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:DOWNLOAD,
 
 BattleHandlers::AbilityOnSwitchIn.add(:MOONGAZE,
   proc { |_ability, battler, battle|
-      pbBattleWeatherAbility(:Moonlight, battler, battle)
+      pbBattleWeatherAbility(:Moonglow, battler, battle)
   }
 )
 

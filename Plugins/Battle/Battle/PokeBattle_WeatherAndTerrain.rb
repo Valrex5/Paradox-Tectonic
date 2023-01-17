@@ -63,7 +63,7 @@ class PokeBattle_Battle
         when :Hail        then pbDisplay(_INTL("The hail keeps coming!"))
         when :ShadowSky   then pbDisplay(_INTL("The darkened sky darkens even further!"))
         when :Eclipse     then pbDisplay(_INTL("The eclipse extends unnaturally!"))
-        when :Moonlight   then pbDisplay(_INTL("The bright moon doesn't wane!"))
+        when :Moonglow   then pbDisplay(_INTL("The bright moon doesn't wane!"))
         end
     end
 
@@ -78,7 +78,7 @@ class PokeBattle_Battle
         when :StrongWinds then pbDisplay(_INTL("Mysterious strong winds are protecting Flying-type Pokémon!"))
         when :ShadowSky   then pbDisplay(_INTL("A shadow sky appeared!"))
         when :Eclipse     then pbDisplay(_INTL("An eclipse covers the sun!"))
-        when :Moonlight   then pbDisplay(_INTL("The light of the moon shines down!"))
+        when :Moonglow   then pbDisplay(_INTL("The light of the moon shines down!"))
         end
     end
 
@@ -91,7 +91,7 @@ class PokeBattle_Battle
         when :Hail        then pbDisplay(_INTL("The hail stopped."))
         when :ShadowSky   then pbDisplay(_INTL("The shadow sky faded."))
         when :Eclipse     then pbDisplay(_INTL("The eclipse ended."))
-        when :Moonlight   then pbDisplay(_INTL("The moonlight faded."))
+        when :Moonglow   then pbDisplay(_INTL("The moonlight faded."))
         when :HeavyRain   then pbDisplay(_INTL("The heavy rain has lifted!"))
         when :HarshSun    then pbDisplay(_INTL("The harsh sunlight faded!"))
         when :StrongWinds then pbDisplay(_INTL("The mysterious air current has dissipated!"))
@@ -226,7 +226,7 @@ class PokeBattle_Battle
         showWeatherMessages = $PokemonSystem.weather_messages == 0
 
         # Eclipse and Moonlight specials
-        @field.specialTimer += 1 if [:Moonlight,:Eclipse].include?(curWeather)
+        @field.specialTimer += 1 if [:Moonglow,:Eclipse].include?(curWeather)
         if @field.specialTimer == 3
             case curWeather
             when :Eclipse
@@ -241,9 +241,9 @@ class PokeBattle_Battle
                     anyAffected = true
                 end
                 pbDisplay(_INTL("But no one was affected...")) unless anyAffected
-            when :Moonlight
+            when :Moonglow
                 pbDisplay(_INTL("The Full Moon rises!"))
-                pbAnimation(:MOONLIGHT, @battlers[0], [])
+                pbAnimation(:Moonglow, @battlers[0], [])
                 anyAffected = false
                 priority.each do |b|
                     next unless b.flinchedByMoonlight?
@@ -327,7 +327,7 @@ class PokeBattle_Battle
                 pbDisplay(_INTL("{1} is hurt by the shadow sky!", b.pbThis)) if showWeatherMessages
                 fraction = 1.0 / 16.0
                 b.applyFractionalDamage(fraction)
-            when :Moonlight
+            when :Moonglow
                 if b.pbHasType?(:FAIRY)
                     healingMessage = _INTL("{1} absorbs the moonlight!", b.pbThis)
                     b.applyFractionalHealing(1.0 / 16.0, showMessage: showWeatherMessages, customMessage: healingMessage)

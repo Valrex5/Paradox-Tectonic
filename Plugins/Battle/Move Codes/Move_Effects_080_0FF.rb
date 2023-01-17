@@ -116,6 +116,7 @@ end
 
 #===============================================================================
 # Power is doubled in weather. Type changes depending on the weather. (Weather Ball)
+# Changes category based on your better attacking stat.
 #===============================================================================
 class PokeBattle_Move_087 < PokeBattle_Move
     def immuneToRainDebuff?; return true; end
@@ -139,7 +140,7 @@ class PokeBattle_Move_087 < PokeBattle_Move
             ret = :ICE if GameData::Type.exists?(:ICE)
         when :Eclipse
             ret = :PSYCHIC if GameData::Type.exists?(:PSYCHIC)
-        when :Moonlight
+        when :Moonglow
             ret = :FAIRY if GameData::Type.exists?(:FAIRY)
         end
         return ret
@@ -648,7 +649,7 @@ end
 class PokeBattle_Move_09E < PokeBattle_WeatherMove
     def initialize(battle, move)
         super
-        @weatherType = :Moonlight
+        @weatherType = :Moonglow
     end
 end
 
@@ -3703,7 +3704,7 @@ end
 #===============================================================================
 class PokeBattle_Move_0F9 < PokeBattle_HealingMove
     def healRatio(_user)
-        if @battle.pbWeather == :Moonlight
+        if @battle.pbWeather == :Moonglow
             return 2.0 / 3.0
         else
             return 1.0 / 2.0
@@ -3711,7 +3712,7 @@ class PokeBattle_Move_0F9 < PokeBattle_HealingMove
     end
 
     def shouldHighlight?(_user, _target)
-        return @battle.pbWeather == :Moonlight
+        return @battle.pbWeather == :Moonglow
     end
 end
 
