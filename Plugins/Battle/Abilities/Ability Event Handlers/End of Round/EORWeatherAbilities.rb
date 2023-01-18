@@ -70,3 +70,11 @@ BattleHandlers::EORWeatherAbility.add(:EXTREMOPHILE,
         battler.applyFractionalHealing(1.0 / 8.0, showAbilitySplash: true, customMessage: healingMessage)
     }
 )
+
+BattleHandlers::EORWeatherAbility.add(:NESTING,
+    proc { |_ability, _weather, battler, battle|
+        next if battle.pbWeather == :None
+        healingMessage = battle.pbDisplay(_INTL("{1} rests in safety.", battler.pbThis))
+        battler.applyFractionalHealing(1.0 / 12.0, showAbilitySplash: true, customMessage: healingMessage)
+    }
+)

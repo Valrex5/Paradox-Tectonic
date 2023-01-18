@@ -282,7 +282,7 @@ BattleHandlers::DamageCalcUserAbility.add(:ARMORPIERCING,
 
 BattleHandlers::DamageCalcUserAbility.add(:TERRITORIAL,
   proc { |_ability, _user, target, _move, mults, _baseDmg, _type, _aiCheck|
-      mults[:attack_multiplier] *= 1.3 if target.battle.field.terrain != :None
+      mults[:attack_multiplier] *= 1.2 if target.battle.pbWeather != :None
   }
 )
 

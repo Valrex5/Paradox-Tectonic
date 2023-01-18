@@ -389,20 +389,10 @@ class PokeBattle_Battle
             next if b.fainted?
             next unless b.affectedByTerrain?
             PBDebug.log("[Lingering effect] Grassy Terrain affects #{b.pbThis(true)}")
-            if pbCheckOpposingAbility(:SNAKEPIT, b.index)
-                pbDisplay(_INTL("{1} is lashed at by the pit of snakes!", b.pbThis))
-                b.applyFractionalDamage(1.0 / 16.0)
-            else
-                fraction = 1.0 / 16.0
-                healingMessage = _INTL("{1} is healed by the Grassy Terrain.", b.pbThis)
-                if b.hasActiveAbility?(:NESTING)
-                    pbShowAbilitySplash(b)
-                    fraction *= 4.0
-                    healingMessage = _INTL("{1} nests within the Grassy Terrain.", b.pbThis)
-                end
-                b.applyFractionalHealing(fraction, customMessage: healingMessage)
-                pbHideAbilitySplash(b) if b.hasActiveAbility?(:NESTING)
-            end
+            fraction = 1.0 / 16.0
+            healingMessage = _INTL("{1} is healed by the Grassy Terrain.", b.pbThis)
+            b.applyFractionalHealing(fraction, customMessage: healingMessage)
+            pbHideAbilitySplash(b) if b.hasActiveAbility?(:NESTING)
         end
     end
 

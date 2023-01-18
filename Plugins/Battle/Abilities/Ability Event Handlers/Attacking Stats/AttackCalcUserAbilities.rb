@@ -79,7 +79,7 @@ BattleHandlers::AttackCalcUserAbility.add(:DEEPSTING,
 
 BattleHandlers::AttackCalcUserAbility.add(:BIGTHORNS,
   proc { |_ability, _user, battle, attackMult|
-      attackMult *= 1.3 if battle.field.terrain == :Grassy
+      attackMult *= 1.3 if battle.sunny?
       next attackMult
   }
 )
@@ -98,9 +98,9 @@ BattleHandlers::AttackCalcUserAbility.add(:BLIZZBOXER,
   }
 )
 
-BattleHandlers::AttackCalcUserAbility.add(:STRANGESTRENGTH,
+BattleHandlers::AttackCalcUserAbility.add(:LUNATIC,
   proc { |_ability, _user, battle, attackMult|
-      attackMult *= 2.0 if battle.field.terrain == :Fairy
+      attackMult *= 1.3 if battle.field.terrain == :Moonglow
       next attackMult
   }
 )
