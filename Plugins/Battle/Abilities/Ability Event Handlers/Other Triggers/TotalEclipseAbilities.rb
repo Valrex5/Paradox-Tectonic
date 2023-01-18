@@ -6,3 +6,9 @@ BattleHandlers::TotalEclipseAbility.add(:TOTALGRASP,
              showAbilitySplash: true)
     }
 )
+
+BattleHandlers::TotalEclipseAbility.add(:TOLLDANGER,
+    proc { |_ability, battler, _battle|
+        battle.forceUseMove(battler, :HEALBELL, nil, true, nil, nil, true)
+    }
+)

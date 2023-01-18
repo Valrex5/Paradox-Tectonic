@@ -906,3 +906,33 @@ class PokeBattle_Move_5AE < PokeBattle_ProtectMove
         @effect = :ReverbWard
     end
 end
+
+#===============================================================================
+# Target becomes trapped. Summons Eclipse for 6 turns.
+# (Captivating Sight)
+#===============================================================================
+class PokeBattle_Move_5AF < PokeBattle_Move_0EF
+    def pbFailsAgainstTarget?(_user, target, show_message)
+        return false unless @battle.primevalWeatherPresent?(false)
+        super
+    end
+
+    def pbEffectGeneral(user)
+        @battle.pbStartWeather(user, :Eclipse, 6, false) unless @battle.primevalWeatherPresent?
+    end
+end
+
+#===============================================================================
+# Target becomes trapped. Summons Moonglow for 6 turns.
+# (Midnight Hunt)
+#===============================================================================
+class PokeBattle_Move_5B0 < PokeBattle_Move_0EF
+    def pbFailsAgainstTarget?(_user, target, show_message)
+        return false unless @battle.primevalWeatherPresent?(false)
+        super
+    end
+
+    def pbEffectGeneral(user)
+        @battle.pbStartWeather(user, :Moonglow, 6, false) unless @battle.primevalWeatherPresent?
+    end
+end

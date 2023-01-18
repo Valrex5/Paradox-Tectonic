@@ -96,3 +96,10 @@ BattleHandlers::SpecialAttackCalcUserAbility.add(:GLOWSHROOM,
       next spAtkMult
   }
 )
+
+BattleHandlers::SpecialAttackCalcUserAbility.add(:NIGHTLIGHT,
+  proc { |_ability, _user, battle, spAtkMult|
+      spAtkMult *= 1.3 if battle.pbWeather == :Moonglow
+      next spAtkMult
+  }
+)

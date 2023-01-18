@@ -360,6 +360,18 @@ BattleHandlers::AbilityOnSwitchIn.add(:NEUTRALIZINGGAS,
   }
 )
 
+BattleHandlers::AbilityOnSwitchIn.add(:DRAMATICLIGHTING,
+  proc { |_ability, battler, battle|
+      next unless battle.pbWeather == :Eclipse
+      battle.pbShowAbilitySplash(battler)
+      battle.eachOtherSideBattler(battler.index) do |b|
+          next unless b.near?(battler)
+          b.pbLowerMultipleStatStages([:ATTACK,1,:SPECIAL_ATTACK,1],battler,showFailMsg: true)
+      end
+      battle.pbHideAbilitySplash(battler)
+  }
+)
+
 BattleHandlers::AbilityOnSwitchIn.add(:FASCINATE,
   proc { |_ability, battler, battle|
       battle.pbShowAbilitySplash(battler)
