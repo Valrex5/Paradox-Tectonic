@@ -338,12 +338,12 @@ end
 #===============================================================================
 class PokeBattle_Move_516 < PokeBattle_DizzyMove
     def pbBaseAccuracy(user, target)
-        return 0 if @battle.field.pbWeather == :Moonglow
+        return 0 if @battle.pbWeather == :Moonglow
         return super
     end
 
     def shouldHighlight?(_user, _target)
-        return @battle.field.pbWeather == :Moonglow
+        return @battle.pbWeather == :Moonglow
     end
 end
 

@@ -308,7 +308,7 @@ end
 #===============================================================================
 class PokeBattle_Move_190 < PokeBattle_Move
     def pbBaseDamage(baseDmg, _user, _target)
-        baseDmg *= 1.5 if @battle.field.pbWeather == :Eclipse
+        baseDmg *= 1.5 if @battle.pbWeather == :Eclipse
         return baseDmg
     end
 end
@@ -406,7 +406,7 @@ end
 #===============================================================================
 class PokeBattle_Move_196 < PokeBattle_Move_0E0
     def pbBaseDamage(baseDmg, user, _target)
-        baseDmg = (baseDmg * 1.5).round if @battle.field.pbWeather == :Moonglow
+        baseDmg = (baseDmg * 1.5).round if @battle.pbWeather == :Moonglow
         return baseDmg
     end
 
