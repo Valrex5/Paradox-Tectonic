@@ -7,7 +7,7 @@ class PokeBattle_Battler
 
     def affectedByWeatherDownsides?(checkingForAI = false)
         return false if inTwoTurnAttack?("0CA", "0CB")   # Dig, Dive
-        return false if shouldAbilityApply?(%i[STOUT WEATHERSENSES NORMALIZE], checkingForAI)
+        return false if shouldAbilityApply?(%i[STOUT WEATHERSENSES TERRITORIAL NESTING], checkingForAI)
         return false if hasActiveItem?(:UTILITYUMBRELLA)
         return false if @battle.pbCheckAlliedAbility(:HIGHRISE, @index)
         return true
@@ -39,8 +39,7 @@ checkingForAI) || shouldAbilityApply?(synergyAbilities, checkingForAI)
         return false unless affectedByWeatherDownsides?(checkingForAI)
         return false unless takesIndirectDamage?
         return false if hasActiveItem?(:SAFETYGOGGLES)
-        return false if shouldTypeApply?(:GROUND,
-checkingForAI) || shouldTypeApply?(:ROCK,	checkingForAI) || shouldTypeApply?(:STEEL, checkingForAI)
+        return false if shouldTypeApply?(:GROUND,checkingForAI) || shouldTypeApply?(:ROCK,	checkingForAI)
         setterAbilities = %i[SANDSTREAM SANDBURST]
         synergyAbilities = %i[OVERCOAT SANDFORCE SANDRUSH SANDSHROUD DESERTSPIRITBURROWER SHRAPNELSTORM HARSHHUNTER]
         return false if shouldAbilityApply?(setterAbilities,
@@ -52,8 +51,7 @@ checkingForAI) || shouldAbilityApply?(synergyAbilities, checkingForAI)
         return false unless affectedByWeatherDownsides?(checkingForAI)
         return false unless takesIndirectDamage?
         return false if hasActiveItem?(:SAFETYGOGGLES)
-        return false if shouldTypeApply?(:ICE,
-checkingForAI) || shouldTypeApply?(:GHOST,	checkingForAI) || shouldTypeApply?(:STEEL, checkingForAI)
+        return false if shouldTypeApply?(:ICE, checkingForAI) || shouldTypeApply?(:GHOST,	checkingForAI)
         setterAbilities = %i[SNOWWARNING FROSTSCATTER]
         synergyAbilities = %i[OVERCOAT ICEBODY SNOWSHROUD BLIZZBOXER SLUSHRUSH ICEFACEBITTERCOLD ECTOPARTICLES]
         return false if shouldAbilityApply?(setterAbilities,
@@ -72,7 +70,8 @@ checkingForAI) || shouldAbilityApply?(synergyAbilities, checkingForAI)
         return true
     end
 
-    def debuffedByMoonlight?(checkingForAI = false)
+    def flinchedByMoonlight?(checkingForAI = false)
+        return false if shouldAbilityApply?(:INNERFOCUS, checkingForAI)
         return false unless affectedByWeatherDownsides?(checkingForAI)
         return false if shouldTypeApply?(:FAIRY, checkingForAI) || shouldTypeApply?(:DARK, checkingForAI)
         setterAbilities = %i[MOONGAZE LUNARLOYALTY]

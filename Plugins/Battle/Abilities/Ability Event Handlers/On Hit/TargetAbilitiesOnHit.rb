@@ -62,7 +62,7 @@ BattleHandlers::TargetAbilityOnHit.add(:SUNEATER,
 
 BattleHandlers::TargetAbilityOnHit.add(:LUNARLOYALTY,
     proc { |_ability, _target, battler, _move, battle|
-        pbBattleWeatherAbility(:Moonlight, battler, battle, false, true)
+        pbBattleWeatherAbility(:Moonglow, battler, battle, false, true)
     }
 )
 
@@ -504,10 +504,9 @@ BattleHandlers::TargetAbilityOnHit.add(:QUILLERINSTINCT,
   }
 )
 
-BattleHandlers::TargetAbilityOnHit.add(:ELECTRICFENCE,
+BattleHandlers::TargetAbilityOnHit.add(:ARCCONDUCTOR,
   proc { |_ability, user, target, _move, battle|
-      echoln target.battle.field.terrain == :Electric
-      next unless target.battle.field.terrain == :Electric
+      next unless battle.rainy?
       battle.pbShowAbilitySplash(target)
       if user.takesIndirectDamage?(true)
           battle.pbDisplay(_INTL("{1} is hurt!", user.pbThis))

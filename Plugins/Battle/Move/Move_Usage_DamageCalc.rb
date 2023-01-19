@@ -187,6 +187,10 @@ class PokeBattle_Move
                 damageBonus = 0.3
                 multipliers[:final_damage_multiplier] *= (1 + damageBonus)
             end
+
+            if @battle.pbCheckOpposingAbility(:DISTRESSING,user.index)
+                multipliers[:final_damage_multiplier] *= 0.8
+            end
         end
     end
 

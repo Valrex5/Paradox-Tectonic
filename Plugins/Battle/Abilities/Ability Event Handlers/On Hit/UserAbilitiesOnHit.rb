@@ -4,6 +4,12 @@ BattleHandlers::UserAbilityOnHit.add(:POISONTOUCH,
   }
 )
 
+BattleHandlers::UserAbilityOnHit.add(:TOXICCLOUD,
+  proc { |_ability, user, target, move, battle|
+      randomStatusProcAbility(:POISON, 30, user, target, move, battle) if move.specialMove?
+  }
+)
+
 BattleHandlers::UserAbilityOnHit.add(:CHRONICCOLD,
   proc { |_ability, user, target, move, battle|
       randomStatusProcAbility(:FROSTBITE, 30, user, target, move, battle) if move.physicalMove?
