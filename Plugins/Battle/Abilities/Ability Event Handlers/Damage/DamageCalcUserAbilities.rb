@@ -405,3 +405,15 @@ BattleHandlers::DamageCalcUserAbility.add(:WORLDQUAKE,
       mults[:base_damage_multiplier] *= 1.5 if user.battle.pbWeather == :Eclipse && type == :GROUND
   }
 )
+
+BattleHandlers::DamageCalcUserAbility.add(:TIDALFORCE,
+  proc { |_ability, user, _target, _move, mults, _baseDmg, type, _aiCheck|
+      mults[:base_damage_multiplier] *= 1.5 if user.battle.pbWeather == :Moonglow && type == :WATER
+  }
+)
+
+BattleHandlers::DamageCalcUserAbility.add(:FULLMOONBLADE,
+  proc { |_ability, user, _target, _move, mults, _baseDmg, type, _aiCheck|
+      mults[:base_damage_multiplier] *= 2.0 if user.battle.fullMoon?
+  }
+)

@@ -40,6 +40,12 @@ BattleHandlers::SpeedCalcAbility.add(:SWIFTSWIM,
   }
 )
 
+BattleHandlers::SpeedCalcAbility.add(:AQUAPROPULSION,
+  proc { |_ability, battler, mult|
+      next mult * 1.25 if battler.battle.rainy?
+  }
+)
+
 BattleHandlers::SpeedCalcAbility.add(:UNBURDEN,
   proc { |_ability, battler, mult|
       next mult * 2 if battler.effectActive?(:ItemLost) && !battler.item
@@ -112,8 +118,14 @@ BattleHandlers::SpeedCalcAbility.add(:LIGHTTRICK,
   }
 )
 
-BattleHandlers::SpeedCalcAbility.add(:PHENOMENAL,
+BattleHandlers::SpeedCalcAbility.add(:ANARCHIC,
   proc { |_ability, battler, mult|
       next mult * 2 if battler.battle.pbWeather == :Eclipse
+  }
+)
+
+BattleHandlers::SpeedCalcAbility.add(:NIGHTLIFE,
+  proc { |_ability, battler, mult|
+      next mult * 2 if battler.battle.pbWeather == :Moonglow
   }
 )

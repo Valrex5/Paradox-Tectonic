@@ -53,9 +53,9 @@ BattleHandlers::SpecialAttackCalcUserAbility.add(:ARCANEFINALE,
   }
 )
 
-BattleHandlers::SpecialAttackCalcUserAbility.add(:TIDALFORCE,
+BattleHandlers::SpecialAttackCalcUserAbility.add(:AQUAPROPULSION,
   proc { |_ability, _user, battle, spAtkMult|
-      spAtkMult *= 1.3 if battle.rainy?
+      spAtkMult *= 1.25 if battle.rainy?
       next spAtkMult
   }
 )
@@ -86,13 +86,6 @@ BattleHandlers::SpecialAttackCalcUserAbility.add(:BALANCEOFPOWER,
 BattleHandlers::SpecialAttackCalcUserAbility.add(:SHATTERING,
   proc { |_ability, _user, _battle, spAtkMult|
       spAtkMult *= 1.3 if battle.pbWeather == :Eclipse
-      next spAtkMult
-  }
-)
-
-BattleHandlers::SpecialAttackCalcUserAbility.add(:GLOWSHROOM,
-  proc { |_ability, _user, battle, spAtkMult|
-      spAtkMult *= 1.25 if battle.pbWeather == :Eclipse
       next spAtkMult
   }
 )

@@ -589,6 +589,44 @@ BattleHandlers::AbilityOnSwitchIn.add(:REFRESHMENTS,
   }
 )
 
+BattleHandlers::AbilityOnSwitchIn.add(:MENDINGTONES,
+  proc { |_ability, battler, battle|
+      next unless battle.sunny?
+      lowestId = battler.index
+      lowestPercent = battler.hp / battler.totalhp.to_f
+      battler.eachAlly do |b|
+          thisHP = b.hp / b.totalhp.to_f
+          if (thisHP < lowestPercent) && b.canHeal?
+              lowestId = b.index
+              lowestPercent = thisHP
+          end
+      end
+      lowestIdBattler = battle.battlers[lowestId]
+      next unless lowestIdBattler.canHeal?
+      served = (lowestId == battler.index ? "itself" : lowestIdBattler.pbThis)
+      battle.pbShowAbilitySplash(battler)
+      battle.pbDisplay(_INTL("{1} mended {2} with soothing sounds!", battler.pbThis, served))
+      lowestIdBattler.pbRecoverHP(lowestIdBattler.totalhp / 2.0)
+      battle.pbHideAbilitySplash(battler)
+  }
+)
+
+BattleHandlers::AbilityOnSwitchIn.add(:PEARLSEEKER,
+  proc { |_ability, battler, battle|
+      next unless battle.pbWeather == :Eclipse
+      next if battler.item
+      pbShowAbilitySplash(battler)
+      itemData = GameData::Item(:PEARLOFFATE)
+      battle.pbDisplay(_INTL("{1} discovers the {2}!", battler.pbThis, itemData.name))
+      battler.item = :PEARLOFFATE
+      pbHideAbilitySplash(battler)
+  }
+)
+
+#######################################################
+# Terrain setting abilities
+#######################################################
+
 BattleHandlers::AbilityOnSwitchIn.add(:GRASSYSURGE,
   proc { |_ability, battler, battle|
       next if battle.field.terrain == :Grassy

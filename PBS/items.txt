@@ -854,6 +854,7 @@
 877,CONDENSEDLIGHT,Condensed Light,Condensed Light,8,0,"A strange ball of light. You should gather these for a friend.",0,0,13
 878,PINPOINTROCK,Pin-Point Rock,Pin-Point Rocks,5,4000,"A Pokémon held item. When the holder summons Eclipse, it lasts twice as long.",0,0,0
 879,MIRROREDROCK,Mirrored Rock,Mirrored Rocks,5,4000,"A Pokémon held item. When the holder summons Moonlight, it lasts twice as long.",0,0,0
+880,PEARLOFFATE,Pearl of Fate,Pearls of Fate,5,0,"User heals 1/16th HP every turn. Will sacrifice itself to cure the user of status.",0,0,0
 900,CHAMBER1KEY,Chamber 1 Key,Chamber 1 Keys,8,0,"The key to the first chamber containing a powerful avatar.",0,0,6
 901,CHAMBER2KEY,Chamber 2 Key,Chamber 2 Keys,8,0,"The key to the second chamber containing a powerful avatar.",0,0,6
 902,CHAMBER3KEY,Chamber 3 Key,Chamber 3 Keys,8,0,"The key to the third chamber containing a powerful avatar.",0,0,6

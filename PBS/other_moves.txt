@@ -52,6 +52,7 @@
 2050,GRASSYGLIDE,Grassy Glide,18C,70,GRASS,Physical,100,15,0,NearOther,0,abef,"Attacks by gliding on the ground. This move always goes first on Grassy Terrain.",
 2051,EXPANDINGFORCE,Expanding Force,190,80,PSYCHIC,Special,100,15,0,AllNearOthers,0,bef,"Attacks with its psychic power. Power increases and damages all opponents on Psychic Terrain.",
 2052,HURRICANE,Hurricane,570,110,FLYING,Special,70,10,30,Other,0,befq,"Can't miss in rain. It has a 30% chance to dizzy. Can hit targets flying high up.",
+2053,WEATHERBALL,Weather Ball,087,50,NORMAL,Special,100,10,0,NearOther,0,befn,"Type based on weather, and double damage if any. Physical or special based on user's stats.",
 2500,BREAKNECKBLITZ,Breakneck Blitz,Z000,1,NORMAL,Physical,0,1,0,NearOther,0,fz,"The user builds up its momentum using its Z-Power and crashes into the target at full speed.",
 2501,ALLOUTPUMMELING,All-Out Pummeling,Z000,1,FIGHTING,Physical,0,1,0,NearOther,0,fz,"The user rams an energy orb created by its Z-Power into the target with full force.",
 2502,SUPERSONICSKYSTRIKE,Supersonic Skystrike,Z000,1,FLYING,Physical,0,1,0,NearOther,0,fz,"The user soars up with its Z-Power and plummets toward the target at full speed.",

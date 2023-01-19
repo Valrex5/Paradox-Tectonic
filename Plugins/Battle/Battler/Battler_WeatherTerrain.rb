@@ -63,7 +63,8 @@ checkingForAI) || shouldAbilityApply?(synergyAbilities, checkingForAI)
         return false unless affectedByWeatherDownsides?(checkingForAI)
         return false if shouldTypeApply?(:PSYCHIC, checkingForAI) || shouldTypeApply?(:DRAGON, checkingForAI)
         setterAbilities = %i[HARBINGER SUNEATER]
-        synergyAbilities = %i[]
+        synergyAbilities = %i[APPREHENSIVE TOTALGRASP EXTREMOPHILE WORLDQUAKE RESONANCE DISTRESSING SHAKYCODE MYTHICSCALES
+                              STARSALIGN WARPINGEFFECT TOLLDANGER DRAMATICLIGHTING CALAMITY ANARCHIC MENDINGTONES PEARLSEEKER]
         return false if shouldAbilityApply?(setterAbilities,checkingForAI) ||
             shouldAbilityApply?(synergyAbilities, checkingForAI)
         return true

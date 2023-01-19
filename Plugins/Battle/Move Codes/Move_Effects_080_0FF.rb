@@ -115,16 +115,15 @@ class PokeBattle_Move_086 < PokeBattle_Move
 end
 
 #===============================================================================
-# Power is doubled in weather. Type changes depending on the weather. (Weather Ball)
+# Type changes depending on the weather. (Weather Burst)
 # Changes category based on your better attacking stat.
 #===============================================================================
 class PokeBattle_Move_087 < PokeBattle_Move
     def immuneToRainDebuff?; return true; end
     def immuneToSunDebuff?; return true; end
-
-    def pbBaseDamage(baseDmg, _user, _target)
-        baseDmg *= 2 if @battle.pbWeather != :None
-        return baseDmg
+    
+    def shouldHighlight?(_user, _target)
+        return @battle.pbWeather != :None
     end
 
     def pbBaseType(_user)
