@@ -517,6 +517,7 @@
 523,TOLLDANGER,Toll Danger,"Uses Heal Bell when a total eclipse happens."
 524,CALAMITY,Calamity,"During eclipse, raises Attack and Sp. Atk after knocking out any Pokémon."
 525,DIMVIEW,Dim View,"Trapped during eclipse, but heals 1/4th HP each turn during."
+526,DRAMATICLIGHTING,Dramatoc Lighting,"Upon entry during eclipse, lowers the foe's Attack and Sp. Atk stat."
 530,LUNATIC,Lunatic,"Boosts Attack by 30% in moonglow."
 531,NIGHTLIGHT,NIGHTLIGHT,"Boosts Sp. Atk by 30% in moonglow."
 540,TOXICCLOUD,TOXICCLOUD,"Special moves have a 30% chance to poison targets."
