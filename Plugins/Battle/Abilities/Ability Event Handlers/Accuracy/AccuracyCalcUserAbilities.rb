@@ -51,9 +51,3 @@ BattleHandlers::AccuracyCalcUserAbility.add(:AQUASNEAK,
         mults[:base_accuracy] = 0 if user.turnCount <= 1
     }
 )
-
-BattleHandlers::AccuracyCalcUserAbility.add(:STARSALIGN,
-  proc { |_ability, mults, user, _target, _move, _type|
-      mults[:base_accuracy] = 0 if user.battle.pbWeather == :Eclipse
-  }
-)

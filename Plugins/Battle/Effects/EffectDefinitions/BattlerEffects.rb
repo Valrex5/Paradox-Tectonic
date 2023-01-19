@@ -1617,3 +1617,12 @@ GameData::BattleEffect.register_effect(:Battler, {
 battler.pbThis(true)))
     end,
 })
+
+GameData::BattleEffect.register_effect(:Battler, {
+    :id => :MoonStruck,
+    :real_name => "Moonstruck",
+    :resets_eor => true,
+    :apply_proc => proc do |battle, battler, _value|
+        battle.pbDisplay(_INTL("{1} is moonstruck! It'll be slow this turn!", battler.pbThis))
+    end,
+})

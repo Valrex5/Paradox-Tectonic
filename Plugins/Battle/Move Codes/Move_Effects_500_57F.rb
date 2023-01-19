@@ -333,18 +333,9 @@ class PokeBattle_Move_515 < PokeBattle_Move
 end
 
 #===============================================================================
-# Dizzies the target. Accuracy perfect in moonglow. Hits some
-# semi-invulnerable targets. (Moon Impact)
+# (Not currenly used)
 #===============================================================================
-class PokeBattle_Move_516 < PokeBattle_DizzyMove
-    def pbBaseAccuracy(user, target)
-        return 0 if @battle.pbWeather == :Moonglow
-        return super
-    end
-
-    def shouldHighlight?(_user, _target)
-        return @battle.pbWeather == :Moonglow
-    end
+class PokeBattle_Move_516 < PokeBattle_Move
 end
 
 #===============================================================================

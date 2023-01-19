@@ -380,9 +380,7 @@ class PokeBattle_Battler
             end
         end
         # Protean
-        proteans = user.hasActiveAbility?(:PROTEAN) || user.hasActiveAbility?(:LIBERO) ||
-            (user.hasActiveAbility?(:SHAKYCODE) && @battle.pbWeather == :Eclipse)
-        if proteans && !move.callsAnotherMove? &&
+        if (user.hasActiveAbility?(:PROTEAN) || user.hasActiveAbility?(:LIBERO)) && !move.callsAnotherMove? &&
            !move.snatched && user.pbHasOtherType?(move.calcType) && !GameData::Type.get(move.calcType).pseudo_type
             @battle.pbShowAbilitySplash(user)
             user.pbChangeTypes(move.calcType)

@@ -3,7 +3,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:AIRLOCK,
       battle.pbShowAbilitySplash(battler)
       battle.pbDisplay(_INTL("The effects of the weather disappeared."))
       battle.pbHideAbilitySplash(battler)
-      battle.field.specialTimer = 1
+      battle.field.specialTimer = 0
   }
 )
 
@@ -92,7 +92,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:DOWNLOAD,
 
 BattleHandlers::AbilityOnSwitchIn.add(:MOONGAZE,
   proc { |_ability, battler, battle|
-      pbBattleWeatherAbility(:Moonglow, battler, battle)
+      pbBattleWeatherAbility(:Moonlight, battler, battle)
   }
 )
 
@@ -356,18 +356,6 @@ BattleHandlers::AbilityOnSwitchIn.add(:NEUTRALIZINGGAS,
       next if battle.field.effectActive?(:NeutralizingGas)
       battle.pbShowAbilitySplash(battler)
       battle.field.applyEffect(:NeutralizingGas)
-      battle.pbHideAbilitySplash(battler)
-  }
-)
-
-BattleHandlers::AbilityOnSwitchIn.add(:DRAMATICLIGHTING,
-  proc { |_ability, battler, battle|
-      next unless battle.pbWeather == :Eclipse
-      battle.pbShowAbilitySplash(battler)
-      battle.eachOtherSideBattler(battler.index) do |b|
-          next unless b.near?(battler)
-          b.pbLowerMultipleStatStages([:ATTACK,1,:SPECIAL_ATTACK,1],battler,showFailMsg: true)
-      end
       battle.pbHideAbilitySplash(battler)
   }
 )

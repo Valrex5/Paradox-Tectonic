@@ -119,10 +119,6 @@ module BattleHandlers
     ItemOnStatLoss = ItemHandlerHash.new
     FieldEffectStatLossItem	= ItemHandlerHash.new
 
-    # Special Weather Effect abilities
-    TotalEclipseAbility                 = AbilityHandlerHash.new
-    FullMoonAbility                     = AbilityHandlerHash.new
-
     #=============================================================================
 
     def self.triggerSpeedCalcAbility(ability, battler, mult)
@@ -608,15 +604,5 @@ module BattleHandlers
 
     def self.triggerFieldEffectItem(item, battler, battle)
         FieldEffectStatLossItem.trigger(item, battler, battle)
-    end
-
-    #=============================================================================
-
-    def self.triggerTotalEclipseAbility(ability, battler, battle)
-        TotalEclipseAbility.trigger(ability, battler, battle)
-    end
-
-    def self.triggerFullMoonAbility(ability, battler, battle)
-        FullMoonAbility.trigger(ability, battler, battle)
     end
 end

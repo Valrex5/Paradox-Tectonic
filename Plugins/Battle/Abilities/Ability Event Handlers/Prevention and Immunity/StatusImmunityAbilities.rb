@@ -83,9 +83,3 @@ BattleHandlers::StatusImmunityAbility.add(:SLICKSURFACE,
       next true if status == :LEECHED
   }
 )
-
-BattleHandlers::StatusImmunityAbility.add(:STABILITY,
-  proc { |_ability, battler, status|
-      next true if battler.battle.pbWeather == :Eclipse
-  }
-)

@@ -26,14 +26,14 @@ BattleHandlers::PriorityChangeAbility.add(:MAESTRO,
 )
 
 BattleHandlers::PriorityChangeAbility.add(:FAUXLIAGE,
-  proc { |_ability, battler, move, _pri, _targets = nil, _aiCheck = false|
-      next 1 if move.calcType == :GRASS
+  proc { |_ability, battler, _move, _pri, _targets = nil, _aiCheck = false|
+      next 1 if battler.battle.field.terrain == :Grassy
   }
 )
 
-BattleHandlers::PriorityChangeAbility.add(:NEERDOWELL,
+BattleHandlers::PriorityChangeAbility.add(:DECEPTIVE,
   proc { |_ability, battler, move, _pri, aiCheck = false|
-      if move.statusMove? && battler.battle.pbWeather == :Moonglow
+      if move.statusMove? && battler.battle.field.terrain == :Fairy
           next 1
       end
   }

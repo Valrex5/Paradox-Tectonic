@@ -137,10 +137,6 @@ class PokeBattle_Move_087 < PokeBattle_Move
             ret = :ROCK if GameData::Type.exists?(:ROCK)
         when :Hail
             ret = :ICE if GameData::Type.exists?(:ICE)
-        when :Eclipse
-            ret = :PSYCHIC if GameData::Type.exists?(:PSYCHIC)
-        when :Moonglow
-            ret = :FAIRY if GameData::Type.exists?(:FAIRY)
         end
         return ret
     end
@@ -648,7 +644,7 @@ end
 class PokeBattle_Move_09E < PokeBattle_WeatherMove
     def initialize(battle, move)
         super
-        @weatherType = :Moonglow
+        @weatherType = :Moonlight
     end
 end
 
@@ -3703,7 +3699,7 @@ end
 #===============================================================================
 class PokeBattle_Move_0F9 < PokeBattle_HealingMove
     def healRatio(_user)
-        if @battle.pbWeather == :Moonglow
+        if @battle.pbWeather == :Moonlight
             return 2.0 / 3.0
         else
             return 1.0 / 2.0
@@ -3711,7 +3707,7 @@ class PokeBattle_Move_0F9 < PokeBattle_HealingMove
     end
 
     def shouldHighlight?(_user, _target)
-        return @battle.pbWeather == :Moonglow
+        return @battle.pbWeather == :Moonlight
     end
 end
 

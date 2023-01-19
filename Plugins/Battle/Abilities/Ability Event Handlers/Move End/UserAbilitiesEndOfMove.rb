@@ -126,17 +126,6 @@ BattleHandlers::UserAbilityEndOfMove.add(:DAUNTLESS,
   }
 )
 
-BattleHandlers::UserAbilityEndOfMove.add(:CALAMITY,
-  proc { |_ability, user, targets, _move, battle, _switchedBattlers|
-      next unless battle.pbWeather == :Eclipse
-      next if battle.pbAllFainted?(user.idxOpposingSide)
-      numFainted = 0
-      targets.each { |b| numFainted += 1 if b.damageState.fainted }
-      next if numFainted == 0
-      user.pbRaiseMultipleStatStages([:ATTACK, numFainted, :SPECIAL_ATTACK, numFainted], user, showAbilitySplash: true)
-  }
-)
-
 BattleHandlers::UserAbilityEndOfMove.add(:SPACEINTERLOPER,
   proc { |_ability, battler, targets, _move, _battle|
       battler.pbRecoverHPFromMultiDrain(targets, 0.25)

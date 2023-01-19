@@ -77,8 +77,8 @@ BattleHandlers::EOREffectAbility.add(:HUNGERSWITCH,
 
 BattleHandlers::EOREffectAbility.add(:ASTRALBODY,
   proc { |_ability, battler, battle|
-      next unless battle.pbWeather == :Moonglow
-      healingMessage = battle.pbDisplay(_INTL("{1} absorbs magic from the starry sky.", battler.pbThis))
+      next unless battle.field.terrain == :Fairy
+      healingMessage = battle.pbDisplay(_INTL("{1} absorbs magic from the fae mist.", battler.pbThis))
       battler.applyFractionalHealing(1.0 / 8.0, showAbilitySplash: true, customMessage: healingMessage)
   }
 )

@@ -30,6 +30,6 @@ BattleHandlers::WeatherExtenderItem.add(:PINPOINTROCK,
 
 BattleHandlers::WeatherExtenderItem.add(:MIRROREDROCK,
   proc { |_item, weather, duration, _battler, _battle|
-      next duration * 2 if weather == :Moonglow
+      next duration * 2 if weather == :Moonlight
   }
 )

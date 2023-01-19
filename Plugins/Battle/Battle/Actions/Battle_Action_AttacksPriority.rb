@@ -234,6 +234,7 @@ class PokeBattle_Battle
     end
 
     def getMovePriority(move, user, targets, aiCheck = false)
+        return -6 if user.effectActive?(:MoonStruck)
         priority = move.priority
         priority -= 1 if pbCheckGlobalAbility(:HONORAURA) && move.statusMove?
         if user.abilityActive?

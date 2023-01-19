@@ -215,6 +215,7 @@ class PokeBattle_Battler
         return false if effectActive?(:Ingrain)
         return false if effectActive?(:SmackDown)
         return false if @battle.field.effectActive?(:Gravity)
+        return false if @battle.field.terrain == :Grassy && shouldAbilityApply?(:NESTING, checkingForAI)
         return true if shouldTypeApply?(:FLYING, checkingForAI)
         return true if hasLevitate?(checkingForAI) && !@battle.moldBreaker
         return true if hasActiveItem?(LEVITATION_ITEMS)
@@ -406,7 +407,6 @@ class PokeBattle_Battler
         ret = 5
         ret += 3 if hasActiveItem?(:LIGHTCLAY)
         ret += 6 if hasActiveItem?(:BRIGHTCLAY)
-        ret *= 2 if hasActiveAbility?(:RESONANCE) && @battle.pbWeather == :Eclipse
         return ret
     end
 
