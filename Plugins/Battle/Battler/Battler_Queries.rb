@@ -264,6 +264,7 @@ class PokeBattle_Battler
     def canHeal?
         return false if fainted? || @hp >= @totalhp
         return false if effectActive?(:HealBlock)
+        return false if hasActiveAbility?(:ONEDGE) && @battle.pbWeather == :Moonglow
         return true
     end
 

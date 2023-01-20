@@ -22,6 +22,19 @@ BattleHandlers::TargetAbilityAfterMoveUse.add(:PICKPOCKET,
   }
 )
 
+BattleHandlers::TargetAbilityAfterMoveUse.add(:MOONLIGHTER,
+  proc { |_ability, target, user, move, switched, battle|
+      next if switched.include?(user.index)
+      next unless move.pbDamagingMove?
+      next if battle.futureSight
+      if move.canStealItem(user,target)
+        move.stealItem(target, user, true)
+      else
+        move.removeItem(target, user, true)
+      end
+  }
+)
+
 BattleHandlers::TargetAbilityAfterMoveUse.add(:VENGEANCE,
   proc { |_ability, target, user, move, _switched, battle|
       next unless move.damagingMove?

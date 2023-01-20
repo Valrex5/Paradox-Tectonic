@@ -33,3 +33,9 @@ BattleHandlers::GuaranteedCriticalUserAbility.add(:LURING,
         next true if target.dizzy?
     }
 )
+
+BattleHandlers::GuaranteedCriticalUserAbility.add(:NIGHTSTALKER,
+    proc { |_ability, user, _target, _battle|
+        next true if user.effectActive?(:NightStalker)
+    }
+)

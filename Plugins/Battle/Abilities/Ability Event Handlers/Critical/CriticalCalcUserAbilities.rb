@@ -15,3 +15,9 @@ BattleHandlers::CriticalCalcUserAbility.add(:RAZORSEDGE,
       next c + 1 if move.slashMove?
   }
 )
+
+BattleHandlers::CriticalCalcUserAbility.add(:NIGHTVISION,
+  proc { |_ability, user, _target, _move, c|
+      next c + 1 if user.battle.pbWeather == :Moonglow
+  }
+)

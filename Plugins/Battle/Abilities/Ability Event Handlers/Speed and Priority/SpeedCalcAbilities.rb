@@ -129,3 +129,9 @@ BattleHandlers::SpeedCalcAbility.add(:NIGHTLIFE,
       next mult * 2 if battler.battle.pbWeather == :Moonglow
   }
 )
+
+BattleHandlers::SpeedCalcAbility.add(:NIGHTVISION,
+  proc { |_ability, battler, mult|
+      next mult * 1.5 if battler.battle.pbWeather == :Moonglow
+  }
+)

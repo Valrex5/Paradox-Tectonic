@@ -105,6 +105,13 @@ BattleHandlers::AttackCalcUserAbility.add(:LUNATIC,
   }
 )
 
+BattleHandlers::AttackCalcUserAbility.add(:ONEDGE,
+  proc { |_ability, _user, battle, attackMult|
+      attackMult *= 1.5 if battle.field.terrain == :Moonglow
+      next attackMult
+  }
+)
+
 BattleHandlers::AttackCalcUserAbility.add(:HARSHHUNTER,
   proc { |_ability, _user, battle, attackMult|
       attackMult *= 1.3 if battle.pbWeather == :Sandstorm

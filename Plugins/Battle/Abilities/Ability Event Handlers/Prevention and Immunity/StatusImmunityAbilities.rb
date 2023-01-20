@@ -16,6 +16,12 @@ BattleHandlers::StatusImmunityAbility.add(:INSOMNIA,
   }
 )
 
+BattleHandlers::StatusImmunityAbility.add(:ONEDGE,
+  proc { |_ability, battler, status|
+      next true if status == :SLEEP && battler.battle.pbWeather == :Moonglow
+  }
+)
+
 BattleHandlers::StatusImmunityAbility.copy(:INSOMNIA, :SWEETVEIL, :VITALSPIRIT)
 
 BattleHandlers::StatusImmunityAbility.add(:LEAFGUARD,
