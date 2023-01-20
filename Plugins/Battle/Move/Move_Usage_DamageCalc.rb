@@ -75,6 +75,11 @@ class PokeBattle_Move
     def damageCalcStats(user,target,aiChecking=false)
         # Calculate user's attack stat
         attacking_stat_holder, attacking_stat = pbAttackingStat(user,target)
+
+        if user.shouldAbilityApply?(:MALICIOUSGLOW,aiChecking) && @battle.pbWeather == :Moonglow
+            attacking_stat_holder = target
+        end
+
         attack_stage = attacking_stat_holder.stages[attacking_stat]
         critical = target.damageState.critical
         critical = false if aiChecking

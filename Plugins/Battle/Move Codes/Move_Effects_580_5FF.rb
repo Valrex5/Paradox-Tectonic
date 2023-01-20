@@ -936,3 +936,33 @@ class PokeBattle_Move_5B0 < PokeBattle_Move_0EF
         @battle.pbStartWeather(user, :Moonglow, 6, false) unless @battle.primevalWeatherPresent?
     end
 end
+
+#===============================================================================
+# Target is frostbitten if in moonglow. (Night Chill)
+#===============================================================================
+class PokeBattle_Move_5B1 < PokeBattle_FrostbiteMove
+    def pbAdditionalEffect(user, target)
+        return unless @battle.pbWeather == :Moonglow
+        super
+    end
+
+    def getEffectScore(user, target)
+        return 0 unless @battle.pbWeather == :Moonglow
+        super
+    end
+end
+
+#===============================================================================
+# Target is burned if in eclipse. (Calamitous Slash)
+#===============================================================================
+class PokeBattle_Move_5B2 < PokeBattle_FrostbiteMove
+    def pbAdditionalEffect(user, target)
+        return unless @battle.pbWeather == :Moonglow
+        super
+    end
+
+    def getEffectScore(user, target)
+        return 0 unless @battle.pbWeather == :Moonglow
+        super
+    end
+end

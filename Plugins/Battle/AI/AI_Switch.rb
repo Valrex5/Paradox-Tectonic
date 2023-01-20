@@ -158,39 +158,6 @@ getRoughAttackingTypes(opposingBattler))
         return false
     end
 
-    def highDamageFromConfusion(battler, charm = false)
-        # Calculate the damage the confusionMove would do
-        confusionMove = charm ? PokeBattle_Charm.new(@battle, nil) : PokeBattle_Confusion.new(@battle, nil)
-        # Get the move's type
-        type = confusionMove.calcType
-        # Calcuate base power of move
-        baseDmg = confusionMove.pbBaseDamage(confusionMove.baseDamage, battler, battler)
-        # Calculate battler's attack stat
-        attacking_stat_holder, attacking_stat = confusionMove.pbAttackingStat(battler, battler)
-        defStage = attacking_stat_holder.stages[attacking_stat]
-        attack = battler.statAfterStage(attacking_stat, atkStage)
-        # Calculate battler's defense stat
-        defending_stat_holder, defending_stat = confusionMove.pbDefendingStat(battler, battler)
-        defStage = defending_stat_holder.stages[defending_stat]
-        defense = battler.statAfterStage(defending_stat, defStage)
-        # Calculate all multiplier effects
-        multipliers = {
-          :base_damage_multiplier  => 1.0,
-          :attack_multiplier       => 1.0,
-          :defense_multiplier      => 1.0,
-          :final_damage_multiplier => 1.0,
-        }
-        confusionMove.pbCalcDamageMultipliers(battler, battler, 1, type, baseDmg, multipliers)
-        # Main damage calculation
-        baseDmg = [(baseDmg * multipliers[:base_damage_multiplier]).round, 1].max
-        atk     = [(atk     * multipliers[:attack_multiplier]).round, 1].max
-        defense = [(defense * multipliers[:defense_multiplier]).round, 1].max
-        damage  = (((2.0 * battler.level / 5 + 2).floor * baseDmg * atk / defense).floor / 50).floor + 2
-        damage  = [(damage * multipliers[:final_damage_multiplier]).round, 1].max
-
-        return damage >= (battler.hp * 0.5).floor
-    end
-
     def pbDefaultChooseNewEnemy(idxBattler, _party)
         list = pbGetPartyWithSwapRatings(idxBattler)
         list.delete_if { |val| !@battle.pbCanSwitchLax?(idxBattler, val[0]) }
