@@ -599,7 +599,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:REFRESHMENTS,
 
 BattleHandlers::AbilityOnSwitchIn.add(:MENDINGTONES,
   proc { |_ability, battler, battle|
-      next unless battle.sunny?
+      next unless battle.pbWeather == :Eclipse
       lowestId = battler.index
       lowestPercent = battler.hp / battler.totalhp.to_f
       battler.eachAlly do |b|
