@@ -84,7 +84,7 @@ BattleHandlers::SpecialAttackCalcUserAbility.add(:BALANCEOFPOWER,
 )
 
 BattleHandlers::SpecialAttackCalcUserAbility.add(:SHATTERING,
-  proc { |_ability, _user, _battle, spAtkMult|
+  proc { |_ability, _user, battle, spAtkMult|
       spAtkMult *= 1.3 if battle.pbWeather == :Eclipse
       next spAtkMult
   }
