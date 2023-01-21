@@ -235,6 +235,7 @@ class PokeBattle_Battle
                 pbCommonAnimation("Eclipse")
                 anyAffected = false
                 priority.each do |b|
+                    next if b.fainted?
                     next unless b.debuffedByEclipse?
                     pbDisplay(_INTL("{1} is panicked!", b.pbThis))
                     allStats = [:ATTACK, 1, :DEFENSE, 1, :SPECIAL_ATTACK, 1, :SPECIAL_DEFENSE, 1, :SPEED, 1]
@@ -251,6 +252,7 @@ class PokeBattle_Battle
                 pbAnimation(:Moonglow, @battlers[0], [])
                 anyAffected = false
                 priority.each do |b|
+                    next if b.fainted?
                     next unless b.flinchedByMoonlight?
                     pbDisplay(_INTL("{1} is moonstruck! It'll flinch this turn!", b.pbThis))
                     b.pbFlinch
