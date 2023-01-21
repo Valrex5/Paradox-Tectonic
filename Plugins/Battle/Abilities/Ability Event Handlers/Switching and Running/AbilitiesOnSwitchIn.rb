@@ -556,7 +556,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:AQUASNEAK,
 BattleHandlers::AbilityOnSwitchIn.add(:NIGHTSTALKER,
   proc { |_ability, battler, battle|
       battle.pbShowAbilitySplash(battler)
-      battle.applyEffect(:NightStalker)
+      battler.applyEffect(:NightStalker)
       battle.pbHideAbilitySplash(battler)
   }
 )
