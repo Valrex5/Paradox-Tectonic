@@ -212,3 +212,23 @@ BattleHandlers::UserAbilityEndOfMove.add(:FLUSTERFLOCK,
 )
 
 BattleHandlers::UserAbilityEndOfMove.copy(:FLUSTERFLOCK, :HEADACHE)
+
+BattleHandlers::UserAbilityEndOfMove.add(:GENERATOR,
+  proc { |_ability, user, _targets, move, battle, _switchedBattlers|
+      next if battle.futureSight
+      next if move.pbDamagingMove?
+      battle.pbShowAbilitySplash(user)
+      user.applyEffect(:Charge, 2)
+      battle.pbHideAbilitySplash(user)
+  }
+)
+
+BattleHandlers::UserAbilityEndOfMove.add(:GENERATOR,
+  proc { |_ability, user, _targets, move, battle, _switchedBattlers|
+      next if battle.futureSight
+      next if move.pbDamagingMove?
+      battle.pbShowAbilitySplash(user)
+      user.applyEffect(:Charge, 2)
+      battle.pbHideAbilitySplash(user)
+  }
+)

@@ -2719,6 +2719,17 @@ class PokeBattle_Move_0E0 < PokeBattle_Move
 
     def pbSelfKO(user)
         return if user.fainted?
+
+        if user.hasActiveAbility?(:SPINESPLOSION)
+            spikesCount = user.pbOpposingSide.incrementEffect(:Spikes, GameData::BattleEffect.get(:Spikes).maximum)
+            
+            if spikesCount > 0
+                @battle.pbShowAbilitySplash(user)
+                @battle.pbDisplay(_INTL("#{spikesCount} layers of Spikes were scattered all around #{user.pbOpposingTeam(true)}'s feet!"))
+                @battle.pbHideAbilitySplash(user)
+            end
+        end
+
         if user.bunkeringDown?
             @battle.pbShowAbilitySplash(user)
             @battle.pbDisplay(_INTL("{1}'s {2} barely saves it!", user.pbThis, @name))

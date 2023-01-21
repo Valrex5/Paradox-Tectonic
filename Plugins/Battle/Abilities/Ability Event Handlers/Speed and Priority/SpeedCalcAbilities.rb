@@ -135,3 +135,9 @@ BattleHandlers::SpeedCalcAbility.add(:NIGHTVISION,
       next mult * 1.5 if battler.battle.pbWeather == :Moonglow
   }
 )
+
+BattleHandlers::SpeedCalcAbility.add(:LIGHTNINGRIDE,
+  proc { |_ability, battler, mult|
+      next mult * 2.0 if battler.effectActive?(:Charge)
+  }
+)

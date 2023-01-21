@@ -8,21 +8,9 @@ BattleHandlers::TargetAbilityOnHit.add(:SEEDSCATTER,
     }
 )
 
-BattleHandlers::TargetAbilityOnHit.add(:THUNDERSTRUCK,
-    proc { |_ability, _target, battler, _move, battle|
-        terrainSetAbility(:Electric, battler, battle)
-    }
-)
-
 BattleHandlers::TargetAbilityOnHit.add(:MISTCRAFT,
     proc { |_ability, _target, battler, _move, battle|
         terrainSetAbility(:Fairy, battler, battle)
-    }
-)
-
-BattleHandlers::TargetAbilityOnHit.add(:CLEVERRESPONSE,
-    proc { |_ability, _target, battler, _move, battle|
-        terrainSetAbility(:Psychic, battler, battle)
     }
 )
 
@@ -69,6 +57,12 @@ BattleHandlers::TargetAbilityOnHit.add(:LUNARLOYALTY,
 #########################################
 # Other
 #########################################
+
+BattleHandlers::TargetAbilityOnHit.add(:THUNDERSTRUCK,
+    proc { |_ability, _target, battler, _move, battle|
+        battler.applyEffect(:Charge,2)
+    }
+)
 
 BattleHandlers::TargetAbilityOnHit.add(:ANGERPOINT,
   proc { |_ability, _user, target, _move, battle|
