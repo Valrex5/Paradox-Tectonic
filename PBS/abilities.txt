@@ -538,6 +538,7 @@
 546,SUSTAINABLE,Sustainable,"Upon entry in sunshine, regenerates its used berry."
 547,OXYGENATION,Oxygenation,"Heals status problems each turn if in sunshine."
 548,LIVINGARMOR,Living Armor,"Heals 1/16th HP every turn. Protected against critical hits."
+549,VIBRATIONAL,Vibrational,"Moves that hit multiple targets deal 25% more damage instead of 25% less."
 1000,JUSTIFIED,Justified,"Raises Attack when hit by a Dark-type move."
 1001,ADAPTABILITY,Adaptability,"Powers up moves of the same type."
 1002,HUGEPOWER,Huge Power,"Raises the Pokémon's Attack stat."

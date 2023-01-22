@@ -233,7 +233,6 @@ BattleHandlers::UserAbilityEndOfMove.add(:GENERATOR,
   }
 )
 
-
 BattleHandlers::UserAbilityEndOfMove.add(:HEALINGHOPE,
   proc { |_ability, user, targets, _move, battle, _switchedBattlers|
       next if battle.pbAllFainted?(user.idxOpposingSide)

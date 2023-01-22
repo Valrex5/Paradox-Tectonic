@@ -349,7 +349,11 @@ class PokeBattle_Move
 
         # Multi-targeting attacks
         if numTargets > 1
-            multipliers[:final_damage_multiplier] *= 0.75
+            if user.shouldAbilityApply?(:VIBRATIONAL,aiChecking)
+                multipliers[:final_damage_multiplier] *= 1.25
+            else
+                multipliers[:final_damage_multiplier] *= 0.75
+            end
         end
 
         # Battler properites
