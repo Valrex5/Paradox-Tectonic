@@ -631,6 +631,23 @@ BattleHandlers::AbilityOnSwitchIn.add(:PEARLSEEKER,
   }
 )
 
+BattleHandlers::AbilityOnSwitchIn.add(:WHIRLER,
+  proc { |_ability, battler, battle|
+      trappingDuration = 3
+      trappingDuration *= 2 if battler.hasActiveItem?(:GRIPCLAW)
+
+      pbShowAbilitySplash(battler)
+      battler.eachOpposing do |b|
+        next if target.effectActive?(:Trapping)
+        target.applyEffect(:Trapping, trappingDuration)
+        target.applyEffect(:TrappingMove, :WHIRLPOOL)
+        target.pointAt(:TrappingUser, battler)
+        battle.pbDisplay(_INTL("{1} became trapped in the vortex!", b.pbThis))
+      end
+      pbHideAbilitySplash(battler)
+  }
+)
+
 #######################################################
 # Terrain setting abilities
 #######################################################
@@ -653,7 +670,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:PSYCHICSURGE,
   }
 )
 
-BattleHandlers::AbilityOnSwitchIn.add(:FairySURGE,
+BattleHandlers::AbilityOnSwitchIn.add(:FAIRYSURGE,
   proc { |_ability, battler, battle|
       next if battle.field.terrain == :Fairy
       battle.pbShowAbilitySplash(battler)
@@ -661,8 +678,6 @@ BattleHandlers::AbilityOnSwitchIn.add(:FairySURGE,
       # NOTE: The ability splash is hidden again in def pbStartTerrain.
   }
 )
-
-BattleHandlers::AbilityOnSwitchIn.copy(:FairySURGE, :FAIRYSURGE)
 
 BattleHandlers::AbilityOnSwitchIn.add(:ELECTRICSURGE,
   proc { |_ability, battler, battle|
