@@ -648,6 +648,21 @@ BattleHandlers::AbilityOnSwitchIn.add(:WHIRLER,
   }
 )
 
+BattleHandlers::AbilityOnSwitchIn.add(:SUSTAINABLE,
+  proc { |_ability, battler, battle|
+    next if battler.item
+    next if !battler.recycleItem || !GameData::Item.get(battler.recycleItem).is_berry?
+    next unless battle.sunny?
+    battle.pbShowAbilitySplash(battler)
+    battler.item = battler.recycleItem
+    battler.setRecycleItem(nil)
+    battler.setInitialItem(battler.item) unless battler.initialItem
+    battle.pbDisplay(_INTL("{1} regrew one {2}!", battler.pbThis, battler.itemName))
+    battle.pbHideAbilitySplash(battler)
+    battler.pbHeldItemTriggerCheck
+  }
+)
+
 #######################################################
 # Terrain setting abilities
 #######################################################

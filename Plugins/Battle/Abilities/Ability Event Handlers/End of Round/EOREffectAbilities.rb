@@ -125,3 +125,9 @@ BattleHandlers::EOREffectAbility.add(:TENDERIZE,
       end
   }
 )
+
+BattleHandlers::EOREffectAbility.add(:LIVINGARMOR,
+  proc { |_ability, battler, battle|
+      battler.applyFractionalHealing(1.0 / 16.0, showAbilitySplash: true)
+  }
+)

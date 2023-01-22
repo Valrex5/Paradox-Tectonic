@@ -232,3 +232,14 @@ BattleHandlers::UserAbilityEndOfMove.add(:GENERATOR,
       battle.pbHideAbilitySplash(user)
   }
 )
+
+
+BattleHandlers::UserAbilityEndOfMove.add(:HEALINGHOPE,
+  proc { |_ability, user, targets, _move, battle, _switchedBattlers|
+      next if battle.pbAllFainted?(user.idxOpposingSide)
+      numFainted = 0
+      targets.each { |b| numFainted += 1 if b.damageState.fainted }
+      next if numFainted == 0
+      battle.forceUseMove(user, :WISH, user.index, true, nil, nil, true)
+  }
+)
