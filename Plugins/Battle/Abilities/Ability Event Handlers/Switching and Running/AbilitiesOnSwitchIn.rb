@@ -1,3 +1,47 @@
+#######################################################
+# Terrain setting abilities
+#######################################################
+
+BattleHandlers::AbilityOnSwitchIn.add(:GRASSYSURGE,
+  proc { |_ability, battler, battle|
+      next if battle.field.terrain == :Grassy
+      battle.pbShowAbilitySplash(battler)
+      battle.pbStartTerrain(battler, :Grassy)
+      # NOTE: The ability splash is hidden again in def pbStartTerrain.
+  }
+)
+
+BattleHandlers::AbilityOnSwitchIn.add(:PSYCHICSURGE,
+  proc { |_ability, battler, battle|
+      next if battle.field.terrain == :Psychic
+      battle.pbShowAbilitySplash(battler)
+      battle.pbStartTerrain(battler, :Psychic)
+      # NOTE: The ability splash is hidden again in def pbStartTerrain.
+  }
+)
+
+BattleHandlers::AbilityOnSwitchIn.add(:FAIRYSURGE,
+  proc { |_ability, battler, battle|
+      next if battle.field.terrain == :Fairy
+      battle.pbShowAbilitySplash(battler)
+      battle.pbStartTerrain(battler, :Fairy)
+      # NOTE: The ability splash is hidden again in def pbStartTerrain.
+  }
+)
+
+BattleHandlers::AbilityOnSwitchIn.add(:ELECTRICSURGE,
+  proc { |_ability, battler, battle|
+      next if battle.field.terrain == :Electric
+      battle.pbShowAbilitySplash(battler)
+      battle.pbStartTerrain(battler, :Electric)
+      # NOTE: The ability splash is hidden again in def pbStartTerrain.
+  }
+)
+
+#######################################################
+# Other abilities
+#######################################################
+
 BattleHandlers::AbilityOnSwitchIn.add(:AIRLOCK,
   proc { |_ability, battler, battle|
       battle.pbShowAbilitySplash(battler)
@@ -663,42 +707,22 @@ BattleHandlers::AbilityOnSwitchIn.add(:SUSTAINABLE,
   }
 )
 
-#######################################################
-# Terrain setting abilities
-#######################################################
-
-BattleHandlers::AbilityOnSwitchIn.add(:GRASSYSURGE,
+BattleHandlers::AbilityOnSwitchIn.add(:COTTONDECOY,
   proc { |_ability, battler, battle|
-      next if battle.field.terrain == :Grassy
-      battle.pbShowAbilitySplash(battler)
-      battle.pbStartTerrain(battler, :Grassy)
-      # NOTE: The ability splash is hidden again in def pbStartTerrain.
+    next if battler.substituted?
+    next unless battler.hp > battler.totalhp / 4
+    battler.createSubstitute
   }
 )
 
-BattleHandlers::AbilityOnSwitchIn.add(:PSYCHICSURGE,
+BattleHandlers::AbilityOnSwitchIn.add(:KLEPTOMANIAC,
   proc { |_ability, battler, battle|
-      next if battle.field.terrain == :Psychic
-      battle.pbShowAbilitySplash(battler)
-      battle.pbStartTerrain(battler, :Psychic)
-      # NOTE: The ability splash is hidden again in def pbStartTerrain.
+      battle.forceUseMove(battler, :SNATCH, -1, true, nil, nil, true)
   }
 )
 
-BattleHandlers::AbilityOnSwitchIn.add(:FAIRYSURGE,
+BattleHandlers::AbilityOnSwitchIn.add(:ASSISTANT,
   proc { |_ability, battler, battle|
-      next if battle.field.terrain == :Fairy
-      battle.pbShowAbilitySplash(battler)
-      battle.pbStartTerrain(battler, :Fairy)
-      # NOTE: The ability splash is hidden again in def pbStartTerrain.
-  }
-)
-
-BattleHandlers::AbilityOnSwitchIn.add(:ELECTRICSURGE,
-  proc { |_ability, battler, battle|
-      next if battle.field.terrain == :Electric
-      battle.pbShowAbilitySplash(battler)
-      battle.pbStartTerrain(battler, :Electric)
-      # NOTE: The ability splash is hidden again in def pbStartTerrain.
+      battle.forceUseMove(battler, :ASSIST, -1, true, nil, nil, true)
   }
 )

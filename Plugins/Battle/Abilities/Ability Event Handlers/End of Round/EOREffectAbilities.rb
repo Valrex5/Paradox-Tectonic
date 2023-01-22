@@ -131,3 +131,19 @@ BattleHandlers::EOREffectAbility.add(:LIVINGARMOR,
       battler.applyFractionalHealing(1.0 / 16.0, showAbilitySplash: true)
   }
 )
+
+BattleHandlers::EOREffectAbility.add(:VITALRHYTHM,
+  proc { |_ability, battler, battle|
+      canHealAny = false
+      battler.eachAlly do |b|
+        canHealAny = true if b.canHeal?
+      end
+      next unless canHealAny
+      battle.pbShowAbilitySplash(battler)
+      battler.applyFractionalHealing(1.0 / 16.0)
+      battler.eachAlly do |b|
+        b.applyFractionalHealing(1.0 / 16.0)
+      end
+      battle.pbHideAbilitySplash(battler)
+  }
+)

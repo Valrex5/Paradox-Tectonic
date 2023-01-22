@@ -550,4 +550,18 @@ class PokeBattle_Battler
     end
 
     def pbHyperMode; end
+
+    def getSubLife
+        subLife = @totalhp / 4
+        subLife = 1 if subLife < 1
+        return subLife.floor
+    end
+
+    def createSubstitute
+        subLife = getSubLife
+        pbReduceHP(subLife, false, false)
+        pbItemHPHealCheck
+        disableEffect(:Trapping)
+        applyEffect(:Substitute, subLife)
+    end
 end

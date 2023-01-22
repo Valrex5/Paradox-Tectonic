@@ -207,7 +207,7 @@ class PokeBattle_Move_10C < PokeBattle_Move
             return true
         end
 
-        if user.hp <= getSubLife(user)
+        if user.hp <= user.getSubLife
             if show_message
                 @battle.pbDisplay(_INTL("But it failed, since #{user.pbThis(true)} does not have enough HP left to make a substitute!"))
             end
@@ -216,18 +216,8 @@ class PokeBattle_Move_10C < PokeBattle_Move
         return false
     end
 
-    def getSubLife(battler)
-        subLife = battler.totalhp / 4
-        subLife = 1 if subLife < 1
-        return subLife.floor
-    end
-
     def pbEffectGeneral(user)
-        subLife = getSubLife(user)
-        user.pbReduceHP(subLife, false, false)
-        user.pbItemHPHealCheck
-        user.disableEffect(:Trapping)
-        user.applyEffect(:Substitute, subLife)
+        user.createSubstitute
     end
 
     def getEffectScore(user, _target)
