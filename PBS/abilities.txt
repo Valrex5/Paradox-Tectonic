@@ -543,7 +543,7 @@
 551,VITALRHYTHM,Vital Rhythm,"At the end of each turn, itself and each ally heals for 1/16th of their HP."
 552,KLEPTOMANIAC,Kleptomanic,"Uses Snatch upon entry, stealing self-targeting status moves."
 553,ASSISTANT,Assistant,"Uses Assist upon entry, copying a random team-mates move."
-554,METALCOVER,"Prevents other Pokémon from lowering its stat stages. Immune to weather downsides."
+554,METALCOVER,Prevents other Pokémon from lowering its stat stages. Immune to weather downsides.,
 1000,JUSTIFIED,Justified,"Raises Attack when hit by a Dark-type move."
 1001,ADAPTABILITY,Adaptability,"Powers up moves of the same type."
 1002,HUGEPOWER,Huge Power,"Raises the Pokémon's Attack stat."

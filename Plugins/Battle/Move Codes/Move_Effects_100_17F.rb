@@ -2491,7 +2491,7 @@ end
 
 # TODO: create a "targeting healing move" parent class
 #===============================================================================
-# Heals target by 1/2 of its max HP, or 2/3 of its max HP in Grassy Terrain.
+# Heals target by 1/2 of its max HP, or 2/3 of its max HP in moonglow.
 # (Floral Healing)
 #===============================================================================
 class PokeBattle_Move_16E < PokeBattle_Move
@@ -2509,7 +2509,7 @@ class PokeBattle_Move_16E < PokeBattle_Move
     end
 
     def pbEffectAgainstTarget(_user, target)
-        if @battle.field.terrain == :Grassy
+        if @battle.pbWeather == :Moonglow
             ratio = 2.0 / 3.0
         else
             ratio = 1.0 / 2.0
@@ -2519,7 +2519,7 @@ class PokeBattle_Move_16E < PokeBattle_Move
 
     def getEffectScore(user, target)
         magnitude = 3
-        magnitude = 6 if @battle.field.terrain == :Grassy
+        magnitude = 5 if @battle.pbWeather == :Moonglow
         return getHealingEffectScore(user, target, magnitude)
     end
 
