@@ -3497,7 +3497,7 @@ class PokeBattle_Move_0F7 < PokeBattle_Move
         # 10 => all Berries
         @flingPowers = {
           130 => [:IRONBALL],
-          100 => [:HARDSTONE, :RAREBONE,
+          100 => [:HARDSTONE, :RAREBONE, :PEARLOFFATE
                   # Fossils
                   :ARMORFOSSIL, :CLAWFOSSIL, :COVERFOSSIL, :DOMEFOSSIL, :HELIXFOSSIL,
                   :JAWFOSSIL, :OLDAMBER, :PLUMEFOSSIL, :ROOTFOSSIL, :SAILFOSSIL,
@@ -3670,6 +3670,8 @@ class PokeBattle_Move_0F7 < PokeBattle_Move
             target.applyNumb(user) if target.canNumb?(user, false, self)
         when :KINGSROCK, :RAZORFANG
             target.pbFlinch(user)
+        when :PEARLOFFATE
+            target.applyDizzy(user) if target.canDizzy?(user, false, self)
         else
             target.pbHeldItemTriggerCheck(user.item, true)
         end
