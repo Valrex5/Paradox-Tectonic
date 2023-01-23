@@ -1059,3 +1059,4 @@
 1100,MIDNIGHTHUNT,Midnight Hunt,5B0,0,DARK,Status,0,5,0,NearFoe,0,,"Summons moonglow for six turns. The target is terrorized by howls, trapping it.",
 1101,NIGHTCHILL,Night Chill,5B1,80,DARK,Special,100,12,0,NearOther,0,bef,"Damages the target's life force directly. During moonglow, the target also becomes frostbitten.",DARKVOID
 1102,CALAMITOUSSLASH,Calamitous Slash,5B2,80,DRAGON,Physical,100,10,20,NearOther,0,abefp,"The user slashes the foe while menacing. During eclipse, the target also becomes burned.",DRAGONCLAW
+1103,TAKESHELTER,Take Shelter,5B3,0,STEEL,Status,0,10,0,User,0,d,"The user heals itself for 1/2 of its max HP, and extends the current weather by 1 turn.",

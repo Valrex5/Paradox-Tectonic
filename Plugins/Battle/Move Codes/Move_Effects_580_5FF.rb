@@ -966,3 +966,18 @@ class PokeBattle_Move_5B2 < PokeBattle_FrostbiteMove
         super
     end
 end
+
+#===============================================================================
+# Heals user by 1/2 of their HP.
+# In any weather, increases the duration of the weather by 1. (Take Shelter)
+#===============================================================================
+class PokeBattle_Move_5B3 < PokeBattle_HalfHealingMove
+    def pbEffectGeneral(user)
+        super
+        if @battle.field.pbWeather != :None
+            @battle.field.weatherDuration += 1
+            weatherName = GameData::BattleWeather.get(@battle.field.weather).real_name
+            @battle.pbDisplay(_INTL("The {1} extends by 1 turn!",weatherName))
+        end
+    end
+end
