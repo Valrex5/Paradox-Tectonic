@@ -402,7 +402,7 @@ class PokeBattle_Move_195 < PokeBattle_Move
 end
 
 #===============================================================================
-# User loses half their max health. Boosted Damage in Moonglow (Misty Explosion)
+# User loses half their max health. Boosted Damage in Moonglow (Moon Burst)
 #===============================================================================
 class PokeBattle_Move_196 < PokeBattle_Move_0E0
     def pbBaseDamage(baseDmg, user, _target)
