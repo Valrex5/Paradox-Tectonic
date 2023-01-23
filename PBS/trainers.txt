@@ -411,38 +411,38 @@ Pokemon = MORELULL,19
     AbilityIndex = 1
 #-------------------------------
 [LEADER_Helena,Helena]
-Policies = HELENA
+Policies = HELENA,PRIORITIZEUTURN
 Pokemon = LANTURN,25
-    Moves = DOUSE,SHOCKWAVE,VOLTSWITCH,EERIEIMPULSE
+    Moves = DOUSE,SHOCKWAVE,VOLTSWITCH
     AbilityIndex = 0
-Pokemon = CHARJABUG,25
-    Moves = STRINGSHOT,SIGNALBEAM,LIGHTSHOW,SHOCKWAVE
+Pokemon = KINGLER,25
+    Moves = UTURN,RAZORSHELL,INCISION,GREYMIST
     AbilityIndex = 0
-    Item = SITRUSBERRY
 Pokemon = WAILMER,25
     Name = Hannibal
     Gender = male
-    Moves = NOBLEROAR,CHILL,BOREALWIND,BRINE
+    Moves = DEFOG,CHILL,BOREALWIND,BRINE
     AbilityIndex = 1
 Pokemon = LUXIO,25
-    Moves = FEINTATTACK,THUNDERFANG,ROAR,MAGNETRISE
+    Moves = FEINTATTACK,THUNDERFANG,ROAR,ICEFANG
     AbilityIndex = 1
 #-------------------------------
 [LEADER_Helena_2,Helena]
 Extends = LEADER_Helena,Helena,0
 Pokemon = WAILMER,25
-    Item = ELECTRICSEED
-Pokemon = PINCURCHIN,25
-    Moves = SPARK,PECK,BUBBLEBEAM,VENOSHOCK
+    Item = LEFTOVERS
+Pokemon = PRINPLUP,25
+    Moves = FLIPTURN,AERIALACE,MIRRORSHOT,BUBBLEBEAM
     AbilityIndex = 0
-    Item = EJECTBUTTON
-Pokemon = CLAUNCHER,25
-    Moves = BOREALWIND,AQUAJET,WATERPULSE,FLIPTURN
-    AbilityIndex = 0
+    Item = ASSAULTVEST
+Pokemon = TOXTRICITY,25
+    Moves = VOLTSWITCH,POISONGAS,PROTECT,STINKCLOUD
+    AbilityIndex = 1
+    Item = LEFTOVERS
 #-------------------------------
 [LEADER_Helena_2,Helena,1]
 ExtendsVersion = 0
-Policies = CURSE_BOOSTED_ELECTRIC
+Policies = CURSE_SPIKES
 #-------------------------------
 [IDOL,Ishizu]
 Pokemon = JIGGLYPUFF,25
