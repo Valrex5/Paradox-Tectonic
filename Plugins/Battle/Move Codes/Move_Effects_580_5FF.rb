@@ -981,3 +981,16 @@ class PokeBattle_Move_5B3 < PokeBattle_HalfHealingMove
         end
     end
 end
+
+#===============================================================================
+# Target falls asleep. Can only be used during the Full Moon. (Bedtime.)
+#===============================================================================
+class PokeBattle_Move_5B4 < PokeBattle_SleepMove
+    def pbMoveFailed?(user, _targets, show_message)
+        unless @battle.fullMoon?
+            @battle.pbDisplay(_INTL("But it failed, since it isn't a Full Moon!")) if show_message
+            return true
+        end
+        return false
+    end
+end

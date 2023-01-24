@@ -27,6 +27,7 @@ BattleHandlers::TargetAbilityAfterMoveUse.add(:MOONLIGHTER,
       next if switched.include?(user.index)
       next unless move.pbDamagingMove?
       next if battle.futureSight
+      next unless battle.pbWeather == :Moonglow
       if move.canStealItem(user,target)
         move.stealItem(target, user, true)
       else
