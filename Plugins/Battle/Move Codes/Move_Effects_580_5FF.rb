@@ -974,10 +974,8 @@ end
 class PokeBattle_Move_5B3 < PokeBattle_HalfHealingMove
     def pbEffectGeneral(user)
         super
-        if @battle.field.pbWeather != :None
-            @battle.field.weatherDuration += 1
-            weatherName = GameData::BattleWeather.get(@battle.field.weather).real_name
-            @battle.pbDisplay(_INTL("The {1} extends by 1 turn!",weatherName))
+        if @battle.pbWeather != :None
+            @battle.extendWeather(1)
         end
     end
 end

@@ -105,6 +105,13 @@ BattleHandlers::AttackCalcUserAbility.add(:LUNATIC,
   }
 )
 
+BattleHandlers::AttackCalcUserAbility.add(:FULLMOONBLADE,
+  proc { |_ability, _user, battle, attackMult|
+      attackMult *= 2.0 if battle.fullMoon?
+      next attackMult
+  }
+)
+
 BattleHandlers::AttackCalcUserAbility.add(:ONEDGE,
   proc { |_ability, _user, battle, attackMult|
       attackMult *= 1.5 if battle.field.terrain == :Moonglow

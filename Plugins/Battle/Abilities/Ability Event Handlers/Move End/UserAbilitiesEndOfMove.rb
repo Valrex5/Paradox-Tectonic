@@ -242,3 +242,14 @@ BattleHandlers::UserAbilityEndOfMove.add(:HEALINGHOPE,
       battle.forceUseMove(user, :WISH, user.index, true, nil, nil, true)
   }
 )
+
+BattleHandlers::UserAbilityEndOfMove.add(:MIDNIGHTOIL,
+  proc { |_ability, user, _targets, move, battle, _switchedBattlers|
+      next if battle.futureSight
+      next if move.pbDamagingMove?
+      next unless battle.pbWeather == :Moonglow
+      battle.pbShowAbilitySplash(user)
+      battle.extendWeather(1)
+      battle.pbHideAbilitySplash(user)
+  }
+)

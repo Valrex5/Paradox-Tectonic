@@ -53,3 +53,10 @@ BattleHandlers::SpecialDefenseCalcUserAbility.add(:WARPINGEFFECT,
         next spDefMult
     }
 )
+
+BattleHandlers::SpecialDefenseCalcUserAbility.add(:MOONBUBBLE,
+    proc { |_ability, _user, battle, spDefMult|
+        spDefMult *= 2 if battle.pbWeather == :Moonglow
+        next spDefMult
+    }
+)
