@@ -92,15 +92,6 @@ BattleHandlers::DamageCalcUserAbility.add(:RIVALRY,
   }
 )
 
-BattleHandlers::DamageCalcUserAbility.add(:SANDFORCE,
-  proc { |_ability, user, _target, _move, mults, _baseDmg, type, _aiCheck|
-      if user.battle.pbWeather == :Sandstorm &&
-         %i[ROCK GROUND STEEL].include?(type)
-          mults[:base_damage_multiplier] *= 1.3
-      end
-  }
-)
-
 BattleHandlers::DamageCalcUserAbility.add(:SHEERFORCE,
   proc { |_ability, _user, _target, move, mults, _baseDmg, _type, _aiCheck|
       mults[:base_damage_multiplier] *= 1.3 if move.effectChance > 0

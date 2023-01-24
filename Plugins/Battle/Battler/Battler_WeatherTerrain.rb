@@ -41,7 +41,7 @@ checkingForAI) || shouldAbilityApply?(synergyAbilities, checkingForAI)
         return false if hasActiveItem?(:SAFETYGOGGLES)
         return false if shouldTypeApply?(:GROUND,checkingForAI) || shouldTypeApply?(:ROCK,	checkingForAI)
         setterAbilities = %i[SANDSTREAM SANDBURST]
-        synergyAbilities = %i[OVERCOAT SANDFORCE SANDRUSH SANDSHROUD DESERTSPIRITBURROWER SHRAPNELSTORM HARSHHUNTER]
+        synergyAbilities = %i[SANDPOWER SANDRUSH SANDSHROUD DESERTSPIRIT SHRAPNELSTORM HARSHHUNTER]
         return false if shouldAbilityApply?(setterAbilities,
 checkingForAI) || shouldAbilityApply?(synergyAbilities, checkingForAI)
         return true
@@ -53,7 +53,7 @@ checkingForAI) || shouldAbilityApply?(synergyAbilities, checkingForAI)
         return false if hasActiveItem?(:SAFETYGOGGLES)
         return false if shouldTypeApply?(:ICE, checkingForAI) || shouldTypeApply?(:GHOST,	checkingForAI)
         setterAbilities = %i[SNOWWARNING FROSTSCATTER]
-        synergyAbilities = %i[OVERCOAT ICEBODY SNOWSHROUD BLIZZBOXER SLUSHRUSH ICEFACEBITTERCOLD ECTOPARTICLES]
+        synergyAbilities = %i[ICEBODY SNOWSHROUD BLIZZBOXER SLUSHRUSH ICEFACEBITTERCOLD ECTOPARTICLES]
         return false if shouldAbilityApply?(setterAbilities,
 checkingForAI) || shouldAbilityApply?(synergyAbilities, checkingForAI)
         return true

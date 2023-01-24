@@ -321,7 +321,7 @@ class PokeBattle_Move
         
         if aiChecking
             # Parental Bond
-            if user.hasActiveAbility?(:PARENTALBOND)
+            if user.hasActiveAbility?(:PARENTALBOND) || (user.hasActiveAbility?(:STRIKESTWICE) && @battle.rainy?)
                 multipliers[:base_damage_multiplier] *= 1.25
             end
         else

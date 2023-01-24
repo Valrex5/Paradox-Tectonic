@@ -106,8 +106,12 @@ target.pbThis(true)))
     def pbDamagingMove?; return damagingMove?; end
 
     def canParentalBond?(user, targets, checkingForAI = false)
-        return user.shouldAbilityApply?(:PARENTALBOND,
-checkingForAI) && pbDamagingMove? && !chargingTurnMove? && targets.length == 1
+        return false unless pbDamagingMove?
+        return false if chargingTurnMove?
+        return false unless targets.length == 1
+        return true if user.shouldAbilityApply?(:PARENTALBOND,checkingForAI)
+        return true if user.shouldAbilityApply?(:STRIKESTWICE,checkingForAI) && @battle.rainy?
+        return false
     end
 
     def numberOfHits(user, targets, checkingForAI = false)

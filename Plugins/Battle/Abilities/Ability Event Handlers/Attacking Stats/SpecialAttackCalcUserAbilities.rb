@@ -96,3 +96,17 @@ BattleHandlers::SpecialAttackCalcUserAbility.add(:NIGHTLIGHT,
       next spAtkMult
   }
 )
+
+BattleHandlers::SpecialAttackCalcUserAbility.add(:SANDPOWER,
+  proc { |_ability, _user, battle, spAtkMult|
+      spAtkMult *= 1.3 if battle.pbWeather == :Sandstorm
+      next spAtkMult
+  }
+)
+
+BattleHandlers::SpecialAttackCalcUserAbility.add(:OVERWHELM,
+  proc { |_ability, _user, battle, spAtkMult|
+      spAtkMult *= 1.3 if battle.rainy?
+      next spAtkMult
+  }
+)
