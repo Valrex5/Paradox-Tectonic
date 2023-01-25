@@ -253,3 +253,14 @@ BattleHandlers::UserAbilityEndOfMove.add(:MIDNIGHTOIL,
       battle.pbHideAbilitySplash(user)
   }
 )
+
+BattleHandlers::UserAbilityEndOfMove.add(:ICEQUEEN,
+  proc { |_ability, user, _targets, move, battle, _switchedBattlers|
+      next if battle.futureSight
+      next unless move.pbDamagingMove?
+      next unless battle.pbWeather == :Hail
+      battle.pbShowAbilitySplash(user)
+      battler.pbRecoverHPFromMultiDrain(targets, 0.50)
+      battle.pbHideAbilitySplash(user)
+  }
+)

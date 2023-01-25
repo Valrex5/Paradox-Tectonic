@@ -547,6 +547,7 @@
 554,METALCOVER,Metal Cover,"Prevents other Pokémon from lowering its stat stages. Immune to weather downsides."
 555,STRIKETWICE,Strikes Twice,"In rain, each of its hits is followed by an extra hit at 25% power."
 556,MOONBUBBLE,Moon Bubble,"Doubles Sp. Def in moonglow."
+557,ICEQUEEN,Ice Queen,"During hail, it restores its HP by half the damage it deals with attacks."
 1000,JUSTIFIED,Justified,"Raises Attack when hit by a Dark-type move."
 1001,ADAPTABILITY,Adaptability,"Powers up moves of the same type."
 1002,HUGEPOWER,Huge Power,"Raises the Pokémon's Attack stat."
