@@ -15,3 +15,9 @@ MultipleForms.register(:GYARADOS, {
       next 0 if pkmn.form == 1 && (pkmn.fainted? || endBattle)
   },
 })
+
+MultipleForms.register(:LYCANROC, {
+  "getFormOnLeavingBattle" => proc { |pkmn, _battle, _usedInBattle, endBattle|
+      next 0 if pkmn.form == 1 && (pkmn.fainted? || endBattle)
+  },
+})

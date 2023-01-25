@@ -9,6 +9,7 @@ ItemHandlers::UseOnPokemon.add(:UNIVERSALFORMALIZER,proc { |item,pkmn,scene|
 		GameData::Species.each do |species_data|
 			next unless species_data.species == species
 			next if species_data.form == pkmn.form
+			next if species_data.species == :LYCANROC && species_data.form == 1
 			possibleForms.push(species_data)
 			possibleFormNames.push(species_data.real_form_name)
 		end
