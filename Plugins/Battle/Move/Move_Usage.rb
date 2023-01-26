@@ -29,7 +29,10 @@ class PokeBattle_Move
         end
     end
 
-    def calculateCategory(_user, _targets); return -1; end
+    def calculateCategory(user, targets)
+        return selectBestCategory(user, targets[0]) if user.hasActiveAbility?(:MYSTICFIST)
+        return -1
+    end
 
     #=============================================================================
     # Methods for displaying stuff when the move is used

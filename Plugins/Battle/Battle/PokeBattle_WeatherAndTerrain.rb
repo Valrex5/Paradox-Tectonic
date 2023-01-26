@@ -237,9 +237,10 @@ class PokeBattle_Battle
     def pbSORWeather(priority)
         curWeather = pbWeather
 
-        # Eclipse and Moonlight specials
-        @field.specialTimer += 1 if [:Moonglow,:Eclipse].include?(curWeather)
-        if @field.specialTimer == SPECIAL_EFFECT_WAIT_TURNS
+        @field.specialTimer += 1
+        @field.specialTimer += 1 if weatherSpedUp?
+
+        if @field.specialTimer >= SPECIAL_EFFECT_WAIT_TURNS
             case curWeather
             when :Eclipse
                 pbDisplay(_INTL("The Total Eclipse arrives!"))
@@ -282,16 +283,13 @@ class PokeBattle_Battle
         end
     end
 
-    #=============================================================================
-    # End Of Round weather
-    #=============================================================================
-    def pbEORWeather(priority)
-        PBDebug.log("[DEBUG] Counting down weathers")
-
+    # Returns true if the weather went away
+    def tickDownWeather
         # NOTE: Primordial weather doesn't need to be checked here, because if it
         #       could wear off here, it will have worn off already.
         # Count down weather duration
         @field.weatherDuration -= 1 if @field.weatherDuration > 0
+
         # Weather wears off
         if @field.weatherDuration == 0
             endWeather
@@ -302,6 +300,24 @@ class PokeBattle_Battle
             pbStartWeather(nil, @field.defaultWeather) if @field.defaultWeather != :None
             return if @field.weather == :None
         end
+    end
+
+    def weatherSpedUp?
+        return true if pbWeather == :Eclipse && pbCheckGlobalAbility(:EPHEMERATE)
+        return true if pbWeather == :Moonglow && pbCheckGlobalAbility(:SOLSTICE)
+        return false
+    end
+
+    #=============================================================================
+    # End Of Round weather
+    #=============================================================================
+    def pbEORWeather(priority)
+        PBDebug.log("[DEBUG] Counting down weathers")
+
+        return if tickDownWeather
+
+        # Tick down twice if weathers are being sped up
+        return if weatherSpedUp? && tickDownWeather
 
         # Weather continues
         weather_data = GameData::BattleWeather.try_get(@field.weather)
@@ -357,7 +373,22 @@ class PokeBattle_Battle
             when :Moonglow
                 if b.pbHasType?(:FAIRY)
                     healingMessage = _INTL("{1} absorbs the moonlight!", b.pbThis)
-                    b.applyFractionalHealing(1.0 / 16.0, showMessage: showWeatherMessages, customMessage: healingMessage)
+                    healingAmount = b.applyFractionalHealing(1.0 / 16.0, showMessage: showWeatherMessages, customMessage: healingMessage)
+                    if healingAmount > 0 && b.hasActiveAbility?(:NIGHTLINE)
+                        potentialHeals = []
+                        @battle.pbParty(b.index).each_with_index do |pkmn,index|
+                            next if pkmn.fainted?
+                            next if pkmn.hp == pkmn.totalhp
+                            potentialHeals.push(pkmn)
+                        end
+                        unless potentialHeals.empty?
+                            healTarget = potentialHeals.sample
+                            pbDisplay(_INTL("{1} shares the healing with #{healTarget.name}!"))
+                            newHP = pkmn.hp + healingAmount
+                            newHP = pkmn.totalhp if newHP > pkmn.totalhp
+                            pkmn.hp = newHP
+                        end
+                    end
                 end
             end
         end
