@@ -275,7 +275,7 @@ class PokeBattle_Battle
                     BattleHandlers.triggerFullMoonAbility(b.ability, b, self)
                 end
             end
-            @field.specialTimer = 1
+            @field.specialTimer = 0
             @field.specialWeatherEffect = true
         else
             @field.specialWeatherEffect = false
