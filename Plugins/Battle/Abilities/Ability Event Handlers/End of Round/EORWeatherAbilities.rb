@@ -14,6 +14,14 @@ BattleHandlers::EORWeatherAbility.add(:RAINDISH,
   }
 )
 
+BattleHandlers::EORWeatherAbility.add(:ROCKBODY,
+    proc { |_ability, _weather, battler, battle|
+        next unless weather == :Sandstorm
+        healingMessage = _INTL("{1} incorporates sand into its body.", battler.pbThis)
+        battler.applyFractionalHealing(1.0 / 8.0, showAbilitySplash: true, customMessage: healingMessage)
+    }
+  )
+
 BattleHandlers::EORWeatherAbility.add(:DRYSKIN,
   proc { |_ability, _weather, battler, battle|
       if battle.sunny?
