@@ -89,7 +89,6 @@ GameData::BattleEffect.register_effect(:Battler, {
     :real_name => "Charged",
     :type => :Integer,
     :ticks_down => true,
-    :resets_battlers_eot => true,
     :apply_proc => proc do |battle, battler, _value|
         battle.pbDisplay(_INTL("{1} began charging power!", battler.pbThis))
     end,
@@ -1500,6 +1499,16 @@ GameData::BattleEffect.register_effect(:Battler, {
     end,
 })
 
+GameData::BattleEffect.register_effect(:Battler, {
+    :id => :VolatileToxin,
+    :real_name => "Volatile Toxin",
+    :apply_proc => proc do |battle, battler, _value|
+        battle.pbDisplay(_INTL("The next Ground-type attack against {1} will deal double damage!",
+battler.pbThis(true)))
+    end,
+})
+
+
 #######################################################
 # Protection effects
 #######################################################
@@ -1531,6 +1540,7 @@ GameData::BattleEffect.register_effect(:Battler, {
 GameData::BattleEffect.register_effect(:Battler, {
     :id => :Obstruct,
     :real_name => "Obstruct",
+    :resets_eor	=> true,
     :protection_info => {
         :hit_proc => proc do |user, _target, move, _battle|
             user.tryLowerStat(:DEFENSE, user, increment: 2) if move.physicalMove?
@@ -1541,6 +1551,7 @@ GameData::BattleEffect.register_effect(:Battler, {
 GameData::BattleEffect.register_effect(:Battler, {
     :id => :ReverbWard,
     :real_name => "Reverb Ward",
+    :resets_eor	=> true,
     :protection_info => {
         :hit_proc => proc do |user, _target, move, _battle|
             user.tryLowerStat(:SPECIAL_DEFENSE, user, increment: 2) if move.specialMove?
@@ -1625,4 +1636,4 @@ GameData::BattleEffect.register_effect(:Battler, {
         battle.pbDisplay(_INTL("{1} will strike from the shadows!",battler.pbThis))
     end,
 }
-)
+})

@@ -52,7 +52,7 @@ class PokeBattle_Battler
         return 0 unless takesIndirectDamage?
         oldHP = @hp
         fraction /= BOSS_HP_BASED_EFFECT_RESISTANCE if boss?
-        fraction *= 2 if @battle.pbCheckOpposingAbility(:AGGRAVATE, @index)
+        fraction *= 1.5 if @battle.pbCheckOpposingAbility(:AGGRAVATE, @index)
         if basedOnCurrentHP
             reduction = (@hp * fraction).ceil
         else
@@ -100,7 +100,7 @@ class PokeBattle_Battler
         @battle.pbDisplay(recoilMessage) if showMessage
         pbReduceHP(damage, showDamageAnimation)
 
-        if cushionRecoil
+        if !cushionRecoil
             pbHealthLossChecks(oldHP)
         elsif pbEntryHealthLossChecks(oldHP)
             @battle.pbOnActiveOne(self)

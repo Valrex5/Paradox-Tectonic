@@ -28,3 +28,17 @@ ItemHandlers::UseOnPokemon.add(:UNIVERSALFORMALIZER,proc { |item,pkmn,scene|
 		next false
 	end
 })
+
+
+def getFormSelectionChoices(species,currentForm=0)
+	possibleForms = []
+	possibleFormNames = []
+	GameData::Species.each do |species_data|
+		next unless species_data.species == species
+		next if species_data.form == currentForm
+		possibleForms.push(species_data)
+		possibleFormNames.push(species_data.real_form_name)
+	end
+	possibleFormNames.push(_INTL("Cancel"))
+	return [possibleForms, possibleFormNames]
+end

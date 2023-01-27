@@ -236,6 +236,7 @@ Land,20
     25,TIMBURR,14,17
 Puddle,21
     25,BARBOACH,14,17
+    25,BINACLE,14,17
     25,FEEBAS,14,17
     25,MAGIKARP,14,17
     25,TAILLOW,14,17
@@ -265,10 +266,6 @@ Special,20
 [071] # Room 103
 Special
     1,MAREANIE,15
-#-------------------------------
-[074] # Room 203
-Special
-    1,GYAMASK,15
 #-------------------------------
 [085] # Worried Man's House
 Special,20
@@ -612,8 +609,8 @@ DarkCave,21
     25,ELGYEM,16,19
     25,MUNNA,16,19
 #-------------------------------
-[215] # Sky Walk Sketch
-Cloud,60
+[215] # Tempest Realm
+Cloud,20
     25,CASTFORM,52,54
     25,CRYOGONAL,52,54
     25,MINIOR,52,54
@@ -650,7 +647,7 @@ DarkCave,20
     25,UNOWN,37,39
     25,WYNAUT,37,39
 #-------------------------------
-[219] # Crumbling Nest
+[219] # Crumbling Canyon
 DarkCave,20
     20,AXEW,18,20
     20,EKANS,18,20
@@ -839,7 +836,17 @@ Land,20
     13,NIHILEGO,56,59
     13,PHEROMOSA,56,59
     13,XURKITREE,56,59
+    12,BLACEPHALON,56,59
     12,CELESTEELA,56,59
     12,GUZZLORD,56,59
     12,KARTANA,56,59
     12,POIPOLE,56,59
+    12,STAKATAKA,56,59
+#-------------------------------
+[353] # Crumbling Canyon F2
+DarkCave,20
+    20,LARVITAR,56,59
+    20,LUNATONE,56,59
+    20,ONIX,56,59
+    20,RHYHORN,56,59
+    20,SOLROCK,56,59

@@ -231,8 +231,11 @@ BattleHandlers::DamageCalcUserAbility.add(:SCALDINGSMOKE,
   }
 )
 
-BattleHandlers::DamageCalcUserAbility.copy(:PUNKROCK, :LOUD)
-
+BattleHandlers::DamageCalcUserAbility.add(:LOUD,
+  proc { |_ability, _user, _target, move, mults, _baseDmg, _type, _aiCheck|
+      mults[:base_damage_multiplier] *= 1.3 if move.soundMove?
+  }
+)
 BattleHandlers::DamageCalcUserAbility.add(:SWORDSMAN,
   proc { |_ability, _user, _target, move, mults, _baseDmg, _type, _aiCheck|
       mults[:base_damage_multiplier] *= 1.5 if move.slashMove?
@@ -385,7 +388,7 @@ BattleHandlers::DamageCalcUserAbility.add(:MARINEMENACE,
   }
 )
 
-BattleHandlers::DamageCalcUserAbility.add(:RECKLESS,
+BattleHandlers::DamageCalcUserAbility.add(:LINEBACKER,
   proc { |_ability, _user, _target, move, mults, _baseDmg, _type, _aiCheck|
       mults[:base_damage_multiplier] *= 2.0 if move.recoilMove?
   }
@@ -400,5 +403,10 @@ BattleHandlers::DamageCalcUserAbility.add(:WORLDQUAKE,
 BattleHandlers::DamageCalcUserAbility.add(:TIDALFORCE,
   proc { |_ability, user, _target, _move, mults, _baseDmg, type, _aiCheck|
       mults[:base_damage_multiplier] *= 1.5 if user.battle.pbWeather == :Moonglow && type == :WATER
+  }
+)
+BattleHandlers::DamageCalcUserAbility.add(:RATTLEEM,
+  proc { |_ability, _user, target, move, mults, _baseDmg, _type, _aiCheck|
+      mults[:base_damage_multiplier] *= 1.5 if target.effectActive?(:FlinchedAlready)
   }
 )

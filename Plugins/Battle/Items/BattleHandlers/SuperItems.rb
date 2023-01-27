@@ -73,7 +73,7 @@ BattleHandlers::HPHealItem.add(:SITREONBERRY,
     proc { |item,battler,battle,forced|
       next false if !battler.canHeal?
       next false if !forced && !battler.canConsumePinchBerry?(false)
-      battle.pbCommonAnimation("EatBerry",battler) if !forced
+      battle.pbCommonAnimation("Nom",battler) if !forced
       healFromBerry(battler,1.0/2.0,item,forced=false)
       next true
     }
@@ -113,7 +113,7 @@ BattleHandlers::StatusCureItem.add(:LUNUSBERRY,
       next false if !battler.hasAnyStatusNoTrigger
       itemName = GameData::Item.get(item).name
       PBDebug.log("[Item triggered] #{battler.pbThis}'s #{itemName}") if forced
-      battle.pbCommonAnimation("EatBerry",battler) if !forced
+      battle.pbCommonAnimation("Nom",battler) if !forced
       battler.pbCureStatus
       battler.pbRaiseMultipleStatStages([:ATTACK,1,:DEFENSE,1,:SPECIAL_ATTACK,1,:SPECIAL_DEFENSE,1,:SPEED,1], user, item: item)
       next true
@@ -139,11 +139,11 @@ BattleHandlers::DamageCalcUserItem.add(:LUCENTGEM,
 ringTypes = [:NORMAL,:FIRE,:WATER,:GRASS,:ELECTRIC,:ICE,:FIGHTING,:POISON,:GROUND,:FLYING,:PSYCHIC,:BUG,:ROCK,:GHOST,:DARK,:DRAGON,:STEEL,:FAIRY]
 
 ringTypes.each do |type_sym|
-    ringSym = (type_sym.to_s + "RING").to_sym
-    gemSym = (type_sym.to_s + "GEM").to_sym
-    BattleHandlers::EORHealingItem.copy(:LEFTOVERS,ringSym)
-    BattleHandlers::DamageCalcUserItem.copy(gemSym,ringSym)
-    SUPER_ITEMS.push(ringSym)
+  ringSym = (type_sym.to_s + "RING").to_sym
+  gemSym = (type_sym.to_s + "GEM").to_sym
+  BattleHandlers::EORHealingItem.copy(:LEFTOVERS,ringSym)
+  BattleHandlers::DamageCalcUserItem.copy(gemSym,ringSym)
+  SUPER_ITEMS.push(ringSym)
 end
 
 # White Bough
@@ -173,10 +173,10 @@ BattleHandlers::EndOfMoveStatRestoreItem.add(:WHITEBOUGH,
 )
 
 # Lead Balloon
-BattleHandlers::ItemOnSwitchIn.add(:AIRBALLOON,:LEADBALLOON)
+BattleHandlers::ItemOnSwitchIn.copy(:AIRBALLOON,:LEADBALLOON)
 
 # Spell Bell
-BattleHandlers::UserItemAfterMoveUse.add(:SHELLBELL,:SPELLBELL)
+BattleHandlers::UserItemAfterMoveUse.copy(:SHELLBELL,:SPELLBELL)
 BattleHandlers::DamageCalcUserItem.copy(:SPELLTAG,:SPELLBELL)
 
 # Big Red Button

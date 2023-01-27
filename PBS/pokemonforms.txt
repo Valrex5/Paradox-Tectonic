@@ -284,7 +284,6 @@ BattlerEnemyY = 30
 FormName = Sand
 Type1 = BUG
 Type2 = GROUND
-BaseStats = 60,79,105,36,59,85
 EffortPoints = 0,0,2,0,0,0
 Moves = 1,PROTECT,1,TACKLE,10,BUGBITE,15,HIDDENPOWER,20,MINDWAVES,24,ROCKBLAST,28,HARDEN,32,PSYBEAM,36,CAPTIVATE,40,FLAIL,44,SPELLBIND,48,PSYCHIC,52,EARTHPOWER,56,BUGBUZZ
 Color = Brown
@@ -295,7 +294,6 @@ BattlerEnemyY = 27
 FormName = Trash
 Type1 = BUG
 Type2 = STEEL
-BaseStats = 60,69,95,36,69,95
 EffortPoints = 0,0,1,0,0,1
 Moves = 1,PROTECT,1,TACKLE,10,BUGBITE,15,HIDDENPOWER,20,MINDWAVES,24,MIRRORSHOT,28,METALSOUND,32,PSYBEAM,36,CAPTIVATE,40,METALBURST,44,SPELLBIND,48,PSYCHIC,52,IRONHEAD,56,BUGBUZZ
 Color = Red
@@ -1026,78 +1024,71 @@ Type1 = FAIRY
 #-------------------------------
 [MINIOR,7]
 FormName = Red
-BaseStats = 60,100,60,120,130,60
+BaseStats = 65,100,60,120,130,60
 EffortPoints = 0,1,0,0,1,0
 Weight = 0.3
 Color = Red
 Pokedex = If its core stays exposed, it will soon die off. It's possible that it may survive if it's put into a Poké Ball quickly enough.
-BattlerPlayerY = 28
 BattlerEnemyX = 0
 BattlerEnemyY = 26
 #-------------------------------
 [MINIOR,8]
 FormName = Orange
-BaseStats = 60,100,60,120,130,60
+BaseStats = 65,100,60,120,130,60
 EffortPoints = 0,1,0,0,1,0
 Weight = 0.3
 Color = Red
 Pokedex = If its core stays exposed, it will soon die off. It's possible that it may survive if it's put into a Poké Ball quickly enough.
-BattlerPlayerY = 28
 BattlerEnemyX = 0
 BattlerEnemyY = 26
 #-------------------------------
 [MINIOR,9]
 FormName = Yellow
-BaseStats = 60,100,60,120,130,60
+BaseStats = 65,100,60,120,130,60
 EffortPoints = 0,1,0,0,1,0
 Weight = 0.3
 Color = Yellow
 Pokedex = If its core stays exposed, it will soon die off. It's possible that it may survive if it's put into a Poké Ball quickly enough.
-BattlerPlayerY = 28
 BattlerEnemyX = 0
 BattlerEnemyY = 26
 #-------------------------------
 [MINIOR,10]
 FormName = Green
-BaseStats = 60,100,60,120,130,60
+BaseStats = 65,100,60,120,130,60
 EffortPoints = 0,1,0,0,1,0
 Weight = 0.3
 Color = Green
 Pokedex = If its core stays exposed, it will soon die off. It's possible that it may survive if it's put into a Poké Ball quickly enough.
-BattlerPlayerY = 28
 BattlerEnemyX = 0
 BattlerEnemyY = 26
 #-------------------------------
 [MINIOR,11]
 FormName = Blue
-BaseStats = 60,100,60,120,130,60
+BaseStats = 65,100,60,120,130,60
 EffortPoints = 0,1,0,0,1,0
 Weight = 0.3
 Color = Blue
 Pokedex = If its core stays exposed, it will soon die off. It's possible that it may survive if it's put into a Poké Ball quickly enough.
-BattlerPlayerY = 28
 BattlerEnemyX = 0
 BattlerEnemyY = 26
 #-------------------------------
 [MINIOR,12]
 FormName = Indigo
-BaseStats = 60,100,60,120,130,60
+BaseStats = 65,100,60,120,130,60
 EffortPoints = 0,1,0,0,1,0
 Weight = 0.3
 Color = Blue
 Pokedex = If its core stays exposed, it will soon die off. It's possible that it may survive if it's put into a Poké Ball quickly enough.
-BattlerPlayerY = 28
 BattlerEnemyX = 0
 BattlerEnemyY = 26
 #-------------------------------
 [MINIOR,13]
 FormName = Violet
-BaseStats = 60,100,60,120,130,60
+BaseStats = 65,100,60,120,130,60
 EffortPoints = 0,1,0,0,1,0
 Weight = 0.3
 Color = Purple
 Pokedex = If its core stays exposed, it will soon die off. It's possible that it may survive if it's put into a Poké Ball quickly enough.
-BattlerPlayerY = 28
 BattlerEnemyX = 0
 BattlerEnemyY = 26
 #-------------------------------

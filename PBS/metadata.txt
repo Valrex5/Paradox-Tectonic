@@ -1237,6 +1237,14 @@ Bicycle = true
 MapPosition = 0,10,11
 BattleBack = cave1
 #-------------------------------
+[215]
+# Tempest Realm
+Outdoor = true
+ShowArea = true
+Bicycle = true
+MapPosition = 0,11,9
+BattleBack = snow
+#-------------------------------
 [216]
 # Highland Lake
 Outdoor = true
@@ -1264,7 +1272,7 @@ BattleBack = cave3
 Environment = Underwater
 #-------------------------------
 [219]
-# Crumbling Nest
+# Crumbling Canyon
 Outdoor = false
 ShowArea = true
 Bicycle = true
@@ -1733,6 +1741,13 @@ Outdoor = false
 ShowArea = false
 Bicycle = true
 BattleBack = wcave
+#-------------------------------
+[331]
+# Frostflow Farms Center
+Outdoor = false
+ShowArea = false
+Bicycle = false
+HealingSpot = 186,34,15
 #-------------------------------
 [334]
 # The Present

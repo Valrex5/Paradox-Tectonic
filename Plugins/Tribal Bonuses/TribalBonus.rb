@@ -1,6 +1,8 @@
 class TribalBonus
     attr_reader :tribeCounts
 
+    TRIBAL_BONUS_THRESHOLD = 5
+
     def initialize
         resetTribeCounts()
     end
@@ -18,15 +20,27 @@ class TribalBonus
 
         # Count all tribes that exist for pokemon in player's party
         $Trainer.party.each {|pokemon|
-            form = pokemon.form
-            species = pokemon.species
-            fSpecies = GameData::Species.get_species_form(species, form)
-            tribes = fSpecies.tribes
+            tribes = pokemon.tribes
             tribes.each {|tribe|
                 next if !@tribeCounts.has_key?(tribe)
                 @tribeCounts[tribe] += 1
             }
         }
+    end
+
+    def getActiveBonusesList(concat = true)
+        updateTribeCount()
+
+        list = []
+        GameData::Tribe.each do |tribeData|
+            echoln(@tribeCounts[tribeData.id])
+            next unless @tribeCounts[tribeData.id] >= TRIBAL_BONUS_THRESHOLD
+            description = TribalBonus.getTribeName(tribeData.id)
+            description += _INTL(" Tribe Bonus") if concat
+            list.push(description)
+        end
+
+        return list
     end
 
     def getTribeBonuses(pokemon)
@@ -40,12 +54,8 @@ class TribalBonus
             :SPEED => 0,
         }
 
-        form = pokemon.form
-        species = pokemon.species
-        fSpecies = GameData::Species.get_species_form(species, form)
-        tribes = fSpecies.tribes
-        tribes.each { |tribe|
-            next unless @tribeCounts[tribe] >= 5
+        pokemon.tribes.each { |tribe|
+            next unless @tribeCounts[tribe] >= TRIBAL_BONUS_THRESHOLD
             GameData::Stat.each_main_battle do |stat|
                 tribeBonuses[stat.id] = 5 + (pokemon.level / 14).floor
             end
@@ -61,3 +71,16 @@ class TribalBonus
     end
 end
 
+class Pokemon
+    def tribes
+        if @ability == :FRIENDTOALL
+            list = []
+            GameData::Tribe.each do |tribeData|
+                list.push(tribeData.id)
+            end
+            return list
+        end
+        fSpecies = GameData::Species.get_species_form(@species, @form)
+        return fSpecies.tribes
+    end
+end

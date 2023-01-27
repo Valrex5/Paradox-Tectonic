@@ -28,7 +28,14 @@ def getStatusSettingEffectScore(statusApplying, user, target, ignoreCheck: false
     raise _INTL("Given status #{statusApplying} is not valid.")
 end
 
+def willHealStatus?(target)
+    return true if target.hasActiveAbilityAI?(:SHEDSKIN)
+    return true if target.hasActiveAbilityAI?(:HYDRATION) && target.battle.rainy?
+    return false
+end
+
 def getNumbEffectScore(user, target, ignoreCheck: false)
+    return 0 if willHealStatus?(target)
     if target && (ignoreCheck || target.canNumb?(user, false))
         score = 0
         score += 60 if target.hasDamagingAttack?
@@ -44,6 +51,7 @@ def getNumbEffectScore(user, target, ignoreCheck: false)
 end
 
 def getPoisonEffectScore(user, target, ignoreCheck: false)
+    return 0 if willHealStatus?(target)
     if target && (ignoreCheck || target.canPoison?(user, false))
         return 9999 if user.ownersPolicies.include?(:PRIORITIZEDOTS) && user.opposes?(target)
         score = 40
@@ -54,7 +62,7 @@ def getPoisonEffectScore(user, target, ignoreCheck: false)
         score -= STATUS_UPSIDE_MALUS if target.hasActiveAbilityAI?(%i[TOXICBOOST
                                                                       POISONHEAL].concat(STATUS_UPSIDE_ABILITIES))
         score += STATUS_PUNISHMENT_BONUS if user.hasStatusPunishMove? || user.pbHasMoveFunction?("07B") # Venoshock
-        score *= 2 if user.hasActiveAbilityAI?(:AGGRAVATE)
+        score *= 1.5 if user.hasActiveAbilityAI?(:AGGRAVATE)
     else
         return 0
     end
@@ -62,6 +70,7 @@ def getPoisonEffectScore(user, target, ignoreCheck: false)
 end
 
 def getBurnEffectScore(user, target, ignoreCheck: false)
+    return 0 if willHealStatus?(target)
     if target && (ignoreCheck || target.canBurn?(user, false))
         return 9999 if user.ownersPolicies.include?(:PRIORITIZEDOTS) && user.opposes?(target)
         score = 40
@@ -74,7 +83,7 @@ def getBurnEffectScore(user, target, ignoreCheck: false)
         score -= STATUS_UPSIDE_MALUS if target.hasActiveAbilityAI?(%i[FLAREBOOST
                                                                       BURNHEAL].concat(STATUS_UPSIDE_ABILITIES))
         score += STATUS_PUNISHMENT_BONUS if user.hasStatusPunishMove? || user.pbHasMoveFunction?("50E") # Flare Up
-        score *= 2 if user.hasActiveAbilityAI?(:AGGRAVATE)
+        score *= 1.5 if user.hasActiveAbilityAI?(:AGGRAVATE)
     else
         return 0
     end
@@ -82,6 +91,7 @@ def getBurnEffectScore(user, target, ignoreCheck: false)
 end
 
 def getFrostbiteEffectScore(user, target, ignoreCheck: false)
+    return 0 if willHealStatus?(target)
     if target && (ignoreCheck || target.canFrostbite?(user, false))
         return 9999 if user.ownersPolicies.include?(:PRIORITIZEDOTS) && user.opposes?(target)
         score = 40
@@ -93,7 +103,7 @@ def getFrostbiteEffectScore(user, target, ignoreCheck: false)
         score += NON_ATTACKER_BONUS unless user.hasDamagingAttack?
         score -= STATUS_UPSIDE_MALUS if target.hasActiveAbilityAI?([:FROSTHEAL].concat(STATUS_UPSIDE_ABILITIES))
         score += STATUS_PUNISHMENT_BONUS if user.hasStatusPunishMove? || user.pbHasMoveFunction?("50C") # Ice Impact
-        score *= 2 if user.hasActiveAbilityAI?(:AGGRAVATE)
+        score *= 1.5 if user.hasActiveAbilityAI?(:AGGRAVATE)
     else
         return 0
     end
@@ -115,6 +125,7 @@ def getDizzyEffectScore(user, target, ignoreCheck: false)
 end
 
 def getLeechEffectScore(user, target, ignoreCheck: false)
+    return 0 if willHealStatus?(target)
     canLeech = target.canLeech?(user, false)
     if ignoreCheck || canLeech
         return 9999 if user.ownersPolicies.include?(:PRIORITIZEDOTS) && user.opposes?(target)
@@ -125,7 +136,7 @@ def getLeechEffectScore(user, target, ignoreCheck: false)
         score -= 30 if target.totalhp < user.totalhp / 2
         score -= STATUS_UPSIDE_MALUS if target.hasActiveAbilityAI?(STATUS_UPSIDE_ABILITIES)
         score += STATUS_PUNISHMENT_BONUS if user.hasStatusPunishMove?
-        score *= 4 if user.hasActiveAbilityAI?(:AGGRAVATE)
+        score *= 2 if user.hasActiveAbilityAI?(:AGGRAVATE)
         score *= 1.5 if user.hasActiveAbilityAI?(:ROOTED)
         score *= 2.0 if user.hasActiveAbilityAI?(:GLOWSHROOM) && user.battle.pbWeather == :Moonglow
         score *= 1.3 if user.hasActiveItem?(:BIGROOT)
@@ -228,11 +239,7 @@ end
 
 def getForceOutEffectScore(_user, target)
     return 0 if target.substituted?
-    count = 0
-    @battle.pbParty(target.index).each_with_index do |_pkmn, i|
-        count += 1 if @battle.pbCanSwitchLax?(target.index, i)
-    end
-    return 0 if count
+    return 0 if target.battle.pbCanChooseNonActive?(target.index)
     return hazardWeightOnSide(target.pbOwnSide)
 end
 
@@ -258,7 +265,12 @@ def getHealingEffectScore(user, target, magnitude = 5)
 end
 
 def getMultiStatUpEffectScore(statUpArray, user, target)
-    return 0 if user.battle.field.effectActive?(:GreyMist)
+    echoln("[EFFECT SCORING] Scoring the effect of raising stats #{statUpArray.to_s} on target #{target.pbThis(true)}")
+    
+    if user.battle.field.effectActive?(:GreyMist)
+        echoln("[EFFECT SCORING] Grey Mist is active, scoring 0.")
+        return 0
+    end
 
     score = 0
 
@@ -267,8 +279,14 @@ def getMultiStatUpEffectScore(statUpArray, user, target)
         statIncreaseAmount = statUpArray[i * 2 + 1]
 
         # Give no extra points for attacking stats you can't use
-        next if statSymbol == :ATTACK && !target.hasPhysicalAttack?
-        next if statSymbol == :SPECIAL_ATTACK && !target.hasSpecialAttack?
+        if statSymbol == :ATTACK && !target.hasPhysicalAttack?
+            echoln("[EFFECT SCORING] Ignoring Attack changes, the target has no physical attacks")
+            next
+        end
+        if statSymbol == :SPECIAL_ATTACK && !target.hasSpecialAttack?
+            echoln("[EFFECT SCORING] Ignoring Sp. Atk changes, the target has no special attacks")
+            next
+        end
 
         # Increase the score more for boosting attacking stats
         if %i[ATTACK SPECIAL_ATTACK].include?(statSymbol)
@@ -281,6 +299,8 @@ def getMultiStatUpEffectScore(statUpArray, user, target)
         increase -= target.stages[statSymbol] * 10 # Reduce the score for each existing stage
 
         score += increase
+
+        echoln("[EFFECT SCORING] The change to #{statSymbol} by #{statIncreaseAmount} increases the score by #{increase}")
     end
 
     # Stat up moves tend to be strong on the first turn
@@ -297,14 +317,25 @@ def getMultiStatUpEffectScore(statUpArray, user, target)
         score *= 0.8
     end
 
-    score *= -1 if target.hasActiveAbility?(:CONTRARY)
-    score *= -1 unless user.opposes?(target)
+    if target.hasActiveAbility?(:CONTRARY)
+        score *= -1
+        echoln("[EFFECT SCORING] The target has Contrary! Inverting the score.")
+    end
+    if user.opposes?(target)
+        score *= -1
+        echoln("[EFFECT SCORING] The target opposes the user! Inverting the score.")
+    end
 
     return score
 end
 
 def getMultiStatDownEffectScore(statDownArray, user, target)
-    return 0 if user.battle.field.effectActive?(:GreyMist)
+    echoln("[EFFECT SCORING] Scoring the effect of lowering stats #{statDownArray.to_s} on target #{target.pbThis(true)}")
+    
+    if user.battle.field.effectActive?(:GreyMist)
+        echoln("[EFFECT SCORING] Grey Mist is active, scoring 0.")
+        return 0
+    end
 
     score = 0
 
@@ -318,8 +349,14 @@ def getMultiStatDownEffectScore(statDownArray, user, target)
         end
 
         # Give no extra points for attacking stats you can't use
-        next if statSymbol == :ATTACK && !target.hasPhysicalAttack?
-        next if statSymbol == :SPECIAL_ATTACK && !target.hasSpecialAttack?
+        if statSymbol == :ATTACK && !target.hasPhysicalAttack?
+            echoln("[EFFECT SCORING] Ignoring Attack changes, the target has no physical attacks")
+            next
+        end
+        if statSymbol == :SPECIAL_ATTACK && !target.hasSpecialAttack?
+            echoln("[EFFECT SCORING] Ignoring Sp. Atk changes, the target has no special attacks")
+            next
+        end
 
         # Increase the score more for boosting attacking stats
         if %i[ATTACK SPECIAL_ATTACK].include?(statSymbol)
@@ -332,6 +369,8 @@ def getMultiStatDownEffectScore(statDownArray, user, target)
         scoreIncrease += target.stages[statSymbol] * 10 # Increase the score for each existing stage
 
         score += scoreIncrease
+        
+        echoln("[EFFECT SCORING] The change to #{statSymbol} by #{statDecreaseAmount} increases the score by #{scoreIncrease}")
     end
 
     # Stat up moves tend to be strong on the first turn
@@ -342,8 +381,14 @@ def getMultiStatDownEffectScore(statDownArray, user, target)
 
     score *= 2 if @battle.pbIsTrapped?(target.index)
 
-    score *= -1 if target.hasActiveAbility?(:CONTRARY)
-    score *= -1 unless user.opposes?(target)
+    if target.hasActiveAbility?(:CONTRARY)
+        score *= -1
+        echoln("[EFFECT SCORING] The target has Contrary! Inverting the score.")
+    end
+    unless user.opposes?(target)
+        score *= -1
+        echoln("[EFFECT SCORING] The target is an ally of the user! Inverting the score.")
+    end
 
     return score
 end
@@ -390,6 +435,6 @@ end
 def getCurseEffectScore(user, target)
     score = 50
     score += 50 if target.aboveHalfHealth?
-    score *= 2 if user.hasActiveAbilityAI?(:AGGRAVATE)
+    score *= 1.5 if user.hasActiveAbilityAI?(:AGGRAVATE)
     return score
 end
