@@ -1635,5 +1635,4 @@ GameData::BattleEffect.register_effect(:Battler, {
     :apply_proc => proc do |battle, battler, _value|
         battle.pbDisplay(_INTL("{1} will strike from the shadows!",battler.pbThis))
     end,
-}
 })
