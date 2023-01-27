@@ -664,7 +664,6 @@
 700,SHIFTGEAR,Shift Gear,036,0,STEEL,Status,0,10,0,User,0,d,"The user rotates its gears, raising its Attack and sharply raising its Speed.",
 701,BEHEMOTHBASH,Behemoth Bash,000,100,STEEL,Physical,100,5,0,NearOther,0,abef,"The user becomes a gigantic shield and slams into the target.",
 702,BEHEMOTHBLADE,Behemoth Blade,000,100,STEEL,Physical,100,5,0,NearOther,0,abefp,"The user becomes a gigantic sword and cuts the target.",
-703,STEELROLLER,Steel Roller,195,130,STEEL,Physical,100,5,0,NearOther,0,abef,"Attacks while destroying the terrain. This move fails in the absence of a terrain.",
 704,SNAPTRAP,Snap Trap,0CF,75,GRASS,Special,100,12,0,NearOther,0,abef,"The user snares the target, trapping and damaging it for three turns.",
 705,STEELBEAM,Steel Beam,510,140,STEEL,Special,100,5,100,NearOther,0,bef,"Fires a beam of steel that it collected from its entire body. The user loses half its current HP.",
 706,HYDROCANNON,Hydro Cannon,0C2,170,WATER,Special,100,5,0,NearOther,0,bef,"The target is hit with a watery blast. The user must rest on the next turn, however.",
@@ -838,7 +837,7 @@
 879,FURY,Fury,093,60,NORMAL,Physical,100,12,0,NearOther,0,abef,"As long as this move is in use, the user's Attack rises each time the user is hit in battle.",RAGE
 880,SPELLBIND,Spellbind,401,0,FAIRY,Status,100,10,0,NearOther,0,bce,"Dizzies the target by putting them under a magical spell.",CHARM
 881,BIRDSTRIKE,Bird Strike,0FA,90,FLYING,Physical,100,15,0,Other,0,abef,"A reckless charge attack from the air. It also damages the user by 25% of the damage dealt.",BRAVEBIRD
-882,TERRAFORM,Terraform,538,70,ROCK,Special,100,12,0,AllNearOthers,0,bef,"Churns nearby rocks, dealing damage to nearby Pokémon and removing active terrain.",
+882,TERRAFORM,Terraform,538,70,ROCK,Special,100,12,0,AllNearOthers,0,bef,"Churns nearby rocks, dealing damage to nearby Pokémon and removing hazards from both sides.",
 883,PREDICTIONSTRIKE,Prediction Strike,0A5,90,PSYCHIC,Physical,0,12,0,Other,0,abef,"The user perfectly predicts the target's future location, then strikes. It lands without fail.",ZENHEADBUTT
 884,RAKE,Rake,000,65,BUG,Physical,100,20,0,NearOther,0,abefp,"The user rakes the target with sharp claws.",FURYCUTTER
 885,WATERSPIRAL,Water Spiral,16F,85,WATER,Special,100,12,0,NearOther,0,befn,"Fires a spiral of water at enemies, or a HP-restoring one at allies.",WATERPULSE
@@ -1056,3 +1055,4 @@
 1102,CALAMITOUSSLASH,Calamitous Slash,5B2,80,DRAGON,Physical,100,10,100,NearOther,0,abefp,"The user slashes the foe while menacing. During eclipse, the target also becomes burned.",DRAGONCLAW
 1103,TAKESHELTER,Take Shelter,5B3,0,STEEL,Status,0,10,0,User,0,d,"The user heals itself for 1/2 of its max HP, and extends the current weather by 1 turn.",
 1104,BEDTIME,Bed Time,003,0,FAIRY,Status,100,1,0,NearOther,0,bcel,"The target is lulled to sleep. Can only be used during a Full Moon.",
+1105,SKYFALL,Sky Fall,5B5,130,FLYING,Special,100,5,0,NearOther,0,abef,"Attacks while clearing weather. This move fails in the absence of a weather.",

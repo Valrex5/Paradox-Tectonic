@@ -981,7 +981,7 @@ class PokeBattle_Move_5B3 < PokeBattle_HalfHealingMove
 end
 
 #===============================================================================
-# Target falls asleep. Can only be used during the Full Moon. (Bedtime.)
+# Target falls asleep. Can only be used during the Full Moon. (Bedtime)
 #===============================================================================
 class PokeBattle_Move_5B4 < PokeBattle_SleepMove
     def pbMoveFailed?(user, _targets, show_message)
@@ -990,5 +990,26 @@ class PokeBattle_Move_5B4 < PokeBattle_SleepMove
             return true
         end
         return false
+    end
+end
+
+#===============================================================================
+# Removes all Weather. Fails if there is no Terrain (Sky Fall)
+#===============================================================================
+class PokeBattle_Move_5B5 < PokeBattle_Move
+    def pbMoveFailed?(_user, _targets, show_message)
+        if @battle.pbWeather == :None
+            @battle.pbDisplay(_INTL("But it failed, since there is no active weather!")) if show_message
+            return true
+        end
+        return false
+    end
+
+    def pbEffectGeneral(user)
+       @battle.endWeather
+    end
+
+    def getEffectScore(_user, _target)
+        return 20
     end
 end
