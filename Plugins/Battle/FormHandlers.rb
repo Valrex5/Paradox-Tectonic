@@ -21,3 +21,17 @@ MultipleForms.register(:LYCANROC, {
       next 0 if pkmn.form == 1 && (pkmn.fainted? || endBattle)
   },
 })
+
+MultipleForms.register(:ZAMAZENTA,{
+  "getForm" => proc { |pkmn|
+    next 1 if pkmn.item == :RUSTEDSHIELD
+    next 0
+  }
+})
+
+MultipleForms.register(:ZACIAN,{
+  "getForm" => proc { |pkmn|
+    next 1 if pkmn.item == :RUSTEDSWORD
+    next 0
+  }
+})
