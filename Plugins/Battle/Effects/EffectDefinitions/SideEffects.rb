@@ -179,7 +179,9 @@ GameData::BattleEffect.register_effect(:Side, {
     :resets_eor => true,
     :protection_effect => {
         :does_negate_proc => proc do |user, _target, move, _battle|
-            move.pbTarget(user).num_targets > 1
+            numTargets = move.pbTarget(user).num_targets
+            echoln("!!!!!Number of targets of move #{move.id} by user #{user.pbThis(true)} against target #{target.pbThis(true)} is #{numTargets}!!!!!")
+            numTargets > 1
         end,
     },
 })
