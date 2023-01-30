@@ -179,3 +179,15 @@ BattleHandlers::DamageCalcTargetAbility.add(:APPREHENSIVE,
       mults[:final_damage_multiplier] *= 0.7 if user.battle.partialEclipse?
   }
 )
+
+BattleHandlers::DamageCalcTargetAbility.add(:SUPERSTITIOUS,
+  proc { |_ability, _user, _target, _move, mults, _baseDmg, type|
+      mults[:base_damage_multiplier] /= 2 if %i[GHOST PSYCHIC].include?(type)
+  }
+)
+
+BattleHandlers::DamageCalcTargetAbility.add(:FEATHERCOAT,
+  proc { |_ability, _user, _target, _move, mults, _baseDmg, type|
+      mults[:base_damage_multiplier] /= 2 if %i[ICE FLYING].include?(type)
+  }
+)

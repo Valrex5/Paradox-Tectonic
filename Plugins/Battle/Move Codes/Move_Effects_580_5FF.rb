@@ -722,29 +722,25 @@ end
 #===============================================================================
 class PokeBattle_Move_5A8 < PokeBattle_Move
     def pbFailsAgainstTarget?(user, target, show_message)
-        if target.item == :BLACKSLUDGE
+        if target.item && !canRemoveItem?(user, target) && pbCanLowerStatStage?(:SPECIAL_DEFENSE,user,self)
             if show_message
-                @battle.pbDisplay(_INTL("But {1} is already holding a Black Sludge!",
-target.pbThis(true)))
+                @battle.pbDisplay(_INTL("But it failed!"))
             end
             return true
         end
-        return !canRemoveItem?(user, target)
-    end
-
-    def pbFailsAgainstTargetAI?(user, target)
-        return true if target.item == :BLACKSLUDGE
-        return !canRemoveItem?(user, target, true)
+        return false
     end
 
     def pbEffectAgainstTarget(user, target)
-        if target.item
-            itemName = target.itemName
-            removalMessage = _INTL("{1} dropped its {2}!", target.pbThis, itemName)
-            removeItem(user, target, false, removalMessage)
+        if target.item != :BLACKSLUDGE
+            if target.item
+                itemName = target.itemName
+                removalMessage = _INTL("{1} dropped its {2}!", target.pbThis, itemName)
+                removeItem(user, target, false, removalMessage)
+            end
+            target.item = :BLACKSLUDGE
+            @battle.pbDisplay(_INTL("{1} was forced to hold a {2}!", target.pbThis, target.itemName))
         end
-        target.item = :BLACKSLUDGE
-        @battle.pbDisplay(_INTL("{1} was forced to hold a {2}!", target.pbThis, target.itemName))
         target.tryLowerStat(:SPECIAL_DEFENSE, user, move: self)
     end
 end
@@ -776,7 +772,7 @@ end
 #===============================================================================
 # Reduce's the target's highest attacking stat. (Scale Glint)
 #===============================================================================
-class PokeBattle_Move_5AF < PokeBattle_TargetMultiStatDownMove
+class PokeBattle_Move_5AA < PokeBattle_TargetMultiStatDownMove
     def pbAdditionalEffect(user, target)
         if target.pbAttack > target.pbSpAtk
             target.pbLowerMultipleStatStages(:ATTACK, user, move: self)
@@ -1011,5 +1007,93 @@ class PokeBattle_Move_5B5 < PokeBattle_Move
 
     def getEffectScore(_user, _target)
         return 20
+    end
+end
+
+#===============================================================================
+# Move deals double damage but heals the status condition every active Pokémon
+# if the target has a status condition (Purifying Flame)
+#===============================================================================
+class PokeBattle_Move_5B6 < PokeBattle_Move
+    def pbBaseDamage(baseDmg, _user, target)
+        baseDmg *= 2 if target.pbHasAnyStatus?
+        return baseDmg
+    end
+
+    def pbEffectWhenDealingDamage(user, target)
+        return unless target.pbHasAnyStatus?
+        @battle.battlers.each do |b|
+            healStatus(b)
+        end
+    end
+
+    def getEffectScore(_user, _target)
+        score = 0
+        @battle.battlers.each do |b|
+            pkmn = b.pokemon
+            next if !pkmn || !pkmn.able? || pkmn.status == :NONE
+            score += b.opposes? ? 30 : -30
+        end
+        return score
+    end
+end
+
+#===============================================================================
+# All stats up, fails if the attack was not used the turn after a foe fainted. 
+# (Triumphant Dance)
+#===============================================================================
+class PokeBattle_Move_5B7 < PokeBattle_MultiStatUpMove
+		def initialize(battle, move)
+        super
+        @statUp = [:ATTACK, 1, :DEFENSE, 1, :SPECIAL_ATTACK, 1, :SPECIAL_DEFENSE, 1, :SPEED, 1]
+    end
+	
+	def pbMoveFailed?(user, targets, show_message)
+        unless user.pbOpposingSide.effects[:LastRoundFainted]
+            @battle.pbDisplay(_INTL("But it failed, since there was no victory to celebrate!")) if show_message
+            return true
+        end
+        super
+    end
+end
+
+#===============================================================================
+# Removes entry hazards on user's side. 33% Recoil.
+# (Icebreaker)
+#===============================================================================
+class PokeBattle_Move_5B8 < PokeBattle_RecoilMove
+    def recoilFactor;  return (1.0 / 3.0); end
+
+    def pbEffectAfterAllHits(user, target)
+        return if user.fainted? || target.damageState.unaffected
+        user.pbOwnSide.eachEffect(true) do |effect, _value, data|
+            next unless data.is_hazard?
+            user.pbOwnSide.disableEffect(effect)
+        end
+    end
+
+    def getEffectScore(user, target)
+        score = super
+        score += hazardWeightOnSide(user.pbOwnSide) if user.alliesInReserve?
+        return score
+    end
+end
+
+#===============================================================================
+# This round, user becomes the target of attacks that have single targets.
+# All enemies attacks this turn become Electric-type.
+# (Zap Yapping)
+#===============================================================================
+class PokeBattle_Move_5B9 < PokeBattle_Move_117
+    def pbEffectGeneral(user)
+        super
+        user.eachOpposing do |b|
+            b.applyEffect(:Electrify)
+        end
+    end
+    
+    def getEffectScore(_user, _target)
+        score = super
+        return score + 40
     end
 end

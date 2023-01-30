@@ -33,6 +33,7 @@ end
 #===============================================================================
 class PokeBattle_Move_103 < PokeBattle_Move
     def pbMoveFailed?(user, _targets, show_message)
+        return false if damagingMove?
         if user.pbOpposingSide.effectAtMax?(:Spikes)
             @battle.pbDisplay(_INTL("But it failed, since there is no room for more Spikes!")) if show_message
             return true
@@ -41,10 +42,18 @@ class PokeBattle_Move_103 < PokeBattle_Move
     end
 
     def pbEffectGeneral(user)
+        return if damagingMove?
         user.pbOpposingSide.incrementEffect(:Spikes)
     end
 
+    def pbEffectAgainstTarget(_user, target)
+        return unless damagingMove?
+        return if target.pbOwnSide.effectAtMax?(:Spikes)
+        target.pbOwnSide.applyEffect(:Spikes)
+    end
+
     def getEffectScore(user, target)
+        return 0 if damagingMove? && target.pbOwnSide.effectAtMax?(:Spikes)
         return getHazardSettingEffectScore(user, target)
     end
 end
@@ -65,6 +74,7 @@ end
 #===============================================================================
 class PokeBattle_Move_105 < PokeBattle_Move
     def pbMoveFailed?(user, _targets, show_message)
+        return false if damagingMove?
         if user.pbOpposingSide.effectActive?(:StealthRock)
             if show_message
                 @battle.pbDisplay(_INTL("But it failed, since pointed stones already float around the opponent!"))
@@ -75,12 +85,19 @@ class PokeBattle_Move_105 < PokeBattle_Move
     end
 
     def pbEffectGeneral(user)
+        return if damagingMove?
         user.pbOpposingSide.applyEffect(:StealthRock)
     end
 
+    def pbEffectAgainstTarget(_user, target)
+        return unless damagingMove?
+        return if target.pbOwnSide.effectActive?(:StealthRock)
+        target.pbOwnSide.applyEffect(:StealthRock)
+    end
+
     def getEffectScore(user, target)
-        score = getHazardSettingEffectScore(user, target)
-        return score
+        return 0 if damagingMove? && target.pbOwnSide.effectActive?(:StealthRock)
+        return getHazardSettingEffectScore(user, target)
     end
 end
 
@@ -440,7 +457,7 @@ end
 
 #===============================================================================
 # Increases the user's Defense and Special Defense by 1 stage each. Ups the
-# user's stockpile by 1 (max. 3). (Stockpile)
+# user's stockpile by 1 (max. 2). (Stockpile)
 #===============================================================================
 class PokeBattle_Move_112 < PokeBattle_MultiStatUpMove
     def initialize(battle, move)
@@ -470,7 +487,7 @@ class PokeBattle_Move_112 < PokeBattle_MultiStatUpMove
 end
 
 #===============================================================================
-# Power is 100 multiplied by the user's stockpile (X). Resets the stockpile to
+# Power is 150 multiplied by the user's stockpile (X). Resets the stockpile to
 # 0. Decreases the user's Defense and Special Defense by X stages each. (Spit Up)
 #===============================================================================
 class PokeBattle_Move_113 < PokeBattle_Move
@@ -483,7 +500,7 @@ class PokeBattle_Move_113 < PokeBattle_Move
     end
 
     def pbBaseDamage(_baseDmg, user, _target)
-        return 100 * user.countEffect(:Stockpile)
+        return 150 * user.countEffect(:Stockpile)
     end
 
     def pbEffectAfterAllHits(user, target)
@@ -524,8 +541,6 @@ class PokeBattle_Move_114 < PokeBattle_HealingMove
         when 1
             return 1.0 / 2.0
         when 2
-            return 2.0 / 3.0
-        when 3
             return 1.0
         end
         return 0.0
@@ -621,7 +636,7 @@ end
 
 #===============================================================================
 # This round, user becomes the target of attacks that have single targets.
-# (Follow Me, Rage Powder)
+# (Follow Me)
 #===============================================================================
 class PokeBattle_Move_117 < PokeBattle_Move
     def pbEffectGeneral(user)
@@ -631,7 +646,6 @@ class PokeBattle_Move_117 < PokeBattle_Move
             maxFollowMe = b.effects[:FollowMe]
         end
         user.applyEffect(:FollowMe, maxFollowMe + 1)
-        user.applyEffect(:RagePowder) if @id == :RAGEPOWDER
     end
 
     def getEffectScore(user, _target)
