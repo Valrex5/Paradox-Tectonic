@@ -21,3 +21,9 @@ BattleHandlers::TrappingTargetAbility.add(:CLINGY,
       next true if switcher.pbHasAnyStatus?
   }
 )
+
+BattleHandlers::TrappingTargetAbility.add(:FROSTPITALITY,
+  proc { |_ability, switcher, _bearer, battle|
+      next true if battle.pbWeather == :Hail
+  }
+)

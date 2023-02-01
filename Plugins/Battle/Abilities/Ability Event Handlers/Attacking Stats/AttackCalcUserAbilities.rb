@@ -146,3 +146,16 @@ BattleHandlers::AttackCalcUserAbility.add(:BALANCEOFPOWER,
       next attackMult
   }
 )
+
+BattleHandlers::AttackCalcUserAbility.add(:SERVEDCOLD,
+  proc { |_ability, user, battle, attackMult|
+      if battle.pbWeather == :Hail
+        if user.belowHalfHealth?
+          attackMult *= 1.4
+        else
+          attackMult *= 1.2
+        end
+      end
+      next attackMult
+  }
+)

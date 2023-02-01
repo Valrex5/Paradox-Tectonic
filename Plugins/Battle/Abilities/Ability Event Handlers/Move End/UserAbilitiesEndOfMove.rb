@@ -222,16 +222,6 @@ BattleHandlers::UserAbilityEndOfMove.add(:GENERATOR,
   }
 )
 
-BattleHandlers::UserAbilityEndOfMove.add(:GENERATOR,
-  proc { |_ability, user, _targets, move, battle, _switchedBattlers|
-      next if battle.futureSight
-      next if move.pbDamagingMove?
-      battle.pbShowAbilitySplash(user)
-      user.applyEffect(:Charge, 2)
-      battle.pbHideAbilitySplash(user)
-  }
-)
-
 BattleHandlers::UserAbilityEndOfMove.add(:HEALINGHOPE,
   proc { |_ability, user, targets, _move, battle, _switchedBattlers|
       next if battle.pbAllFainted?(user.idxOpposingSide)

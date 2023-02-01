@@ -557,4 +557,18 @@ class PokeBattle_Battler
         return true if shouldAbilityApply?(:CLEAVING,checkingForAI)
         return false
     end
+
+    def canBeDisabled?(show_messages = false, move = nil)
+        return false if move&.pbMoveFailedAromaVeil?(nil, self, show_messages)
+        return false if fainted?
+        return false if effectActive?(:Disable)
+        regularMove = nil
+        eachMove do |m|
+            next if m.id != @lastRegularMoveUsed
+            regularMove = m
+            break
+        end
+        return false unless regularMove && (regularMove.pp == 0 && regularMove.total_pp > 0)
+        return true
+    end
 end

@@ -198,22 +198,9 @@ BattleHandlers::TargetAbilityOnHit.add(:LIVEWIRE,
 
 BattleHandlers::TargetAbilityOnHit.add(:CURSEDBODY,
   proc { |_ability, user, target, move, battle|
-      next if user.fainted?
-      next if user.effectActive?(:Disable)
-      regularMove = nil
-      user.eachMove do |m|
-          next if m.id != user.lastRegularMoveUsed
-          regularMove = m
-          break
-      end
-      next unless regularMove && (regularMove.pp == 0 && regularMove.total_pp > 0)
-      next if battle.pbRandom(100) >= 60
+      next if user.fainted? || user.effectActive?(:Disable) 
       battle.pbShowAbilitySplash(target)
-      unless move.pbMoveFailedAromaVeil?(target, user, true)
-          user.applyEffect(:Disable, 3)
-          battle.pbHideAbilitySplash(target)
-          user.pbItemStatusCureCheck
-      end
+      user.applyEffect(:Disable, 3) if user.canBeDisabled?
       battle.pbHideAbilitySplash(target)
   }
 )
