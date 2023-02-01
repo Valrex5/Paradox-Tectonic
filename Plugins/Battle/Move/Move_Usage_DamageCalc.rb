@@ -196,6 +196,11 @@ class PokeBattle_Move
             if @battle.pbCheckOpposingAbility(:DISTRESSING,user.index)
                 multipliers[:final_damage_multiplier] *= 0.8
             end
+        when :Moonglow
+            if type == :FAIRY
+                damageBonus = 0.3
+                multipliers[:final_damage_multiplier] *= (1 + damageBonus)
+            end
         end
     end
 

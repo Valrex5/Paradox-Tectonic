@@ -86,3 +86,35 @@ BattleHandlers::EORWeatherAbility.add(:NESTING,
         battler.applyFractionalHealing(1.0 / 12.0, showAbilitySplash: true, customMessage: healingMessage)
     }
 )
+
+BattleHandlers::EORWeatherAbility.add(:MOONBASKING,
+    proc { |_ability, _weather, battler, battle|
+        next unless battle.pbWeather == :Moonglow
+        healingMessage = _INTL("{1} absorbs the moonlight.", battler.pbThis)
+        battler.applyFractionalHealing(1.0 / 8.0, showAbilitySplash: true, customMessage: healingMessage)
+    }
+)
+
+BattleHandlers::EORWeatherAbility.add(:NIGHTLINE,
+    proc { |_ability, _weather, battler, battle|
+        next unless battle.pbWeather == :Moonglow
+        healingMessage = _INTL("{1} absorbs the moonlight.", battler.pbThis)
+        healingAmount = battler.applyFractionalHealing(1.0 / 12.0, showAbilitySplash: true, customMessage: healingMessage)
+
+        if healingAmount > 0
+            potentialHeals = []
+            battle.pbParty(b.index).each_with_index do |pkmn,index|
+                next if pkmn.fainted?
+                next if pkmn.hp == pkmn.totalhp
+                potentialHeals.push(pkmn)
+            end
+            unless potentialHeals.empty?
+                healTarget = potentialHeals.sample
+                pbDisplay(_INTL("{1} sends out a signal, healing #{healTarget.name}!"))
+                newHP = pkmn.hp + healingAmount
+                newHP = pkmn.totalhp if newHP > pkmn.totalhp
+                pkmn.hp = newHP
+            end
+        end
+    }
+)

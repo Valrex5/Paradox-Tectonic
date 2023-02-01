@@ -589,7 +589,7 @@ Item = WIDELENS
 [RUBARIOR]
 Ability = MAGICBOUNCE
 Moves1 = FOULPLAY,CURSE,PRIMEVALMOONBASK
-Moves2 = TRICKYTOXINS,MOONBURST
+Moves2 = TRICKYTOXINS,MISTBURST
 HPMult = 6.0
 Item = LEFTOVERS
 #-------------------------------
@@ -644,7 +644,7 @@ HPMult = 6.0
 #-------------------------------
 [TOGEKISS]
 Ability = SERENEGRACE
-Moves1 = AIRSLASH,MOONBURST,PRIMEVALHEALBELL
+Moves1 = AIRSLASH,MISTBURST,PRIMEVALHEALBELL
 Moves2 = TRIATTACK,FLEURCANNON
 HPMult = 6.0
 #-------------------------------

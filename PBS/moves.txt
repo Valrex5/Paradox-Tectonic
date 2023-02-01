@@ -33,7 +33,7 @@
 34,CRUNCH,Crunch,043,80,DARK,Physical,100,12,20,NearOther,0,abefi,"The user crunches up the target with sharp fangs. It has a 20% chance to lower Defense.",
 35,DARKPULSE,Dark Pulse,00F,80,DARK,Special,100,12,40,Other,0,bem,"The user releases an aura imbued with dark thoughts. It has a 40% chance to flinch the target.",
 36,THROATCHOP,Throat Chop,16C,80,DARK,Physical,100,12,100,NearOther,0,abef,"The user attacks the target's throat. The target cannot use sound-based moves for two turns.",
-37,NIGHTSLASH,Night Slash,000,70,DARK,Physical,100,12,0,NearOther,0,abefhp,"The user slashes the target the instant an opportunity arises. Critical hits land more easily.",
+37,DARKSLASH,Dark Slash,5B0,70,DARK,Physical,100,12,0,NearOther,0,abefhp,"The user slashes the target the instant an opportunity arises. Critical hits land more easily.",NIGHTSLASH
 38,SUCKERPUNCH,Sucker Punch,116,70,DARK,Physical,100,5,0,NearOther,1,abef,"This move enables the user to attack first. It fails if the target is not readying an attack, however.",
 39,KNOCKOFF,Knock Off,0F0,65,DARK,Physical,100,15,0,NearOther,0,abef,"The user slaps down the target's held item, preventing that item from being used in the battle.",
 40,ASSURANCE,Assurance,082,60,DARK,Physical,100,10,0,NearOther,0,abef,"If the target has already taken some damage in the same turn, this attack's power is doubled.",
@@ -138,12 +138,12 @@
 143,FLORALHEALING,Floral Healing,16E,0,FAIRY,Status,0,5,0,NearOther,0,bc,"The user restores the target's HP by 50% of its max hp, or 2/3rds in moonglow.",
 144,FLOWERSHIELD,Flower Shield,13F,0,FAIRY,Status,0,10,0,UserAndAllies,0,,"The user raises the Defense and Sp. Def of all Grass-type Pokémon on its side.",
 145,GEOMANCY,Geomancy,14E,0,FAIRY,Status,0,10,0,User,0,,"The user absorbs energy and sharply raises its Sp. Atk, Sp. Def, and Speed stats on the next turn.",
-147,MOONBASK,Moon Bask,0F9,0,FAIRY,Status,0,5,0,User,0,d,"The user restores 1/2 of its HP, or 2/3rds in moonglow.",
+147,POWERNAP,Power Nap,0F9,0,DARK,Status,0,5,0,User,0,d,"The user restores 1/2 of its HP, or 2/3rds in moonglow.",
 148,NATURESMADNESS,Nature's Madness,06C,0,FAIRY,Status,90,10,0,NearOther,0,bef,"The user hits the target with the force of nature. It halves the target's HP.",
 149,ANGELSKISS,Angel's Kiss,401,0,FAIRY,Status,100,10,0,NearOther,0,bce,"The user kisses the target with a sweet, angelic cuteness that dizzies the target.",
 150,SPIRITBREAK,Spirit Break,045,75,FAIRY,Physical,100,12,100,NearOther,0,abef,"Attacks the target and breaks its spirit. Lowers the target's Sp. Atk stat.",
 151,DECORATE,Decorate,17B,0,FAIRY,Status,0,12,0,NearAlly,0,,"The user sharply raises the target's Attack and Sp. Atk stats by decorating the target.",
-152,MOONBURST,Moon Burst,196,150,FAIRY,Special,100,5,0,AllNearFoes,0,bef,"Attacks nearby enemies. User is damaged for 50% of their max HP. Deals 50% more damage in moonglow.",
+152,MISTBURST,Mist Burst,510,130,FAIRY,Special,100,5,0,AllNearFoes,0,bef,"Attacks nearby foes with a misty explosion. User is damaged for 50% of their current HP.",
 153,STRANGESTEAM,Strange Steam,401,90,FAIRY,Special,100,10,20,NearOther,0,bef,"The user attacks the target by emitting steam. It has a 20% chance to dizzy.",
 154,FOCUSPUNCH,Focus Punch,115,150,FIGHTING,Physical,100,15,0,NearOther,-3,abfj,"The user focuses its mind before launching a punch. It will fail if the user is hit before it is used.",
 155,HIGHJUMPKICK,High Jump Kick,10B,130,FIGHTING,Physical,85,10,0,NearOther,0,abef,"The target is attacked with a knee kick from a jump. If it misses, the user is hurt instead.",
@@ -812,7 +812,7 @@
 856,INURE,Inure,531,0,ICE,Status,0,10,0,User,0,d,"The user inures themselves to a harsh environment, shedding their type weaknesses.",
 857,BREAKDANCE,Breakdance,532,0,FIGHTING,Status,0,15,0,User,0,do,"The user improvises a dance, sharply raising its weakest stat, and raising its second weakest stat.",WORKUP
 858,SHIVERDANCE,Shiver Dance,525,0,ICE,Status,0,15,0,User,0,do,"The user shivers rhythmically. It boosts the user's Attack, Defense, and Speed stats.",
-859,AMBUSH,Ambush,174,130,DARK,Physical,100,10,0,NearOther,2,abef,"The user ambushes the target. This only works the first turn the user is in battle.",NIGHTSLASH
+859,AMBUSH,Ambush,516,110,DARK,Physical,100,10,0,NearOther,2,abef,"The user tries to surprise-attack the target. Cannot miss in Moonglow. Critical hits land more easily.",NIGHTSLASH
 860,STITCHUP,Stitch Up,524,0,GHOST,Status,0,5,0,User,0,d,"The user restores two thirds of its own HP. Then, this move is disabled.",RECOVER
 861,PHANTOMBREAK,Phantom Break,523,120,GHOST,Physical,100,5,0,NearOther,0,abef,"Although this move has great power, it disables itself after use.",SHADOWPUNCH
 862,LOOMOVER,Loom Over,522,0,DRAGON,Status,0,12,0,NearOther,0,ce,"The user looms over the target with awful menace, causing their best stat to drop harshly.",
@@ -1064,3 +1064,4 @@
 1114,TRIUMPHANTDANCE,Triumphant Dance,5B7,0,FIGHTING,Status,100,5,0,User,0,do,"The user dances to celebrate victory. This aises all stats if a foe fainted last turn.",
 1115,ICEBREAKER,Icebreaker,5B8,120,ROCK,Physical,100,10,0,NearOther,0,abef,"The user charges at the target, sweeping away hazard moves in the process with its armored jaw. The user also takes 33% recoil.",HEADSMASH
 1116,ZAPYAPPING,Zap Yapping,5B9,0,ELECTRIC,Status,0,15,0,User,2,,"This turn, all Enemies attacks becomes Electric-type and can only target the user.",
+1117,SCHEME,Scheme,027,0,NORMAL,Status,0,25,0,User,0,d,"The user is roused, and its Attack and Sp. Atk stats increase.",

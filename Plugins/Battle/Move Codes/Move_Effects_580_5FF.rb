@@ -1097,3 +1097,26 @@ class PokeBattle_Move_5B9 < PokeBattle_Move_117
         return score + 40
     end
 end
+
+#===============================================================================
+# Increases the user's Attack and Sp. Attack by 1 stage each.
+# In moonglow, also increases the user's Speed. (Scheme)
+#===============================================================================
+class PokeBattle_Move_5BA < PokeBattle_MultiStatUpMove
+    def initialize(battle, move)
+        super
+        @statUp = [:ATTACK, 1, :SPECIAL_ATTACK, 1]
+    end
+
+    def pbOnStartUse(_user, _targets)
+        if @battle.pbWeather == :Moonglow
+            @statUp = [:ATTACK, 1, :SPECIAL_ATTACK, 1, :SPEED, 1]
+        else
+            @statUp = [:ATTACK, 1, :SPECIAL_ATTACK, 1]
+        end
+    end
+
+    def shouldHighlight?(_user, _target)
+        return @battle.pbWeather == :Moonglow
+    end
+end

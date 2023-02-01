@@ -46,6 +46,12 @@ BattleHandlers::AccuracyCalcUserAbility.add(:SANDSNIPER,
     }
 )
 
+BattleHandlers::AccuracyCalcUserAbility.add(:NIGHTOWL,
+  proc { |_ability, mults, user, _target, _move, _type|
+      mults[:base_accuracy] = 0 if user.battle.pbWeather == :Moonglow
+  }
+)
+
 BattleHandlers::AccuracyCalcUserAbility.add(:AQUASNEAK,
     proc { |_ability, mults, user, _target, _move, _type|
         mults[:base_accuracy] = 0 if user.turnCount <= 1
