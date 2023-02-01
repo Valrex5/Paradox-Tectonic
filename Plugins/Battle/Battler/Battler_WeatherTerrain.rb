@@ -20,16 +20,12 @@ class PokeBattle_Battler
         return true
     end
 
-    HEATVEIL OXYGENATION SUSTAINABLE
-
     def debuffedByRain?(checkingForAI = false)
         return false unless affectedByWeatherDownsides?(checkingForAI)
         return false if shouldTypeApply?(:WATER, checkingForAI) || shouldTypeApply?(:ELECTRIC, checkingForAI)
-        return false if shouldAbilityApply?(GameData::Ability::SUN_ABILITIES, checkingForAI)
+        return false if shouldAbilityApply?(GameData::Ability::RAIN_ABILITIES, checkingForAI)
         return true
-    end
-
-    STRIKETWICE AQUAPROPULSION OVERWHELM ARCCONDUCTOR
+    end  
 
     def takesSandstormDamage?(checkingForAI = false)
         return false unless affectedByWeatherDownsides?(checkingForAI)
@@ -40,8 +36,6 @@ class PokeBattle_Battler
         return true
     end
 
-    SANDPOWER
-
     def takesHailDamage?(checkingForAI = false)
         return false unless affectedByWeatherDownsides?(checkingForAI)
         return false unless takesIndirectDamage?
@@ -50,8 +44,6 @@ class PokeBattle_Battler
         return false if shouldAbilityApply?(GameData::Ability::HAIL_ABILITIES, checkingForAI)
         return true
     end
-
-    SANDPOWER
 
     def debuffedByEclipse?(checkingForAI = false)
         return false unless affectedByWeatherDownsides?(checkingForAI)

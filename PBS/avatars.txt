@@ -346,7 +346,7 @@ HPMult = 6.0
 #-------------------------------
 [VILEPLUME]
 Ability = ADAPTED
-Moves1 = MEGADRAIN,POISONPOLLEN,ACID,PRIMEVALPSYCHICTERRAIN
+Moves1 = MEGADRAIN,POISONPOLLEN,ACID,PRIMEVALECLIPSE
 Moves2 = PSYBEAM,SLUDGEWAVE
 HPMult = 4.0
 #-------------------------------
