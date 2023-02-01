@@ -7,7 +7,7 @@
 5,STURDY,Sturdy,"It cannot be knocked out with one hit."
 6,DAMP,Damp,"Prevents the use of self-destructing moves."
 7,LIMBER,Limber,"The Pokémon is protected from numbing."
-8,SANDSHROUD,Sand Veil,"Takes 25% less damage in a sandstorm."
+8,SANDSHROUD,Sand Shroud,"Takes 25% less damage in a sandstorm."
 9,STATIC,Static,"Physical attacks against the Pokémon has a 30% chance to cause numbing."
 10,VOLTABSORB,Volt Absorb,"Immune to Electric-type moves and restores HP when hit by one."
 11,WATERABSORB,Water Absorb,"Immune to Water-type moves and restores HP when hit by one."
