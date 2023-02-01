@@ -1120,3 +1120,37 @@ class PokeBattle_Move_5BA < PokeBattle_MultiStatUpMove
         return @battle.pbWeather == :Moonglow
     end
 end
+
+#===============================================================================
+# User is protected against damaging moves this round. Decreases the Sp. Atk of
+# the user of a stopped special move by 1 stage. (Shield Shell)
+#===============================================================================
+class PokeBattle_Move_5BB < PokeBattle_ProtectMove
+    def initialize(battle, move)
+        super
+        @effect = :ShieldShell
+    end
+
+    def getEffectScore(user, target)
+        score = super
+        # Check only physical attackers
+        user.eachPotentialAttacker(1) do |_b|
+            score += 20
+        end
+        return score
+    end
+end
+
+#===============================================================================
+# User faints, even if the move does nothing else. (Mine Field)
+# Deals extra damage per "Spike" on the enemy side.
+#===============================================================================
+class PokeBattle_Move_5BC < PokeBattle_Move_0E0
+    def pbBaseDamage(baseDmg, _user, target)
+        baseDmg += 50 * target.pbOwnSide.countEffect(:Spikes)
+        baseDmg += 50 * target.pbOwnSide.countEffect(:FrostSpikes)
+        baseDmg += 50 * target.pbOwnSide.countEffect(:FlameSpikes)
+        baseDmg += 50 * target.pbOwnSide.countEffect(:PoisonSpikes)
+        return baseDmg
+    end
+end

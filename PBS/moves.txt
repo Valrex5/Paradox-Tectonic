@@ -912,7 +912,7 @@
 961,TRICKYTOXINS,Tricky Toxins,121,95,POISON,Special,100,12,0,NearOther,0,abef,"Turns the foe's power against it, dealing damage using the target's Sp. Attack stat.",VENOSHOCK
 962,RANSACK,Ransack,0F1,60,NORMAL,Special,100,20,0,NearOther,0,abef,"The user skillfully blasts the target, then steals their item. Items stolen from wild Pokémon are stored.",
 964,TRAPJAW,Trap Jaw,557,85,GRASS,Physical,100,12,0,NearOther,0,abefi,"Lures an enemy into its jaws, draining 2/3 of damage dealt if they hit the user this turn.",
-965,CAUSTICPUNCH,Caustic Punch,0F5,65,POISON,Physical,100,15,0,NearOther,0,abefj,"The user strikes with an acidic punch that destroys Gems and Berries.",POISONJAB
+965,CAUSTICPUNCH,Caustic Punch,0F5,65,POISON,Physical,100,15,0,NearOther,0,abefj,"The user strikes with an acidic punch that destroys Gems and Berries.",
 966,DOLLSTITCH,Doll Stitch,558,0,GHOST,Status,0,10,0,NearOther,0,bc,"The user forces the target to make a substitute by turning it into a doll.",
 967,SEVER,Sever,000,90,DARK,Physical,100,10,0,NearOther,0,abefhp,"The user hacks at the target with great violence. Critical hits land more easily.",NIGHTSLASH
 968,EVAPORATE,Evaporate,559,0,GHOST,Status,0,5,0,User,1,d,"The user becomes Ghost-type only. Always goes first.",
@@ -1056,12 +1056,18 @@
 1106,HEARTSTOP,Heart Stop,53A,90,DARK,Special,100,12,100,AllNearOthers,0,bef,"For the rest of the round, the healing of all damaged Pokemon is reversed.",GLARE
 1107,PSYSHIELDBASH,Psyshield Bash,01D,80,PSYCHIC,Physical,100,20,100,NearOther,0,abef,"Cloaking itself in psychic energy, the user slams into the target. This also boosts the user’s Defense stat.",ZENHEADBUTT
 1108,HEADLONGRUSH,Headlong Rush,03C,120,GROUND,Physical,100,5,0,NearOther,0,abef,"The user smashes into the target in a full-body tackle. This cuts the user's Defenses.",STOMPINGTANTRUM
-1109,PURIFYINGFLAME,Purifying Flame,5B6,80,FIRE,Special,100,10,0,NearOther,0,bef,"If the target has a status condition, this deals double damage and heals every battler's status condition.",
+1109,PURIFYINGFLAME,Purifying Flame,5AF,80,FIRE,Special,100,10,0,NearOther,0,bef,"If the target has a status condition, this deals double damage and heals every battler's status condition.",
 1110,CEASELESSEDGE,Ceaseless Edge,103,65,DARK,Physical,100,10,0,NearOther,0,abefp,"The user slashes its shell blade at the target. Shell splinters remain scattered under the target as spikes.",
-1111,STONEAXE,Stone Axe,105,55,ROCK,Physical,100,10,0,NearOther,0,abefp,"The user swings its stone axes at the target. This leaves stone splinters floating around the target.",
+1111,STONEAXE,Stone Axe,105,55,ROCK,Physical,100,10,0,NearOther,0,abefp,"The user swings its stone axes. This leaves stone splinters floating around the target.",
 1112,AURAARROWS,Aura Arrows,500,30,FIGHTING,Special,100,15,0,Other,0,befhn,"The user shoots three arrows made of Aura with extreme precision. Critical hits are more likely.",
-1113,ESPERDIVE,Esper Dive,01F,80,PSYCHIC,Physical,100,10,100,NearOther,0,abef,"The user slashes the target with aura-enriched wings. This also boosts the user’s Speed stat.",
-1114,TRIUMPHANTDANCE,Triumphant Dance,5B7,0,FIGHTING,Status,100,5,0,User,0,do,"The user dances to celebrate victory. This aises all stats if a foe fainted last turn.",
-1115,ICEBREAKER,Icebreaker,5B8,120,ROCK,Physical,100,10,0,NearOther,0,abef,"The user charges at the target, sweeping away hazard moves in the process with its armored jaw. The user also takes 33% recoil.",HEADSMASH
-1116,ZAPYAPPING,Zap Yapping,5B9,0,ELECTRIC,Status,0,15,0,User,2,,"This turn, all Enemies attacks becomes Electric-type and can only target the user.",
+1113,ESPERDIVE,Esper Dive,01F,80,PSYCHIC,Physical,100,10,100,NearOther,0,abef,"The user slashes the target with aura-enriched wings. This also boosts the user's Speed stat.",
+1114,TRIUMPHANTDANCE,Triumphant Dance,5B0,0,FIGHTING,Status,100,5,0,User,0,do,"The user dances to celebrate victory. This raises all stats if a foe fainted last turn.",
+1115,ICEBREAKER,Icebreaker,5B1,120,ROCK,Physical,100,10,0,NearOther,0,abef,"The user charges at the target, sweeping away hazards in the with its armored jaw. The user also takes 33% recoil.",HEADSMASH
+1116,ZAPYAPPING,Zap Yapping,5B2,0,ELECTRIC,Status,0,15,0,User,2,,"This turn, all Enemies attacks becomes Electric-type and can only target the user.",
 1117,SCHEME,Scheme,027,0,NORMAL,Status,0,25,0,User,0,d,"The user is roused, and its Attack and Sp. Atk stats increase.",
+1118,RAGINGFURY,Raging Fury,55F,120,FIRE,Physical,100,10,0,RandomNearFoe,0,abef,"The user rampages and attacks while spewing flames for three turns.",FLAREBLITZ
+1119,CHLOROBLAST,Chloroblast,510,150,STEEL,Special,100,5,100,NearOther,0,bef,"The user launches its amassed chlorophyll to inflict damage on the target. The user loses half its current HP.",
+1120,DIRECLAW,Dire Claw,005,85,POISON,Physical,100,15,50,NearOther,0,abefh,"The user lashes out at the target with ruinous claws, aiming to land a critical hit. This has a 50% chance to poison.",
+1121,SHIELDSHELL,Shield Shell,5BB,0,STEEL,Status,0,3,0,User,4,,"Protects itself from damage. It also lowers the Sp. Atk of special attackers.",
+1122,SPIKYBURST,Spiky Burst,5BC,300,DARK,Physical,100,5,0,NearFoe,0,bef,"Exlodes, dealing extra damage to all foes for each layer of spikes underneath them. The user faints.",
+1123,MALEFICPHANTOM,Malefic Phantom,0EE,70,GHOST,Special,100,15,0,NearOther,-1,bef,"The user swaps out using an illusion made from the hatred of their opponent. This move always goes last.",

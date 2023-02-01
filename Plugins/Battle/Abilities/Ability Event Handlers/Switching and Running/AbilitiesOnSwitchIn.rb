@@ -764,5 +764,13 @@ BattleHandlers::AbilityOnSwitchIn.add(:KLEPTOMANIAC,
 BattleHandlers::AbilityOnSwitchIn.add(:ASSISTANT,
   proc { |_ability, battler, battle|
       battle.forceUseMove(battler, :ASSIST, -1, true, nil, nil, true)
+    }
+)
+
+BattleHandlers::AbilityOnSwitchIn.add(:PRECHARGED,
+  proc { |_ability, battler, battle|
+      battle.pbShowAbilitySplash(battler)
+      battler.applyEffect(:Charge)
+      battle.pbHideAbilitySplash(battler)
   }
 )

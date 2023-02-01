@@ -16,49 +16,42 @@ class PokeBattle_Battler
     def debuffedBySun?(checkingForAI = false)
         return false unless affectedByWeatherDownsides?(checkingForAI)
         return false if shouldTypeApply?(:FIRE, checkingForAI) || shouldTypeApply?(:GRASS, checkingForAI)
-        setterAbilities = %i[DROUGHT INNERLIGHT]
-        synergyAbilities = %i[CHLOROPHYLL SOLARPOWER LEAFGUARD FLOWERGIFT MIDNIGHTSUN HARVEST SUNCHASER HEATSAVOR
-                              BLINDINGLIGHT SOLARCELL ROAST FINESUGAR REFRESHMENTS HEATVEIL OXYGENATION SUSTAINABLE]
-        return false if shouldAbilityApply?(setterAbilities,
-checkingForAI) || shouldAbilityApply?(synergyAbilities, checkingForAI)
+        return false if shouldAbilityApply?(GameData::Ability::SUN_ABILITIES, checkingForAI)
         return true
     end
+
+    HEATVEIL OXYGENATION SUSTAINABLE
 
     def debuffedByRain?(checkingForAI = false)
         return false unless affectedByWeatherDownsides?(checkingForAI)
         return false if shouldTypeApply?(:WATER, checkingForAI) || shouldTypeApply?(:ELECTRIC, checkingForAI)
-        setterAbilities = %i[DRIZZLE STORMBRINGER]
-        synergyAbilities = %i[SWIFTSWIM RAINDISH HYDRATION ARCCONDUCTOR STORMFRONT DREARYCLOUDS DRYSKIN OVERWHELM
-                              RAINPRISM STRIKETWICE AQUAPROPULSION]
-        return false if shouldAbilityApply?(setterAbilities,
-checkingForAI) || shouldAbilityApply?(synergyAbilities, checkingForAI)
+        return false if shouldAbilityApply?(GameData::Ability::SUN_ABILITIES, checkingForAI)
         return true
     end
+
+    STRIKETWICE AQUAPROPULSION OVERWHELM ARCCONDUCTOR
 
     def takesSandstormDamage?(checkingForAI = false)
         return false unless affectedByWeatherDownsides?(checkingForAI)
         return false unless takesIndirectDamage?
         return false if hasActiveItem?(:SAFETYGOGGLES)
-        return false if shouldTypeApply?(:GROUND,checkingForAI) || shouldTypeApply?(:ROCK,	checkingForAI)
-        setterAbilities = %i[SANDSTREAM SANDBURST]
-        synergyAbilities = %i[SANDPOWER SANDRUSH SANDSHROUD DESERTSPIRIT SHRAPNELSTORM HARSHHUNTER DESERTARMOR
-                            SANDSNIPER DUNEPREDATOR]
-        return false if shouldAbilityApply?(setterAbilities,
-checkingForAI) || shouldAbilityApply?(synergyAbilities, checkingForAI)
+        return false if shouldTypeApply?(:GROUND,checkingForAI) || shouldTypeApply?(:ROCK,checkingForAI)
+        return false if shouldAbilityApply?(GameData::Ability::SAND_ABILITIES, checkingForAI)
         return true
     end
+
+    SANDPOWER
 
     def takesHailDamage?(checkingForAI = false)
         return false unless affectedByWeatherDownsides?(checkingForAI)
         return false unless takesIndirectDamage?
         return false if hasActiveItem?(:SAFETYGOGGLES)
-        return false if shouldTypeApply?(:ICE, checkingForAI) || shouldTypeApply?(:GHOST,	checkingForAI)
-        setterAbilities = %i[SNOWWARNING FROSTSCATTER]
-        synergyAbilities = %i[ICEBODY SNOWSHROUD BLIZZBOXER SLUSHRUSH ICEFACE BITTERCOLD ECTOPARTICLES]
-        return false if shouldAbilityApply?(setterAbilities,
-checkingForAI) || shouldAbilityApply?(synergyAbilities, checkingForAI)
+        return false if shouldTypeApply?(:ICE,checkingForAI) || shouldTypeApply?(:GHOST,checkingForAI)
+        return false if shouldAbilityApply?(GameData::Ability::HAIL_ABILITIES, checkingForAI)
         return true
     end
+
+    SANDPOWER
 
     def debuffedByEclipse?(checkingForAI = false)
         return false unless affectedByWeatherDownsides?(checkingForAI)

@@ -396,8 +396,38 @@ end
 def getWeatherSettingEffectScore(weatherType, user, battle, duration = 4)
     return 0 if battle.primevalWeatherPresent? || battle.pbCheckGlobalAbility(:AIRLOCK) ||
                 battle.pbCheckGlobalAbility(:CLOUDNINE) || battle.pbWeather == @weatherType
-    score = 20 * user.getWeatherSettingDuration(weatherType, duration, true)
-    score += 20 if user.firstTurn?
+
+    score = 10 * user.getWeatherSettingDuration(weatherType, duration, true)
+
+    weatherMatchesPolicy = false
+    hasSynergyAbility = false
+    hasSynergisticType = false
+    case weatherType
+    when :Sun
+        weatherMatchesPolicy = true if user.ownersPolicies.include?(:SUN_TEAM)
+        hasSynergyAbility = true if user.hasActiveAbilityAI?(GameData::Ability::SUN_ABILITIES)
+        hasSynergisticType = true if user.pbHasAttackingType?(:FIRE)
+    when :Rain
+        weatherMatchesPolicy = true if user.ownersPolicies.include?(:RAIN_TEAM)
+        hasSynergyAbility = true if user.hasActiveAbilityAI?(GameData::Ability::RAIN_ABILITIES)
+        hasSynergisticType = true if user.pbHasAttackingType?(:WATER)
+    when :Sandstorm
+        weatherMatchesPolicy = true if user.ownersPolicies.include?(:SANDSTORM_TEAM)
+        hasSynergyAbility = true if user.hasActiveAbilityAI?(GameData::Ability::SAND_ABILITIES)
+        hasSynergisticType = true if user.pbHasTypeAI?(:ROCK)
+    when :Hail
+        weatherMatchesPolicy = true if user.ownersPolicies.include?(:HAIL_TEAM)
+        hasSynergyAbility = true if user.hasActiveAbilityAI?(GameData::Ability::HAIL_ABILITIES)
+        hasSynergisticType = true if user.pbHasTypeAI?(:ICE)
+    end
+    return 300 if weatherMatchesPolicy
+
+    score += 20 if hasSynergisticType
+    score += 40 if hasSynergyAbility
+    score += 10 if user.aboveHalfHealth?
+
+    score += 20 if user.pbHasMoveFunction?("087") # Weather Ball
+   
     return score
 end
 

@@ -270,3 +270,43 @@ def styleFurfrou()
 	end
 	return false
 end
+
+def canBeOriginized?(pokemon)
+	return %i[QWILFISH VOLTORB GROWLITHE SNEASEL ZORUA].include?(pokemon.species)
+end
+
+def createHisuian
+	speciesArray = ["None","Hisuian Growlithe","Hisuian Voltorb","Hisuian Qwilfish","Hisuian Sneasel","Hisuian Zorua"]
+	actualSpecies = [nil,:HGROWLITHE,:HVOLTORB,:HQWILFISH,:HSNEASEL,:HZORUA]
+	
+	while true
+		result = pbShowCommands(nil,speciesArray)
+
+		if result == 0
+			pbMessage(_INTL("Ah, I was looking forward to flexing my skills today."))
+			break
+		else
+			chosenName = speciesArray[result]
+			chosenSpecies = actualSpecies[result]
+
+			choicesArray = ["View Pokedex", "Buy Pokemon", "Cancel"]
+			secondResult = pbShowCommands(nil,choicesArray,3)
+			case secondResult
+			when 1
+				item_data = GameData::Item.get(:ORIGINORE)
+				pbMessage("\\PN hands over the #{item_data.name}.")
+				pbMessage("Now just to work my magicks...")
+				blackFadeOutIn(30) {
+					$PokemonBag.pbDeleteItem(:ORIGINORE)
+				}
+				pbMessage("Poof! And so the impossible has been made possible!")
+				pbAddPokemon(chosenSpecies,10)
+				pbMessage("My hopes go with you. Be respectful of this relic which you now posess.")
+				break
+			when 0
+				openSingleDexScreen(chosenSpecies)
+			end
+			next
+		end
+	end
+end
