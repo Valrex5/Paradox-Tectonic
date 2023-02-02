@@ -7256,6 +7256,7 @@ BattlerEnemyX = 0
 BattlerEnemyY = 10
 BattlerShadowX = 0
 BattlerShadowSize = 3
+Evolutions = URSALUNA,Originize,44
 #-------------------------------
 [218]
 Name = Slugma
