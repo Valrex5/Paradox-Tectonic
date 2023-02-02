@@ -25,9 +25,14 @@ BattleHandlers::MoveBlockingAbility.add(:BADINFLUENCE,
     }
 )
 
-
 BattleHandlers::MoveBlockingAbility.add(:DESSICATE,
     proc { |_ability, _bearer, _user, _targets, move, battle|
         next [:GRASS,:WATER].include?(move.calcType) && battle.pbWeather == :Sandstorm
+    }
+)
+
+BattleHandlers::MoveBlockingAbility.add(:LUNARCLEANSING,
+    proc { |_ability, _bearer, _user, _targets, move, battle|
+        next [:BUG,:POISON].include?(move.calcType) && battle.pbWeather == :Sandstorm
     }
 )

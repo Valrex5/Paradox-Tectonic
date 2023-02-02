@@ -549,7 +549,7 @@
 559,DESSICATE,Dessicate,"Prevents Water or Grass-type moves during Sandstorm."
 560,HEAVENSCROWN,HEAVENSCROWN,"Moves twice during a Total Eclipse turn."
 561,NIGHTLINE,Night-line,"Whenever it heals from Moonglow, shares that healing with a party member."
-562,LUNARPROTECTION,Lunar Protection,"Prevents Bug or Poison-type moves during Moonglow."
+562,LUNARCLEANSING,Lunar Cleansing,"Prevents Bug or Poison-type moves during Moonglow."
 563,ROCKBODY,Rock Body,"Heals 1/8th of its max HP each turn during Sandstorm."
 564,FRIENDTOALL,FRIENDTOALL,"Counts as every tribe."
 565,RATTLEEM,Rattle 'Em,"Moves that can flinch are 50% more likely. Deals 50% more damage to Pokemon with flinch immunity."
