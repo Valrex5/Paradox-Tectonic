@@ -4,12 +4,6 @@ BattleHandlers::TrappingTargetAbility.add(:ARENATRAP,
     }
 )
 
-BattleHandlers::TrappingTargetAbility.add(:MAGNETPULL,
-  proc { |_ability, switcher, _bearer, _battle|
-      next true if switcher.pbHasType?(:STEEL)
-  }
-)
-
 BattleHandlers::TrappingTargetAbility.add(:SHADOWTAG,
   proc { |_ability, switcher, _bearer, _battle|
       next true unless switcher.hasActiveAbility?(:SHADOWTAG)
@@ -25,5 +19,11 @@ BattleHandlers::TrappingTargetAbility.add(:CLINGY,
 BattleHandlers::TrappingTargetAbility.add(:FROSTPITALITY,
   proc { |_ability, switcher, _bearer, battle|
       next true if battle.pbWeather == :Hail
+  }
+)
+
+BattleHandlers::TrappingTargetAbility.add(:MAGNETTRAP,
+  proc { |_ability, switcher, bearer, _battle|
+      next true if bearer.pbSpAtk > switcher.pbSpAtk
   }
 )

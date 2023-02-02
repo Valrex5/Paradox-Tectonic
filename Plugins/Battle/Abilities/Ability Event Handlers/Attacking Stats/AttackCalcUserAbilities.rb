@@ -119,7 +119,7 @@ BattleHandlers::AttackCalcUserAbility.add(:ONEDGE,
   }
 )
 
-BattleHandlers::AttackCalcUserAbility.add(:SANDPOWER,
+BattleHandlers::AttackCalcUserAbility.add(:SANDSTRENGTH,
   proc { |_ability, _user, battle, attackMult|
       attackMult *= 1.3 if battle.pbWeather == :Sandstorm
       next attackMult

@@ -1154,3 +1154,17 @@ class PokeBattle_Move_5BC < PokeBattle_Move_0E0
         return baseDmg
     end
 end
+
+#===============================================================================
+# Sets stealth rock and sandstorm for 5 turns. (Stone Signal)
+#===============================================================================
+class PokeBattle_Move_5BD < PokeBattle_Move_105
+    def pbMoveFailed?(user, _targets, show_message)
+        return false
+    end
+
+    def pbEffectGeneral(user)
+        super
+        @battle.pbStartWeather(user, :Sandstorm, 5, false) unless @battle.primevalWeatherPresent?
+    end
+end

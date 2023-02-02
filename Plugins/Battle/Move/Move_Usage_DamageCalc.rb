@@ -176,7 +176,7 @@ class PokeBattle_Move
         when :Sandstorm
             if target.shouldTypeApply?(:ROCK,checkingForAI) && specialMove? && @function != "122"   # Psyshock/Psystrike
                 defenseAddition = 0.5
-                defenseAddition *= 2 if @battle.pbCheckGlobalAbility(:SHRAPNELSTORM)
+                defenseAddition *= 2 if @battle.pbCheckGlobalAbility(:IRONSTORM)
                 defenseAddition *= 2 if @battle.curseActive?(:CURSE_BOOSTED_SAND)
                 multipliers[:defense_multiplier] *= (1 + defenseAddition)
             end

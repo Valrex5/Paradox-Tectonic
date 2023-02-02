@@ -136,6 +136,12 @@ BattleHandlers::SpeedCalcAbility.add(:NIGHTVISION,
   }
 )
 
+BattleHandlers::SpeedCalcAbility.add(:SANDDRILLING,
+  proc { |_ability, battler, mult|
+      next mult * 1.5 if battler.battle.pbWeather == :Sandstorm
+  }
+)
+
 BattleHandlers::SpeedCalcAbility.add(:NIGHTOWL,
   proc { |_ability, battler, mult|
       next mult * 1.5 if battler.battle.pbWeather == :Moonglow

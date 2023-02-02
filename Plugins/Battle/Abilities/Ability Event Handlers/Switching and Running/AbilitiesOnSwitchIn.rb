@@ -416,6 +416,18 @@ BattleHandlers::AbilityOnSwitchIn.add(:DRAMATICLIGHTING,
   }
 )
 
+BattleHandlers::AbilityOnSwitchIn.add(:CRAGTERROR,
+  proc { |_ability, battler, battle|
+      next unless battle.pbWeather == :Sandstorm
+      battle.pbShowAbilitySplash(battler)
+      battle.eachOtherSideBattler(battler.index) do |b|
+          next unless b.near?(battler)
+          b.pbLowerMultipleStatStages([:ATTACK,1,:SPECIAL_ATTACK,1],battler,showFailMsg: true)
+      end
+      battle.pbHideAbilitySplash(battler)
+  }
+)
+
 BattleHandlers::AbilityOnSwitchIn.add(:FASCINATE,
   proc { |_ability, battler, battle|
       battle.pbShowAbilitySplash(battler)
@@ -771,6 +783,17 @@ BattleHandlers::AbilityOnSwitchIn.add(:PRECHARGED,
   proc { |_ability, battler, battle|
       battle.pbShowAbilitySplash(battler)
       battler.applyEffect(:Charge)
+      battle.pbHideAbilitySplash(battler)
+  }
+)
+
+BattleHandlers::AbilityOnSwitchIn.add(:LOOSESHELL,
+  proc { |_ability, battler, battle|
+      next unless battle.pbWeather == :Sandstorm
+      next unless battler.form == 0
+      battle.pbShowAbilitySplash(battler)
+      pbChangeForm(1, _INTL("{1} scrapped its meteor shell!", pbThis))
+      battler.pbOpposingSide.applyEffect(:StealthRock)
       battle.pbHideAbilitySplash(battler)
   }
 )

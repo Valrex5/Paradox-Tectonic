@@ -205,6 +205,12 @@ BattleHandlers::DamageCalcUserAbility.add(:MIDNIGHTSUN,
   }
 )
 
+BattleHandlers::DamageCalcUserAbility.add(:SANDDEMON,
+  proc { |_ability, user, _target, _move, mults, _baseDmg, type, _aiCheck|
+      mults[:base_damage_multiplier] *= 1.5 if user.battle.pbWeather == :Sandstorm && type == :DARK
+  }
+)
+
 BattleHandlers::DamageCalcUserAbility.add(:RAINPRISM,
   proc { |_ability, user, _target, _move, mults, _baseDmg, type, _aiCheck|
       mults[:base_damage_multiplier] *= 1.5 if user.battle.pbWeather == :Rain && type == :FAIRY

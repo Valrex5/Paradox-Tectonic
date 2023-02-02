@@ -327,6 +327,7 @@ class PokeBattle_Battle
         curWeather = pbWeather
         showWeatherMessages = $PokemonSystem.weather_messages == 0
         hailDamage = 0
+        sandstormDamage = 0
         priority.each do |b|
             # Weather-related abilities
             if b.abilityActive?
@@ -339,10 +340,10 @@ class PokeBattle_Battle
             case curWeather
             when :Sandstorm
                 next unless b.takesSandstormDamage?
-                damageDoubled = pbCheckGlobalAbility(:SHRAPNELSTORM)
+                damageDoubled = pbCheckGlobalAbility(:IRONSTORM)
                 if showWeatherMessages
                     if damageDoubled
-                        pbDisplay(_INTL("{1} is shredded by the razor-sharp shrapnel!", b.pbThis))
+                        pbDisplay(_INTL("{1} is shredded by the iron-infused sandstorm!", b.pbThis))
                     else
                         pbDisplay(_INTL("{1} is buffeted by the sandstorm!", b.pbThis))
                     end
@@ -350,7 +351,7 @@ class PokeBattle_Battle
                 fraction = 1.0 / 16.0
                 fraction *= 2 if damageDoubled
                 fraction *= 2 if curseActive?(:CURSE_BOOSTED_SAND)
-                b.applyFractionalDamage(fraction)
+                sandstormDamage += b.applyFractionalDamage(fraction)
             when :Hail
                 next unless b.takesHailDamage?
                 damageDoubled = pbCheckGlobalAbility(:BITTERCOLD)
@@ -399,6 +400,16 @@ class PokeBattle_Battle
                 pbShowAbilitySplash(b)
                 healingMessage = _INTL("{1} absorbs the suffering from the hailstorm.", b.pbThis)
                 b.pbRecoverHP(hailDamage, true, true, true, healingMessage)
+                pbHideAbilitySplash(b)
+            end
+        end
+        # Desert Scavenger
+        if sandstormDamage > 0
+            priority.each do |b|
+                next unless b.hasActiveAbility?(:DESERTSCAVENGER)
+                pbShowAbilitySplash(b)
+                healingMessage = _INTL("{1} absorbs the suffering from the sandstorm", b.pbThis)
+                b.pbRecoverHP(sandstormDamage, true, true, true, healingMessage)
                 pbHideAbilitySplash(b)
             end
         end
