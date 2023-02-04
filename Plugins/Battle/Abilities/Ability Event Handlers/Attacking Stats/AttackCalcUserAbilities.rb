@@ -159,3 +159,10 @@ BattleHandlers::AttackCalcUserAbility.add(:SERVEDCOLD,
       next attackMult
   }
 )
+
+BattleHandlers::AttackCalcUserAbility.add(:POLARHUNTER,
+  proc { |_ability, user, battle, attackMult|
+      attackMult *= 1.25 if battle.pbWeather == :Hail
+      next attackMult
+  }
+)

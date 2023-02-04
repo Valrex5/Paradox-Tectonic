@@ -55,7 +55,7 @@ BattleHandlers::SpecialAttackCalcUserAbility.add(:ARCANEFINALE,
 
 BattleHandlers::SpecialAttackCalcUserAbility.add(:AQUAPROPULSION,
   proc { |_ability, _user, battle, spAtkMult|
-      spAtkMult *= 1.25 if battle.rainy?
+      spAtkMult *= 1.2 if battle.rainy?
       next spAtkMult
   }
 )
@@ -107,6 +107,13 @@ BattleHandlers::SpecialAttackCalcUserAbility.add(:SANDPOWER,
 BattleHandlers::SpecialAttackCalcUserAbility.add(:OVERWHELM,
   proc { |_ability, _user, battle, spAtkMult|
       spAtkMult *= 1.3 if battle.rainy?
+      next spAtkMult
+  }
+)
+
+BattleHandlers::SpecialAttackCalcUserAbility.add(:WINTERWISDOM,
+  proc { |_ability, _user, battle, spAtkMult|
+      spAtkMult *= 1.3 if battle.pbWeather == :Hail
       next spAtkMult
   }
 )

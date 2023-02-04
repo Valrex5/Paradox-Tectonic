@@ -50,7 +50,7 @@ BattleHandlers::TargetAbilityAfterMoveUse.add(:BRILLIANTFLURRY,
   proc { |_ability, target, user, move, _switched, _battle|
       next unless move.damagingMove?
       next unless target.knockedBelowHalf?
-      user.pbLowerMultipleStatStages([:ATTACK, 1, :SPECIAL_ATTACK, 1, :SPEED, 1], user, showAbilitySplash: true)
+      user.pbLowerMultipleStatStages([:ATTACK, 2, :SPECIAL_ATTACK, 2, :SPEED, 2], user, showAbilitySplash: true)
   }
 )
 

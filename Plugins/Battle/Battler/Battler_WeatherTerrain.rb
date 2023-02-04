@@ -48,23 +48,15 @@ class PokeBattle_Battler
     def debuffedByEclipse?(checkingForAI = false)
         return false unless affectedByWeatherDownsides?(checkingForAI)
         return false if shouldTypeApply?(:PSYCHIC, checkingForAI) || shouldTypeApply?(:DRAGON, checkingForAI)
-        setterAbilities = %i[HARBINGER SUNEATER]
-        synergyAbilities = %i[APPREHENSIVE TOTALGRASP EXTREMOPHILE WORLDQUAKE RESONANCE DISTRESSING SHAKYCODE MYTHICSCALES SHATTERING
-                              STARSALIGN WARPINGEFFECT TOLLDANGER DRAMATICLIGHTING CALAMITY ANARCHIC MENDINGTONES PEARLSEEKER]
-        return false if shouldAbilityApply?(setterAbilities,checkingForAI) ||
-            shouldAbilityApply?(synergyAbilities, checkingForAI)
+        return false if shouldAbilityApply?(GameData::Ability::ECLIPSE_ABILITIES, checkingForAI)
         return true
     end
 
-    def flinchedByMoonlight?(checkingForAI = false)
+    def flinchedByMoonglow?(checkingForAI = false)
         return false if shouldAbilityApply?(:INNERFOCUS, checkingForAI)
         return false unless affectedByWeatherDownsides?(checkingForAI)
         return false if shouldTypeApply?(:FAIRY, checkingForAI) || shouldTypeApply?(:DARK, checkingForAI)
-        setterAbilities = %i[MOONGAZE LUNARLOYALTY]
-        synergyAbilities = %i[MOONGAZE LUNARLOYALTY LUNATIC MYSTICTAP NEERDOWELL ASTRALBODY NIGHTLIGHT NIGHTLIFE FULLMOONBLADE
-                            MALICIOUSGLOW MOONMIRROR NIGHTVISION MOONLIGHTER ONEDGE NIGHTSTALKER WEREWOLF MIDNIGHTTOIL MOONBUBBLE]
-        return false if shouldAbilityApply?(setterAbilities,checkingForAI) ||
-            shouldAbilityApply?(synergyAbilities, checkingForAI)
+        return false if shouldAbilityApply?(GameData::Ability::MOONGLOW_ABILITIES, checkingForAI)
         return true
     end
 

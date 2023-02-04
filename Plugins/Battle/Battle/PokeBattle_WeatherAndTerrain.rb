@@ -133,7 +133,7 @@ class PokeBattle_Battle
         end
     end
 
-    def extendWeather(numTurns)
+    def extendWeather(numTurns = 1)
         return if pbWeather == :None
         @field.weatherDuration += numTurns
         weatherName = GameData::BattleWeather.get(pbWeather).real_name
@@ -265,7 +265,7 @@ class PokeBattle_Battle
                 anyAffected = false
                 priority.each do |b|
                     next if b.fainted?
-                    next unless b.flinchedByMoonlight?
+                    next unless b.flinchedByMoonglow?
                     pbDisplay(_INTL("{1} is moonstruck! It'll flinch this turn!", b.pbThis))
                     b.pbFlinch
                     anyAffected = true

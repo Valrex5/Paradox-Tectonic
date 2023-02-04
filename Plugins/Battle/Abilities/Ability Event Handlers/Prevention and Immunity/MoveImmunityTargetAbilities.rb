@@ -204,3 +204,16 @@ BattleHandlers::MoveImmunityTargetAbility.add(:SOUNDPROOF,
       next true
   }
 )
+
+BattleHandlers::MoveImmunityTargetAbility.add(:WINTERINSULATION,
+  proc { |_ability, _user, target, move, type, battle, showMessages|
+      next false unless battle.pbWeather == :Hail
+      next false unless %i[FIRE ELECTRIC].include?(type)
+      if showMessages
+          battle.pbShowAbilitySplash(target)
+          battle.pbDisplay(_INTL("It doesn't affect {1}...", target.pbThis(true)))
+          battle.pbHideAbilitySplash(target)
+      end
+      next true
+  }
+)

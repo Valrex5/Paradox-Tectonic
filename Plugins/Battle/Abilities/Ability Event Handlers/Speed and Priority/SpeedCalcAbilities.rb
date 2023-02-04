@@ -154,6 +154,18 @@ BattleHandlers::SpeedCalcAbility.add(:SANDSNIPER,
   }
 )
 
+BattleHandlers::SpeedCalcAbility.add(:TAIGATRECKER,
+  proc { |_ability, battler, mult|
+      next mult * 1.5 if battler.battle.pbWeather == :Hail
+  }
+)
+
+BattleHandlers::SpeedCalcAbility.add(:POLARHUNTER,
+  proc { |_ability, battler, mult|
+      next mult * 1.25 if battler.battle.pbWeather == :Hail
+  }
+)
+
 BattleHandlers::SpeedCalcAbility.add(:LIGHTNINGRIDE,
   proc { |_ability, battler, mult|
       next mult * 2.0 if battler.effectActive?(:Charge)
