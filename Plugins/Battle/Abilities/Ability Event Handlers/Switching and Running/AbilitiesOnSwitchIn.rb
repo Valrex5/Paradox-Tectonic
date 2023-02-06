@@ -719,11 +719,11 @@ BattleHandlers::AbilityOnSwitchIn.add(:PEARLSEEKER,
   proc { |_ability, battler, battle|
       next unless battle.pbWeather == :Eclipse
       next if battler.item
-      pbShowAbilitySplash(battler)
+      battle.pbShowAbilitySplash(battler)
       itemData = GameData::Item(:PEARLOFFATE)
       battle.pbDisplay(_INTL("{1} discovers the {2}!", battler.pbThis, itemData.name))
       battler.item = :PEARLOFFATE
-      pbHideAbilitySplash(battler)
+      battle.pbHideAbilitySplash(battler)
   }
 )
 
@@ -732,7 +732,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:WHIRLER,
       trappingDuration = 3
       trappingDuration *= 2 if battler.hasActiveItem?(:GRIPCLAW)
 
-      pbShowAbilitySplash(battler)
+      battle.pbShowAbilitySplash(battler)
       battler.eachOpposing do |b|
         next if target.effectActive?(:Trapping)
         target.applyEffect(:Trapping, trappingDuration)
@@ -740,7 +740,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:WHIRLER,
         target.pointAt(:TrappingUser, battler)
         battle.pbDisplay(_INTL("{1} became trapped in the vortex!", b.pbThis))
       end
-      pbHideAbilitySplash(battler)
+      battle.pbHideAbilitySplash(battler)
   }
 )
 
