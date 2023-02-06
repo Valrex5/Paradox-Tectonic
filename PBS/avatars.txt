@@ -182,10 +182,9 @@ HPMult = 6.0
 #-------------------------------
 [SAWSBUCK]
 Ability = SERENEGRACE
-Moves1 = DOUBLEEDGE,HORNDRAIN,PRIMEVALFLOWSTATE
-Moves2 = WATERFALL,CRASHDIVE
+Moves1 = HEADBUTT,PLAYROUGH
 HPMult = 6.0
-Form = 1
+HealthBars = 2
 #-------------------------------
 [LEAFEON]
 Ability = RELUCTANTBLADE
@@ -446,6 +445,12 @@ HPMult = 6.0
 Ability = DRIZZLE
 Moves1 = MUDSHOT,SHOCKWAVE,PRIMEVALRAIN
 Moves2 = BRINE,THUNDER
+HPMult = 6.0
+#-------------------------------
+[STUNFISK]
+Ability = DRIZZLE
+Moves1 = MUDSHOT,NUMB,THUNDERPUNCH,PRIMEVALRAIN
+Moves2 = WATERPULSE,THUNDER
 HPMult = 6.0
 #-------------------------------
 [PANSAGE]
