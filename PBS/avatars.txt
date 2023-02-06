@@ -447,12 +447,6 @@ Moves1 = MUDSHOT,SHOCKWAVE,PRIMEVALRAIN
 Moves2 = BRINE,THUNDER
 HPMult = 6.0
 #-------------------------------
-[STUNFISK]
-Ability = DRIZZLE
-Moves1 = MUDSHOT,NUMB,THUNDERPUNCH,PRIMEVALRAIN
-Moves2 = WATERPULSE,THUNDER
-HPMult = 6.0
-#-------------------------------
 [PANSAGE]
 Ability = FRIENDGUARD
 Moves1 = SEEDBOMB
