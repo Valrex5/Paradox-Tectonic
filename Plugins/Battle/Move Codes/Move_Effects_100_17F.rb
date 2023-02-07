@@ -49,7 +49,7 @@ class PokeBattle_Move_103 < PokeBattle_Move
     def pbEffectAgainstTarget(_user, target)
         return unless damagingMove?
         return if target.pbOwnSide.effectAtMax?(:Spikes)
-        target.pbOwnSide.applyEffect(:Spikes)
+        target.pbOwnSide.incrementEffect(:Spikes)
     end
 
     def getEffectScore(user, target)
@@ -393,7 +393,7 @@ class PokeBattle_Move_110 < PokeBattle_Move
 end
 
 #===============================================================================
-# Attacks 2 rounds in the future. (Doom Desire, Future Sight)
+# Attacks 2 rounds in the future. (Future Sight, etc.)
 #===============================================================================
 class PokeBattle_Move_111 < PokeBattle_Move
     def cannotRedirect?; return true; end
@@ -428,8 +428,7 @@ class PokeBattle_Move_111 < PokeBattle_Move
 
     def pbEffectAgainstTarget(user, target)
         return if @battle.futureSight # Attack is hitting
-        position =
-            count = 3
+        count = 2
         count -= 1 if user.hasActiveAbility?([:BADOMEN])
         target.position.applyEffect(:FutureSightCounter, count)
         target.position.applyEffect(:FutureSightMove, @id)
@@ -624,6 +623,7 @@ class PokeBattle_Move_116 < PokeBattle_Move
 
     def getEffectScore(user, target)
         return 0 unless target.hasDamagingAttack?
+        return 0 if hasBeenUsed?(user)
         score = 0
         if user.belowHalfHealth?
             score -= 20
@@ -1681,7 +1681,7 @@ end
 
 #===============================================================================
 # Powders the foe. This round, if it uses a Fire move, it loses 1/4 of its max
-# HP instead. (Powder)
+# HP instead. (Black Powder)
 #===============================================================================
 class PokeBattle_Move_148 < PokeBattle_Move
     def ignoresSubstitute?(_user); return true; end
@@ -1698,8 +1698,9 @@ class PokeBattle_Move_148 < PokeBattle_Move
         target.applyEffect(:Powder)
     end
 
-    def getEffectScore(_user, target)
+    def getEffectScore(user, target)
         return 20 unless target.pbHasMoveType?(:FIRE)
+        return 0 if hasBeenUsed?(user)
         return 80
     end
 end

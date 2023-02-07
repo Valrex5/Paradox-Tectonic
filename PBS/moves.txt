@@ -1073,3 +1073,4 @@
 1123,MALEFICPHANTOM,Malefic Phantom,0EE,70,GHOST,Special,100,15,0,NearOther,-1,bef,"The user swaps out using an illusion made from the hatred of their opponent. This move always goes last.",
 1124,HAIRCURL,Hair Curl,0CF,80,STEEL,Special,100,15,0,NearOther,0,abef,"The user curls its metal hair around the target, trapping and damaging it for three turns.",
 1125,STONESIGNAL,Stone Signal,5BD,0,ROCK,Status,0,10,0,FoeSide,0,c,"The user calls all rocks to join it, summoning sandstorm for 5 turns and laying a trap of levitating stones around the target.",
+1126,CONTRADICT,Contradict,401,60,PSYCHIC,Special,100,12,0,NearOther,0,bce,"The user questions the existence of the enemy Pokemon, dealing psychic damage and dizzying them.",

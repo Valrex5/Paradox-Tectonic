@@ -649,10 +649,14 @@ end
 # attacks the user while this effect applies, that Pokémon become leeched.
 # (Root Haven)
 #===============================================================================
-class PokeBattle_Move_5A5 < PokeBattle_ProtectMove
+class PokeBattle_Move_5A5 < PokeBattle_HalfProtectMove
     def initialize(battle, move)
         super
         @effect = :RootShelter
+    end
+
+    def getOnHitEffectScore(user,target)
+        return getLeechEffectScore(user, target)
     end
 end
 
@@ -722,7 +726,7 @@ end
 #===============================================================================
 class PokeBattle_Move_5A8 < PokeBattle_Move
     def pbFailsAgainstTarget?(user, target, show_message)
-        if target.item && !canRemoveItem?(user, target) && pbCanLowerStatStage?(:SPECIAL_DEFENSE,user,self)
+        if target.item && !canRemoveItem?(user, target) && target.pbCanLowerStatStage?(:SPECIAL_DEFENSE,user,self)
             if show_message
                 @battle.pbDisplay(_INTL("But it failed!"))
             end
@@ -772,13 +776,22 @@ end
 #===============================================================================
 # Reduce's the target's highest attacking stat. (Scale Glint)
 #===============================================================================
-class PokeBattle_Move_5AA < PokeBattle_TargetMultiStatDownMove
+class PokeBattle_Move_5AA < PokeBattle_Move
     def pbAdditionalEffect(user, target)
         if target.pbAttack > target.pbSpAtk
-            target.pbLowerMultipleStatStages(:ATTACK, user, move: self)
+            target.pbLowerMultipleStatStages([:ATTACK,1], user, move: self)
         else
-            target.pbLowerMultipleStatStages(:SPECIAL_ATTACK, user, move: self)
+            target.pbLowerMultipleStatStages([:SPECIAL_ATTACK,1], user, move: self)
         end
+    end
+
+    def getEffectScore(user, target)
+        if target.pbAttack > target.pbSpAtk
+            statDownArray = [:ATTACK,1]
+        else
+            statDownArray = [:SPECIAL_ATTACK,1]
+        end
+        return getMultiStatDownEffectScore(statDownArray, user, target)
     end
 end
 
