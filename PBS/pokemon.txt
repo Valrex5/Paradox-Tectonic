@@ -9881,8 +9881,8 @@ Name = Makuhita
 InternalName = MAKUHITA
 Type1 = FIGHTING
 # HP, Attack, Defense, Speed, Sp. Atk, Sp. Def
-BaseStats = 70,65,50,40,40,50
-# Total = 315
+BaseStats = 95,80,60,35,50,70
+# Total = 390
 GenderRate = Female25Percent
 GrowthRate = Fluctuating
 BaseEXP = 47
@@ -9909,14 +9909,14 @@ BattlerEnemyX = 0
 BattlerEnemyY = 19
 BattlerShadowX = 0
 BattlerShadowSize = 2
-Evolutions = HARIYAMA,Level,26
+Evolutions = HARIYAMA,Level,39
 #-------------------------------
 [297]
 Name = Hariyama
 InternalName = HARIYAMA
 Type1 = FIGHTING
 # HP, Attack, Defense, Speed, Sp. Atk, Sp. Def
-BaseStats = 130,110,70,50,80,70
+BaseStats = 140,120,85,50,70,100
 # Total = 510
 GenderRate = Female25Percent
 GrowthRate = Fluctuating
@@ -11374,7 +11374,7 @@ BattlerEnemyX = 0
 BattlerEnemyY = 26
 BattlerShadowX = 0
 BattlerShadowSize = 1
-Evolutions = WHISCASH,Level,50
+Evolutions = WHISCASH,Level,34
 #-------------------------------
 [340]
 Name = Whiscash
@@ -11382,8 +11382,8 @@ InternalName = WHISCASH
 Type1 = WATER
 Type2 = GROUND
 # HP, Attack, Defense, Speed, Sp. Atk, Sp. Def
-BaseStats = 110,100,85,80,95,105
-# Total = 575
+BaseStats = 105,95,80,75,90,100
+# Total = 545
 GenderRate = Female50Percent
 GrowthRate = Medium
 BaseEXP = 164
@@ -14051,6 +14051,7 @@ BattlerShadowSize = 2
 Name = Cherubi
 InternalName = CHERUBI
 Type1 = GRASS
+Type2 = FIRE
 # HP, Attack, Defense, Speed, Sp. Atk, Sp. Def
 BaseStats = 50,45,50,75,65,65
 # Total = 350
@@ -14086,6 +14087,7 @@ Evolutions = CHERRIM,Level,25
 Name = Cherrim
 InternalName = CHERRIM
 Type1 = GRASS
+Type2 = FIRE
 # HP, Attack, Defense, Speed, Sp. Atk, Sp. Def
 BaseStats = 85,60,70,100,95,90
 # Total = 500
@@ -20226,6 +20228,7 @@ BattlerShadowSize = 3
 Name = Elgyem
 InternalName = ELGYEM
 Type1 = PSYCHIC
+Type2 = STEEL
 # HP, Attack, Defense, Speed, Sp. Atk, Sp. Def
 BaseStats = 55,65,55,55,80,70
 # Total = 380
@@ -20260,6 +20263,7 @@ Evolutions = BEHEEYEM,Level,34
 Name = Beheeyem
 InternalName = BEHEEYEM
 Type1 = PSYCHIC
+Type2 = STEEL
 # HP, Attack, Defense, Speed, Sp. Atk, Sp. Def
 BaseStats = 75,90,75,70,105,95
 # Total = 510

@@ -20,7 +20,8 @@ module BattleHandlers
     StatLossImmunityAbility             = AbilityHandlerHash.new
     StatLossImmunityAbilityNonIgnorable = AbilityHandlerHash.new   # Full Metal Body
     StatLossImmunityAllyAbility         = AbilityHandlerHash.new   # Flower Veil
-    AbilityOnStatGain                   = AbilityHandlerHash.new   # None!
+    AbilityOnStatGain                   = AbilityHandlerHash.new
+    AbilityOnEnemyStatGain              = AbilityHandlerHash.new
     AbilityOnStatLoss                   = AbilityHandlerHash.new
     # Priority and turn order
     PriorityChangeAbility               = AbilityHandlerHash.new
@@ -114,10 +115,11 @@ module BattleHandlers
     RunFromBattleAbility                = AbilityHandlerHash.new # Run Away
     RunFromBattleItem                   = ItemHandlerHash.new # Smoke Ball
     # Consuming items
-    OnBerryConsumedAbility = AbilityHandlerHash.new
+    OnBerryConsumedAbility              = AbilityHandlerHash.new
     # Other triggers
-    ItemOnStatLoss = ItemHandlerHash.new
-    FieldEffectStatLossItem	= ItemHandlerHash.new
+    ItemOnEnemyStatGain                 = ItemHandlerHash.new
+    ItemOnStatLoss                      = ItemHandlerHash.new
+    FieldEffectStatLossItem	            = ItemHandlerHash.new
 
     # Special Weather Effect abilities
     TotalEclipseAbility                 = AbilityHandlerHash.new
@@ -214,6 +216,10 @@ module BattleHandlers
 
     def self.triggerAbilityOnStatGain(ability, battler, stat, user)
         AbilityOnStatGain.trigger(ability, battler, stat, user)
+    end
+
+    def self.triggerAbilityOnEnemyStatGain(ability, battler, stat, user, benefactor)
+        AbilityOnEnemyStatGain.trigger(ability, battler, stat, user, benefactor)
     end
 
     def self.triggerAbilityOnStatLoss(ability, battler, stat, user)
@@ -601,6 +607,10 @@ module BattleHandlers
     end
 
     #=============================================================================
+
+    def self.triggerItemOnEnemyStatGain(item, battler, user, battle, benefactor)
+        ItemOnEnemyStatGain.trigger(item, battler, user, battle, benefactor)
+    end
 
     def self.triggerItemOnStatLoss(item, battler, user, move, switched, battle)
         ItemOnStatLoss.trigger(item, battler, user, move, switched, battle)
