@@ -434,3 +434,9 @@ BattleHandlers::DamageCalcUserAbility.add(:TAIGATRECKER,
       mults[:base_damage_multiplier] *= 1.5 if user.battle.pbWeather == :Hail && type == :GRASS
   }
 )
+
+BattleHandlers::DamageCalcUserAbility.add(:HOOLIGAN,
+  proc { |_ability, _user, _target, move, mults, _baseDmg, _type, _aiCheck|
+      mults[:base_damage_multiplier] *= 1.3 if move.recoilMove? || move.soundMove?
+  }
+)
