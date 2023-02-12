@@ -586,16 +586,15 @@ class PokeBattle_Move_115 < PokeBattle_Move
         return false
     end
 
-    def pbMoveFailedAI?(_user, _targets); return false; end
-
-    def getEffectScore(user, _target)
-        score = 0
-        score -= 30 unless user.substituted?
-        score -= 20 unless user.hasAlly?
-        user.eachPotentialAttacker do |_b|
-            score -= 20
+    def pbMoveFailedAI?(user, _targets)
+        return false if user.substituted?
+        if user.ownersPolicies.include?(:PREDICTS_MOVES)
+            user.eachPredictedAttacker do |_b|
+                return true
+            end
+            return false
         end
-        return score
+        return hasBeenUsed?(user)
     end
 end
 
@@ -1784,8 +1783,8 @@ class PokeBattle_Move_14B < PokeBattle_ProtectMove
     def getEffectScore(user, target)
         score = super
         # Check only physical attackers
-        user.eachPotentialAttacker(0) do |_b|
-            score += 20
+        user.eachPredictedProtectHitter(0) do |b|
+            score += getMultiStatDownEffectScore([:ATTACK,1],user,b)
         end
         return score
     end
@@ -1804,7 +1803,7 @@ class PokeBattle_Move_14C < PokeBattle_ProtectMove
     def getEffectScore(user, target)
         score = super
         # Check only physical attackers
-        user.eachPotentialAttacker(0) do |_b|
+        user.eachPredictedProtectHitter(0) do |_b|
             score += 20
         end
         return score
@@ -1885,6 +1884,8 @@ end
 # switches out. Ignores trapping moves. (Parting Shot)
 #===============================================================================
 class PokeBattle_Move_151 < PokeBattle_TargetMultiStatDownMove
+    def switchOutMove?; return true; end
+
     def initialize(battle, move)
         super
         @statDown = [:ATTACK, 1, :SPECIAL_ATTACK, 1]
@@ -2372,10 +2373,9 @@ class PokeBattle_Move_168 < PokeBattle_ProtectMove
 
     def getEffectScore(user, target)
         score = super
-        # Check only special attackers
-        user.eachPotentialAttacker(true) do |b|
-            next unless b.hasPhysicalAttack?
-            score += getPoisonEffectScore(user, b) * 0.75
+        # Check only physical attackers
+        user.eachPredictedProtectHitter(0) do |b|
+            score += getPoisonEffectScore(user, b)
         end
         return score
     end
@@ -2936,7 +2936,6 @@ end
 #===============================================================================
 class PokeBattle_Move_17E < PokeBattle_Move
     def healingMove?; return true; end
-    def worksWithNoTargets?; return true; end
 
     def healRatio(_user)
         return 1.0 / 4.0

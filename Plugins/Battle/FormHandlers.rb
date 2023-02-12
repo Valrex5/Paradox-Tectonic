@@ -35,3 +35,15 @@ MultipleForms.register(:ZACIAN,{
     next 0
   }
 })
+
+MultipleForms.register(:PUMPKABOO, {
+  "getFormOnLeavingBattle" => proc { |pkmn, _battle, _usedInBattle, endBattle|
+      next 0 if pkmn.fainted? || endBattle
+  },
+})
+
+MultipleForms.register(:GOURGEIST, {
+  "getFormOnLeavingBattle" => proc { |pkmn, _battle, _usedInBattle, endBattle|
+      next 0 if pkmn.fainted? || endBattle
+  },
+})

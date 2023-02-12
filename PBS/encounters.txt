@@ -1,5 +1,13 @@
 ﻿# See the documentation on the wiki to learn how to edit this file.
 #-------------------------------
+[002] # Sandstone System F2
+DarkCave,21
+    20,EELEKTROSS,53,55
+    20,GYARADOS,53,55
+    20,KROOKODILE,53,55
+    20,PORYGONZ,53,55
+    20,ROTOM,53,55
+#-------------------------------
 [003] # Kilna Turf
 Land,20
     25,GROWLITHE,15,18
@@ -201,7 +209,7 @@ LandTall,20
     25,SPRITZEE,16,19
     25,VENONAT,16,19
 #-------------------------------
-[055] # Eleig Delta
+[055] # Lingering Delta
 FloweryGrass,20
     25,BONSLY,15,18
     25,SHUPPET,15,18
@@ -458,7 +466,7 @@ Special,1
 Special,1
     1,GFARFETCHD,40
 #-------------------------------
-[183] # Circuit Cave
+[183] # Sandstone System F1
 DarkCave,21
     25,ELEKID,38
     25,MINUN,38
@@ -647,7 +655,7 @@ DarkCave,20
     25,UNOWN,37,39
     25,WYNAUT,37,39
 #-------------------------------
-[219] # Crumbling Canyon
+[219] # Crumbling Canyon F1
 DarkCave,20
     20,AXEW,18,20
     20,EKANS,18,20
@@ -759,6 +767,14 @@ Land,20
     25,PICHU,43,45
     25,ROOKIDEE,43,45
 #-------------------------------
+[282] # The Catacombs
+LandSparse,20
+    20,AEGISLASH,53,55
+    20,DRUDDIGON,34,36
+    20,DUSKNOIR,34,36
+    20,ESCAVALIER,34,36
+    20,NOIVERN,34,36
+#-------------------------------
 [288] # Underground River
 Puddle,20
     25,LUVDISC,36,38
@@ -815,7 +831,7 @@ Special
 Special
     1,WIMPOD,15
 #-------------------------------
-[326] # The Barrows
+[326] # Carnation Graves
 DarkCave,20
     25,CUBONE,17,20
     25,DUSKULL,17,20
@@ -850,3 +866,11 @@ DarkCave,20
     20,ONIX,56,59
     20,RHYHORN,56,59
     20,SOLROCK,56,59
+#-------------------------------
+[359] # Alloyed Thicket
+Land,20
+    20,AMOONGUSS,53,55
+    20,ARIADOS,53,55
+    20,DURANT,53,55
+    20,FERROTHORN,53,55
+    20,REAVOR,53,55

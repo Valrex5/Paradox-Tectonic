@@ -418,7 +418,7 @@ class PokeBattle_Move_593 < PokeBattle_ProtectMove
     def getEffectScore(user, target)
         score = super
         # Check only special attackers
-        user.eachPotentialAttacker(1) do |_b|
+        user.eachPredictedProtectHitter(1) do |_b|
             score += 20
         end
         return score
@@ -1146,9 +1146,9 @@ class PokeBattle_Move_5BB < PokeBattle_ProtectMove
 
     def getEffectScore(user, target)
         score = super
-        # Check only physical attackers
-        user.eachPotentialAttacker(1) do |_b|
-            score += 20
+        # Check only special attackers
+        user.eachPredictedProtectHitter(1) do |b|
+            score += getMultiStatDownEffectScore([:SPECIAL_ATTACK,1],user,b)
         end
         return score
     end
@@ -1179,5 +1179,19 @@ class PokeBattle_Move_5BD < PokeBattle_Move_105
     def pbEffectGeneral(user)
         super
         @battle.pbStartWeather(user, :Sandstorm, 5, false) unless @battle.primevalWeatherPresent?
+    end
+end
+
+#===============================================================================
+# Halves the target's current HP. (Mouthful)
+# User gains half the HP it inflicts as damage.
+#===============================================================================
+class PokeBattle_Move_5BE < PokeBattle_DrainMove
+    def drainFactor(_user, _target); return 0.5; end
+
+    def pbFixedDamage(_user, target)
+        damage = target.hp / 2.0
+        damage /= BOSS_HP_BASED_EFFECT_RESISTANCE if target.boss?
+        return damage.round
     end
 end
