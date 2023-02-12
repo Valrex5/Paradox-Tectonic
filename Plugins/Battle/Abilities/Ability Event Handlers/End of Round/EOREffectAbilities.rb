@@ -158,7 +158,7 @@ BattleHandlers::EOREffectAbility.add(:VITALRHYTHM,
 )
 
 BattleHandlers::EOREffectAbility.add(:GROWUP,
-  proc { |_ability, battler, _battle|
+  proc { |_ability, battler, battle|
       # A Pokémon's turnCount is 0 if it became active after the beginning of a
       # round
       next if battler.turnCount == 0
