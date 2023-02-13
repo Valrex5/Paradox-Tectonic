@@ -33,6 +33,6 @@ BattleHandlers::MoveBlockingAbility.add(:DESSICATE,
 
 BattleHandlers::MoveBlockingAbility.add(:LUNARCLEANSING,
     proc { |_ability, _bearer, _user, _targets, move, battle|
-        next [:BUG,:POISON].include?(move.calcType) && battle.pbWeather == :Sandstorm
+        next [:BUG,:POISON].include?(move.calcType) && battle.pbWeather == :Moonglow
     }
 )
