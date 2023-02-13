@@ -609,14 +609,6 @@ BattleHandlers::AbilityOnSwitchIn.add(:AQUASNEAK,
   }
 )
 
-BattleHandlers::AbilityOnSwitchIn.add(:NIGHTSTALKER,
-  proc { |_ability, battler, battle|
-      battle.pbShowAbilitySplash(battler)
-      battler.applyEffect(:NightStalker)
-      battle.pbHideAbilitySplash(battler)
-  }
-)
-
 BattleHandlers::AbilityOnSwitchIn.add(:CONVICTION,
   proc { |_ability, battler, battle|
       battle.forceUseMove(battler, :ENDURE, -1, true, nil, nil, true)

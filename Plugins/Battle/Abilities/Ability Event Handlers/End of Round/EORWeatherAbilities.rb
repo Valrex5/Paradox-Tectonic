@@ -48,6 +48,16 @@ BattleHandlers::EORWeatherAbility.add(:SOLARPOWER,
   }
 )
 
+BattleHandlers::EORWeatherAbility.add(:NIGHTSTALKER,
+    proc { |_ability, _weather, battler, battle|
+        next unless battle.pbWeather == :Moonglow
+        battle.pbShowAbilitySplash(battler)
+        battle.pbDisplay(_INTL("{1} was hurt by the moonlight!", battler.pbThis))
+        battler.applyFractionalDamage(1.0 / 8.0)
+        battle.pbHideAbilitySplash(battler)
+    }
+  )
+
 BattleHandlers::EORWeatherAbility.add(:HEATSAVOR,
     proc { |_ability, _weather, battler, battle|
         next unless battle.sunny?

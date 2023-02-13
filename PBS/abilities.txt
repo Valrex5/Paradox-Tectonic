@@ -524,7 +524,7 @@
 534,MOONMIRROR,Moon Mirror,"In moonglow, bounces back stat-lowering effects."
 535,MOONLIGHTER,Moonlighter,"When hit in moonglow, steals the attacker's item, or knocks it away."
 536,NIGHTVISION,Night Vision,"During moonglow, speed is boosted by 50% and twice as likely to crit."
-537,NIGHTSTALKER,Night Stalker,"In sunshine, Attack is boosted by 50%, but HP decreases."
+537,NIGHTSTALKER,Night Stalker,"In moonglow, Attack is boosted by 50%, but HP decreases."
 539,WEREWOLF,Werewolf,"Transforms into Midnight Form at the Full Moon. Ability becomes No Guard."
 540,TOXICCLOUD,Toxic Cloud,"Special moves have a 30% chance to poison targets."
 541,GENERATOR,Generator,"Whenever it uses a status move, Electric-type attacks the next turn are boosted."

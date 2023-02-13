@@ -117,9 +117,6 @@ switchedBattlers)
             #       after the move's animation, but the item is only consumed now.
             user.pbConsumeItem
         end
-        if move.pbDamagingMove? && user.effectActive?(:NightStalker)
-            user.disableEffect(:NightStalker)
-        end
         # Consume Volatile Toxin
         if move.pbDamagingMove?
             targets.each do |b|

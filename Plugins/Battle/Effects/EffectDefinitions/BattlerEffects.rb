@@ -1639,11 +1639,3 @@ GameData::BattleEffect.register_effect(:Battler, {
 battler.pbThis(true)))
     end,
 })
-
-GameData::BattleEffect.register_effect(:Battler, {
-    :id => :NightStalker,
-    :real_name => "Night Stalking",
-    :apply_proc => proc do |battle, battler, _value|
-        battle.pbDisplay(_INTL("{1} will strike from the shadows!",battler.pbThis))
-    end,
-})
