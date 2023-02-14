@@ -49,7 +49,9 @@ class PokeBattle_Battle
             if @field.weatherDuration < 0
                 pbDisplay(_INTL("It'll last indefinitely!"))
             else
-                pbDisplay(_INTL("It'll last for {1} more turns!", @field.weatherDuration - 1))
+                moreTurns = @field.weatherDuration
+                moreTurns -= 1 unless @turnCount == 0
+                pbDisplay(_INTL("It'll last for {1} more turns!", moreTurns))
             end
         end
         pbHideAbilitySplash(user) if user
@@ -238,9 +240,11 @@ class PokeBattle_Battle
         curWeather = pbWeather
 
         @field.specialTimer += 1
-        @field.specialTimer += 1 if weatherSpedUp?
 
-        if @field.specialTimer >= SPECIAL_EFFECT_WAIT_TURNS
+        threshold = SPECIAL_EFFECT_WAIT_TURNS
+        threshold /= 2 if weatherSpedUp?
+
+        if (@field.specialTimer + 1) >= threshold
             case curWeather
             when :Eclipse
                 pbDisplay(_INTL("The Total Eclipse arrives!"))

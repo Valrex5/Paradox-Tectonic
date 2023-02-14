@@ -488,7 +488,8 @@ class PokeBattle_Battle
 
         pbCalculatePriority           # recalculate speeds
         priority = pbPriority(true)   # in order of fastest -> slowest speeds only
-        pbSORWeather(priority)
+        
+        pbSORWeather(priority) unless @turnCount == 0
     end
 
     #=============================================================================
