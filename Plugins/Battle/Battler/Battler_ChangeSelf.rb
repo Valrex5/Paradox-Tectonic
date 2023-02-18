@@ -233,8 +233,8 @@ class PokeBattle_Battler
 
         @battle.triggerBattlerFaintedDialogue(self)
 
-        if effectActive?(:GivingDragonRideTo)
-            otherBattler = @battle.battlers[@effects[:GivingDragonRideTo]]
+        if effectActive?(:GivingDragonRideTo, true)
+            otherBattler = @battle.battlers[@effects[:GivingDragonRideTo]] # Do not switch to the helper method
             damageDealt = otherBattler.hp
             otherBattler.damageState.displayedDamage = damageDealt
             @battle.scene.pbDamageAnimation(otherBattler)

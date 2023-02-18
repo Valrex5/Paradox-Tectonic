@@ -677,27 +677,7 @@ end
 class PokeBattle_Move_09F < PokeBattle_Move
     def initialize(battle, move)
         super
-        if @id == :JUDGMENT
-            @itemTypes = {
-                :FISTPLATE   => :FIGHTING,
-                :SKYPLATE    => :FLYING,
-                :TOXICPLATE  => :POISON,
-                :EARTHPLATE  => :GROUND,
-                :STONEPLATE  => :ROCK,
-                :INSECTPLATE => :BUG,
-                :SPOOKYPLATE => :GHOST,
-                :IRONPLATE   => :STEEL,
-                :FLAMEPLATE  => :FIRE,
-                :SPLASHPLATE => :WATER,
-                :MEADOWPLATE => :GRASS,
-                :ZAPPLATE    => :ELECTRIC,
-                :MINDPLATE   => :PSYCHIC,
-                :ICICLEPLATE => :ICE,
-                :DRACOPLATE  => :DRAGON,
-                :DREADPLATE  => :DARK,
-                :PIXIEPLATE  => :FAIRY,
-            }
-        elsif @id == :TECHNOBLAST
+        if @id == :TECHNOBLAST
             @itemTypes = {
                 :SHOCKDRIVE => :ELECTRIC,
                 :BURNDRIVE  => :FIRE,
@@ -730,10 +710,14 @@ class PokeBattle_Move_09F < PokeBattle_Move
     def pbBaseType(user)
         ret = :NORMAL
         if user.itemActive?
-            @itemTypes.each do |item, itemType|
-                next if user.item != item
-                ret = itemType if GameData::Type.exists?(itemType)
-                break
+            if @id == :TECHNOBLAST
+                @itemTypes.each do |item, itemType|
+                    next if user.item != item
+                    ret = itemType if GameData::Type.exists?(itemType)
+                    break
+                end
+            else
+                return user.itemTypeChosen
             end
         end
         return ret
