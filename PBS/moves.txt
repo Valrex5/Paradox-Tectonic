@@ -711,7 +711,7 @@
 752,DIAMONDFORCE,Diamond Force,000,85,ROCK,Special,100,12,0,NearOther,0,befh,"The user calls up spikes of diamond. Critical hits land more easily.",DIAMONDSTORM
 753,CLASH,Clash,000,45,DRAGON,Physical,100,30,0,NearOther,0,abef,"The user harnesses inner battle instincts to strike at the target.",
 754,JOLT,Jolt,007,40,ELECTRIC,Physical,100,25,10,NearOther,0,abef,"The user strikes the enemy while coated with electricity. It has a 10% chance to numb.",SPARK
-755,ELECTROSLASH,Electroslash,000,90,ELECTRIC,Physical,100,12,0,NearOther,0,abefhp,"The user harnesses a blade of lightning and slices at the target. Critical hits land more easily.",SPARK
+755,ELECTROSLASH,Electroslash,000,90,ELECTRIC,Physical,100,12,0,NearOther,0,abefhp,"The user harnesses a blade of lightning and slices at the target. Critical hits land more easily.",
 756,CURRENTCRASH,Current Crash,599,55,ELECTRIC,Physical,100,25,0,NearOther,0,abef,"The user wraps their body in electricity and crashes into the target. The user also takes 20% recoil.",WILDCHARGE
 757,FAVOR,Favor,089,9,NORMAL,Special,100,15,0,NearOther,0,bef,"A full-power special attack that grows more powerful the more the user likes its Trainer.",RETURN
 758,ESSENCEARROW,Essence Arrow,020,40,GRASS,Special,100,30,10,NearOther,0,befn,"The user fires a small bolt of energy at the target. It has a 10% chance to raise user's Sp. Atk.",ENERGYBALL
@@ -779,7 +779,7 @@
 821,ROCKAPULT,Rockapult,51F,140,ROCK,Special,50,10,0,NearOther,0,bef,"The user throws a large rock at the target. If it misses, the user's accuracy is raised.",ROCKTHROW
 822,LAHAR,Lahar,51E,125,GROUND,Special,75,10,0,NearOther,0,bef,"The user causes a mud slide. If the move misses, it sharply raises the user's Speed.",
 823,STARFALL,Star Fall,520,50,ROCK,Special,100,12,100,NearOther,0,bef,"A star falls on the target. Witnessing this lucky star also increases the user's critical hit chance.",DOOMDESIRE
-824,BUBBLEBLAST,Bubble Blast,044,80,WATER,Special,100,12,30,NearOther,0,bef,"A blast of bubbles is shot at the target. It has a 30% chance to lower the target's Speed stat.",BUBBLEBEAM
+824,BUBBLEBLAST,Bubble Blast,044,80,WATER,Special,100,12,30,NearOther,0,bef,"A blast of bubbles is shot at the target. It has a 30% chance to lower the target's Speed stat.",
 825,AURASTRIKE,Aura Strike,007,60,FIGHTING,Special,100,15,30,NearOther,0,bef,"The user shoots a blast of aura. This has a 30% chance to numb the target.",
 826,COURAGEBOLT,Courage Bolt,020,40,FIGHTING,Special,100,30,10,NearOther,0,bef,"The user manifests a bolt of pure courage. This has a 10% chance of raising the user's Sp. Atk.",AURASPHERE
 828,PSYCHICOVERLOAD,Psychic Overload,55F,120,PSYCHIC,Special,100,10,0,RandomNearFoe,0,abef,"The user overloads its mind to attack for three turns.",PSYCHOBOOST
@@ -1075,3 +1075,8 @@
 1125,STONESIGNAL,Stone Signal,5BD,0,ROCK,Status,0,10,0,FoeSide,0,c,"The user calls all rocks to join it, summoning sandstorm for 5 turns and laying a trap of levitating stones around the target.",
 1126,CONTRADICT,Contradict,401,60,PSYCHIC,Special,100,12,0,NearOther,0,bce,"The user questions the existence of the enemy Pokemon, dealing psychic damage and dizzying them.",
 1127,MOUTHFUL,Mouthful,5BE,1,DARK,Physical,100,10,0,NearOther,0,abef,"The user chomps hard, cutting the target's HP by half, and healing for half of that.",
+1128,GOLEMGUARD,Golem Guard,5BF,0,ROCK,Status,0,5,0,User,3,d,"The user and its allies are protected from wide-ranging attacks this turn, and enemies can only target the user. Fails if used in succession.",
+1129,FREEZERAY,Freeze Ray,5C0,70,ICE,Special,100,10,100,NearOther,0,bef,"The user freezes the target in place, dealing damage and minimizing their Speed and Evasiveness.",
+1130,WARPEDSTRIKE,Warped Strike,5C1,80,STEEL,Physical,100,15,100,NearOther,0,abefj,"Inflicts physical or special damage, whichever deals more. Then, raises the Attacking stat which wasn't used.",
+1131,OPTIMIZEDACTION,Optimized Action,5C2,0,ELECTRIC,Status,0,15,0,User,0,,"The user finds the highest base power move among your able party members, and uses it.",
+1132,DRAGONASPECT,Dragon Aspect,5C3,0,DRAGON,Status,0,5,0,User,0,,"Invokes the aspects of multiple dragons, striking with two fitting moves in a row.",

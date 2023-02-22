@@ -117,3 +117,9 @@ BattleHandlers::UserAbilityOnHit.add(:MENTALDAMAGE,
     battle.pbHideAbilitySplash(user)
   }
 )
+
+BattleHandlers::UserAbilityOnHit.add(:ROCKCYCLE,
+  proc { |_ability, user, target, move, battle|
+    user.pbOwnSide.applyEffect(:ErodedRock) if move.physicalMove?
+  }
+)

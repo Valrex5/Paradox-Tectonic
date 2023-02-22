@@ -217,6 +217,14 @@ BattleHandlers::MoveImmunityTargetAbility.add(:WINTERINSULATION,
   proc { |_ability, _user, target, move, type, battle, showMessages|
       next false unless battle.pbWeather == :Hail
       next false unless %i[FIRE ELECTRIC].include?(type)
+      next true
+  }
+)
+
+BattleHandlers::MoveImmunityTargetAbility.add(:MORPHINGGUARD,
+  proc { |_ability, user, target, _move, type, battle, showMessages|
+      next false unless user.effectActive?(:MorphingGuard)
+      next false unless user.effects[:MorphingGuard] == type
       if showMessages
           battle.pbShowAbilitySplash(target)
           battle.pbDisplay(_INTL("It doesn't affect {1}...", target.pbThis(true)))

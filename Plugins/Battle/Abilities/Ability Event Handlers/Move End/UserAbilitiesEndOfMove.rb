@@ -273,3 +273,15 @@ BattleHandlers::UserAbilityEndOfMove.add(:ETERNALWINTER,
       battle.pbHideAbilitySplash(user)
   }
 )
+
+BattleHandlers::UserAbilityEndOfMove.add(:ROCKCYCLE,
+  proc { |_ability, user, targets, move, battle, _switchedBattlers|
+      next if move.pbDamagingMove?
+      next unless user.pbOwnSide.effectActive?(:ErodedRock)
+      rockCount = user.pbOwnSide.countEffect(:ErodedRock)
+      battle.pbShowAbilitySplash(user)
+      user.pbOwnSide.disableEffect(:ErodedRock)
+      battler.applyFractionalHealing(rockCount.to_f / 4.0)
+      battle.pbHideAbilitySplash(user)
+  }
+)
