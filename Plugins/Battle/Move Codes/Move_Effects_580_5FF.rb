@@ -1201,7 +1201,7 @@ end
 # This round, user becomes the target of attacks that have single targets.
 # (Golem Guard)
 #===============================================================================
-class PokeBattle_Move_5B6 < PokeBattle_ProtectMove
+class PokeBattle_Move_5BF < PokeBattle_ProtectMove
     def initialize(battle, move)
         super
         @effect      = :WideGuard
@@ -1239,7 +1239,7 @@ end
 #===============================================================================
 # Minimizes the target's Speed and Evasiveness. (Freeze Ray)
 #===============================================================================
-class PokeBattle_Move_5B7 < PokeBattle_Move
+class PokeBattle_Move_5C0 < PokeBattle_Move
     def pbAdditionalEffect(user, target)
         target.pbMinimizeStatStage(:SPEED, user, self)
         target.pbMinimizeStatStage(:EVASION, user, self)
@@ -1254,7 +1254,7 @@ end
 # Changes Category based on which will deal more damage. (Warped Strike)
 # Raises the stat that wasn't selected to be used.
 #===============================================================================
-class PokeBattle_Move_5B8 < PokeBattle_Move
+class PokeBattle_Move_5C1 < PokeBattle_Move
     def initialize(battle, move)
         super
         @calculated_category = 1
@@ -1285,7 +1285,7 @@ end
 #===============================================================================
 # Uses the highest base-power move known by any non-user Pokémon in the user's party. (Optimized Action)
 #===============================================================================
-class PokeBattle_Move_5B9 < PokeBattle_Move
+class PokeBattle_Move_5C2 < PokeBattle_Move
     def callsAnotherMove?; return true; end
 
     def initialize(battle, move)
@@ -1406,7 +1406,7 @@ end
 #===============================================================================
 # Uses a random special Dragon-themed move, then a random physical Dragon-themed move. (Dragon Invocation)
 #===============================================================================
-class PokeBattle_Move_5BA < PokeBattle_Move
+class PokeBattle_Move_5C3 < PokeBattle_Move
     def callsAnotherMove?; return true; end
 
     def initialize(battle, move)
