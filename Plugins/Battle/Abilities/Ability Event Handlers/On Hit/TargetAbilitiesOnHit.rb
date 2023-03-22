@@ -584,7 +584,7 @@ BattleHandlers::TargetAbilityOnHit.add(:TOTALMIRROR,
 )
 
 BattleHandlers::TargetAbilityOnHit.add(:EROSIONCYCLE,
-    proc { |_ability, target, battler, _move, battle|
+    proc { |_ability, target, battler, move, battle|
         target.pbOwnSide.incrementEffect(:ErodedRock) if move.physicalMove?
     }
 )
