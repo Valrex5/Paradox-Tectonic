@@ -1180,7 +1180,7 @@ class PokeBattle_Move_04E < PokeBattle_TargetStatDownMove
         end
         if target.hasActiveAbility?(:OBLIVIOUS) && !@battle.moldBreaker
             if show_message
-                @battle.pbShowAbilitySplash(target)
+                @battle.battle.pbShowAbilitySplash(target, ability)
                 @battle.pbDisplay(_INTL("{1} is unaffected!", target.pbThis))
                 @battle.pbHideAbilitySplash(target)
             end
@@ -1894,7 +1894,7 @@ class PokeBattle_Move_063 < PokeBattle_Move
     end
 
     def pbEffectAgainstTarget(_user, target)
-        @battle.pbShowAbilitySplash(target, true, false)
+        @battle.battle.pbShowAbilitySplash(target, ability, true, false)
         oldAbil = target.ability
         target.ability = :SIMPLE
         @battle.pbReplaceAbilitySplash(target)
@@ -1939,7 +1939,7 @@ class PokeBattle_Move_064 < PokeBattle_Move
     end
 
     def pbEffectAgainstTarget(_user, target)
-        @battle.pbShowAbilitySplash(target, true, false)
+        @battle.battle.pbShowAbilitySplash(target, ability, true, false)
         oldAbil = target.ability
         target.ability = :INSOMNIA
         @battle.pbReplaceAbilitySplash(target)
@@ -1992,9 +1992,9 @@ class PokeBattle_Move_065 < PokeBattle_Move
     end
 
     def pbEffectAgainstTarget(user, target)
-        @battle.pbShowAbilitySplash(user, true, false)
-        oldAbil = user.ability
-        user.ability = target.ability
+        @battle.pbShowAbilitySplash(user, user.baseAbility, true, false)
+        oldAbil = user.baseAbility
+        user.ability = target.baseAbility
         @battle.pbReplaceAbilitySplash(user)
         @battle.pbDisplay(_INTL("{1} copied {2}'s {3}!",
            user.pbThis, target.pbThis(true), target.abilityName))
@@ -2038,7 +2038,7 @@ class PokeBattle_Move_066 < PokeBattle_Move
     end
 
     def pbEffectAgainstTarget(user, target)
-        @battle.pbShowAbilitySplash(target, true, false)
+        @battle.battle.pbShowAbilitySplash(target, ability, true, false)
         oldAbil = target.ability
         target.ability = user.ability
         @battle.pbReplaceAbilitySplash(target)
@@ -2113,11 +2113,11 @@ class PokeBattle_Move_067 < PokeBattle_Move
 
     def pbEffectAgainstTarget(user, target)
         if user.opposes?(target)
-            @battle.pbShowAbilitySplash(user, false, false)
-            @battle.pbShowAbilitySplash(target, true, false)
+            @battle.pbShowAbilitySplash(user, user.baseAbility, false, false)
+            @battle.battle.pbShowAbilitySplash(target, target.baseAbility, true, false)
         end
-        oldUserAbil   = user.ability
-        oldTargetAbil = target.ability
+        oldUserAbil   = user.baseAbility
+        oldTargetAbil = target.baseAbility
         user.ability   = oldTargetAbil
         target.ability = oldUserAbil
         if user.opposes?(target)
@@ -2302,13 +2302,17 @@ class PokeBattle_Move_070 < PokeBattle_FixedDamageMove
             @battle.pbDisplay(_INTL("{1} is unaffected, since it's an Avatar!", target.pbThis)) if show_message
             return true
         end
-        if target.hasActiveAbility?([:STURDY,:DANGERSENSE]) && !@battle.moldBreaker
-            if show_message
-                @battle.pbShowAbilitySplash(target)
-                @battle.pbDisplay(_INTL("But it failed to affect {1}!", target.pbThis(true)))
-                @battle.pbHideAbilitySplash(target)
+        unless @battle.moldBreaker
+            %i[STURDY DANGERSENSE].each do |ability|
+                if target.hasActiveAbility?(ability)
+                    if show_message
+                        @battle.battle.pbShowAbilitySplash(target, ability)
+                        @battle.pbDisplay(_INTL("But it failed to affect {1}!", target.pbThis(true)))
+                        @battle.pbHideAbilitySplash(target)
+                    end
+                    return true
+                end
             end
-            return true
         end
         return false
     end

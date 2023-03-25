@@ -254,7 +254,7 @@ target.pbThis(true)))
         return false if @battle.moldBreaker
         if target.hasActiveAbility?(:AROMAVEIL)
             if showMessage
-                @battle.pbShowAbilitySplash(target)
+                @battle.battle.pbShowAbilitySplash(target, ability)
                 @battle.pbDisplay(_INTL("{1} is unaffected!", target.pbThis))
                 @battle.pbHideAbilitySplash(target)
             end
@@ -263,7 +263,7 @@ target.pbThis(true)))
         target.eachAlly do |b|
             next unless b.hasActiveAbility?(:AROMAVEIL)
             if showMessage
-                @battle.pbShowAbilitySplash(target)
+                @battle.battle.pbShowAbilitySplash(target, ability)
                 @battle.pbDisplay(_INTL("{1} is unaffected!", target.pbThis))
                 @battle.pbHideAbilitySplash(target)
             end
@@ -463,22 +463,22 @@ target.pbThis(true)))
 
     def pbEndureKOMessage(target)
         if target.damageState.disguise
-            @battle.pbShowAbilitySplash(target)
+            @battle.battle.pbShowAbilitySplash(target, ability)
             @battle.pbDisplay(_INTL("Its disguise served it as a decoy!"))
             @battle.pbHideAbilitySplash(target)
             target.pbChangeForm(1, _INTL("{1}'s disguise was busted!", target.pbThis))
         elsif target.damageState.iceface
-            @battle.pbShowAbilitySplash(target)
+            @battle.battle.pbShowAbilitySplash(target, ability)
             target.pbChangeForm(1, _INTL("{1} transformed!", target.pbThis))
             @battle.pbHideAbilitySplash(target)
         elsif target.damageState.endured
             @battle.pbDisplay(_INTL("{1} endured the hit!", target.pbThis))
         elsif target.damageState.sturdy
-            @battle.pbShowAbilitySplash(target)
+            @battle.battle.pbShowAbilitySplash(target, ability)
             @battle.pbDisplay(_INTL("{1} endured the hit!", target.pbThis))
             @battle.pbHideAbilitySplash(target)
         elsif target.damageState.dangerSense
-            @battle.pbShowAbilitySplash(target)
+            @battle.battle.pbShowAbilitySplash(target, ability)
             @battle.pbDisplay(_INTL("{1} avoided taking the full hit!", target.pbThis))
             @battle.pbHideAbilitySplash(target)
         elsif target.damageState.focusSash

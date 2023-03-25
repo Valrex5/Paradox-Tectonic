@@ -7,7 +7,7 @@ LEECHED_EXPLANATION = _INTL("Its HP will be siphoned by the opposing side")
 
 class PokeBattle_Battler
     def getStatuses
-        statuses = [ability == :COMATOSE ? :SLEEP : @status]
+        statuses = [abilities.include?(:COMATOSE) ? :SLEEP : @status]
         statuses.push(@bossStatus) if canHaveSecondStatus?
         return statuses
     end
@@ -26,7 +26,7 @@ class PokeBattle_Battler
     #			 "counts as having that status", which includes Comatose which can't be
     #			 cured.
     def pbHasStatus?(checkStatus)
-        eachActiveAbility do |ability|
+        eachAbility do |ability|
             return true if BattleHandlers.triggerStatusCheckAbilityNonIgnorable(ability, self, checkStatus)
         end
         return getStatuses.include?(checkStatus)
@@ -38,7 +38,7 @@ class PokeBattle_Battler
     alias hasStatusNoTrigger? hasStatusNoTrigger
 
     def pbHasAnyStatus?
-        eachActiveAbility do |ability|
+        eachAbility do |ability|
             return true if BattleHandlers.triggerStatusCheckAbilityNonIgnorable(ability, self, nil)
         end
         return hasAnyStatusNoTrigger
@@ -337,7 +337,7 @@ immuneTypeRealName))
         newStatusCount = sleepDuration if newStatusCount <= 0 && newStatus == :SLEEP
 
         statusCheck = false
-        eachActiveAbility do |ability|
+        eachAbility do |ability|
             statusCheck = true if BattleHandlers.triggerStatusCheckAbilityNonIgnorable(ability, self, nil)
         end
 
@@ -389,7 +389,7 @@ immuneTypeRealName))
             @battle.eachBattler do |b|
                 next if b.nil?
                 next unless b.hasActiveAbility?(:DREAMWEAVER)
-                b.tryRaiseStat(:SPECIAL_ATTACK, b, showAbilitySplash: true)
+                b.tryRaiseStat(:SPECIAL_ATTACK, b, ability: ability)
             end
         end
         # Form change check
@@ -654,7 +654,7 @@ pbThis(true)))
             next unless oldStatus == :SLEEP
             @battle.eachOtherSideBattler(@index) do |b|
                 if b.hasActiveAbility?(:LINGERINGDAZE)
-                    pbLowerMultipleStatStages([:ATTACK, 2, :SPECIAL_ATTACK, 2], b, showAbilitySplash: true)
+                    pbLowerMultipleStatStages([:ATTACK, 2, :SPECIAL_ATTACK, 2], b, ability: ability)
                 end
             end
         end

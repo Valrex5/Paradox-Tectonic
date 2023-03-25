@@ -153,12 +153,12 @@ class PokeBattle_Battle
         return @battleAI.pbDefaultChooseNewEnemy(idxBattler, pbParty(idxBattler))
     end
 
-    def triggeredSwitchOut(idxBattler, showSplash = true)
+    def triggeredSwitchOut(idxBattler, ability: nil)
         battler = @battlers[idxBattler]
         return false unless pbCanSwitch?(idxBattler) # Battler can't switch out
         return false unless pbCanChooseNonActive?(idxBattler) # No Pokémon can switch in
-        if showSplash
-            pbShowAbilitySplash(battler, true)
+        if ability
+            pbShowAbilitySplash(battler, ability)
             pbHideAbilitySplash(battler)
         end
         pbDisplay(_INTL("{1} went back to {2}!",

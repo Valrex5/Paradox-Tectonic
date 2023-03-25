@@ -107,14 +107,13 @@ class PokeBattle_Battle
         return 0
     end
 
-    def healFromStatusAbility(battler, status, denom = 12)
+    def healFromStatusAbility(ability, battler, status, denom = 12)
         statusEffectMessages = !defined?($PokemonSystem.status_effect_messages) || $PokemonSystem.status_effect_messages == 0
         if battler.canHeal?
             anim_name = GameData::Status.get(status).animation
             pbCommonAnimation(anim_name, battler) if anim_name
             ratio = 1.0 / denom.to_f
-            battler.applyFractionalHealing(ratio, showAbilitySplash: statusEffectMessages,
-    showMessage: statusEffectMessages)
+            battler.applyFractionalHealing(ratio, ability: ability, showMessage: statusEffectMessages)
         end
     end
 
@@ -129,7 +128,7 @@ class PokeBattle_Battle
         priority.each do |b|
             next if b.fainted?
             next unless b.poisoned?
-            healFromStatusAbility(b, :POISON, 4) if b.hasActiveAbility?(:POISONHEAL)
+            healFromStatusAbility(:POISONHEAL, b, :POISON, 4) if b.hasActiveAbility?(:POISONHEAL)
             damageFromDOTStatus(b, :POISON)
         end
         # Damage from burn
@@ -137,7 +136,7 @@ class PokeBattle_Battle
             next if b.fainted?
             next unless b.burned?
             if b.hasActiveAbility?(:BURNHEAL)
-                healFromStatusAbility(b, :BURN)
+                healFromStatusAbility(:BURNHEAL, b, :BURN)
             else
                 damageFromDOTStatus(b, :BURN)
             end
@@ -147,7 +146,7 @@ class PokeBattle_Battle
             next if b.fainted?
             next unless b.frostbitten?
             if b.hasActiveAbility?(:FROSTHEAL)
-                healFromStatusAbility(b, :FROSTBITE)
+                healFromStatusAbility(:FROSTHEAL, b, :FROSTBITE)
             else
                 damageFromDOTStatus(b, :FROSTBITE)
             end

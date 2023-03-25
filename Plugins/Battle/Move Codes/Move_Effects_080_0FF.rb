@@ -1697,7 +1697,7 @@ class PokeBattle_Move_0BA < PokeBattle_Move
         return true if pbMoveFailedAromaVeil?(user, target, show_message)
         if target.hasActiveAbility?(:OBLIVIOUS) && !@battle.moldBreaker
             if show_message
-                @battle.pbShowAbilitySplash(target)
+                @battle.battle.pbShowAbilitySplash(target, ability)
                 @battle.pbDisplay(_INTL("But it failed!"))
                 @battle.pbHideAbilitySplash(target)
             end
@@ -2713,14 +2713,14 @@ class PokeBattle_Move_0E0 < PokeBattle_Move
             spikesCount = user.pbOpposingSide.incrementEffect(:Spikes, GameData::BattleEffect.get(:Spikes).maximum)
             
             if spikesCount > 0
-                @battle.pbShowAbilitySplash(user)
+                @battle.pbShowAbilitySplash(user, :SPINESPLODE)
                 @battle.pbDisplay(_INTL("#{spikesCount} layers of Spikes were scattered all around #{user.pbOpposingTeam(true)}'s feet!"))
                 @battle.pbHideAbilitySplash(user)
             end
         end
 
         if user.bunkeringDown?
-            @battle.pbShowAbilitySplash(user)
+            @battle.pbShowAbilitySplash(user, :BUNKERDOWN)
             @battle.pbDisplay(_INTL("{1}'s {2} barely saves it!", user.pbThis, @name))
             user.pbReduceHP(user.hp - 1, false)
             @battle.pbHideAbilitySplash(user)
@@ -2728,14 +2728,14 @@ class PokeBattle_Move_0E0 < PokeBattle_Move
             reduction = user.totalhp
             unbreakable = user.hasActiveAbility?(:UNBREAKABLE)
             if unbreakable
-                @battle.pbShowAbilitySplash(user)
+                @battle.pbShowAbilitySplash(user, :UNBREAKABLE)
                 @battle.pbDisplay(_INTL("{1} resists the recoil!", user.pbThis))
                 reduction /= 2
             end
             user.pbReduceHP(reduction, false)
             @battle.pbHideAbilitySplash(user) if unbreakable
             if user.hasActiveAbility?(:SELFMENDING,true)
-                @battle.pbShowAbilitySplash(user)
+                @battle.pbShowAbilitySplash(user, :SELFMENDING)
                 @battle.pbDisplay(_INTL("{1} will revive in 3 turns!", user.pbThis))
                 if user.pbOwnSide.effectActive?(:SelfMending)
                     user.pbOwnSide.effects[:SelfMending][user.pokemonIndex] = 4
@@ -3050,7 +3050,7 @@ class PokeBattle_Move_0EB < PokeBattle_Move
     def pbFailsAgainstTarget?(user, target, show_message)
         if target.hasActiveAbility?(:SUCTIONCUPS) && !@battle.moldBreaker
             if show_message
-                @battle.pbShowAbilitySplash(target)
+                @battle.battle.pbShowAbilitySplash(target, ability)
                 @battle.pbDisplay(_INTL("{1} anchors itself!", target.pbThis))
                 @battle.pbHideAbilitySplash(target)
             end
@@ -3303,7 +3303,7 @@ class PokeBattle_Move_0F2 < PokeBattle_Move
         end
         if target.hasActiveAbility?(:STICKYHOLD) && !@battle.moldBreaker
             if show_message
-                @battle.pbShowAbilitySplash(target)
+                @battle.battle.pbShowAbilitySplash(target, ability)
                 @battle.pbDisplay(_INTL("But it failed to affect {1}!", target.pbThis(true)))
                 @battle.pbHideAbilitySplash(target)
             end

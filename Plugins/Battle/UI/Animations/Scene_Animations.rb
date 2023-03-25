@@ -122,13 +122,13 @@ class PokeBattle_Scene
   #=============================================================================
   # Ability splash bar animations
   #=============================================================================
-  def pbShowAbilitySplash(battler,fakeName=nil)
-    return if !PokeBattle_SceneConstants::USE_ABILITY_SPLASH
+  def pbShowAbilitySplash(battler,name=nil)
+    return if !PokeBattle_SceneConstants::USEability_SPLASH
     side = battler.index%2
     pbHideAbilitySplash(battler) if @sprites["abilityBar_#{side}"].visible
     splashBar = @sprites["abilityBar_#{side}"]
     splashBar.battler = battler
-    splashBar.fakeName = fakeName
+    splashBar.fakeName = name
     abilitySplashAnim = AbilitySplashAppearAnimation.new(@sprites,@viewport,side)
     loop do
       abilitySplashAnim.update
@@ -142,7 +142,7 @@ class PokeBattle_Scene
   # Tribe splash bar animations
   #=============================================================================
   def pbShowTribeSplash(side,tribeName,trainerName = nil)
-    return unless PokeBattle_SceneConstants::USE_ABILITY_SPLASH
+    return unless PokeBattle_SceneConstants::USEability_SPLASH
     if side.is_a?(PokeBattle_Battler)
       trainerName = side.owner.name unless trainerName
       sideIndex = side.index % 2
@@ -164,7 +164,7 @@ class PokeBattle_Scene
   end
 
   def pbHideTribeSplash(side)
-    return unless PokeBattle_SceneConstants::USE_ABILITY_SPLASH
+    return unless PokeBattle_SceneConstants::USEability_SPLASH
     sideIndex = side.index % 2 if side.is_a?(PokeBattle_Battler)
     sideIndex = side.index if side.is_a?(PokeBattle_ActiveSide)
     return unless @sprites["tribeBar_#{sideIndex}"].visible

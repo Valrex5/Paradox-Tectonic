@@ -57,13 +57,13 @@ class PokeBattle_Battler
         return false if fainted? && !ignore_fainted
         return false if !ignore_gas && @battle.abilitiesNeutralized?
         return false if effectActive?(:GastroAcid)
-        return false if dizzy? && !%i[MARVELSCALE MARVELSKIN].include?(@ability_id)
+        return false if dizzy?
         return true
     end
 
     def abilities
         abil = []
-        abil.push(@ability_id) if ability
+        abil.push(@ability_id)
 
         # Even with the curse, don't add extra abilities if ability was overwritten during battle
         return abil unless @pokemon.hasAbility?(@ability_id)
@@ -82,21 +82,21 @@ class PokeBattle_Battler
         end
     end
 
-    def eachActiveAbility(ignore_fainted = false)
-        return unless abilityActive?(ignore_fainted)
-        eachAbility.each do |abilityID|
+    def eachActiveAbility(ignore_fainted = false, ignoreGas: false)
+        return unless abilityActive?(ignore_fainted, ignoreGas)
+        abilities.each do |abilityID|
             yield abilityID
         end
     end
 
-    def hasActiveAbility?(check_ability, ignore_fainted = false, checkingForAI = false)
-        return hasActiveAbilityAI?(check_ability, ignore_fainted) if checkingForAI
-        return false unless abilityActive?(ignore_fainted)
-        eachAbility.each do |effectingID|
-            if check_ability.is_a?(Array)
-                return true if check_ability.include?(effectingID)
+    def hasActiveAbility?(checkable, ignore_fainted = false, checkingForAI = false, ignoreGas: false)
+        return hasActiveAbilityAI?(checkable, ignore_fainted) if checkingForAI
+        return false unless abilityActive?(ignore_fainted, ignoreGas)
+        abilities.each do |effectingID|
+            if checkable.is_a?(Array)
+                return true if checkable.include?(effectingID)
             else
-                return true if check_ability == effectingID
+                return true if checkable == effectingID
             end
         end
         return false
@@ -104,7 +104,8 @@ class PokeBattle_Battler
     alias hasWorkingAbility hasActiveAbility?
 
     def hasActiveNeutralizingGas?(ignore_fainted = false)
-        return @ability_id == :NEUTRALIZINGGAS && abilityActive?(ignore_fainted, true)
+        return false unless abilities.include?(:NEUTRALIZINGGAS)
+        return abilityActive?(ignore_fainted, true)
     end
 
     alias hasType? pbHasType?
@@ -190,7 +191,7 @@ class PokeBattle_Battler
 
     def eachActiveItem(ignoreFainted = false)
         return unless itemActive?(ignoreFainted)
-        eachItem do |itemID|
+        items.each do |itemID|
             yield itemID
         end
     end
@@ -205,7 +206,7 @@ class PokeBattle_Battler
 
     def hasActiveItem?(check_item, ignore_fainted = false)
         return false unless itemActive?(ignore_fainted)
-        eachItem do |effectiveItem|
+        items.each do |effectiveItem|
             if check_item.is_a?(Array)
                 return true if check_item.include?(effectiveItem)
             else

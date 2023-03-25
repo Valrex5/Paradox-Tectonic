@@ -370,14 +370,19 @@ class PokeBattle_Move
     # Additional effect chance
     #=============================================================================
     def canApplyAdditionalEffects?(user,target,showMessages=false,aiChecking=false)
-        if target.shouldAbilityApply?(%i[SHIELDDUST HARSHTRAINING],aiChecking) && !@battle.moldBreaker
-            if showMessages
-                battle.pbShowAbilitySplash(target)
-                battle.pbDisplay(_INTL("#{target.pbThis} prevents the additional effect!"))
-                battle.pbHideAbilitySplash(target)
+        unless @battle.moldBreaker
+            %i[SHIELDDUST HARSHTRAINING].each do |ability|
+                if target.shouldAbilityApply?(ability,aiChecking)
+                    if showMessages
+                        battle.pbShowAbilitySplash(target,ability)
+                        battle.pbDisplay(_INTL("#{target.pbThis} prevents the additional effect!"))
+                        battle.pbHideAbilitySplash(target)
+                    end
+                    return false
+                end
             end
-            return false
         end
+        
         if target.effectActive?(:Enlightened)
             if showMessages
                 battle.pbDisplay(_INTL("#{target.pbThis} is enlightened, and so ignores the additional effect!"))

@@ -362,12 +362,10 @@ class PokeBattle_Battle
         sandstormDamage = 0
         priority.each do |b|
             # Weather-related abilities
-            if b.abilityActive?
-                b.eachActiveAbility do |ability|
-                    oldHP = b.hp
-                    BattleHandlers.triggerEORWeatherAbility(ability, curWeather, b, self)
-                    break if b.pbHealthLossChecks(oldHP)
-                end
+            b.eachActiveAbility do |ability|
+                oldHP = b.hp
+                BattleHandlers.triggerEORWeatherAbility(ability, curWeather, b, self)
+                break if b.pbHealthLossChecks(oldHP)
             end
             # Weather damage
             # NOTE:
@@ -431,7 +429,7 @@ class PokeBattle_Battle
         if hailDamage > 0
             priority.each do |b|
                 next unless b.hasActiveAbility?(:ECTOPARTICLES)
-                pbShowAbilitySplash(b)
+                pbShowAbilitySplash(b, :ECTOPARTICLES)
                 healingMessage = _INTL("{1} absorbs the suffering from the hailstorm.", b.pbThis)
                 b.pbRecoverHP(hailDamage, true, true, true, healingMessage)
                 pbHideAbilitySplash(b)
@@ -441,7 +439,7 @@ class PokeBattle_Battle
         if sandstormDamage > 0
             priority.each do |b|
                 next unless b.hasActiveAbility?(:DESERTSCAVENGER)
-                pbShowAbilitySplash(b)
+                pbShowAbilitySplash(b, :DESERTSCAVENGER)
                 healingMessage = _INTL("{1} absorbs the suffering from the sandstorm", b.pbThis)
                 b.pbRecoverHP(sandstormDamage, true, true, true, healingMessage)
                 pbHideAbilitySplash(b)

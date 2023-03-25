@@ -1,9 +1,9 @@
 BattleHandlers::EORGainItemAbility.add(:HARVEST,
-    proc { |_ability, battler, battle|
+    proc { |ability, battler, battle|
         next if battler.item
         next if !battler.recycleItem || !GameData::Item.get(battler.recycleItem).is_berry?
         next if !battle.sunny? && !(battle.pbRandom(100) < 50)
-        battle.pbShowAbilitySplash(battler)
+        battle.pbShowAbilitySplash(battler, ability)
         battler.item = battler.recycleItem
         battler.setRecycleItem(nil)
         battler.setInitialItem(battler.item) unless battler.initialItem
@@ -14,10 +14,10 @@ BattleHandlers::EORGainItemAbility.add(:HARVEST,
 )
 
 BattleHandlers::EORGainItemAbility.add(:LARDER,
-    proc { |_ability, battler, battle|
+    proc { |ability, battler, battle|
         next if battler.item
         next if !battler.recycleItem || !GameData::Item.get(battler.recycleItem).is_berry?
-        battle.pbShowAbilitySplash(battler)
+        battle.pbShowAbilitySplash(battler, ability)
         battler.item = battler.recycleItem
         battler.setRecycleItem(nil)
         battler.setInitialItem(battler.item) unless battler.initialItem
@@ -28,7 +28,7 @@ BattleHandlers::EORGainItemAbility.add(:LARDER,
 )
 
 BattleHandlers::EORGainItemAbility.add(:PICKUP,
-  proc { |_ability, battler, battle|
+  proc { |ability, battler, battle|
       next if battler.item
       foundItem = nil
       fromBattler = nil
@@ -41,7 +41,7 @@ BattleHandlers::EORGainItemAbility.add(:PICKUP,
           use         = b.effects[:PickupUse]
       end
       next unless foundItem
-      battle.pbShowAbilitySplash(battler)
+      battle.pbShowAbilitySplash(battler, ability)
       battler.item = foundItem
       fromBattler.disableEffect(:PickupItem)
       fromBattler.setRecycleItem(nil) if fromBattler.recycleItem == foundItem
@@ -56,9 +56,9 @@ BattleHandlers::EORGainItemAbility.add(:PICKUP,
 )
 
 BattleHandlers::EORGainItemAbility.add(:GOURMAND,
-    proc { |_ability, battler, battle|
+    proc { |ability, battler, battle|
         next if battler.item
-        battle.pbShowAbilitySplash(battler)
+        battle.pbShowAbilitySplash(battler, ability)
         battler.item =
             %i[
                 ORANBERRY GANLONBERRY LANSATBERRY APICOTBERRY LIECHIBERRY

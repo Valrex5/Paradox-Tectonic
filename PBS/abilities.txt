@@ -203,7 +203,6 @@
 201,SURGESURFER,Surge Surfer,"Doubles Speed on Electric Terrain."
 202,SCHOOLING,Schooling,"Forms a powerful school while it has a lot of HP."
 203,DISGUISE,Disguise,"Its shroud protects it from an attack just once."
-204,BATTLEBOND,Battle Bond,"Defeating a foe lets it become Ash-Greninja."
 205,POWERCONSTRUCT,Power Construct,"Changes with other Cells if HP becomes half or less."
 206,CORROSION,Corrosion,"Can poison the target even if it's a Steel or Poison type."
 207,COMATOSE,Comatose,"It's always drowsing, and attacks without waking."

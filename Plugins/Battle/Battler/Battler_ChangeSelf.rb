@@ -149,7 +149,7 @@ class PokeBattle_Battler
 
     def pbRecoverHPFromDrain(drainAmount, target)
         if target.hasActiveAbility?(:LIQUIDOOZE)
-            @battle.pbShowAbilitySplash(target)
+            @battle.battle.pbShowAbilitySplash(target, ability)
             oldHP = @hp
             pbReduceHP(drainAmount)
             @battle.pbDisplay(_INTL("{1} sucked up the liquid ooze!", pbThis))
@@ -169,7 +169,7 @@ class PokeBattle_Battler
             next if target.damageState.unaffected
             damage = target.damageState.totalHPLost
             if target.hasActiveAbility?(:LIQUIDOOZE)
-                @battle.pbShowAbilitySplash(target)
+                @battle.battle.pbShowAbilitySplash(target, ability)
                 lossAmount = (damage * ratio).round
                 pbReduceHP(lossAmount)
                 @battle.pbDisplay(_INTL("{1} sucked up the liquid ooze!", pbThis))
@@ -188,7 +188,7 @@ class PokeBattle_Battler
         @battle.pbHideAbilitySplash(self)
     end
 
-    def applyFractionalHealing(fraction, showAbilitySplash: false, anim: true, anyAnim: true, showMessage: true, customMessage: nil, item: nil)
+    def applyFractionalHealing(fraction, ability: nil, anim: true, anyAnim: true, showMessage: true, customMessage: nil, item: nil)
         return 0 unless canHeal?
         if item
             @battle.pbCommonAnimation("UseItem", self) unless @battle.autoTesting
@@ -200,11 +200,11 @@ class PokeBattle_Battler
                 end
             end
         end
-        battle.pbShowAbilitySplash(self) if showAbilitySplash
+        battle.pbShowAbilitySplash(self, ability) if ability
         healAmount = @totalhp * fraction
         healAmount /= BOSS_HP_BASED_EFFECT_RESISTANCE.to_f if boss?
         actuallyHealed = pbRecoverHP(healAmount, anim, anyAnim, showMessage, customMessage)
-        battle.pbHideAbilitySplash(self) if showAbilitySplash
+        battle.pbHideAbilitySplash(self) if ability
         return actuallyHealed
     end
 

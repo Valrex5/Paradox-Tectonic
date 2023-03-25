@@ -385,11 +385,13 @@ class PokeBattle_Battler
             end
         end
         # Protean
-        proteans = user.hasActiveAbility?(:PROTEAN) || user.hasActiveAbility?(:LIBERO) ||
-            (user.hasActiveAbility?(:SHAKYCODE) && @battle.pbWeather == :Eclipse)
-        if proteans && !move.callsAnotherMove? &&
+        proteanAbility = nil
+        proteanAbility = :PROTEAN if user.hasActiveAbility?(:PROTEAN)
+        proteanAbility = :LIBERO if user.hasActiveAbility?(:LIBERO)
+        proteanAbility = :SHAKYCODE if user.hasActiveAbility?(:SHAKYCODE) && @battle.pbWeather == :Eclipse
+        if proteanAbility && !move.callsAnotherMove? &&
            !move.snatched && user.pbHasOtherType?(move.calcType) && !GameData::Type.get(move.calcType).pseudo_type
-            @battle.pbShowAbilitySplash(user)
+            @battle.pbShowAbilitySplash(user, proteanAbility)
             user.pbChangeTypes(move.calcType)
             typeName = GameData::Type.get(move.calcType).name
             @battle.pbDisplay(_INTL("{1} transformed into the {2} type!", user.pbThis, typeName))
@@ -406,7 +408,7 @@ class PokeBattle_Battler
         # Shifting Fist
         if user.hasActiveAbility?(:SHIFTINGFIST) && !move.callsAnotherMove? && !move.snatched &&
            user.pbHasOtherType?(move.calcType) && !GameData::Type.get(move.calcType).pseudo_type && move.punchingMove?
-            @battle.pbShowAbilitySplash(user)
+            @battle.pbShowAbilitySplash(user, :SHIFTINGFIST)
             user.applyEffect(:Type3, move.calcType)
             typeName = GameData::Type.get(move.calcType).name
             @battle.pbDisplay(_INTL("{1} shifted into a {2} stance!", user.pbThis, typeName))
@@ -653,7 +655,7 @@ user.pbThis))
         if moveSucceeded && @battle.pbCheckGlobalAbility(:FIESTA) && (move.soundMove? || move.danceMove?)
             @battle.pbPriority(true).each do |b|
                 next unless b.index != user.index && b.hasActiveAbility?(:FIESTA)
-                b.applyFractionalHealing(1.0 / 8.0, showAbilitySplash: true)
+                b.applyFractionalHealing(1.0 / 8.0, ability: ability)
 			end
         end
 		if moveSucceeded && (move.danceMove?)
@@ -677,7 +679,7 @@ user.pbThis))
             moveID = b.lastMoveUsed
             usageMessage = _INTL("{1} used the move instructed by {2}!", b.pbThis, user.pbThis(true))
             preTarget = b.lastRegularMoveTarget
-            @battle.forceUseMove(b, moveID, preTarget, false, usageMessage, :Instructed, false)
+            @battle.forceUseMove(b, moveID, preTarget, false, usageMessage, :Instructed)
         end  
         # Dancer
         if !effectActive?(:Dancer) && moveSucceeded && @battle.pbCheckGlobalAbility(:DANCER) && move.danceMove?
@@ -689,7 +691,7 @@ user.pbThis))
                 nextUser = dancers.pop
                 preTarget = choice[3]
                 preTarget = user.index if nextUser.opposes?(user) || !nextUser.opposes?(preTarget)
-                @battle.forceUseMove(nextUser, move.id, preTarget, true, nil, :Dancer, true)
+                @battle.forceUseMove(nextUser, move.id, preTarget, true, nil, :Dancer, ability: :DANCER)
             end
         end
         # Echo
@@ -702,7 +704,7 @@ user.pbThis))
                 nextUser = echoers.pop
                 preTarget = choice[3]
                 preTarget = user.index if nextUser.opposes?(user) || !nextUser.opposes?(preTarget)
-                @battle.forceUseMove(nextUser, move.id, preTarget, true, nil, :Echo, true)
+                @battle.forceUseMove(nextUser, move.id, preTarget, true, nil, :Echo, ability: :ECHO)
             end
         end
     end
@@ -862,7 +864,7 @@ user.pbThis))
                 targets.each do |target|
                     next if target.damageState.unaffected
                     next unless target.hasActiveAbility?(:SECRETIONSECRET) && user.opposes?(target)
-                    battle.pbShowAbilitySplash(target)
+                    battle.battle.pbShowAbilitySplash(target, ability)
                     user.applyPoison(target, nil) if user.canPoison?(target, true)
                     battle.pbHideAbilitySplash(target)
                 end
@@ -874,12 +876,12 @@ user.pbThis))
 
                 # Unassuming
                 if user.hasActiveAbility?(:UNASSUMING)
-                    target.tryLowerStat(:DEFENSE, user, move: move, showFailMsg: true, showAbilitySplash: true)
+                    target.tryLowerStat(:DEFENSE, user, move: move, showFailMsg: true, ability: ability)
                 end
 
                 # Recon
                 if user.hasActiveAbility?(:RECON)
-                    target.tryLowerStat(:SPECIAL_DEFENSE, user, move: move, showFailMsg: true, showAbilitySplash: true)
+                    target.tryLowerStat(:SPECIAL_DEFENSE, user, move: move, showFailMsg: true, ability: ability)
                 end
             end
         end

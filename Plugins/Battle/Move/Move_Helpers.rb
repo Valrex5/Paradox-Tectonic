@@ -226,7 +226,7 @@ class PokeBattle_Move
         end
     end
 
-    def forceOutTargets(user, targets, switchedBattlers, substituteBlocks = false, random = true, showAbilitySplash: false)
+    def forceOutTargets(user, targets, switchedBattlers, substituteBlocks = false, random = true, ability: nil)
         return if user.fainted?
         roarSwitched = []
         targets.each do |b|
@@ -237,7 +237,7 @@ class PokeBattle_Move
             next if b.hasActiveAbility?(:SUCTIONCUPS) && !@battle.moldBreaker
             next if substituteBlocks && b.damageState.substitute
             next unless @battle.pbCanChooseNonActive?(b.index)
-            @battle.pbShowAbilitySplash(user) if showAbilitySplash
+            @battle.pbShowAbilitySplash(user, ability) if ability
             newPkmn = @battle.pbGetReplacementPokemonIndex(b.index, random)
             next if newPkmn < 0
             @battle.pbRecallAndReplace(b.index, newPkmn, true)
@@ -249,7 +249,7 @@ class PokeBattle_Move
             @battle.pbClearChoice(b.index)   # Replacement Pokémon does nothing this round
             switchedBattlers.push(b.index)
             roarSwitched.push(b.index)
-            @battle.pbHideAbilitySplash(user) if showAbilitySplash
+            @battle.pbHideAbilitySplash(user) if ability
         end
         if roarSwitched.length > 0
             @battle.moldBreaker = false if roarSwitched.include?(user.index)

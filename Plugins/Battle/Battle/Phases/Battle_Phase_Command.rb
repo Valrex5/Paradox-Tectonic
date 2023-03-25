@@ -265,7 +265,7 @@ class PokeBattle_Battle
                 end
                 next if possibleInvestigation.length == 0
                 investigating = possibleInvestigation.sample
-                pbShowAbilitySplash(b)
+                pbShowAbilitySplash(b, :INVESTIGATOR)
                 choice = @choices[investigating.index]
                 case choice[0]
                 when :UseMove
@@ -295,7 +295,7 @@ class PokeBattle_Battle
             battler.eachOpposing do |opponent|
                 next if opponent.lastMoveUsedType.nil?
                 next if opponent.pbTypes(true).include?(opponent.lastMoveUsedType)
-                pbShowAbilitySplash(battler)
+                battle.pbShowAbilitySplash(battler, ability)
                 pbDisplay(_INTL("{1} reads {2}'s guilty soul!", battler.pbThis, opponent.pbThis(true)))
                 pbHideAbilitySplash(battler)
             end

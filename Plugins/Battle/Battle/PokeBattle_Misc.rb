@@ -123,7 +123,7 @@ class PokeBattle_Battle
 
     # moveIDOrIndex is either the index of the move on the user's move list (Integer)
     # or it's the ID of the move to be used (Symbol)
-    def forceUseMove(forcedMoveUser, moveIDOrIndex, target = -1, specialUsage = true, usageMessage = nil, moveUsageEffect = nil, showAbilitySplash = false)
+    def forceUseMove(forcedMoveUser, moveIDOrIndex, target = -1, specialUsage = true, usageMessage = nil, moveUsageEffect = nil, ability: nil)
         oldLastRoundMoved = forcedMoveUser.lastRoundMoved
         if specialUsage
             @specialUsage = true
@@ -134,9 +134,9 @@ class PokeBattle_Battle
             oldOutrageTurns = forcedMoveUser.effects[:Outrage]
             forcedMoveUser.effects[:Outrage] += 1 if forcedMoveUser.effectActive?(:Outrage)
         end
-        pbShowAbilitySplash(forcedMoveUser, true) if showAbilitySplash
+        pbShowAbilitySplash(forcedMoveUser, ability, true) if ability
         pbDisplay(usageMessage) unless usageMessage.nil?
-        pbHideAbilitySplash(forcedMoveUser) if showAbilitySplash
+        pbHideAbilitySplash(forcedMoveUser) if ability
         moveID = moveIDOrIndex.is_a?(Symbol) ? moveIDOrIndex : nil
         moveIndex = moveIDOrIndex.is_a?(Integer) ? moveIDOrIndex : -1
         PBDebug.logonerr do

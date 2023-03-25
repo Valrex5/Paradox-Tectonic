@@ -479,11 +479,11 @@ class PokeBattle_Battler
     end
 
     # Fails silently
-    def tryRaiseStat(stat, user, move: nil, increment: 1, showFailMsg: false, showAnim: true, showAbilitySplash: false, cause: nil, item: nil)
+    def tryRaiseStat(stat, user, move: nil, increment: 1, showFailMsg: false, showAnim: true, ability: nil, cause: nil, item: nil)
         return false if increment <= 0
         lowered = false
         if pbCanRaiseStatStage?(stat, user, move, showFailMsg)
-            @battle.pbShowAbilitySplash(user) if showAbilitySplash
+            @battle.pbShowAbilitySplash(user, ability) if ability
             if item
                 cause = GameData::Item.get(item).name
                 @battle.pbCommonAnimation("UseItem", user)
@@ -494,16 +494,16 @@ class PokeBattle_Battler
                 lowered = true
             end
         end
-        @battle.pbHideAbilitySplash(user) if showAbilitySplash
+        @battle.pbHideAbilitySplash(user) if ability
         return lowered
     end
 
     # Fails silently
-    def tryLowerStat(stat, user, move: nil, increment: 1, showFailMsg: false, showAnim: true, showAbilitySplash: false, cause: nil, item: nil)
+    def tryLowerStat(stat, user, move: nil, increment: 1, showFailMsg: false, showAnim: true, ability: nil, cause: nil, item: nil)
         return false if increment <= 0
         lowered = false
         if pbCanLowerStatStage?(stat, user, move, showFailMsg)
-            @battle.pbShowAbilitySplash(user) if showAbilitySplash
+            @battle.pbShowAbilitySplash(user, ability) if ability
             if item
                 cause = GameData::Item.get(item).name
                 @battle.pbCommonAnimation("UseItem", user)
@@ -514,7 +514,7 @@ class PokeBattle_Battler
                 lowered = true
             end
         end
-        @battle.pbHideAbilitySplash(user) if showAbilitySplash
+        @battle.pbHideAbilitySplash(user) if ability
         return lowered
     end
 
@@ -534,9 +534,9 @@ class PokeBattle_Battler
 
     # Pass in array of form
     # [statToRaise, stagesToRaise, statToRaise2, stagesToRaise2, ...]
-    def pbRaiseMultipleStatStages(statArray, user, move: nil, showFailMsg: false, showAnim: true, showAbilitySplash: false, item: nil)
+    def pbRaiseMultipleStatStages(statArray, user, move: nil, showFailMsg: false, showAnim: true, ability: nil, item: nil)
         return unless pbCanRaiseAnyOfStats?(statArray, user, move: move, showFailMsg: showFailMsg)
-        @battle.pbShowAbilitySplash(user) if showAbilitySplash
+        @battle.pbShowAbilitySplash(user, ability) if ability
 
         cause = nil
         if item
@@ -550,18 +550,18 @@ class PokeBattle_Battler
             increment = statArray[i * 2 + 1]
             next if increment <= 0
             raisedAnyStages = true if tryRaiseStat(stat, user, move: move, increment: increment, showFailMsg: showFailMsg,
-showAnim: showAnim, showAbilitySplash: false, cause: cause)
+showAnim: showAnim, ability: ability, cause: cause)
             showAnim = false if raisedAnyStages
         end
-        @battle.pbHideAbilitySplash(user) if showAbilitySplash
+        @battle.pbHideAbilitySplash(user) if ability
         return raisedAnyStages
     end
 
     # Pass in array of form
     # [statToRaise, stagesToRaise, statToRaise2, stagesToRaise2, ...]
-    def pbLowerMultipleStatStages(statArray, user, move: nil, showFailMsg: false, showAnim: true, showAbilitySplash: false, item: nil)
+    def pbLowerMultipleStatStages(statArray, user, move: nil, showFailMsg: false, showAnim: true, ability: nil, item: nil)
         return unless pbCanLowerAnyOfStats?(statArray, user, move: move, showFailMsg: showFailMsg)
-        @battle.pbShowAbilitySplash(user) if showAbilitySplash
+        @battle.pbShowAbilitySplash(user, ability) if ability
 
         cause = nil
         if item
@@ -575,10 +575,10 @@ showAnim: showAnim, showAbilitySplash: false, cause: cause)
             increment = statArray[i * 2 + 1]
             next if increment <= 0
             raisedAnyStages = true if tryLowerStat(stat, user, move: move, increment: increment, showFailMsg: showFailMsg,
-showAnim: showAnim, showAbilitySplash: false, cause: cause)
+showAnim: showAnim, ability: ability, cause: cause)
             showAnim = false if raisedAnyStages
         end
-        @battle.pbHideAbilitySplash(user) if showAbilitySplash
+        @battle.pbHideAbilitySplash(user) if ability
         return loweredAnyStages
     end
 

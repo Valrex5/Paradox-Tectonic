@@ -100,7 +100,7 @@ class PokeBattle_Battler
             end
             if choices.length > 0
                 choice = choices[@battle.pbRandom(choices.length)]
-                @battle.pbShowAbilitySplash(self)
+                @battle.pbShowAbilitySplash(self, :TRACE)
                 self.ability = choice.ability
                 @battle.pbDisplay(_INTL("{1} traced {2}'s {3}!", pbThis, choice.pbThis(true), choice.abilityName))
                 @battle.pbHideAbilitySplash(self)

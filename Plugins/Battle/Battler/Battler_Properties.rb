@@ -38,8 +38,8 @@ class PokeBattle_Battler
     end
 
     def ability=(value)
-        new_ability = GameData::Ability.try_get(value)
-        @ability_id = new_ability ? new_ability.id : nil
+        newability = GameData::Ability.try_get(value)
+        @ability_id = newability ? newability.id : nil
     end
 
     def baseItem

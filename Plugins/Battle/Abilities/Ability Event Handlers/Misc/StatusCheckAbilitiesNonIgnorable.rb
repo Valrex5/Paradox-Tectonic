@@ -1,5 +1,5 @@
 BattleHandlers::StatusCheckAbilityNonIgnorable.add(:COMATOSE,
-  proc { |_ability, battler, status|
+  proc { |ability, battler, status|
       validSpeciesList = %i[KOMALA]
       validTransform = false
       validTransform = true if validSpeciesList.include?(battler.effects[:TransformSpecies])

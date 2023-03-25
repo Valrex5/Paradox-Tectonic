@@ -377,7 +377,7 @@ animationName, show_message) do
                 unless ai_check
                     target.damageState.protected = true
                     if show_message
-                        @battle.pbShowAbilitySplash(target)
+                        @battle.battle.pbShowAbilitySplash(target, ability)
                         @battle.pbDisplay(_INTL("{1} shielded itself from the {2}!", target.pbThis, move.name))
                         @battle.pbHideAbilitySplash(target)
                     end
@@ -452,7 +452,7 @@ target.pbThis(true)))
         if move.damagingMove? && move.calcType == :GROUND && target.airborne? && !move.hitsFlyingTargets?
             if target.hasLevitate? && !@battle.moldBreaker
                 if showMessages
-                    @battle.pbShowAbilitySplash(target)
+                    @battle.battle.pbShowAbilitySplash(target, ability)
                     @battle.pbDisplay(_INTL("{1} avoided the attack!", target.pbThis))
                     @battle.pbHideAbilitySplash(target)
                     @battle.triggerImmunityDialogue(user, target, true)

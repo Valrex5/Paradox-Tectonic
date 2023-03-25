@@ -104,6 +104,9 @@ module EffectHolder
             end
             return false
         else
+            if effect == :NeutralizingGas
+                puts caller
+            end
             validateCorrectLocation(effect)
             effectData = GameData::BattleEffect.get(effect)
 

@@ -100,20 +100,6 @@ user.pbThis(true)))
         user.eachActiveAbility do |ability|
             BattleHandlers.triggerUserAbilityEndOfMove(ability, user, targets, move, @battle, switchedBattlers)
         end
-        # Greninja - Battle Bond
-        if !user.fainted? && !effectActive?(:Transform) &&
-           user.isSpecies?(:GRENINJA) && user.ability == :BATTLEBOND && (!@battle.pbAllFainted?(user.idxOpposingSide) &&
-                        !@battle.battleBond[user.index & 1][user.pokemonIndex])
-            numFainted = 0
-            targets.each { |b| numFainted += 1 if b.damageState.fainted }
-            if numFainted > 0 && user.form == 1
-                @battle.battleBond[user.index & 1][user.pokemonIndex] = true
-                @battle.pbDisplay(_INTL("{1} became fully charged due to its bond with its Trainer!", user.pbThis))
-                @battle.pbShowAbilitySplash(user, true)
-                @battle.pbHideAbilitySplash(user)
-                user.pbChangeForm(2, _INTL("{1} became Ash-Greninja!", user.pbThis))
-            end
-        end
         # Consume user's Gem
         if user.effectActive?(:GemConsumed)
             # NOTE: The consume animation and message for Gems are shown immediately
@@ -140,7 +126,7 @@ user.pbThis(true)))
         end
         # Ally Cushion
         if user.effectActive?(:AllyCushionSwap) && !switchedBattlers.include?(user.index)
-            if @battle.triggeredSwitchOut(user.index, false)
+            if @battle.triggeredSwitchOut(user.index)
                 user.pbEffectsOnSwitchIn(true)
                 switchedBattlers.push(user.index)
             else
