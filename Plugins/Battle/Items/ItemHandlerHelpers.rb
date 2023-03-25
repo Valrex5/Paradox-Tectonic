@@ -9,7 +9,7 @@ def healFromBerry(battler, ratio, item, forced = false, filchedFrom = nil)
     if battler.hasTribeBonus?(:SCAVENGER)
         ratio *= 1.25
         battler.battle.pbShowTribeSplash(battler,:SCAVENGER)
-        battler.battle.pbDisplay(_INTL("#{battler.pbThis} got a bit extra out of their #{battler.itemName}!"))
+        battler.battle.pbDisplay(_INTL("#{battler.pbThis} got a bit extra out of their #{getItemName(battler.baseItem)}!"))
         battler.battle.pbHideTribeSplash(battler)
     end
     itemToPass = forced ? nil : item
@@ -28,7 +28,6 @@ def pbBattleStatIncreasingBerry(battler, battle, item, forced, stat, increment =
     itemName = GameData::Item.get(item).name
     increment *= 2 if battler.hasActiveAbility?(:RIPEN)
     if forced
-        PBDebug.log("[Item triggered] Forced consuming of #{itemName}")
         return battler.pbRaiseStatStage(stat, increment, battler)
     end
     battle.pbCommonAnimation("Nom", battler)

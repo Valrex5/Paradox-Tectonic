@@ -249,7 +249,12 @@ class PokeBattle_Battle
     end
 end
 
-def abilityName(ability)
+def getAbilityName(ability)
     abilityData = GameData::Ability.get(ability)
     return abilityData.real_name
+end
+
+def getItemName(item)
+    itemData = GameData::Item.get(item)
+    return itemData.real_name
 end

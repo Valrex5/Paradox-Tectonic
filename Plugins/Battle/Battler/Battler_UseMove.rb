@@ -234,7 +234,7 @@ class PokeBattle_Battler
             return
         end
         # Stance Change
-        if isSpecies?(:AEGISLASH) && ability == :STANCECHANGE
+        if isSpecies?(:AEGISLASH) && hasAbility?(:STANCECHANGE)
             if move.damagingMove?
                 pbChangeForm(1, _INTL("{1} changed to Blade Forme!", pbThis))
             elsif move.id == :KINGSSHIELD
@@ -452,7 +452,7 @@ class PokeBattle_Battler
                         break
                     elsif b.hasActiveAbility?(:MAGICSHIELD) && !@battle.moldBreaker
                         magicShielder = b.index
-                        @battle.pbShowAbilitySplash(b)
+                        @battle.pbShowAbilitySplash(b, :MAGICSHIELD)
                         @battle.pbDisplay(_INTL("{1} shielded its side from the {2}!", b.pbThis, move.name))
                         @battle.pbHideAbilitySplash(b)
                         user.lastMoveFailed = true
@@ -465,7 +465,7 @@ class PokeBattle_Battler
                 targets.each do |b|
                     next if b.damageState.unaffected
                     next unless b.hasActiveAbility?(:NEEDLEFUR)
-                    @battle.pbShowAbilitySplash(b)
+                    @battle.pbShowAbilitySplash(b, :NEEDLEFUR)
                     if user.takesIndirectDamage?(true)
                         @battle.scene.pbDamageAnimation(user)
                         upgradedNeedleFur = b.hp < b.totalhp / 2
@@ -557,7 +557,7 @@ user.pbThis))
             targets.each do |b|
                 next if b.fainted?
                 next if !b.damageState.magicCoat && !b.damageState.magicBounce
-                @battle.pbShowAbilitySplash(b) if b.damageState.magicBounce
+                @battle.pbShowAbilitySplash(b, :MAGICBOUNCE) if b.damageState.magicBounce
                 @battle.pbDisplay(_INTL("{1} bounced the {2} back!", b.pbThis, move.name))
                 @battle.pbHideAbilitySplash(b) if b.damageState.magicBounce
                 newChoice = choice.clone
@@ -592,7 +592,7 @@ user.pbThis))
                 mc = @battle.battlers[(magicCoater >= 0) ? magicCoater : magicBouncer]
                 unless mc.fainted?
                     user.lastMoveFailed = true
-                    @battle.pbShowAbilitySplash(mc) if magicBouncer >= 0
+                    @battle.pbShowAbilitySplash(mc, :MAGICBOUNCE) if magicBouncer >= 0
                     @battle.pbDisplay(_INTL("{1} bounced the {2} back!", mc.pbThis, move.name))
                     @battle.pbHideAbilitySplash(mc) if magicBouncer >= 0
                     success = false
@@ -862,7 +862,7 @@ user.pbThis))
                 targets.each do |target|
                     next if target.damageState.unaffected
                     next unless target.hasActiveAbility?(:SECRETIONSECRET) && user.opposes?(target)
-                    battle.pbShowAbilitySplash(target, ability)
+                    battle.pbShowAbilitySplash(target, :SECRETIONSECRET)
                     user.applyPoison(target, nil) if user.canPoison?(target, true)
                     battle.pbHideAbilitySplash(target)
                 end
@@ -874,12 +874,12 @@ user.pbThis))
 
                 # Unassuming
                 if user.hasActiveAbility?(:UNASSUMING)
-                    target.tryLowerStat(:DEFENSE, user, move: move, showFailMsg: true, ability: ability)
+                    target.tryLowerStat(:DEFENSE, user, move: move, showFailMsg: true, ability: :UNASSUMING)
                 end
 
                 # Recon
                 if user.hasActiveAbility?(:RECON)
-                    target.tryLowerStat(:SPECIAL_DEFENSE, user, move: move, showFailMsg: true, ability: ability)
+                    target.tryLowerStat(:SPECIAL_DEFENSE, user, move: move, showFailMsg: true, ability: :RECON)
                 end
             end
         end
@@ -904,7 +904,7 @@ user.pbThis))
                 next if chance <= 0
                 if @battle.pbRandom(100) < chance
                     if b.hasActiveAbility?(:RUGGEDSCALES)
-                        @battle.pbShowAbilitySplash(b)
+                        @battle.pbShowAbilitySplash(b, :RUGGEDSCALES)
                         @battle.pbDisplay(_INTL("The added effect of {1}'s {2} is deflected, harming it!", pbThis(true), move.name))
                         user.applyFractionalDamage(1.0 / 6.0, true)
                         @battle.pbHideAbilitySplash(b)

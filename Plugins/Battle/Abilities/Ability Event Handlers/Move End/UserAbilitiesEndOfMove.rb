@@ -31,7 +31,7 @@ BattleHandlers::UserAbilityEndOfMove.add(:MAGICIAN,
       next if battle.futureSight
       next unless move.pbDamagingMove?
       targets.each do |b|
-          break if move.stealItem(user, b, true)
+          break if move.stealItem(user, b, ability: ability)
       end
   }
 )
@@ -107,8 +107,8 @@ BattleHandlers::UserAbilityEndOfMove.add(:GILD,
       next unless move.pbDamagingMove?
       targets.each do |b|
           next unless b.hasAnyItem?
-          removeMessage = _INTL("{1} turned {2}'s {3} into gold!", user.pbThis, b.pbThis(true), b.itemName)
-          next unless move.removeItem(user, b, true, removeMessage)
+          removeMessage = _INTL("{1} turned {2}'s {3} into gold!", user.pbThis, b.pbThis(true), getItemname(b.baseItem))
+          next unless move.removeItem(user, b, removeMessage, ability: ability)
           battle.field.incrementEffect(:PayDay, 5 * user.level) if user.pbOwnedByPlayer?
           break
       end
@@ -138,7 +138,7 @@ BattleHandlers::UserAbilityEndOfMove.add(:CALAMITY,
 
 BattleHandlers::UserAbilityEndOfMove.add(:SPACEINTERLOPER,
   proc { |ability, user, targets, _move, _battle|
-    user.pbRecoverHPFromMultiDrain(targets, 0.25)
+    user.pbRecoverHPFromMultiDrain(targets, 0.25, ability: ability)
   }
 )
 
@@ -254,9 +254,7 @@ BattleHandlers::UserAbilityEndOfMove.add(:ICEQUEEN,
       next if battle.futureSight
       next unless move.pbDamagingMove?
       next unless battle.pbWeather == :Hail
-      battle.pbShowAbilitySplash(user, ability)
-      user.pbRecoverHPFromMultiDrain(targets, 0.50)
-      battle.pbHideAbilitySplash(user)
+      user.pbRecoverHPFromMultiDrain(targets, 0.50, ability: ability)
   }
 )
 

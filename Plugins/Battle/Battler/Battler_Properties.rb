@@ -47,9 +47,9 @@ class PokeBattle_Battler
     end
 
     def item=(value)
-        new_item = GameData::Item.try_get(value)
-        @item_id = new_item ? new_item.id : nil
-        disableEffect(:ItemLost) if new_item
+        newitem = GameData::Item.try_get(value)
+        @item_id = newitem ? newitem.id : nil
+        disableEffect(:ItemLost) if newitem
         @pokemon.item = @item_id if @pokemon
         refreshDataBox
     end
@@ -181,11 +181,6 @@ class PokeBattle_Battler
         return $Trainer.owned?(displaySpecies)
     end
     alias owned owned?
-
-    def itemName
-        itm = item
-        return itm ? itm.name : ""
-    end
 
     def pbThis(lowerCase = false)
         if opposes?

@@ -536,7 +536,7 @@ class PokeBattle_Move_096 < PokeBattle_Move
         #       missed. The item is not consumed if the target was switched out by
         #       an effect like a target's Red Card.
         # NOTE: There is no item consumption animation.
-        user.pbConsumeItem(true, true, false) if user.baseItem
+        user.pbConsumeItem(user.baseItem, true, true, false) if user.baseItem
     end
 end
 
@@ -2688,7 +2688,7 @@ class PokeBattle_Move_0E0 < PokeBattle_Move
             dampHolder = @battle.pbCheckGlobalAbility(:DAMP)
             unless dampHolder.nil?
                 if show_message
-                    @battle.pbShowAbilitySplash(dampHolder)
+                    @battle.pbShowAbilitySplash(dampHolder, :DAMP)
                     @battle.pbDisplay(_INTL("{1} cannot use {2}!", user.pbThis, @name))
                     @battle.pbHideAbilitySplash(dampHolder)
                 end
@@ -3154,7 +3154,6 @@ class PokeBattle_Move_0ED < PokeBattle_Move
         score += total * 20
         score += 30 unless user.hasDamagingAttack?
         score += getSwitchOutEffectScore(user, target)
-        score -= 50 if user.confused? || user.charmed?
         return score
     end
 end
@@ -3231,7 +3230,7 @@ end
 #===============================================================================
 class PokeBattle_Move_0F0 < PokeBattle_Move
     def pbBaseDamage(baseDmg, _user, target)
-        if target.item && !target.unlosableItem?(target.item)
+        if target.hasAnyItem? && !target.unlosableItem?(target.baseItem)
             # NOTE: Damage is still boosted even if target has Sticky Hold or a
             #       substitute.
             baseDmg = (baseDmg * 1.5).round
@@ -3241,9 +3240,9 @@ class PokeBattle_Move_0F0 < PokeBattle_Move
 
     def pbEffectWhenDealingDamage(user, target)
         return unless canRemoveItem?(user, target)
-        itemName = target.itemName
+        itemName = getItemName(target.baseItem)
         removalMessage = _INTL("{1} dropped its {2}!", target.pbThis, itemName)
-        removeItem(user, target, false, removalMessage)
+        removeItem(user, target, removalMessage)
     end
 
     def getEffectScore(user, target)
@@ -3284,13 +3283,13 @@ class PokeBattle_Move_0F2 < PokeBattle_Move
     end
 
     def pbFailsAgainstTarget?(user, target, show_message)
-        unless target.item
+        unless target.hasAnyItem?
             if show_message
                 @battle.pbDisplay(_INTL("But it failed, since #{target.pbThis(true)} doesn't have an item!"))
             end
             return true
         end
-        unless user.baseItem
+        unless user.hasAnyItem?
             @battle.pbDisplay(_INTL("But it failed, since #{user.pbThis(true)} doesn't have an item!")) if show_message
             return true
         end
@@ -3314,9 +3313,9 @@ class PokeBattle_Move_0F2 < PokeBattle_Move
 
     def pbEffectAgainstTarget(user, target)
         oldUserItem = user.baseItem
-        oldUserItemName = user.itemName
-        oldTargetItem = target.item
-        oldTargetItemName = target.itemName
+        oldUserItemName = getItemName(oldUserItem)
+        oldTargetItem = target.baseItem
+        oldTargetItemName = getItemName(target.baseItem)
         user.pbRemoveItem
         target.pbRemoveItem
         if @battle.curseActive?(:CURSE_SUPER_ITEMS)
@@ -3338,7 +3337,7 @@ class PokeBattle_Move_0F2 < PokeBattle_Move
             return 130
         elsif user.hasActiveItem?(CHOICE_LOCKING_ITEMS)
             return 100
-        elsif !user.item && target.item
+        elsif !user.baseItem && target.baseItem
             if user.lastMoveUsed && GameData::Move.get(user.lastMoveUsed).function_code == "0F2"
                 return 0
             end # Trick/Switcheroo
@@ -3366,7 +3365,7 @@ class PokeBattle_Move_0F3 < PokeBattle_Move
     end
 
     def pbFailsAgainstTarget?(user, target, show_message)
-        if target.item || target.unlosableItem?(user.baseItem)
+        if target.baseItem || target.unlosableItem?(user.baseItem)
             @battle.pbDisplay(_INTL("But it failed!")) if show_message
             return true
         end
@@ -3374,7 +3373,7 @@ class PokeBattle_Move_0F3 < PokeBattle_Move
     end
 
     def pbEffectAgainstTarget(user, target)
-        itemName = user.itemName
+        itemName = getItemName(user.baseItem)
         target.item = user.baseItem
         # Permanently steal the item from wild Pokémon
         if @battle.wildBattle? && user.opposes? &&
@@ -3415,8 +3414,8 @@ class PokeBattle_Move_0F4 < PokeBattle_Move
     def pbEffectWhenDealingDamage(user, target)
         return unless canRemoveItem?(user, target)
         return unless canPluckBerry?(user, target)
-        item = target.item
-        itemName = target.itemName
+        item = target.baseItem
+        itemName = getItemName(target.baseItem)
         target.pbRemoveItem
         @battle.pbDisplay(_INTL("{1} stole and ate its target's {2}!", user.pbThis, itemName))
         user.pbHeldItemTriggerCheck(item, false)
@@ -3445,7 +3444,7 @@ class PokeBattle_Move_0F5 < PokeBattle_Move
 
     def pbEffectWhenDealingDamage(_user, target)
         return unless canIncinerateTargetsItem?(target)
-        itemName = target.itemName
+        itemName = getItemName(target.baseItem)
         target.pbRemoveItem
         @battle.pbDisplay(_INTL("{1}'s {2} was destroyed!", target.pbThis, itemName))
     end
@@ -3632,7 +3631,7 @@ class PokeBattle_Move_0F7 < PokeBattle_Move
             return true if items.include?(user.baseItem.id)
         end
         if show_message
-            @battle.pbDisplay(_INTL("But it failed, since #{user.pbThis(true)} can't fling a #{user.itemName}!"))
+            @battle.pbDisplay(_INTL("But it failed, since #{user.pbThis(true)} can't fling a #{getItemName(user.baseItem)}!"))
         end
         return false
     end
@@ -3643,7 +3642,7 @@ class PokeBattle_Move_0F7 < PokeBattle_Move
 
     def pbDisplayUseMessage(user, targets)
         super
-        @battle.pbDisplay(_INTL("{1} flung its {2}!", user.pbThis, user.itemName)) if canFling?(user, false)
+        @battle.pbDisplay(_INTL("{1} flung its {2}!", user.pbThis, getItemName(user.baseItem))) if canFling?(user, false)
     end
 
     def pbNumHits(_user, _targets, _checkingForAI = false); return 1; end
@@ -3676,7 +3675,7 @@ class PokeBattle_Move_0F7 < PokeBattle_Move
         when :PEARLOFFATE
             target.applyDizzy(user) if target.canDizzy?(user, false, self)
         else
-            target.pbHeldItemTriggerCheck(user.item, true)
+            target.pbHeldItemTriggerCheck(user.baseItem, true)
         end
     end
 
@@ -3685,7 +3684,7 @@ class PokeBattle_Move_0F7 < PokeBattle_Move
         #       missed. The item is not consumed if the target was switched out by
         #       an effect like a target's Red Card.
         # NOTE: There is no item consumption animation.
-        user.pbConsumeItem(true, true, false) if user.baseItem
+        user.pbConsumeItem(user.baseItem, true, false) if user.baseItem
     end
 end
 
@@ -3709,7 +3708,7 @@ class PokeBattle_Move_0F8 < PokeBattle_Move
     end
 
     def getEffectScore(_user, target)
-        return 0 unless target.item
+        return 0 unless target.hasAnyItem?
         return 50
     end
 end

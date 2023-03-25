@@ -201,7 +201,7 @@ class PokeBattle_Battle
         eachBattler do |b|
             b.pbItemTerrainStatBoostCheck
             if user == b && b.hasActiveItem?(:TERRAINSEALANT)
-                pbDisplay(_INTL("{1}'s {2} keeps the terrain from expiring!", b.pbThis, b.itemName))
+                pbDisplay(_INTL("{1}'s {2} keeps the terrain from expiring!", b.pbThis, getItemName(b.baseItem)))
                 @field.pointAt(:TerrainSealant, b)
             end
         end

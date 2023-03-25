@@ -27,23 +27,6 @@ BattleHandlers::StatusCureAbility.add(:LIMBER,
   }
 )
 
-BattleHandlers::StatusCureAbility.add(:OWNTEMPO,
-  proc { |ability, battler|
-      if battler.confused?
-          battler.battle.pbShowAbilitySplash(battler, ability)
-          battler.disableEffect(:Charm)
-          battler.battle.pbDisplay(_INTL("{1} snapped out of its confusion.", battler.pbThis))
-          battler.battle.pbHideAbilitySplash(battler)
-      end
-      if battler.charmed?
-          battler.battle.pbShowAbilitySplash(battler, ability)
-          battler.disableEffect(:Charm)
-          battler.battle.pbDisplay(_INTL("{1} was released from the charm.", battler.pbThis))
-          battler.battle.pbHideAbilitySplash(battler)
-      end
-  }
-)
-
 BattleHandlers::StatusCureAbility.add(:WATERVEIL,
   proc { |ability, battler|
       next unless battler.hasStatusNoTrigger(:BURN)

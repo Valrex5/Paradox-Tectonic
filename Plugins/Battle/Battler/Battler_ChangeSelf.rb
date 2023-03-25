@@ -83,7 +83,7 @@ class PokeBattle_Battler
         damage = damage.round
         damage = 1 if damage < 1
         if !cushionRecoil && hasActiveAbility?(:ALLYCUSHION)
-            @battle.pbShowAbilitySplash(self)
+            @battle.pbShowAbilitySplash(self, :ALLYCUSHION)
             @battle.pbDisplay(_INTL("{1} looks for an ally to help in avoiding the recoil!", pbThis))
 
             # Can be replaced
@@ -149,7 +149,7 @@ class PokeBattle_Battler
 
     def pbRecoverHPFromDrain(drainAmount, target)
         if target.hasActiveAbility?(:LIQUIDOOZE)
-            @battle.pbShowAbilitySplash(target, ability)
+            @battle.pbShowAbilitySplash(target, :LIQUIDOOZE)
             oldHP = @hp
             pbReduceHP(drainAmount)
             @battle.pbDisplay(_INTL("{1} sucked up the liquid ooze!", pbThis))
@@ -163,13 +163,13 @@ class PokeBattle_Battler
         end
     end
 
-    def pbRecoverHPFromMultiDrain(targets, ratio)
+    def pbRecoverHPFromMultiDrain(targets, ratio, ability: nil)
         totalDamageDealt = 0
         targets.each do |target|
             next if target.damageState.unaffected
             damage = target.damageState.totalHPLost
             if target.hasActiveAbility?(:LIQUIDOOZE)
-                @battle.pbShowAbilitySplash(target, ability)
+                @battle.pbShowAbilitySplash(target, :LIQUIDOOZE)
                 lossAmount = (damage * ratio).round
                 pbReduceHP(lossAmount)
                 @battle.pbDisplay(_INTL("{1} sucked up the liquid ooze!", pbThis))
@@ -180,12 +180,12 @@ class PokeBattle_Battler
             end
         end
         return if totalDamageDealt <= 0 || !canHeal?
-        @battle.pbShowAbilitySplash(self)
+        @battle.pbShowAbilitySplash(self, ability) if ability
         drainAmount = (totalDamageDealt * ratio).round
         drainAmount = 1 if drainAmount < 1
         drainAmount = (drainAmount * 1.3).floor if hasActiveItem?(:BIGROOT)
         pbRecoverHP(drainAmount, true, true, false)
-        @battle.pbHideAbilitySplash(self)
+        @battle.pbHideAbilitySplash(self) if ability
     end
 
     def applyFractionalHealing(fraction, ability: nil, anim: true, anyAnim: true, showMessage: true, customMessage: nil, item: nil)
@@ -194,9 +194,9 @@ class PokeBattle_Battler
             @battle.pbCommonAnimation("UseItem", self) unless @battle.autoTesting
             unless customMessage
                 if fraction <= 1.0 / 8.0
-                    customMessage = _INTL("{1} restored a little HP using its {2}!", pbThis, itemName)
+                    customMessage = _INTL("{1} restored a little HP using its {2}!", pbThis, getItemName(item))
                 else
-                    customMessage = _INTL("{1} restored its health using its {2}!", pbThis, itemName)
+                    customMessage = _INTL("{1} restored its health using its {2}!", pbThis, getItemName(item))
                 end
             end
         end
@@ -258,7 +258,7 @@ class PokeBattle_Battler
                 next unless partyPokemon.fainted?
                 faintedPartyMembers.push(partyPokemon)
             end
-            pbDisplay(_INTL("{1}'s scattered its {2} when fainting.", pbThis, itemName))
+            pbDisplay(_INTL("{1}'s scattered its {2} when fainting.", pbThis, getItemName(:HOOHSASHES)))
             if faintedPartyMembers.length == 0
                 pbDisplay(_INTL("But there was no one to revive!"))
             else
@@ -461,7 +461,7 @@ class PokeBattle_Battler
                     @battle.pbDisplay(_INTL("{1} returned back to normal!", pbThis))
                 else
                     typeName = GameData::Type.get(newTypes[0]).name
-                    @battle.pbDisplay(_INTL("{1}'s type changed to {3}!", pbThis, abilityName, typeName))
+                    @battle.pbDisplay(_INTL("{1}'s type changed to {2}!", pbThis, typeName))
                 end
             end
         end
@@ -481,12 +481,12 @@ class PokeBattle_Battler
                 if @form != 1
                     @battle.pbShowAbilitySplash(self, true)
                     @battle.pbHideAbilitySplash(self)
-                    pbChangeForm(1, _INTL("{1} triggered!", abilityName))
+                    pbChangeForm(1, _INTL("{1} triggered!", getAbilityName(:ZENMODE)))
                 end
             elsif @form != 0
                 @battle.pbShowAbilitySplash(self, true)
                 @battle.pbHideAbilitySplash(self)
-                pbChangeForm(0, _INTL("{1} triggered!", abilityName))
+                pbChangeForm(0, _INTL("{1} triggered!", getAbilityName(:ZENMODE)))
             end
         end
         # Minior - Shields Down
@@ -496,14 +496,14 @@ class PokeBattle_Battler
                 if @form != newForm
                     @battle.pbShowAbilitySplash(self, true)
                     @battle.pbHideAbilitySplash(self)
-                    pbChangeForm(newForm, _INTL("{1} deactivated!", abilityName))
+                    pbChangeForm(newForm, _INTL("{1} deactivated!", getAbilityName(:SHIELDSDOWN)))
                 elsif !endOfRound
-                    @battle.pbDisplay(_INTL("{1} deactivated!", abilityName))
+                    @battle.pbDisplay(_INTL("{1} deactivated!", getAbilityName(:SHIELDSDOWN)))
                 end
             elsif @form < 7 # Turn into Core form
                 @battle.pbShowAbilitySplash(self, true)
                 @battle.pbHideAbilitySplash(self)
-                pbChangeForm(@form + 7, _INTL("{1} activated!", abilityName))
+                pbChangeForm(@form + 7, _INTL("{1} activated!", getAbilityName(:SHIELDSDOWN)))
             end
         end
         # Wishiwashi - Schooling
@@ -535,7 +535,7 @@ class PokeBattle_Battler
         applyEffect(:Transform)
         applyEffect(:TransformSpecies, target.species)
         pbChangeTypes(target)
-        self.ability = target.ability
+        self.ability = target.baseAbility
         @attack = target.attack
         @defense = target.defense
         @spatk = target.spatk

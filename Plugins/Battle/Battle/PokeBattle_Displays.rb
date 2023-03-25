@@ -52,7 +52,6 @@ class PokeBattle_Battle
 
     def pbShowAbilitySplash(battler, ability, delay = false, logTrigger = true)
         aiSeesAbility(battler)
-        abilityName = GameData::Ability.get(ability).name
         triggerAbilityTriggeredDialogue(battler, ability)
         return unless showMessages?
         @scene.pbShowAbilitySplash(battler, ability)

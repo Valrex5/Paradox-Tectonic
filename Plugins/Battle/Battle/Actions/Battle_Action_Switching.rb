@@ -90,7 +90,7 @@ class PokeBattle_Battle
                 if BattleHandlers.triggerTrappingTargetAbility(ability, battler, b, self)
                     if partyScene
                         partyScene.pbDisplay(_INTL("{1}'s {2} prevents switching!",
-                            b.pbThis, abilityName(ability)))
+                            b.pbThis, getAbilityName(ability)))
                     end
                     return true
                 end
@@ -101,7 +101,7 @@ class PokeBattle_Battle
                 if BattleHandlers.triggerTrappingTargetItem(item, battler, b, self)
                     if partyScene
                         partyScene.pbDisplay(_INTL("{1}'s {2} prevents switching!",
-                           b.pbThis, b.itemName))
+                           b.pbThis, getItemName(b.baseItem)))
                     end
                     return true
                 end

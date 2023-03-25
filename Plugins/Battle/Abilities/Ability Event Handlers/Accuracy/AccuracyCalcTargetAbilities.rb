@@ -27,9 +27,3 @@ BattleHandlers::AccuracyCalcTargetAbility.add(:WONDERSKIN,
       mults[:base_accuracy] = 50 if move.statusMove? && user.opposes?(target) && (mults[:base_accuracy] > 50)
   }
 )
-
-BattleHandlers::AccuracyCalcTargetAbility.add(:TANGLEDFEET,
-    proc { |ability, mults, _user, target, _move, _type|
-        mults[:accuracy_multiplier] /= 2 if target.confused? || target.charmed?
-    }
-)

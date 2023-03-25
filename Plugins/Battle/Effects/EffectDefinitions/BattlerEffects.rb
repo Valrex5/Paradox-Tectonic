@@ -352,7 +352,9 @@ GameData::BattleEffect.register_effect(:Battler, {
     :apply_proc => proc do |battle, battler, _value|
         battle.pbDisplay(_INTL("{1}'s Ability was suppressed!", battler.pbThis))
         battler.disableEffect(:Truant)
-        battler.pbOnAbilityChanged(battler.ability)
+        battler.eachAbility do |ability|
+            battler.pbOnAbilityChanged(ability)
+        end
     end,
 })
 
@@ -745,6 +747,7 @@ GameData::BattleEffect.register_effect(:Battler, {
 GameData::BattleEffect.register_effect(:Battler, {
     :id => :PriorityAbility,
     :real_name => "Priority Ability",
+    :type => :Ability,
     :resets_eor	=> true,
     :info_displayed => false,
 })
@@ -752,6 +755,7 @@ GameData::BattleEffect.register_effect(:Battler, {
 GameData::BattleEffect.register_effect(:Battler, {
     :id => :PriorityItem,
     :real_name => "Priority Item",
+    :type => :Item,
     :resets_eor	=> true,
     :info_displayed => false,
 })

@@ -295,7 +295,7 @@ class PokeBattle_Battle
             battler.eachOpposing do |opponent|
                 next if opponent.lastMoveUsedType.nil?
                 next if opponent.pbTypes(true).include?(opponent.lastMoveUsedType)
-                battle.pbShowAbilitySplash(battler, ability)
+                pbShowAbilitySplash(battler, :SOULREAD)
                 pbDisplay(_INTL("{1} reads {2}'s guilty soul!", battler.pbThis, opponent.pbThis(true)))
                 pbHideAbilitySplash(battler)
             end

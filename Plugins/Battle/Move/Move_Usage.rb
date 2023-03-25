@@ -461,37 +461,37 @@ target.pbThis(true)))
 
     def pbEndureKOMessage(target)
         if target.damageState.disguise
-            @battle.pbShowAbilitySplash(target, ability)
+            @battle.pbShowAbilitySplash(target, :DISGUISE)
             @battle.pbDisplay(_INTL("Its disguise served it as a decoy!"))
             @battle.pbHideAbilitySplash(target)
             target.pbChangeForm(1, _INTL("{1}'s disguise was busted!", target.pbThis))
         elsif target.damageState.iceface
-            @battle.pbShowAbilitySplash(target, ability)
+            @battle.pbShowAbilitySplash(target, :ICEFACE)
             target.pbChangeForm(1, _INTL("{1} transformed!", target.pbThis))
             @battle.pbHideAbilitySplash(target)
         elsif target.damageState.endured
             @battle.pbDisplay(_INTL("{1} endured the hit!", target.pbThis))
         elsif target.damageState.sturdy
-            @battle.pbShowAbilitySplash(target, ability)
+            @battle.pbShowAbilitySplash(target, :STURDY)
             @battle.pbDisplay(_INTL("{1} endured the hit!", target.pbThis))
             @battle.pbHideAbilitySplash(target)
         elsif target.damageState.dangerSense
-            @battle.pbShowAbilitySplash(target, ability)
+            @battle.pbShowAbilitySplash(target, :DANGERSENSE)
             @battle.pbDisplay(_INTL("{1} avoided taking the full hit!", target.pbThis))
             @battle.pbHideAbilitySplash(target)
         elsif target.damageState.focusSash
             @battle.pbCommonAnimation("UseItem", target)
-            @battle.pbDisplay(_INTL("{1} hung on using its {2}!", target.pbThis, target.itemName))
-            target.pbConsumeItem
+            @battle.pbDisplay(_INTL("{1} hung on using its {2}!", target.pbThis, getItemName(:FOCUSSASH)))
+            target.pbConsumeItem(:FOCUSSASH)
         elsif target.damageState.focusBand
             @battle.pbCommonAnimation("UseItem", target)
             @battle.pbDisplay(_INTL("{1} hung on using its Focus Band!", target.pbThis))
         elsif target.damageState.direDiversion
             @battle.pbDisplay(_INTL("{1} blocked the hit with its item! It barely hung on!", target.pbThis))
-            target.pbConsumeItem
+            target.pbConsumeItem(target.baseItem)
         elsif target.damageState.endureBerry
-            @battle.pbDisplay(_INTL("{1} hung on by consuming its {2}!", target.pbThis, target.itemName))
-            target.pbConsumeItem
+            @battle.pbDisplay(_INTL("{1} hung on by consuming its {2}!", target.pbThis, getItemName(:CASSBERRY)))
+            target.pbConsumeItem(:CASSBERRY)
         end
     end
 

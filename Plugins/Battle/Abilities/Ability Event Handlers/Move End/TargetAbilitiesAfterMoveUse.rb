@@ -6,7 +6,7 @@ BattleHandlers::TargetAbilityAfterMoveUse.add(:COLORCHANGE,
       typeName = GameData::Type.get(move.calcType).name
       battle.pbShowAbilitySplash(target, ability)
       target.pbChangeTypes(move.calcType)
-      battle.pbDisplay(_INTL("{1}'s {2} made it the {3} type!", target.pbThis, abilityName(ability), typeName))
+      battle.pbDisplay(_INTL("{1}'s {2} made it the {3} type!", target.pbThis, getAbilityName(ability), typeName))
       battle.pbHideAbilitySplash(target)
   }
 )
@@ -17,7 +17,7 @@ BattleHandlers::TargetAbilityAfterMoveUse.add(:PICKPOCKET,
       next unless move.pbDamagingMove?
       next unless move.physicalMove?
       next if battle.futureSight
-      move.stealItem(target, user, true)
+      move.stealItem(target, user, ability: ability)
   }
 )
 
@@ -28,9 +28,9 @@ BattleHandlers::TargetAbilityAfterMoveUse.add(:MOONLIGHTER,
       next if battle.futureSight
       next unless battle.pbWeather == :Moonglow
       if move.canStealItem?(user,target)
-        move.stealItem(target, user, true)
+        move.stealItem(target, user, ability: ability)
       else
-        move.removeItem(target, user, true)
+        move.removeItem(target, user, ability: ability)
       end
   }
 )

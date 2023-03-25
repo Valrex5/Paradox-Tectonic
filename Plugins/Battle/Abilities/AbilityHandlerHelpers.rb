@@ -5,7 +5,7 @@ def pbBattleMoveImmunityHealAbility(ability, user, target, move, moveType, immun
     return false if moveType != immuneType
     return true if aiChecking
     if target.applyFractionalHealing(1.0 / 4.0, ability: ability) <= 0 && showMessages
-        battle.pbDisplay(_INTL("{1}'s {2} made {3} ineffective!", target.pbThis, abilityName(ability),
+        battle.pbDisplay(_INTL("{1}'s {2} made {3} ineffective!", target.pbThis, getAbilityName(ability),
 move.name))
     end
     return true

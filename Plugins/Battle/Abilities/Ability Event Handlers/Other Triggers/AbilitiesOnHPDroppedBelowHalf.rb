@@ -14,7 +14,7 @@ BattleHandlers::AbilityOnHPDroppedBelowHalf.add(:EMERGENCYEXIT,
         end
         # In trainer battles
         next false if battle.pbAllFainted?(battler.idxOpposingSide)
-        next battle.triggeredSwitchOut(battler.index, ability)
+        next battle.triggeredSwitchOut(battler.index, ability: ability)
     }
 )
 
@@ -50,7 +50,7 @@ BattleHandlers::AbilityOnHPDroppedBelowHalf.add(:BOULDERNEST,
 
 BattleHandlers::AbilityOnHPDroppedBelowHalf.add(:REAWAKENEDPOWER,
   proc { |ability, battler, _battle|
-      battler.pbMaximizeStatStage(:SPECIAL_ATTACK, battler, self, false, true)
+      battler.pbMaximizeStatStage(:SPECIAL_ATTACK, battler, self, ability: ability)
       next false
   }
 )

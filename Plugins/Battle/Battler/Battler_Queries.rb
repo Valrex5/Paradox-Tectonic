@@ -90,11 +90,11 @@ class PokeBattle_Battler
     end
 
     def hasAbility?(checkable)
-        abilities.each do |effectingID|
+        abilities.each do |ability|
             if checkable.is_a?(Array)
-                return true if checkable.include?(effectingID)
+                return ability if checkable.include?(ability)
             else
-                return true if checkable == effectingID
+                return ability if checkable == ability
             end
         end
         return false
@@ -213,40 +213,44 @@ class PokeBattle_Battler
         return !items.empty?
     end
 
-    def hasActiveItem?(check_item, ignore_fainted = false)
-        return false unless itemActive?(ignore_fainted)
+    def hasItem?(checkitem)
         items.each do |effectiveItem|
-            if check_item.is_a?(Array)
-                return true if check_item.include?(effectiveItem)
+            if checkitem.is_a?(Array)
+                return true if checkitem.include?(effectiveItem)
             else
-                return true if check_item == effectiveItem
+                return true if checkitem == effectiveItem
             end
         end
         return false
     end
+
+    def hasActiveItem?(checkitem, ignore_fainted = false)
+        return false unless itemActive?(ignore_fainted)
+        return hasItem?(checkitem)
+    end
     alias hasWorkingItem hasActiveItem?
 
     # Returns whether the specified item will be unlosable for this Pokémon.
-    def unlosableItem?(check_item, showMessages = false)
-        return false unless check_item
-        return true if GameData::Item.get(check_item).is_mail?
+    def unlosableItem?(checkitem, showMessages = false)
+        return false unless checkitem
+        return true if GameData::Item.get(checkitem).is_mail?
         return false if effectActive?(:Transform)
         # Items that change a Pokémon's form
         if mega? # Check if item was needed for this Mega Evolution
-            return true if @pokemon.species_data.mega_stone == check_item
+            return true if @pokemon.species_data.mega_stone == checkitem
         else # Check if item could cause a Mega Evolution
             GameData::Species.each do |data|
                 next if data.species != @species || data.unmega_form != @form
-                return true if data.mega_stone == check_item
+                return true if data.mega_stone == checkitem
             end
         end
-        if check_item == :LUNCHBOX
+        if checkitem == :LUNCHBOX
             @battle.pbDisplay(_INTL("But #{pbThis(false)} hold's tightly onto its Lunch Box!")) if showMessages
             return true
         end
         # Other unlosable items
         eachAbility do |ability|
-            return true if GameData::Item.get(check_item).unlosable?(@species, ability)
+            return true if GameData::Item.get(checkitem).unlosable?(@species, ability)
         end
         return false
     end
@@ -309,7 +313,7 @@ class PokeBattle_Battler
         return false if fainted?
         if hasActiveAbility?(:MAGICGUARD)
             if showMsg
-                @battle.pbShowAbilitySplash(self)
+                @battle.pbShowAbilitySplash(self, :MAGICGUARD)
                 @battle.pbDisplay(_INTL("{1} is unaffected!", pbThis))
                 @battle.pbHideAbilitySplash(self)
             end
@@ -326,14 +330,14 @@ class PokeBattle_Battler
         end
         if hasActiveAbility?(:OVERCOAT) && !@battle.moldBreaker
             if showMsg
-                @battle.pbShowAbilitySplash(self)
+                @battle.pbShowAbilitySplash(self, :OVERCOAT)
                 @battle.pbDisplay(_INTL("{1} is unaffected!", pbThis))
                 @battle.pbHideAbilitySplash(self)
             end
             return false
         end
         if hasActiveItem?(:SAFETYGOGGLES)
-            @battle.pbDisplay(_INTL("{1} is unaffected because of its {2}!", pbThis, itemName)) if showMsg
+            @battle.pbDisplay(_INTL("{1} is unaffected because of its {2}!", pbThis, getItemName(:SAFETYGOGGLES))) if showMsg
             return false
         end
         return true

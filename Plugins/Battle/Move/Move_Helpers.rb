@@ -62,42 +62,42 @@ class PokeBattle_Move
     end
 
     # Returns whether the item was removed
-    def removeItem(remover, victim, showRemoverSplash = false, removeMessage = nil)
+    def removeItem(remover, victim, removeMessage = nil, ability: nil)
         return false unless canRemoveItem?(remover, victim)
-        battle.pbShowAbilitySplash(remover) if showRemoverSplash
+        battle.pbShowAbilitySplash(remover, ability) if ability
         if victim.hasActiveAbility?(:STICKYHOLD)
-            battle.pbShowAbilitySplash(victim) if remover.opposes?(victim)
+            battle.pbShowAbilitySplash(victim, :STICKYHOLD) if remover.opposes?(victim)
             battle.pbDisplay(_INTL("{1}'s item cannot be removed!", victim.pbThis))
             battle.pbHideAbilitySplash(victim) if remover.opposes?(victim)
-            battle.pbHideAbilitySplash(remover) if showRemoverSplash
+            battle.pbHideAbilitySplash(remover) if ability
             return false
         end
-        itemName = victim.itemName
+        itemName = getItemName(victim.baseItem)
         victim.pbRemoveItem(false)
         removeMessage ||= _INTL("{1} forced {2} to drop their {3}!", remover.pbThis,
               victim.pbThis(true), itemName)
         battle.pbDisplay(removeMessage)
-        battle.pbHideAbilitySplash(remover) if showRemoverSplash
+        battle.pbHideAbilitySplash(remover) if ability
         return true
     end
 
     # Returns whether the item was removed
-    def stealItem(stealer, victim, showStealerSplash = false)
+    def stealItem(stealer, victim, ability: nil)
         return false unless canStealItem?(stealer, victim)
-        @battle.pbShowAbilitySplash(stealer) if showStealerSplash
+        @battle.pbShowAbilitySplash(stealer, ability) if ability
         if victim.hasActiveAbility?(:STICKYHOLD)
-            @battle.pbShowAbilitySplash(victim) if stealer.opposes?(victim)
+            @battle.pbShowAbilitySplash(victim, :STICKYHOLD) if stealer.opposes?(victim)
             @battle.pbDisplay(_INTL("{1}'s item cannot be stolen!", victim.pbThis))
             @battle.pbHideAbilitySplash(victim) if stealer.opposes?(victim)
-            @battle.pbHideAbilitySplash(stealer) if showStealerSplash
+            @battle.pbHideAbilitySplash(stealer) if ability
             return false
         end
-        oldVictimItem = victim.item
-        oldVictimItemName = victim.itemName
+        oldVictimItem = victim.baseItem
+        oldVictimItemName = getItemName(oldVictimItem)
         victim.pbRemoveItem
         if @battle.curseActive?(:CURSE_SUPER_ITEMS)
             @battle.pbDisplay(_INTL("{1}'s {2} turned to dust.", victim.pbThis, oldVictimItemName))
-            @battle.pbHideAbilitySplash(stealer) if showStealerSplash
+            @battle.pbHideAbilitySplash(stealer) if ability
         else
             @battle.pbDisplay(_INTL("{1} stole {2}'s {3}!", stealer.pbThis,
               victim.pbThis(true), oldVictimItemName))
@@ -105,11 +105,11 @@ class PokeBattle_Move
             if @battle.wildBattle? && victim.opposes? && !@battle.bossBattle?
                 victim.setInitialItem(nil)
                 pbReceiveItem(oldVictimItem)
-                @battle.pbHideAbilitySplash(stealer) if showStealerSplash
+                @battle.pbHideAbilitySplash(stealer) if ability
             else
                 stealer.item = oldVictimItem
                 @battle.pbHideAbilitySplash(stealer)
-                stealer.pbHeldItemTriggerCheck if showStealerSplash
+                stealer.pbHeldItemTriggerCheck if ability
             end
         end
         return true

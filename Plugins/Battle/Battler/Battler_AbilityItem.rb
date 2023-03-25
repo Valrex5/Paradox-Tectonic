@@ -36,7 +36,7 @@ class PokeBattle_Battler
             BattleHandlers.triggerAbilityOnSwitchOut(ability, self, false)
         end
         # Caretaker bonus
-        pbRecoverHP(battler.totalhp / 16.0, false, false, false) if hasTribeBonus?(:CARETAKER)
+        pbRecoverHP(@totalhp / 16.0, false, false, false) if hasTribeBonus?(:CARETAKER)
         # Reset form
         @battle.peer.pbOnLeavingBattle(@battle, @pokemon, @battle.usedInBattle[idxOwnSide][@index / 2])
         # Treat self as fainted
@@ -103,7 +103,7 @@ class PokeBattle_Battler
                 @battle.pbShowAbilitySplash(self, :TRACE)
                 stolenAbility = choice.ability
                 self.ability = stolenAbility
-                @battle.pbDisplay(_INTL("{1} traced {2}'s {3}!", pbThis, choice.pbThis(true), abilityName(stolenAbility)))
+                @battle.pbDisplay(_INTL("{1} traced {2}'s {3}!", pbThis, choice.pbThis(true), getAbilityName(stolenAbility)))
                 @battle.pbHideAbilitySplash(self)
                 if !onSwitchIn && (unstoppableAbility? || abilityActive?)
                     eachAbility do |ability|
@@ -146,7 +146,7 @@ class PokeBattle_Battler
             end
         end
         disableEffect(:GastroAcid) if unstoppableAbility?
-        disableEffect(:SlowStart) if ability != :SLOWSTART
+        disableEffect(:SlowStart) unless hasAbility?(:SLOWSTART)
         # Revert form if Flower Gift/Forecast was lost
         pbCheckFormOnWeatherChange
         # Check for end of primordial weather
@@ -183,8 +183,8 @@ class PokeBattle_Battler
     def pbRemoveItem(permanent = true)
         permanent = false # Items respawn after battle always!!
         disableEffect(:ChoiceBand)
-        applyEffect(:ItemLost) if item
-        setInitialItem(nil) if permanent && item == initialItem
+        applyEffect(:ItemLost) if baseItem
+        setInitialItem(nil) if permanent && baseItem == initialItem
         self.item = nil
     end
 
@@ -207,7 +207,7 @@ class PokeBattle_Battler
         end
         setBelched if belch && itemData.is_berry?
         pbRemoveItem
-        pbSymbiosis if symbiosis
+        pbSymbiosis(item) if symbiosis
     end
 
     def pbSymbiosis(item)
@@ -218,7 +218,7 @@ class PokeBattle_Battler
             next if !b.baseItem || b.unlosableItem?(b.baseItem)
             next if unlosableItem?(b.baseItem)
             @battle.pbShowAbilitySplash(b, :SYMBIOSIS)
-            @battle.pbDisplay(_INTL("{1} copies its {2} to {3}!", b.pbThis, b.baseItemName, pbThis(true)))
+            @battle.pbDisplay(_INTL("{1} copies its {2} to {3}!", b.pbThis, getItemName(baseItem), pbThis(true)))
             self.item = b.baseItem
             @battle.pbHideAbilitySplash(b)
             pbHeldItemTriggerCheck
@@ -226,17 +226,17 @@ class PokeBattle_Battler
         end
     end
 
-    # item_to_use is an item ID or GameData::Item object. own_item is whether the
+    # item_to_use is an item ID or GameData::Item object. ownitem is whether the
     # item is held by self. fling is for Fling only.
-    def pbHeldItemTriggered(item_to_use, own_item = true, fling = false)
+    def pbHeldItemTriggered(item_to_use, ownitem = true, fling = false)
         # Cheek Pouch and similar abilities
         if GameData::Item.get(item_to_use).is_berry?
             eachActiveAbility do |ability|
-                BattleHandlers.triggerOnBerryConsumedAbility(ability, self, item_to_use, own_item, @battle)
+                BattleHandlers.triggerOnBerryConsumedAbility(ability, self, item_to_use, ownitem, @battle)
             end
         end
-        pbConsumeItem(item_to_use) if own_item
-        pbSymbiosis if !own_item && !fling # Bug Bite/Pluck users trigger Symbiosis
+        pbConsumeItem(item_to_use) if ownitem
+        pbSymbiosis(item_to_use) if !ownitem && !fling # Bug Bite/Pluck users trigger Symbiosis
     end
 
     #=============================================================================

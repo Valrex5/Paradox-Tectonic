@@ -7,7 +7,7 @@ BattleHandlers::EORGainItemAbility.add(:HARVEST,
         battler.item = battler.recycleItem
         battler.setRecycleItem(nil)
         battler.setInitialItem(battler.item) unless battler.initialItem
-        battle.pbDisplay(_INTL("{1} harvested one {2}!", battler.pbThis, battler.itemName))
+        battle.pbDisplay(_INTL("{1} harvested one {2}!", battler.pbThis, getItemName(battler.baseItem)))
         battle.pbHideAbilitySplash(battler)
         battler.pbHeldItemTriggerCheck
     }
@@ -21,7 +21,7 @@ BattleHandlers::EORGainItemAbility.add(:LARDER,
         battler.item = battler.recycleItem
         battler.setRecycleItem(nil)
         battler.setInitialItem(battler.item) unless battler.initialItem
-        battle.pbDisplay(_INTL("{1} withdrew one {2}!", battler.pbThis, battler.itemName))
+        battle.pbDisplay(_INTL("{1} withdrew one {2}!", battler.pbThis, getItemName(battler.baseItem)))
         battle.pbHideAbilitySplash(battler)
         battler.pbHeldItemTriggerCheck
     }
@@ -49,7 +49,7 @@ BattleHandlers::EORGainItemAbility.add(:PICKUP,
           battler.setInitialItem(foundItem)
           fromBattler.setInitialItem(nil)
       end
-      battle.pbDisplay(_INTL("{1} found one {2}!", battler.pbThis, battler.itemName))
+      battle.pbDisplay(_INTL("{1} found one {2}!", battler.pbThis, getItemName(battler.baseItem)))
       battle.pbHideAbilitySplash(battler)
       battler.pbHeldItemTriggerCheck
   }
@@ -64,7 +64,7 @@ BattleHandlers::EORGainItemAbility.add(:GOURMAND,
                 ORANBERRY GANLONBERRY LANSATBERRY APICOTBERRY LIECHIBERRY
                 PETAYABERRY SALACBERRY STARFBERRY MICLEBERRY SITREONBERRY
             ].sample
-        battle.pbDisplay(_INTL("{1} was delivered one {2}!", battler.pbThis, battler.itemName))
+        battle.pbDisplay(_INTL("{1} was delivered one {2}!", battler.pbThis, getItemName(battler.baseItem)))
         battle.pbHideAbilitySplash(battler)
         battler.pbHeldItemTriggerCheck
     }

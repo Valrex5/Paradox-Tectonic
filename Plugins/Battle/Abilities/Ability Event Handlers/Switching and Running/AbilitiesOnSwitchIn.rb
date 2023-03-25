@@ -112,13 +112,13 @@ BattleHandlers::AbilityOnSwitchIn.add(:DARKAURA,
 
 BattleHandlers::AbilityOnSwitchIn.add(:DELTASTREAM,
   proc { |ability, battler, battle|
-      pbBattleWeatherAbility(:StrongWinds, battler, battle, true)
+      pbBattleWeatherAbility(ability, :StrongWinds, battler, battle, true)
   }
 )
 
 BattleHandlers::AbilityOnSwitchIn.add(:DESOLATELAND,
   proc { |ability, battler, battle|
-      pbBattleWeatherAbility(:HarshSun, battler, battle, true)
+      pbBattleWeatherAbility(ability, :HarshSun, battler, battle, true)
   }
 )
 
@@ -136,19 +136,19 @@ BattleHandlers::AbilityOnSwitchIn.add(:DOWNLOAD,
 
 BattleHandlers::AbilityOnSwitchIn.add(:MOONGAZE,
   proc { |ability, battler, battle|
-      pbBattleWeatherAbility(:Moonglow, battler, battle)
+      pbBattleWeatherAbility(ability, :Moonglow, battler, battle)
   }
 )
 
 BattleHandlers::AbilityOnSwitchIn.add(:HARBINGER,
   proc { |ability, battler, battle|
-      pbBattleWeatherAbility(:Eclipse, battler, battle)
+      pbBattleWeatherAbility(ability, :Eclipse, battler, battle)
   }
 )
 
 BattleHandlers::AbilityOnSwitchIn.add(:DRIZZLE,
   proc { |ability, battler, battle|
-      pbBattleWeatherAbility(:Rain, battler, battle)
+      pbBattleWeatherAbility(ability, :Rain, battler, battle)
   }
 )
 
@@ -160,7 +160,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:DRIFTINGMIST,
 
 BattleHandlers::AbilityOnSwitchIn.add(:DROUGHT,
   proc { |ability, battler, battle|
-      pbBattleWeatherAbility(:Sun, battler, battle)
+      pbBattleWeatherAbility(ability, :Sun, battler, battle)
   }
 )
 
@@ -228,7 +228,32 @@ BattleHandlers::AbilityOnSwitchIn.add(:INTIMIDATE,
       battle.pbShowAbilitySplash(battler, ability)
       battle.eachOtherSideBattler(battler.index) do |b|
           next unless b.near?(battler)
-          b.pbLowerAttackStatStageIntimidate(battler)
+          b.pbLowerStatStageAteAbility(battler, :ATTACK, ability)
+          b.pbItemOnIntimidatedCheck
+      end
+      battle.pbHideAbilitySplash(battler)
+  }
+)
+
+
+BattleHandlers::AbilityOnSwitchIn.add(:FASCINATE,
+  proc { |ability, battler, battle|
+      battle.pbShowAbilitySplash(battler, ability)
+      battle.eachOtherSideBattler(battler.index) do |b|
+          next unless b.near?(battler)
+          b.pbLowerStatStageAteAbility(battler, :SPECIAL_ATTACK, ability)
+          b.pbItemOnIntimidatedCheck
+      end
+      battle.pbHideAbilitySplash(battler)
+  }
+)
+
+BattleHandlers::AbilityOnSwitchIn.add(:FRUSTRATE,
+  proc { |ability, battler, battle|
+      battle.pbShowAbilitySplash(battler, ability)
+      battle.eachOtherSideBattler(battler.index) do |b|
+          next unless b.near?(battler)
+          b.pbLowerStatStageAteAbility(battler, :SPEED, ability)
           b.pbItemOnIntimidatedCheck
       end
       battle.pbHideAbilitySplash(battler)
@@ -253,19 +278,19 @@ BattleHandlers::AbilityOnSwitchIn.add(:PRESSURE,
 
 BattleHandlers::AbilityOnSwitchIn.add(:PRIMORDIALSEA,
   proc { |ability, battler, battle|
-      pbBattleWeatherAbility(:HeavyRain, battler, battle, true)
+      pbBattleWeatherAbility(ability, :HeavyRain, battler, battle, true)
   }
 )
 
 BattleHandlers::AbilityOnSwitchIn.add(:SANDSTREAM,
   proc { |ability, battler, battle|
-      pbBattleWeatherAbility(:Sandstorm, battler, battle)
+      pbBattleWeatherAbility(ability, :Sandstorm, battler, battle)
   }
 )
 
 BattleHandlers::AbilityOnSwitchIn.add(:SNOWWARNING,
   proc { |ability, battler, battle|
-      pbBattleWeatherAbility(:Hail, battler, battle)
+      pbBattleWeatherAbility(ability, :Hail, battler, battle)
   }
 )
 
@@ -413,30 +438,6 @@ BattleHandlers::AbilityOnSwitchIn.add(:CRAGTERROR,
       battle.eachOtherSideBattler(battler.index) do |b|
           next unless b.near?(battler)
           b.pbLowerMultipleStatStages([:ATTACK,1,:SPECIAL_ATTACK,1],battler,showFailMsg: true)
-      end
-      battle.pbHideAbilitySplash(battler)
-  }
-)
-
-BattleHandlers::AbilityOnSwitchIn.add(:FASCINATE,
-  proc { |ability, battler, battle|
-      battle.pbShowAbilitySplash(battler, ability)
-      battle.eachOtherSideBattler(battler.index) do |b|
-          next unless b.near?(battler)
-          b.pbLowerSpecialAttackStatStageFascinate(battler)
-          b.pbItemOnIntimidatedCheck
-      end
-      battle.pbHideAbilitySplash(battler)
-  }
-)
-
-BattleHandlers::AbilityOnSwitchIn.add(:FRUSTRATE,
-  proc { |ability, battler, battle|
-      battle.pbShowAbilitySplash(battler, ability)
-      battle.eachOtherSideBattler(battler.index) do |b|
-          next unless b.near?(battler)
-          b.pbLowerSpeedStatStageFrustrate(battler)
-          b.pbItemOnIntimidatedCheck
       end
       battle.pbHideAbilitySplash(battler)
   }
@@ -709,7 +710,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:PEARLSEEKER,
       next if battler.item
       battle.pbShowAbilitySplash(battler, ability)
       battler.item = :PEARLOFFATE
-      battle.pbDisplay(_INTL("{1} discovers the {2}!", battler.pbThis, battler.itemName))
+      battle.pbDisplay(_INTL("{1} discovers the {2}!", battler.pbThis, getItemName(battler.baseItem)))
       battle.pbHideAbilitySplash(battler)
   }
 )
@@ -740,7 +741,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:SUSTAINABLE,
     battler.item = battler.recycleItem
     battler.setRecycleItem(nil)
     battler.setInitialItem(battler.item) unless battler.initialItem
-    battle.pbDisplay(_INTL("{1} regrew one {2}!", battler.pbThis, battler.itemName))
+    battle.pbDisplay(_INTL("{1} regrew one {2}!", battler.pbThis, getItemName(battler.baseItem)))
     battle.pbHideAbilitySplash(battler)
     battler.pbHeldItemTriggerCheck
   }

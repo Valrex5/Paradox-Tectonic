@@ -480,11 +480,11 @@ BattleHandlers::TargetAbilityOnHit.add(:MUMMY,
         next if user.unstoppableAbility? || user.hasAbility?(ability)
         next -5 if aiChecking
         battle.pbShowAbilitySplash(target, ability) if user.opposes?(target)
-        oldAbil = user.ability
+        oldAbil = user.baseAbility
         battle.pbShowAbilitySplash(user, oldAbil, true, false) if user.opposes?(target)
         user.ability = ability
         battle.pbReplaceAbilitySplash(user) if user.opposes?(target)
-        battle.pbDisplay(_INTL("{1}'s Ability became {2}!", user.pbThis, abilityName(ability)))
+        battle.pbDisplay(_INTL("{1}'s Ability became {2}!", user.pbThis, getAbilityName(ability)))
         battle.pbHideAbilitySplash(user) if user.opposes?(target)
         battle.pbHideAbilitySplash(target) if user.opposes?(target)
         user.pbOnAbilityChanged(oldAbil) unless oldAbil.nil?
@@ -499,11 +499,11 @@ BattleHandlers::TargetAbilityOnHit.add(:INFECTED,
         next unless user.canChangeType?
         next -5 if aiChecking
         battle.pbShowAbilitySplash(target, ability) if user.opposes?(target)
-        oldAbil = user.ability
+        oldAbil = user.baseAbility
         battle.pbShowAbilitySplash(user, oldAbil, true, false) if user.opposes?(target)
         user.ability = ability
         battle.pbReplaceAbilitySplash(user) if user.opposes?(target)
-        battle.pbDisplay(_INTL("{1}'s Ability became {2}!", user.pbThis, abilityName(ability)))
+        battle.pbDisplay(_INTL("{1}'s Ability became {2}!", user.pbThis, getAbilityName(ability)))
         user.applyEffect(:Type3,:GRASS) unless user.pbHasType?(:GRASS)
         battle.pbHideAbilitySplash(user) if user.opposes?(target)
         battle.pbHideAbilitySplash(target) if user.opposes?(target)
@@ -585,13 +585,13 @@ BattleHandlers::TargetAbilityOnHit.add(:WANDERINGSPIRIT,
         ]
         failed = false
         abilityBlacklist.each do |abil|
-            next if user.ability != abil
+            next if user.baseAbility != abil
             failed = true
             break
         end
         next if failed
         battle.pbShowAbilitySplash(target, ability) if user.opposes?(target)
-        oldAbil = user.ability
+        oldAbil = user.baseAbility
         battle.pbShowAbilitySplash(user, oldAbil, true, false) if user.opposes?(target)
         user.ability = :WANDERINGSPIRIT
         target.ability = oldAbil
@@ -599,7 +599,7 @@ BattleHandlers::TargetAbilityOnHit.add(:WANDERINGSPIRIT,
             battle.pbReplaceAbilitySplash(user)
             battle.pbReplaceAbilitySplash(target)
         end
-        battle.pbDisplay(_INTL("{1}'s Ability became {2}!", user.pbThis, abilityName(ability)))
+        battle.pbDisplay(_INTL("{1}'s Ability became {2}!", user.pbThis, getAbilityName(ability)))
         battle.pbHideAbilitySplash(user)
         battle.pbHideAbilitySplash(target) if user.opposes?(target)
         if oldAbil
