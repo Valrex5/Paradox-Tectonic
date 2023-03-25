@@ -106,9 +106,8 @@ BattleHandlers::UserAbilityEndOfMove.add(:GILD,
       next if battle.futureSight
       next unless move.pbDamagingMove?
       targets.each do |b|
-          itemName = GameData::Item.get(b.item).name if b.item
-          removeMessage = _INTL("{1} turned {2}'s {3} into gold!", user.pbThis,
-            b.pbThis(true), b.itemName)
+          next unless b.hasAnyItem?
+          removeMessage = _INTL("{1} turned {2}'s {3} into gold!", user.pbThis, b.pbThis(true), b.itemName)
           next unless move.removeItem(user, b, true, removeMessage)
           battle.field.incrementEffect(:PayDay, 5 * user.level) if user.pbOwnedByPlayer?
           break

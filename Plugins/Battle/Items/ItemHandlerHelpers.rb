@@ -1,6 +1,6 @@
 def healFromBerry(battler, ratio, item, forced = false, filchedFrom = nil)
     if filchedFrom
-        battler.battle.battle.pbShowAbilitySplash(battler, ability)
+        battler.battle.pbShowAbilitySplash(battler, ability)
         itemName = GameData::Item.get(item).real_name
         battler.battle.pbDisplay(_INTL("#{battler.pbThis} filched #{filchedFrom.pbThis(true)}'s #{itemName}!"))
     end
@@ -21,7 +21,7 @@ def pbBattleStatIncreasingBerry(battler, battle, item, forced, stat, increment =
     return false if !forced && !battler.canConsumePinchBerry?(checkGluttony)
     return false unless battler.pbCanRaiseStatStage?(stat, battler)
     if filchedFrom
-        battle.battle.pbShowAbilitySplash(battler, ability)
+        battle.pbShowAbilitySplash(battler, ability)
         itemName = GameData::Item.get(item).real_name
         battle.pbDisplay(_INTL("#{battler.pbThis} filched #{filchedFrom.pbThis(true)}'s #{itemName}!"))
     end
@@ -37,7 +37,7 @@ def pbBattleStatIncreasingBerry(battler, battle, item, forced, stat, increment =
     return result
 end
 
-def pbBattleTypeWeakingBerry(type, moveType, target, mults, feast = false, aiChecking = false)
+def pbBattleTypeWeakingBerry(item, type, moveType, target, mults, feast = false, aiChecking = false)
     return if moveType != type
     return if Effectiveness.resistant?(target.damageState.typeMod) && moveType != :NORMAL
     if target.hasActiveAbility?(:RIPEN)
@@ -46,18 +46,18 @@ def pbBattleTypeWeakingBerry(type, moveType, target, mults, feast = false, aiChe
         mults[:final_damage_multiplier] /= 2
     end
     if feast
-        target.damageState.feastWeakened = true
+        target.damageState.feastWeakened = item
     else
-        target.damageState.berryWeakened = true
+        target.damageState.berryWeakened = item
     end
     target.battle.pbCommonAnimation("Nom", target) unless aiChecking
 end
 
-def pbBattleGem(user, type, move, mults, moveType, aiChecking = false)
+def pbBattleGem(item, user, type, move, mults, moveType, aiChecking = false)
     # Pledge moves never consume Gems
     return if move.is_a?(PokeBattle_PledgeMove)
     return if moveType != type
     return unless user.canConsumeGem?
-    user.applyEffect(:GemConsumed, user.item_id) unless aiChecking
+    user.applyEffect(:GemConsumed, item) unless aiChecking
     mults[:base_damage_multiplier] *= 1.5
 end

@@ -244,7 +244,7 @@ GameData::Move.get(@effects[:GorillaTactics]).name)
                 applyEffect(:Truant)
             end
             if !effectActive?(:Truant) && move.id != :SLACKOFF # True means loafing, but was just inverted
-                @battle.pbShowAbilitySplash(self)
+                @battle.pbShowAbilitySplash(self, :TRUANT)
                 @battle.pbDisplay(_INTL("{1} is loafing around!", pbThis))
                 @lastMoveFailed = true
                 @battle.pbHideAbilitySplash(self)
@@ -333,7 +333,7 @@ target.pbThis))
         ###	Protect Style Moves
         # Ability effects that ignore protection
         protectionIgnoredByAbility = false
-        protectionIgnoredByAbility = true if user.ability == :UNSEENFIST && move.physicalMove?
+        protectionIgnoredByAbility = true if user.shouldAbilityApply?(:UNSEENFIST, ai_check) && move.physicalMove?
 
         # Only check the target's side if the target is not the self
         holdersToCheck = [target]
@@ -377,7 +377,7 @@ animationName, show_message) do
                 unless ai_check
                     target.damageState.protected = true
                     if show_message
-                        @battle.battle.pbShowAbilitySplash(target, ability)
+                        @battle.pbShowAbilitySplash(target, ability)
                         @battle.pbDisplay(_INTL("{1} shielded itself from the {2}!", target.pbThis, move.name))
                         @battle.pbHideAbilitySplash(target)
                     end
@@ -452,7 +452,7 @@ target.pbThis(true)))
         if move.damagingMove? && move.calcType == :GROUND && target.airborne? && !move.hitsFlyingTargets?
             if target.hasLevitate? && !@battle.moldBreaker
                 if showMessages
-                    @battle.battle.pbShowAbilitySplash(target, ability)
+                    @battle.pbShowAbilitySplash(target, ability)
                     @battle.pbDisplay(_INTL("{1} avoided the attack!", target.pbThis))
                     @battle.pbHideAbilitySplash(target)
                     @battle.triggerImmunityDialogue(user, target, true)

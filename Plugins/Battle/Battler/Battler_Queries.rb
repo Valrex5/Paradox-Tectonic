@@ -89,9 +89,7 @@ class PokeBattle_Battler
         end
     end
 
-    def hasActiveAbility?(checkable, ignore_fainted = false, checkingForAI = false, ignoreGas: false)
-        return hasActiveAbilityAI?(checkable, ignore_fainted) if checkingForAI
-        return false unless abilityActive?(ignore_fainted, ignoreGas)
+    def hasAbility?(checkable)
         abilities.each do |effectingID|
             if checkable.is_a?(Array)
                 return true if checkable.include?(effectingID)
@@ -100,6 +98,12 @@ class PokeBattle_Battler
             end
         end
         return false
+    end
+
+    def hasActiveAbility?(checkable, ignore_fainted = false, checkingForAI = false, ignoreGas: false)
+        return hasActiveAbilityAI?(checkable, ignore_fainted) if checkingForAI
+        return false unless abilityActive?(ignore_fainted, ignoreGas)
+        return hasAbility?(checkable)
     end
     alias hasWorkingAbility hasActiveAbility?
 
@@ -175,10 +179,11 @@ class PokeBattle_Battler
     end
 
     def items
+        return [] if @item_id.nil?
         return [@item_id]
     end
 
-    def activeItems
+    def activeItems(ignoreFainted = false)
         return [] unless itemActive?(ignoreFainted)
         return items
     end
@@ -202,6 +207,10 @@ class PokeBattle_Battler
         return false if pbOwnSide.effectActive?(:EmpoweredEmbargo)
         return false if hasActiveAbility?(:KLUTZ, ignoreFainted)
         return true
+    end
+
+    def hasAnyItem?
+        return !items.empty?
     end
 
     def hasActiveItem?(check_item, ignore_fainted = false)
@@ -236,7 +245,10 @@ class PokeBattle_Battler
             return true
         end
         # Other unlosable items
-        return GameData::Item.get(check_item).unlosable?(@species, ability)
+        eachAbility do |ability|
+            return true if GameData::Item.get(check_item).unlosable?(@species, ability)
+        end
+        return false
     end
 
     def eachMove(&block)

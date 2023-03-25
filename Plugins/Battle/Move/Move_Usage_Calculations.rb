@@ -236,30 +236,32 @@ class PokeBattle_Move
             forced = false
         end
 
-        # Critical prevention abilities
-        if crit !@battle.moldBreaker
-            target.eachActiveAbility do |ability|
-                next unless BattleHandlers.triggerCriticalPreventTargetAbility(ability,user,target,@battle)
+        # Critical prevention effects
+        if crit
+            unless @battle.moldBreaker
+                target.eachActiveAbility do |ability|
+                    next unless BattleHandlers.triggerCriticalPreventTargetAbility(ability,user,target,@battle)
+                    unless checkingForAI
+                        battle.pbShowAbilitySplash(target,ability)
+                        battle.pbDisplay(_INTL("#{target.pbThis} prevents the hit from being critical!"))
+                        battle.pbHideAbilitySplash(target)
+                    end
+                    crit = false
+                    forced = true
+                    break
+                end
+            end
+
+            # Tactician tribe prevents random crits
+            if !forced && target.hasTribeBonus?(:TACTICIAN)
                 unless checkingForAI
-                    battle.pbShowAbilitySplash(target,ability)
+                    battle.pbShowTribeSplash(target,:TACTICIAN)
                     battle.pbDisplay(_INTL("#{target.pbThis} prevents the hit from being critical!"))
-                    battle.pbHideAbilitySplash(target)
+                    battle.pbHideTribeSplash(target)
                 end
                 crit = false
                 forced = true
-                break
             end
-        end
-
-        # Tactician tribe prevents random crits
-        if crit && !forced && target.hasTribeBonus?(:TACTICIAN)
-            unless checkingForAI
-                battle.pbShowTribeSplash(target,:TACTICIAN)
-                battle.pbDisplay(_INTL("#{target.pbThis} prevents the hit from being critical!"))
-                battle.pbHideTribeSplash(target)
-            end
-            crit = false
-            forced = true
         end
 
         if checkingForAI

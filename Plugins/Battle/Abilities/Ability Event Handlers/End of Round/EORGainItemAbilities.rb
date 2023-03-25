@@ -1,6 +1,6 @@
 BattleHandlers::EORGainItemAbility.add(:HARVEST,
     proc { |ability, battler, battle|
-        next if battler.item
+        next if battler.baseItem
         next if !battler.recycleItem || !GameData::Item.get(battler.recycleItem).is_berry?
         next if !battle.sunny? && !(battle.pbRandom(100) < 50)
         battle.pbShowAbilitySplash(battler, ability)
@@ -15,7 +15,7 @@ BattleHandlers::EORGainItemAbility.add(:HARVEST,
 
 BattleHandlers::EORGainItemAbility.add(:LARDER,
     proc { |ability, battler, battle|
-        next if battler.item
+        next if battler.baseItem
         next if !battler.recycleItem || !GameData::Item.get(battler.recycleItem).is_berry?
         battle.pbShowAbilitySplash(battler, ability)
         battler.item = battler.recycleItem
@@ -29,7 +29,7 @@ BattleHandlers::EORGainItemAbility.add(:LARDER,
 
 BattleHandlers::EORGainItemAbility.add(:PICKUP,
   proc { |ability, battler, battle|
-      next if battler.item
+      next if battler.baseItem
       foundItem = nil
       fromBattler = nil
       use = 0
@@ -57,7 +57,7 @@ BattleHandlers::EORGainItemAbility.add(:PICKUP,
 
 BattleHandlers::EORGainItemAbility.add(:GOURMAND,
     proc { |ability, battler, battle|
-        next if battler.item
+        next if battler.baseItem
         battle.pbShowAbilitySplash(battler, ability)
         battler.item =
             %i[

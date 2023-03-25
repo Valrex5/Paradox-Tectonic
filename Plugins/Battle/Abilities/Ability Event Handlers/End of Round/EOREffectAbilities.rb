@@ -63,7 +63,7 @@ BattleHandlers::EOREffectAbility.add(:BALLFETCH,
           ball = battler.effects[:BallFetch]
           battler.item = ball
           battler.setInitialItem(battler.item)
-          PBDebug.log("[Ability triggered] #{battler.pbThis}'s Ball Fetch found #{PBItems.getName(ball)}")
+
           battle.pbShowAbilitySplash(battler, ability)
           battle.pbDisplay(_INTL("{1} found a {2}!", battler.pbThis, PBItems.getName(ball)))
           battler.disableEffect(:BallFetch)

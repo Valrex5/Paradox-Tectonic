@@ -55,18 +55,18 @@ end
 #===============================================================================
 class PokeBattle_Move_183 < PokeBattle_Move
     def pbEffectGeneral(user)
-        if !user.item || !user.item.is_berry?
+        if !user.baseItem || !user.baseItem.is_berry?
             @battle.pbDisplay("But it failed!")
             return -1
         end
         user.tryRaiseStat(:DEFENSE, user, increment: 2, move: self)
         user.pbHeldItemTriggerCheck(user.item, false)
-        user.pbConsumeItem(true, true, false) if user.item
+        user.pbConsumeItem(user.baseItem, true, true, false) if user.baseItem
     end
 
     def getEffectScore(user, target)
         score = getMultiStatUpEffectScore([:DEFENSE, 2], user, target)
-        score += 40 if user.item&.is_berry?
+        score += 40 if user.baseItem&.is_berry?
         return score
     end
 end
@@ -79,7 +79,7 @@ class PokeBattle_Move_184 < PokeBattle_Move
     def ignoresSubstitute?(_user); return true; end
 
     def isValidTarget?(target)
-        return target.item && target.item.is_berry? && !target.semiInvulnerable?
+        return target.baseItem && target.baseItem.is_berry? && !target.semiInvulnerable?
     end
 
     def pbMoveFailed?(_user, _targets, show_message)
@@ -100,7 +100,7 @@ class PokeBattle_Move_184 < PokeBattle_Move
 
     def pbEffectAgainstTarget(_user, target)
         target.pbHeldItemTriggerCheck(target.item, false)
-        target.pbConsumeItem(true, true, false) if target.item.is_berry?
+        target.pbConsumeItem(true, true, false) if target.baseItem.is_berry?
     end
 
     def getEffectScore(_user, _target)

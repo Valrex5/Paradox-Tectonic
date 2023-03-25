@@ -118,12 +118,12 @@ BattleHandlers::TargetItemOnHit.add(:WEAKNESSPOLICY,
 BattleHandlers::TargetItemOnHit.add(:STICKYBARB,
   proc { |_item, user, target, move, battle|
       next unless move.physicalMove?
-      next if user.fainted? || user.item
-      user.item = target.item
+      next if user.fainted? || user.baseItem
+      user.item = target.baseItem
       target.item = nil
       target.applyEffect(:ItemLost)
-      if battle.wildBattle? && !user.opposes? && (!user.initialItem && target.initialItem == user.item)
-          user.setInitialItem(user.item)
+      if battle.wildBattle? && !user.opposes? && (!user.initialItem && target.initialItem == user.baseItem)
+          user.setInitialItem(user.baseItem)
           target.setInitialItem(nil)
       end
       battle.pbDisplay(_INTL("{1}'s {2} was transferred to {3}!",

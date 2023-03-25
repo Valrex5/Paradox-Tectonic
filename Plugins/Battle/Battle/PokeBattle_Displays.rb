@@ -53,10 +53,9 @@ class PokeBattle_Battle
     def pbShowAbilitySplash(battler, ability, delay = false, logTrigger = true)
         aiSeesAbility(battler)
         abilityName = GameData::Ability.get(ability).name
-        PBDebug.log("[Ability triggered] #{battler.pbThis}'s #{abilityName}") if logTrigger
         triggerAbilityTriggeredDialogue(battler, ability)
         return unless showMessages?
-        @scene.pbShowAbilitySplash(battler, abilityName)
+        @scene.pbShowAbilitySplash(battler, ability)
         if delay
             frames = Graphics.frame_rate # Default 1 second
             frames /= 2 if fastTransitions?

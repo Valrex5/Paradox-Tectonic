@@ -1,6 +1,5 @@
 BattleHandlers::AbilityOnEnemySwitchIn.add(:DETERRENT,
     proc { |ability, switcher, bearer, battle|
-        PBDebug.log("[Ability triggered] #{bearer.pbThis}'s #{bearer.abilityName}")
         battle.pbShowAbilitySplash(bearer, ability)
         if switcher.takesIndirectDamage?(true)
             battle.pbDisplay(_INTL("{1} was attacked on sight!", switcher.pbThis))

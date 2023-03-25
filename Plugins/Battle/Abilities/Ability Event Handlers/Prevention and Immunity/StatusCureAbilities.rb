@@ -1,7 +1,7 @@
 BattleHandlers::StatusCureAbility.add(:IMMUNITY,
   proc { |ability, battler|
       next unless battler.hasStatusNoTrigger(:POISON)
-      battler.battle.battle.pbShowAbilitySplash(battler, ability)
+      battler.battle.pbShowAbilitySplash(battler, ability)
       battler.pbCureStatus(true, :POISON)
       battler.battle.pbHideAbilitySplash(battler)
   }
@@ -10,7 +10,7 @@ BattleHandlers::StatusCureAbility.add(:IMMUNITY,
 BattleHandlers::StatusCureAbility.add(:INSOMNIA,
   proc { |ability, battler|
       next unless battler.hasStatusNoTrigger(:SLEEP)
-      battler.battle.battle.pbShowAbilitySplash(battler, ability)
+      battler.battle.pbShowAbilitySplash(battler, ability)
       battler.pbCureStatus(true, :SLEEP)
       battler.battle.pbHideAbilitySplash(battler)
   }
@@ -21,7 +21,7 @@ BattleHandlers::StatusCureAbility.copy(:INSOMNIA, :VITALSPIRIT)
 BattleHandlers::StatusCureAbility.add(:LIMBER,
   proc { |ability, battler|
       next unless battler.hasStatusNoTrigger(:SLEEP)
-      battler.battle.battle.pbShowAbilitySplash(battler, ability)
+      battler.battle.pbShowAbilitySplash(battler, ability)
       battler.pbCureStatus(true, :NUMB)
       battler.battle.pbHideAbilitySplash(battler)
   }
@@ -30,13 +30,13 @@ BattleHandlers::StatusCureAbility.add(:LIMBER,
 BattleHandlers::StatusCureAbility.add(:OWNTEMPO,
   proc { |ability, battler|
       if battler.confused?
-          battler.battle.battle.pbShowAbilitySplash(battler, ability)
+          battler.battle.pbShowAbilitySplash(battler, ability)
           battler.disableEffect(:Charm)
           battler.battle.pbDisplay(_INTL("{1} snapped out of its confusion.", battler.pbThis))
           battler.battle.pbHideAbilitySplash(battler)
       end
       if battler.charmed?
-          battler.battle.battle.pbShowAbilitySplash(battler, ability)
+          battler.battle.pbShowAbilitySplash(battler, ability)
           battler.disableEffect(:Charm)
           battler.battle.pbDisplay(_INTL("{1} was released from the charm.", battler.pbThis))
           battler.battle.pbHideAbilitySplash(battler)
@@ -47,7 +47,7 @@ BattleHandlers::StatusCureAbility.add(:OWNTEMPO,
 BattleHandlers::StatusCureAbility.add(:WATERVEIL,
   proc { |ability, battler|
       next unless battler.hasStatusNoTrigger(:BURN)
-      battler.battle.battle.pbShowAbilitySplash(battler, ability)
+      battler.battle.pbShowAbilitySplash(battler, ability)
       battler.pbCureStatus(true, :BURN)
       battler.battle.pbHideAbilitySplash(battler)
   }
@@ -68,7 +68,7 @@ BattleHandlers::StatusCureAbility.add(:MENTALBLOCK,
       activate = true if battler.dizzy?
 
       if activate
-          battle.battle.pbShowAbilitySplash(battler, ability)
+          battle.pbShowAbilitySplash(battler, ability)
           # Disable all mental effects
           battler.eachEffect(true) do |effect, _value, data|
               next unless data.is_mental?
@@ -83,17 +83,17 @@ BattleHandlers::StatusCureAbility.add(:MENTALBLOCK,
 BattleHandlers::StatusCureAbility.add(:ENERGETIC,
   proc { |ability, battler|
       if battler.hasStatusNoTrigger(:POISON)
-          battler.battle.battle.pbShowAbilitySplash(battler, ability)
+          battler.battle.pbShowAbilitySplash(battler, ability)
           battler.pbCureStatus(true, :POISON)
           battler.battle.pbHideAbilitySplash(battler)
       end
       if battler.hasStatusNoTrigger(:NUMB)
-          battler.battle.battle.pbShowAbilitySplash(battler, ability)
+          battler.battle.pbShowAbilitySplash(battler, ability)
           battler.pbCureStatus(true, :NUMB)
           battler.battle.pbHideAbilitySplash(battler)
       end
       if battler.hasStatusNoTrigger(:FROZEN)
-          battler.battle.battle.pbShowAbilitySplash(battler, ability)
+          battler.battle.pbShowAbilitySplash(battler, ability)
           battler.pbCureStatus(true, :FROZEN)
           battler.battle.pbHideAbilitySplash(battler)
       end
@@ -103,17 +103,17 @@ BattleHandlers::StatusCureAbility.add(:ENERGETIC,
 BattleHandlers::StatusCureAbility.add(:STABILITY,
   proc { |ability, battler|
       if battler.hasStatusNoTrigger(:POISON)
-          battler.battle.battle.pbShowAbilitySplash(battler, ability)
+          battler.battle.pbShowAbilitySplash(battler, ability)
           battler.pbCureStatus(true, :POISON)
           battler.battle.pbHideAbilitySplash(battler)
       end
       if battler.hasStatusNoTrigger(:BURN)
-          battler.battle.battle.pbShowAbilitySplash(battler, ability)
+          battler.battle.pbShowAbilitySplash(battler, ability)
           battler.pbCureStatus(true, :BURN)
           battler.battle.pbHideAbilitySplash(battler)
       end
       if battler.hasStatusNoTrigger(:FROSTBITE)
-          battler.battle.battle.pbShowAbilitySplash(battler, ability)
+          battler.battle.pbShowAbilitySplash(battler, ability)
           battler.pbCureStatus(true, :FROSTBITE)
           battler.battle.pbHideAbilitySplash(battler)
       end

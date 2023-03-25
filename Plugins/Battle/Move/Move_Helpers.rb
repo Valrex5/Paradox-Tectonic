@@ -48,15 +48,16 @@ class PokeBattle_Move
         elsif target.damageState.unaffected || target.damageState.substitute
             return false
         end
-        return false if target.item.nil? || target.unlosableItem?(target.item, !checkingForAI)
+        return false if !target.hasAnyItem?
+        return false if target.unlosableItem?(target.baseItem, !checkingForAI)
         return false if target.shouldAbilityApply?(:STICKYHOLD, checkingForAI) && !@battle.moldBreaker
         return true
     end
 
     def canStealItem?(user, target, checkingForAI = false)
         return false unless canRemoveItem?(user, target, checkingForAI, true)
-        return false if user.item && @battle.trainerBattle?
-        return false if user.unlosableItem?(target.item)
+        return false if user.baseItem && @battle.trainerBattle?
+        return false if user.unlosableItem?(target.baseItem)
         return true
     end
 

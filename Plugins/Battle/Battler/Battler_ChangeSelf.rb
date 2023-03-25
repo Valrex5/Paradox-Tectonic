@@ -149,7 +149,7 @@ class PokeBattle_Battler
 
     def pbRecoverHPFromDrain(drainAmount, target)
         if target.hasActiveAbility?(:LIQUIDOOZE)
-            @battle.battle.pbShowAbilitySplash(target, ability)
+            @battle.pbShowAbilitySplash(target, ability)
             oldHP = @hp
             pbReduceHP(drainAmount)
             @battle.pbDisplay(_INTL("{1} sucked up the liquid ooze!", pbThis))
@@ -169,7 +169,7 @@ class PokeBattle_Battler
             next if target.damageState.unaffected
             damage = target.damageState.totalHPLost
             if target.hasActiveAbility?(:LIQUIDOOZE)
-                @battle.battle.pbShowAbilitySplash(target, ability)
+                @battle.pbShowAbilitySplash(target, ability)
                 lossAmount = (damage * ratio).round
                 pbReduceHP(lossAmount)
                 @battle.pbDisplay(_INTL("{1} sucked up the liquid ooze!", pbThis))
@@ -476,7 +476,7 @@ class PokeBattle_Battler
         pbCheckFormOnWeatherChange unless endOfRound
         pbCheckFormOnTerrainChange unless endOfRound
         # Darmanitan - Zen Mode
-        if isSpecies?(:DARMANITAN) && ability == :ZENMODE
+        if isSpecies?(:DARMANITAN) && hasAbility?(:ZENMODE)
             if @hp <= @totalhp / 2
                 if @form != 1
                     @battle.pbShowAbilitySplash(self, true)
@@ -490,7 +490,7 @@ class PokeBattle_Battler
             end
         end
         # Minior - Shields Down
-        if isSpecies?(:MINIOR) && ability == :SHIELDSDOWN
+        if isSpecies?(:MINIOR) && hasAbility?(:SHIELDSDOWN)
             if @hp > @totalhp / 2 # Turn into Meteor form
                 newForm = (@form >= 7) ? @form - 7 : @form
                 if @form != newForm
@@ -507,7 +507,7 @@ class PokeBattle_Battler
             end
         end
         # Wishiwashi - Schooling
-        if isSpecies?(:WISHIWASHI) && ability == :SCHOOLING
+        if isSpecies?(:WISHIWASHI) && hasAbility?(:SCHOOLING)
             if @level >= 20 && @hp > @totalhp / 4
                 if @form != 1
                     @battle.pbShowAbilitySplash(self, true)
@@ -521,7 +521,7 @@ class PokeBattle_Battler
             end
         end
         # Zygarde - Power Construct
-        if isSpecies?(:ZYGARDE) && ability == :POWERCONSTRUCT && endOfRound && (@hp <= @totalhp / 2 && @form < 2) # Turn into Complete Forme
+        if isSpecies?(:ZYGARDE) && hasAbility?(:POWERCONSTRUCT) && endOfRound && (@hp <= @totalhp / 2 && @form < 2) # Turn into Complete Forme
             newForm = @form + 2
             @battle.pbDisplay(_INTL("You sense the presence of many!"))
             @battle.pbShowAbilitySplash(self, true)

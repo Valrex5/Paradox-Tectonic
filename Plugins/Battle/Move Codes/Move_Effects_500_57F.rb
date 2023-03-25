@@ -1087,14 +1087,14 @@ class PokeBattle_Move_541 < PokeBattle_Move
     def pbEffectWhenDealingDamage(_user, target)
         return if target.damageState.substitute
         return unless target.item
-        return unless CLOTHING_ITEMS.include?(target.item.id)
+        return unless CLOTHING_ITEMS.include?(target.baseItem.id)
         itemName = target.itemName
         target.pbRemoveItem
         @battle.pbDisplay(_INTL("{1}'s {2} went up in flames!", target.pbThis, itemName))
     end
 
     def getEffectScore(user, target)
-        return 30 if canRemoveItem?(user, target, true) && CLOTHING_ITEMS.include?(target.item.id)
+        return 30 if canRemoveItem?(user, target, true) && CLOTHING_ITEMS.include?(target.baseItem.id)
         return 0
     end
 end

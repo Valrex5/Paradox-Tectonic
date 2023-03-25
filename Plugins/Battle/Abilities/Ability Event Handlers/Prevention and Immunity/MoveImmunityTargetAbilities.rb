@@ -131,7 +131,7 @@ BattleHandlers::MoveImmunityTargetAbility.add(:DRAGONSLAYER,
       next false if user.index == target.index
       next false if type != :DRAGON
       if showMessages
-          battle.battle.pbShowAbilitySplash(target, ability)
+          battle.pbShowAbilitySplash(target, ability)
           battle.pbDisplay(_INTL("It doesn't affect {1}...", target.pbThis(true)))
           battle.pbHideAbilitySplash(target)
       end
@@ -144,7 +144,7 @@ BattleHandlers::MoveImmunityTargetAbility.add(:PECKINGORDER,
       next false if user.index == target.index
       next false if type != :FLYING
       if showMessages
-          battle.battle.pbShowAbilitySplash(target, ability)
+          battle.pbShowAbilitySplash(target, ability)
           battle.pbDisplay(_INTL("It doesn't affect {1}...", target.pbThis(true)))
           battle.pbHideAbilitySplash(target)
       end
@@ -156,7 +156,7 @@ BattleHandlers::MoveImmunityTargetAbility.add(:SLICKSURFACE,
   proc { |ability, _user, target, move, _type, battle, showMessages|
       next false unless move.healingMove?
       if showMessages
-          battle.battle.pbShowAbilitySplash(target, ability)
+          battle.pbShowAbilitySplash(target, ability)
           battle.pbDisplay(_INTL("It doesn't affect {1}...", target.pbThis(true)))
           battle.pbHideAbilitySplash(target)
       end
@@ -169,7 +169,7 @@ BattleHandlers::MoveImmunityTargetAbility.add(:TELEPATHY,
       next false if move.statusMove?
       next false if user.index == target.index || target.opposes?(user)
       if showMessages
-          battle.battle.pbShowAbilitySplash(target, ability)
+          battle.pbShowAbilitySplash(target, ability)
           battle.pbDisplay(_INTL("{1} avoids attacks by its ally Pokémon!", target.pbThis(true)))
           battle.pbHideAbilitySplash(target)
       end
@@ -182,7 +182,7 @@ BattleHandlers::MoveImmunityTargetAbility.add(:WONDERGUARD,
       next false if move.statusMove?
       next false if !type || Effectiveness.super_effective?(target.damageState.typeMod)
       if showMessages
-          battle.battle.pbShowAbilitySplash(target, ability)
+          battle.pbShowAbilitySplash(target, ability)
           battle.pbDisplay(_INTL("It doesn't affect {1}...", target.pbThis(true)))
           battle.pbHideAbilitySplash(target)
       end
@@ -194,7 +194,7 @@ BattleHandlers::MoveImmunityTargetAbility.add(:BULLETPROOF,
   proc { |ability, _user, target, move, _type, battle, showMessages|
       next false unless move.bombMove?
       if showMessages
-          battle.battle.pbShowAbilitySplash(target, ability)
+          battle.pbShowAbilitySplash(target, ability)
           battle.pbDisplay(_INTL("It doesn't affect {1}...", target.pbThis(true)))
           battle.pbHideAbilitySplash(target)
       end
@@ -206,7 +206,7 @@ BattleHandlers::MoveImmunityTargetAbility.add(:FLASHFIRE,
   proc { |ability, user, target, _move, type, battle, showMessages, aiChecking|
       next false if user.index == target.index
       next false if type != :FIRE
-      battle.battle.pbShowAbilitySplash(target, ability) if showMessages
+      battle.pbShowAbilitySplash(target, ability) if showMessages
       unless aiChecking
         if !target.effectActive?(:FlashFire)
             target.applyEffect(:FlashFire)
@@ -223,7 +223,7 @@ BattleHandlers::MoveImmunityTargetAbility.add(:SOUNDPROOF,
   proc { |ability, _user, target, move, _type, battle, showMessages|
       next false unless move.soundMove?
       if showMessages
-          battle.battle.pbShowAbilitySplash(target, ability)
+          battle.pbShowAbilitySplash(target, ability)
           battle.pbDisplay(_INTL("It doesn't affect {1}...", target.pbThis(true)))
           battle.pbHideAbilitySplash(target)
       end
@@ -236,7 +236,7 @@ BattleHandlers::MoveImmunityTargetAbility.add(:WINTERINSULATION,
       next false unless battle.pbWeather == :Hail
       next false unless %i[FIRE ELECTRIC].include?(type)
       if showMessages
-        battle.battle.pbShowAbilitySplash(target, ability)
+        battle.pbShowAbilitySplash(target, ability)
         battle.pbDisplay(_INTL("It doesn't affect {1}...", target.pbThis(true)))
         battle.pbHideAbilitySplash(target)
       end
@@ -249,7 +249,7 @@ BattleHandlers::MoveImmunityTargetAbility.add(:MORPHINGGUARD,
       next false unless user.effectActive?(:MorphingGuard)
       next false unless user.effects[:MorphingGuard] == type
       if showMessages
-          battle.battle.pbShowAbilitySplash(target, ability)
+          battle.pbShowAbilitySplash(target, ability)
           battle.pbDisplay(_INTL("It doesn't affect {1}...", target.pbThis(true)))
           battle.pbHideAbilitySplash(target)
       end

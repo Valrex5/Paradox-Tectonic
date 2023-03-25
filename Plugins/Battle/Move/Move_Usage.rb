@@ -198,11 +198,9 @@ target.pbThis(true)))
         target.eachActiveAbility do |ability|
             return true if BattleHandlers.triggerMoveImmunityTargetAbility(ability, user, target, self, @calcType, @battle, showMessages, aiChecking)
         end
-        unless ret
-            target.eachAlly do |b|
-                b.eachActiveAbility do |ability|
-                    return true if BattleHandlers.triggerMoveImmunityAllyAbility(ability, user, target, self, @calcType, @battle, b, showMessages)
-                end
+        target.eachAlly do |b|
+            b.eachActiveAbility do |ability|
+                return true if BattleHandlers.triggerMoveImmunityAllyAbility(ability, user, target, self, @calcType, @battle, b, showMessages)
             end
         end
         return false
@@ -254,7 +252,7 @@ target.pbThis(true)))
         return false if @battle.moldBreaker
         if target.hasActiveAbility?(:AROMAVEIL)
             if showMessage
-                @battle.battle.pbShowAbilitySplash(target, ability)
+                @battle.pbShowAbilitySplash(target, ability)
                 @battle.pbDisplay(_INTL("{1} is unaffected!", target.pbThis))
                 @battle.pbHideAbilitySplash(target)
             end
@@ -263,7 +261,7 @@ target.pbThis(true)))
         target.eachAlly do |b|
             next unless b.hasActiveAbility?(:AROMAVEIL)
             if showMessage
-                @battle.battle.pbShowAbilitySplash(target, ability)
+                @battle.pbShowAbilitySplash(target, ability)
                 @battle.pbDisplay(_INTL("{1} is unaffected!", target.pbThis))
                 @battle.pbHideAbilitySplash(target)
             end
@@ -282,12 +280,12 @@ target.pbThis(true)))
             return
         end
         # Disguise will take the damage
-        if !@battle.moldBreaker && target.isSpecies?(:MIMIKYU) && target.form == 0 && target.ability == :DISGUISE
+        if !@battle.moldBreaker && target.isSpecies?(:MIMIKYU) && target.form == 0 && target.hasActiveAbility?(:DISGUISE)
             target.damageState.disguise = true
             return
         end
         # Ice Face will take the damage
-        if !@battle.moldBreaker && target.species == :EISCUE && target.form == 0 && target.ability == :ICEFACE && physicalMove?
+        if !@battle.moldBreaker && target.species == :EISCUE && target.form == 0 && target.hasActiveAbility?(:ICEFACE) && physicalMove?
             target.damageState.iceface = true
             return
         end
@@ -331,7 +329,7 @@ target.pbThis(true)))
                 damage -= 1
                 damageAdjusted = true
                 target.tickDownAndProc(:EmpoweredEndure)
-            elsif target.hasActiveAbility?(:DIREDIVERSION) && !target.item.nil? && target.itemActive? && !@battle.moldBreaker
+            elsif target.hasActiveAbility?(:DIREDIVERSION) && !target.hasAnyItem? && target.itemActive? && !@battle.moldBreaker
                 target.damageState.direDiversion = true
                 damage -= 1
                 damageAdjusted = true
@@ -463,22 +461,22 @@ target.pbThis(true)))
 
     def pbEndureKOMessage(target)
         if target.damageState.disguise
-            @battle.battle.pbShowAbilitySplash(target, ability)
+            @battle.pbShowAbilitySplash(target, ability)
             @battle.pbDisplay(_INTL("Its disguise served it as a decoy!"))
             @battle.pbHideAbilitySplash(target)
             target.pbChangeForm(1, _INTL("{1}'s disguise was busted!", target.pbThis))
         elsif target.damageState.iceface
-            @battle.battle.pbShowAbilitySplash(target, ability)
+            @battle.pbShowAbilitySplash(target, ability)
             target.pbChangeForm(1, _INTL("{1} transformed!", target.pbThis))
             @battle.pbHideAbilitySplash(target)
         elsif target.damageState.endured
             @battle.pbDisplay(_INTL("{1} endured the hit!", target.pbThis))
         elsif target.damageState.sturdy
-            @battle.battle.pbShowAbilitySplash(target, ability)
+            @battle.pbShowAbilitySplash(target, ability)
             @battle.pbDisplay(_INTL("{1} endured the hit!", target.pbThis))
             @battle.pbHideAbilitySplash(target)
         elsif target.damageState.dangerSense
-            @battle.battle.pbShowAbilitySplash(target, ability)
+            @battle.pbShowAbilitySplash(target, ability)
             @battle.pbDisplay(_INTL("{1} avoided taking the full hit!", target.pbThis))
             @battle.pbHideAbilitySplash(target)
         elsif target.damageState.focusSash

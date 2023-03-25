@@ -1,14 +1,12 @@
 BattleHandlers::AbilityOnSwitchOut.add(:REGENERATOR,
   proc { |ability, battler, endOfBattle, _battle = nil|
       next if endOfBattle
-      PBDebug.log("[Ability triggered] #{battler.pbThis}'s #{battler.abilityName}")
       battler.pbRecoverHP(battler.totalhp / 3.0, false, false, false)
   }
 )
 
 BattleHandlers::AbilityOnSwitchOut.add(:NATURALCURE,
   proc { |ability, battler, _endOfBattle|
-      PBDebug.log("[Ability triggered] #{battler.pbThis}'s #{battler.abilityName}")
       battler.pbCureStatus(false)
   }
 )
@@ -23,7 +21,6 @@ BattleHandlers::AbilityOnSwitchOut.add(:FLYBY,
 BattleHandlers::AbilityOnSwitchOut.add(:REFUGE,
   proc { |ability, battler, endOfBattle|
       next if endOfBattle
-      PBDebug.log("[Ability triggered] #{battler.pbThis}'s #{battler.abilityName}")
       battler.position.applyEffect(:Refuge, battler.pokemonIndex)
   }
 )
@@ -31,7 +28,7 @@ BattleHandlers::AbilityOnSwitchOut.add(:REFUGE,
 BattleHandlers::AbilityOnSwitchOut.add(:POORCONDUCT,
   proc { |ability, battler, endOfBattle|
       next if endOfBattle
-      battler.battle.battle.pbShowAbilitySplash(battler, ability)
+      battler.battle.pbShowAbilitySplash(battler, ability)
       battler.battle.eachOtherSideBattler(battler.index) do |b|
           next unless b.near?(battler)
           b.pbLowerMultipleStatStages([:ATTACK,1,:SPECIAL_ATTACK,1],battler,showFailMsg: true)
@@ -43,7 +40,6 @@ BattleHandlers::AbilityOnSwitchOut.add(:POORCONDUCT,
 BattleHandlers::AbilityOnSwitchOut.add(:INFINITESOURCE,
   proc { |ability, battler, endOfBattle|
       next if endOfBattle
-      PBDebug.log("[Ability triggered] #{battler.pbThis}'s #{battler.abilityName}")
       battler.position.applyEffect(:InfiniteSource, battler.pokemonIndex)
   }
 )

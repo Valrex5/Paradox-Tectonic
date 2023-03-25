@@ -5,7 +5,7 @@
 BattleHandlers::AbilityOnSwitchIn.add(:GRASSYSURGE,
   proc { |ability, battler, battle|
       next if battle.field.terrain == :Grassy
-      battle.battle.pbShowAbilitySplash(battler, ability)
+      battle.pbShowAbilitySplash(battler, ability)
       battle.pbStartTerrain(battler, :Grassy)
       # NOTE: The ability splash is hidden again in def pbStartTerrain.
   }
@@ -14,7 +14,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:GRASSYSURGE,
 BattleHandlers::AbilityOnSwitchIn.add(:PSYCHICSURGE,
   proc { |ability, battler, battle|
       next if battle.field.terrain == :Psychic
-      battle.battle.pbShowAbilitySplash(battler, ability)
+      battle.pbShowAbilitySplash(battler, ability)
       battle.pbStartTerrain(battler, :Psychic)
       # NOTE: The ability splash is hidden again in def pbStartTerrain.
   }
@@ -23,7 +23,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:PSYCHICSURGE,
 BattleHandlers::AbilityOnSwitchIn.add(:FAIRYSURGE,
   proc { |ability, battler, battle|
       next if battle.field.terrain == :Fairy
-      battle.battle.pbShowAbilitySplash(battler, ability)
+      battle.pbShowAbilitySplash(battler, ability)
       battle.pbStartTerrain(battler, :Fairy)
       # NOTE: The ability splash is hidden again in def pbStartTerrain.
   }
@@ -32,7 +32,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:FAIRYSURGE,
 BattleHandlers::AbilityOnSwitchIn.add(:ELECTRICSURGE,
   proc { |ability, battler, battle|
       next if battle.field.terrain == :Electric
-      battle.battle.pbShowAbilitySplash(battler, ability)
+      battle.pbShowAbilitySplash(battler, ability)
       battle.pbStartTerrain(battler, :Electric)
       # NOTE: The ability splash is hidden again in def pbStartTerrain.
   }
@@ -44,7 +44,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:ELECTRICSURGE,
 
 BattleHandlers::AbilityOnSwitchIn.add(:AIRLOCK,
   proc { |ability, battler, battle|
-      battle.battle.pbShowAbilitySplash(battler, ability)
+      battle.pbShowAbilitySplash(battler, ability)
       battle.pbDisplay(_INTL("The effects of the weather disappeared."))
       battle.pbHideAbilitySplash(battler)
       battle.field.specialTimer = 1
@@ -79,7 +79,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:ANTICIPATION,
           break if found
       end
       if found
-          battle.battle.pbShowAbilitySplash(battler, ability)
+          battle.pbShowAbilitySplash(battler, ability)
           battle.pbDisplay(_INTL("{1} shuddered with anticipation!", battler.pbThis))
           battle.pbHideAbilitySplash(battler)
       end
@@ -88,7 +88,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:ANTICIPATION,
 
 BattleHandlers::AbilityOnSwitchIn.add(:AURABREAK,
   proc { |ability, battler, battle|
-      battle.battle.pbShowAbilitySplash(battler, ability)
+      battle.pbShowAbilitySplash(battler, ability)
       battle.pbDisplay(_INTL("{1} reversed all other Pokémon's auras!", battler.pbThis))
       battle.pbHideAbilitySplash(battler)
   }
@@ -96,7 +96,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:AURABREAK,
 
 BattleHandlers::AbilityOnSwitchIn.add(:COMATOSE,
   proc { |ability, battler, battle|
-      battle.battle.pbShowAbilitySplash(battler, ability)
+      battle.pbShowAbilitySplash(battler, ability)
       battle.pbDisplay(_INTL("{1} is drowsing!", battler.pbThis))
       battle.pbHideAbilitySplash(battler)
   }
@@ -104,7 +104,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:COMATOSE,
 
 BattleHandlers::AbilityOnSwitchIn.add(:DARKAURA,
   proc { |ability, battler, battle|
-      battle.battle.pbShowAbilitySplash(battler, ability)
+      battle.pbShowAbilitySplash(battler, ability)
       battle.pbDisplay(_INTL("{1} is radiating a dark aura!", battler.pbThis))
       battle.pbHideAbilitySplash(battler)
   }
@@ -166,7 +166,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:DROUGHT,
 
 BattleHandlers::AbilityOnSwitchIn.add(:FAIRYAURA,
   proc { |ability, battler, battle|
-      battle.battle.pbShowAbilitySplash(battler, ability)
+      battle.pbShowAbilitySplash(battler, ability)
       battle.pbDisplay(_INTL("{1} is radiating a fairy aura!", battler.pbThis))
       battle.pbHideAbilitySplash(battler)
   }
@@ -197,7 +197,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:FOREWARN,
           end
       end
       if forewarnMoves.length > 0
-          battle.battle.pbShowAbilitySplash(battler, ability)
+          battle.pbShowAbilitySplash(battler, ability)
           forewarnMoveName = forewarnMoves[battle.pbRandom(forewarnMoves.length)]
           battle.pbDisplay(_INTL("{1} was alerted to {2}!", battler.pbThis, forewarnMoveName))
           battle.pbHideAbilitySplash(battler)
@@ -215,7 +215,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:IMPOSTER,
               choice.substituted? ||
               choice.effectActive?(:SkyDrop) ||
               choice.semiInvulnerable?
-      battle.battle.pbShowAbilitySplash(battler, ability, true)
+      battle.pbShowAbilitySplash(battler, ability, true)
       battle.pbHideAbilitySplash(battler)
       battle.pbAnimation(:TRANSFORM, battler, choice)
       battle.scene.pbChangePokemon(battler, choice.pokemon)
@@ -225,7 +225,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:IMPOSTER,
 
 BattleHandlers::AbilityOnSwitchIn.add(:INTIMIDATE,
   proc { |ability, battler, battle|
-      battle.battle.pbShowAbilitySplash(battler, ability)
+      battle.pbShowAbilitySplash(battler, ability)
       battle.eachOtherSideBattler(battler.index) do |b|
           next unless b.near?(battler)
           b.pbLowerAttackStatStageIntimidate(battler)
@@ -237,7 +237,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:INTIMIDATE,
 
 BattleHandlers::AbilityOnSwitchIn.add(:MOLDBREAKER,
   proc { |ability, battler, battle|
-      battle.battle.pbShowAbilitySplash(battler, ability)
+      battle.pbShowAbilitySplash(battler, ability)
       battle.pbDisplay(_INTL("{1} breaks the mold!", battler.pbThis))
       battle.pbHideAbilitySplash(battler)
   }
@@ -245,7 +245,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:MOLDBREAKER,
 
 BattleHandlers::AbilityOnSwitchIn.add(:PRESSURE,
   proc { |ability, battler, battle|
-      battle.battle.pbShowAbilitySplash(battler, ability)
+      battle.pbShowAbilitySplash(battler, ability)
       battle.pbDisplay(_INTL("{1} is exerting its pressure!", battler.pbThis))
       battle.pbHideAbilitySplash(battler)
   }
@@ -271,7 +271,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:SNOWWARNING,
 
 BattleHandlers::AbilityOnSwitchIn.add(:TERAVOLT,
   proc { |ability, battler, battle|
-      battle.battle.pbShowAbilitySplash(battler, ability)
+      battle.pbShowAbilitySplash(battler, ability)
       battle.pbDisplay(_INTL("{1} is radiating a bursting aura!", battler.pbThis))
       battle.pbHideAbilitySplash(battler)
   }
@@ -279,7 +279,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:TERAVOLT,
 
 BattleHandlers::AbilityOnSwitchIn.add(:TURBOBLAZE,
   proc { |ability, battler, battle|
-      battle.battle.pbShowAbilitySplash(battler, ability)
+      battle.pbShowAbilitySplash(battler, ability)
       battle.pbDisplay(_INTL("{1} is radiating a blazing aura!", battler.pbThis))
       battle.pbHideAbilitySplash(battler)
   }
@@ -287,7 +287,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:TURBOBLAZE,
 
 BattleHandlers::AbilityOnSwitchIn.add(:UNNERVE,
   proc { |ability, battler, battle|
-      battle.battle.pbShowAbilitySplash(battler, ability)
+      battle.pbShowAbilitySplash(battler, ability)
       battle.pbDisplay(_INTL("{1} is too nervous to eat Berries or Leftovers!", battler.pbOpposingTeam))
       battle.pbHideAbilitySplash(battler)
   }
@@ -295,7 +295,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:UNNERVE,
 
 BattleHandlers::AbilityOnSwitchIn.add(:STRESSFUL,
   proc { |ability, battler, battle|
-      battle.battle.pbShowAbilitySplash(battler, ability)
+      battle.pbShowAbilitySplash(battler, ability)
       battle.pbDisplay(_INTL("{1} is too nervous to eat Berries or use Gems!", battler.pbOpposingTeam))
       battle.pbHideAbilitySplash(battler)
   }
@@ -303,7 +303,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:STRESSFUL,
 
 BattleHandlers::AbilityOnSwitchIn.add(:SLOWSTART,
   proc { |ability, battler, battle|
-      battle.battle.pbShowAbilitySplash(battler, ability)
+      battle.pbShowAbilitySplash(battler, ability)
       battler.applyEffect(:SlowStart, 3)
       battle.pbDisplay(_INTL("{1} can't get it going!", battler.pbThis))
       battle.pbHideAbilitySplash(battler)
@@ -312,9 +312,9 @@ BattleHandlers::AbilityOnSwitchIn.add(:SLOWSTART,
 
 BattleHandlers::AbilityOnSwitchIn.add(:ASONEICE,
   proc { |ability, battler, battle|
-      battle.battle.pbShowAbilitySplash(battler, ability)
+      battle.pbShowAbilitySplash(battler, ability)
       battle.pbDisplay(_INTL("{1} has 2 Abilities!", battler.name))
-      battle.battle.pbShowAbilitySplash(battler, :UNNERVE)
+      battle.pbShowAbilitySplash(battler, :UNNERVE)
       battle.pbDisplay(_INTL("{1} is too nervous to eat Berries or Leftovers!", battler.pbOpposingTeam))
       battle.pbHideAbilitySplash(battler)
   }
@@ -347,7 +347,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:SCREENCLEANER,
       end
       next unless anyScreen
 
-      battle.battle.pbShowAbilitySplash(battler, ability)
+      battle.pbShowAbilitySplash(battler, ability)
       battle.sides.each do |side|
           side.eachEffect(true) do |effect, _value, effectData|
               next unless effectData.is_screen?
@@ -362,7 +362,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:PASTELVEIL,
   proc { |ability, battler, battle|
       battler.eachAlly do |b|
           next if b.status != :POISON
-          battle.battle.pbShowAbilitySplash(battler, ability)
+          battle.pbShowAbilitySplash(battler, ability)
           b.pbCureStatus(true)
           battle.pbHideAbilitySplash(battler)
       end
@@ -378,7 +378,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:CURIOUSMEDICINE,
           done = true
       end
       if done
-          battle.battle.pbShowAbilitySplash(battler, ability)
+          battle.pbShowAbilitySplash(battler, ability)
           battle.pbDisplay(_INTL("All allies' stat changes were eliminated!"))
           battle.pbHideAbilitySplash(battler)
       end
@@ -388,7 +388,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:CURIOUSMEDICINE,
 BattleHandlers::AbilityOnSwitchIn.add(:NEUTRALIZINGGAS,
   proc { |ability, battler, battle|
       next if battle.field.effectActive?(:NeutralizingGas)
-      battle.battle.pbShowAbilitySplash(battler, ability)
+      battle.pbShowAbilitySplash(battler, ability)
       battle.field.applyEffect(:NeutralizingGas)
       battle.pbHideAbilitySplash(battler)
   }
@@ -397,7 +397,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:NEUTRALIZINGGAS,
 BattleHandlers::AbilityOnSwitchIn.add(:DRAMATICLIGHTING,
   proc { |ability, battler, battle|
       next unless battle.pbWeather == :Eclipse
-      battle.battle.pbShowAbilitySplash(battler, ability)
+      battle.pbShowAbilitySplash(battler, ability)
       battle.eachOtherSideBattler(battler.index) do |b|
           next unless b.near?(battler)
           b.pbLowerMultipleStatStages([:ATTACK,1,:SPECIAL_ATTACK,1],battler,showFailMsg: true)
@@ -409,7 +409,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:DRAMATICLIGHTING,
 BattleHandlers::AbilityOnSwitchIn.add(:CRAGTERROR,
   proc { |ability, battler, battle|
       next unless battle.pbWeather == :Sandstorm
-      battle.battle.pbShowAbilitySplash(battler, ability)
+      battle.pbShowAbilitySplash(battler, ability)
       battle.eachOtherSideBattler(battler.index) do |b|
           next unless b.near?(battler)
           b.pbLowerMultipleStatStages([:ATTACK,1,:SPECIAL_ATTACK,1],battler,showFailMsg: true)
@@ -420,7 +420,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:CRAGTERROR,
 
 BattleHandlers::AbilityOnSwitchIn.add(:FASCINATE,
   proc { |ability, battler, battle|
-      battle.battle.pbShowAbilitySplash(battler, ability)
+      battle.pbShowAbilitySplash(battler, ability)
       battle.eachOtherSideBattler(battler.index) do |b|
           next unless b.near?(battler)
           b.pbLowerSpecialAttackStatStageFascinate(battler)
@@ -432,7 +432,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:FASCINATE,
 
 BattleHandlers::AbilityOnSwitchIn.add(:FRUSTRATE,
   proc { |ability, battler, battle|
-      battle.battle.pbShowAbilitySplash(battler, ability)
+      battle.pbShowAbilitySplash(battler, ability)
       battle.eachOtherSideBattler(battler.index) do |b|
           next unless b.near?(battler)
           b.pbLowerSpeedStatStageFrustrate(battler)
@@ -449,7 +449,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:HOLIDAYCHEER,
           anyHealing = true if b.hp < b.totalhp
       end
       if anyHealing
-          battle.battle.pbShowAbilitySplash(battler, ability)
+          battle.pbShowAbilitySplash(battler, ability)
           battle.eachSameSideBattler(battler.index) do |b|
               b.pbRecoverHP(b.totalhp * 0.25)
           end
@@ -464,7 +464,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:HOLIDAYCHEER,
 
 BattleHandlers::AbilityOnSwitchIn.add(:STARGUARDIAN,
   proc { |ability, battler, battle|
-      battle.battle.pbShowAbilitySplash(battler, ability)
+      battle.pbShowAbilitySplash(battler, ability)
       duration = battler.getScreenDuration
       battler.pbOwnSide.applyEffect(:LightScreen, duration)
       battle.pbHideAbilitySplash(battler)
@@ -473,7 +473,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:STARGUARDIAN,
 
 BattleHandlers::AbilityOnSwitchIn.add(:BARRIERMAKER,
   proc { |ability, battler, battle|
-      battle.battle.pbShowAbilitySplash(battler, ability)
+      battle.pbShowAbilitySplash(battler, ability)
       duration = battler.getScreenDuration
       battler.pbOwnSide.applyEffect(:Reflect, duration)
       battle.pbHideAbilitySplash(battler)
@@ -486,7 +486,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:BARRIERMAKER,
 
 BattleHandlers::AbilityOnSwitchIn.add(:PUZZLINGAURA,
   proc { |ability, battler, battle|
-    battle.battle.pbShowAbilitySplash(battler, ability)
+    battle.pbShowAbilitySplash(battler, ability)
     battle.pbStartRoom(:PuzzleRoom, battler)
     battle.pbHideAbilitySplash(battler)
   }
@@ -494,7 +494,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:PUZZLINGAURA,
 
 BattleHandlers::AbilityOnSwitchIn.add(:TRICKSTERAURA,
   proc { |ability, battler, battle|
-    battle.battle.pbShowAbilitySplash(battler, ability)
+    battle.pbShowAbilitySplash(battler, ability)
     battle.pbStartRoom(:TrickRoom, battler)
     battle.pbHideAbilitySplash(battler)
   }
@@ -502,7 +502,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:TRICKSTERAURA,
 
 BattleHandlers::AbilityOnSwitchIn.add(:ODDAURA,
   proc { |ability, battler, battle|
-    battle.battle.pbShowAbilitySplash(battler, ability)
+    battle.pbShowAbilitySplash(battler, ability)
     battle.pbStartRoom(:OddRoom, battler)
     battle.pbHideAbilitySplash(battler)
   }
@@ -510,7 +510,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:ODDAURA,
 
 BattleHandlers::AbilityOnSwitchIn.add(:WONDROUSAURA,
   proc { |ability, battler, battle|
-    battle.battle.pbShowAbilitySplash(battler, ability)
+    battle.pbShowAbilitySplash(battler, ability)
     battle.pbStartRoom(:WonderRoom, battler)
     battle.pbHideAbilitySplash(battler)
   }
@@ -522,7 +522,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:WONDROUSAURA,
 
 BattleHandlers::AbilityOnSwitchIn.add(:GARLANDGUARDIAN,
   proc { |ability, battler, battle|
-      battle.battle.pbShowAbilitySplash(battler, ability)
+      battle.pbShowAbilitySplash(battler, ability)
       battler.pbOwnSide.applyEffect(:Safeguard, 10)
       battle.pbHideAbilitySplash(battler)
   }
@@ -531,7 +531,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:GARLANDGUARDIAN,
 BattleHandlers::AbilityOnSwitchIn.add(:FREERIDE,
   proc { |ability, battler, battle|
       next unless battler.hasAlly?
-      battle.battle.pbShowAbilitySplash(battler, ability)
+      battle.pbShowAbilitySplash(battler, ability)
       battler.eachAlly do |b|
           b.tryRaiseStat(:SPEED, battler)
       end
@@ -541,7 +541,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:FREERIDE,
 
 BattleHandlers::AbilityOnSwitchIn.add(:EARTHLOCK,
   proc { |ability, battler, battle|
-      battle.battle.pbShowAbilitySplash(battler, ability)
+      battle.pbShowAbilitySplash(battler, ability)
       battle.pbDisplay(_INTL("The effects of the terrain disappeared."))
       battle.pbHideAbilitySplash(battler)
   }
@@ -549,7 +549,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:EARTHLOCK,
 
 BattleHandlers::AbilityOnSwitchIn.add(:RUINOUS,
   proc { |ability, battler, battle|
-      battle.battle.pbShowAbilitySplash(battler, ability)
+      battle.pbShowAbilitySplash(battler, ability)
       battle.pbDisplay(_INTL("{1} is ruinous! Everyone deals 20 percent more damage!", battler.pbThis))
       battle.pbHideAbilitySplash(battler)
   }
@@ -557,7 +557,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:RUINOUS,
 
 BattleHandlers::AbilityOnSwitchIn.add(:HONORAURA,
   proc { |ability, battler, battle|
-      battle.battle.pbShowAbilitySplash(battler, ability)
+      battle.pbShowAbilitySplash(battler, ability)
       battle.pbDisplay(_INTL("{1} is honorable! Status moves lose priority!", battler.pbThis))
       battle.pbHideAbilitySplash(battler)
   }
@@ -565,7 +565,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:HONORAURA,
 
 BattleHandlers::AbilityOnSwitchIn.add(:CLOVERSONG,
   proc { |ability, battler, battle|
-      battle.battle.pbShowAbilitySplash(battler, ability)
+      battle.pbShowAbilitySplash(battler, ability)
       battler.pbOwnSide.applyEffect(:LuckyChant, 10)
       battle.pbHideAbilitySplash(battler)
   }
@@ -574,7 +574,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:CLOVERSONG,
 BattleHandlers::AbilityOnSwitchIn.add(:ARCANEFINALE,
   proc { |ability, battler, battle|
       next unless battler.isLastAlive?
-      battle.battle.pbShowAbilitySplash(battler, ability)
+      battle.pbShowAbilitySplash(battler, ability)
       battle.pbDisplay(_INTL("{1} is the team's finale!", battler.pbThis))
       battle.pbHideAbilitySplash(battler)
   }
@@ -583,7 +583,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:ARCANEFINALE,
 BattleHandlers::AbilityOnSwitchIn.add(:HEROICFINALE,
   proc { |ability, battler, battle|
       next unless battler.isLastAlive?
-      battle.battle.pbShowAbilitySplash(battler, ability)
+      battle.pbShowAbilitySplash(battler, ability)
       battle.pbDisplay(_INTL("{1} is the team's finale!", battler.pbThis))
       battle.pbHideAbilitySplash(battler)
   }
@@ -591,7 +591,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:HEROICFINALE,
 
 BattleHandlers::AbilityOnSwitchIn.add(:ONTHEWIND,
   proc { |ability, battler, battle|
-      battle.battle.pbShowAbilitySplash(battler, ability)
+      battle.pbShowAbilitySplash(battler, ability)
       battler.pbOwnSide.applyEffect(:Tailwind, 4)
       battle.pbHideAbilitySplash(battler)
   }
@@ -599,7 +599,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:ONTHEWIND,
 
 BattleHandlers::AbilityOnSwitchIn.add(:AQUASNEAK,
   proc { |ability, battler, battle|
-      battle.battle.pbShowAbilitySplash(battler, ability)
+      battle.pbShowAbilitySplash(battler, ability)
       battle.pbDisplay(_INTL("{1} snuck into the water!", battler.pbThis))
       battle.pbHideAbilitySplash(battler)
   }
@@ -613,7 +613,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:CONVICTION,
 
 BattleHandlers::AbilityOnSwitchIn.add(:PRIMEVALSLOWSTART,
   proc { |ability, battler, battle|
-      battle.battle.pbShowAbilitySplash(battler, ability, true)
+      battle.pbShowAbilitySplash(battler, ability, true)
       battle.pbDisplay(_INTL("{1} is burdened!", battler.pbThis))
       battle.pbHideAbilitySplash(battler)
   }
@@ -621,7 +621,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:PRIMEVALSLOWSTART,
 
 BattleHandlers::AbilityOnSwitchIn.add(:PRIMEVALIMPOSTER,
   proc { |ability, battler, battle|
-      battle.battle.pbShowAbilitySplash(battler, ability, true)
+      battle.pbShowAbilitySplash(battler, ability, true)
       battle.pbDisplay(_INTL("{1} transforms into a stronger version of your entire team!", battler.pbThis))
       battler.boss = false
       battle.bossBattle = false
@@ -674,7 +674,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:REFRESHMENTS,
       lowestIdBattler = battle.battlers[lowestId]
       next unless lowestIdBattler.canHeal?
       served = (lowestId == battler.index ? "itself" : lowestIdBattler.pbThis)
-      battle.battle.pbShowAbilitySplash(battler, ability)
+      battle.pbShowAbilitySplash(battler, ability)
       battle.pbDisplay(_INTL("{1} served {2} some refreshments!", battler.pbThis, served))
       lowestIdBattler.pbRecoverHP(lowestIdBattler.totalhp / 2.0)
       battle.pbHideAbilitySplash(battler)
@@ -696,7 +696,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:MENDINGTONES,
       lowestIdBattler = battle.battlers[lowestId]
       next unless lowestIdBattler.canHeal?
       served = (lowestId == battler.index ? "itself" : lowestIdBattler.pbThis)
-      battle.battle.pbShowAbilitySplash(battler, ability)
+      battle.pbShowAbilitySplash(battler, ability)
       battle.pbDisplay(_INTL("{1} mended {2} with soothing sounds!", battler.pbThis, served))
       lowestIdBattler.pbRecoverHP(lowestIdBattler.totalhp / 2.0)
       battle.pbHideAbilitySplash(battler)
@@ -707,7 +707,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:PEARLSEEKER,
   proc { |ability, battler, battle|
       next unless battle.pbWeather == :Eclipse
       next if battler.item
-      battle.battle.pbShowAbilitySplash(battler, ability)
+      battle.pbShowAbilitySplash(battler, ability)
       battler.item = :PEARLOFFATE
       battle.pbDisplay(_INTL("{1} discovers the {2}!", battler.pbThis, battler.itemName))
       battle.pbHideAbilitySplash(battler)
@@ -719,7 +719,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:WHIRLER,
       trappingDuration = 3
       trappingDuration *= 2 if battler.hasActiveItem?(:GRIPCLAW)
 
-      battle.battle.pbShowAbilitySplash(battler, ability)
+      battle.pbShowAbilitySplash(battler, ability)
       battler.eachOpposing do |b|
         next if b.effectActive?(:Trapping)
         b.applyEffect(:Trapping, trappingDuration)
@@ -736,7 +736,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:SUSTAINABLE,
     next if battler.item
     next if !battler.recycleItem || !GameData::Item.get(battler.recycleItem).is_berry?
     next unless battle.sunny?
-    battle.battle.pbShowAbilitySplash(battler, ability)
+    battle.pbShowAbilitySplash(battler, ability)
     battler.item = battler.recycleItem
     battler.setRecycleItem(nil)
     battler.setInitialItem(battler.item) unless battler.initialItem
@@ -768,7 +768,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:ASSISTANT,
 
 BattleHandlers::AbilityOnSwitchIn.add(:PRECHARGED,
   proc { |ability, battler, battle|
-      battle.battle.pbShowAbilitySplash(battler, ability)
+      battle.pbShowAbilitySplash(battler, ability)
       battler.applyEffect(:Charge)
       battle.pbHideAbilitySplash(battler)
   }
@@ -778,7 +778,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:LOOSESHELL,
   proc { |ability, battler, battle|
       next unless battle.pbWeather == :Sandstorm
       next unless battler.form == 0
-      battle.battle.pbShowAbilitySplash(battler, ability)
+      battle.pbShowAbilitySplash(battler, ability)
       pbChangeForm(1, _INTL("{1} scrapped its meteor shell!", pbThis))
       battler.pbOpposingSide.applyEffect(:StealthRock)
       battle.pbHideAbilitySplash(battler)
@@ -787,7 +787,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:LOOSESHELL,
 
 BattleHandlers::AbilityOnSwitchIn.add(:GRAVITATIONAL,
   proc { |ability, battler, battle|
-      battle.battle.pbShowAbilitySplash(battler, ability)
+      battle.pbShowAbilitySplash(battler, ability)
       battle.field.applyEffect(:Gravity, 5)
       battle.pbHideAbilitySplash(battler)
   }
@@ -795,7 +795,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:GRAVITATIONAL,
 
 BattleHandlers::AbilityOnSwitchIn.add(:INFECTED,
   proc { |ability, battler, battle|
-      battle.battle.pbShowAbilitySplash(battler, ability)
+      battle.pbShowAbilitySplash(battler, ability)
       battler.applyEffect(:Type3,:GRASS)
       battle.pbHideAbilitySplash(battler)
   }

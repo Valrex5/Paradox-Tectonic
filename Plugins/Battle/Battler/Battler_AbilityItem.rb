@@ -101,8 +101,9 @@ class PokeBattle_Battler
             if choices.length > 0
                 choice = choices[@battle.pbRandom(choices.length)]
                 @battle.pbShowAbilitySplash(self, :TRACE)
-                self.ability = choice.ability
-                @battle.pbDisplay(_INTL("{1} traced {2}'s {3}!", pbThis, choice.pbThis(true), choice.abilityName))
+                stolenAbility = choice.ability
+                self.ability = stolenAbility
+                @battle.pbDisplay(_INTL("{1} traced {2}'s {3}!", pbThis, choice.pbThis(true), abilityName(stolenAbility)))
                 @battle.pbHideAbilitySplash(self)
                 if !onSwitchIn && (unstoppableAbility? || abilityActive?)
                     eachAbility do |ability|
@@ -195,7 +196,8 @@ class PokeBattle_Battler
             PBDebug.log("[Item not consumed] #{pbThis} could not consume a #{item} because it was already missing")
             return
         end
-        itemName = GameData::Item.get(item).name
+        itemData = GameData::Item.get(item)
+        itemName = itemData.name
         PBDebug.log("[Item consumed] #{pbThis} consumed its held #{itemName}")
         @battle.triggerBattlerConsumedItemDialogue(self, item)
         if recoverable
@@ -203,7 +205,7 @@ class PokeBattle_Battler
             applyEffect(:PickupItem, item)
             applyEffect(:PickupUse, @battle.nextPickupUse)
         end
-        setBelched if belch && item.is_berry?
+        setBelched if belch && itemData.is_berry?
         pbRemoveItem
         pbSymbiosis if symbiosis
     end

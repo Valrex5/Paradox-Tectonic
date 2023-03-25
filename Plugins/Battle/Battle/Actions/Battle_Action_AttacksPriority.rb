@@ -177,8 +177,7 @@ class PokeBattle_Battle
                     end
                     # Items (Quick Claw, Custap Berry, Lagging Tail, Full Incense)
                     b.eachActiveItem do |item|
-                        newSubPri = BattleHandlers.triggerPriorityBracketChangeItem(b.item,
-                           b, subPri, self)
+                        newSubPri = BattleHandlers.triggerPriorityBracketChangeItem(item, b, subPri, self)
                         if subPri != newSubPri
                             subPri = newSubPri
                             b.disableEffect(:PriorityAbility)

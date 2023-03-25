@@ -6,8 +6,7 @@ BattleHandlers::TargetAbilityAfterMoveUse.add(:COLORCHANGE,
       typeName = GameData::Type.get(move.calcType).name
       battle.pbShowAbilitySplash(target, ability)
       target.pbChangeTypes(move.calcType)
-      battle.pbDisplay(_INTL("{1}'s {2} made it the {3} type!", target.pbThis,
-         target.abilityName, typeName))
+      battle.pbDisplay(_INTL("{1}'s {2} made it the {3} type!", target.pbThis, abilityName(ability), typeName))
       battle.pbHideAbilitySplash(target)
   }
 )

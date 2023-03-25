@@ -287,13 +287,11 @@ class PokeBattle_Battler
         unless specialUsage
             targets.each do |b|
                 next unless b.opposes?(user) && b.hasActiveAbility?(:PRESSURE)
-                PBDebug.log("[Ability triggered] #{b.pbThis}'s #{b.abilityName}")
                 user.pbReducePP(move)
             end
             if move.pbTarget(user).affects_foe_side
                 @battle.eachOtherSideBattler(user) do |b|
                     next unless b.hasActiveAbility?(:PRESSURE)
-                    PBDebug.log("[Ability triggered] #{b.pbThis}'s #{b.abilityName}")
                     user.pbReducePP(move)
                 end
             end
@@ -864,7 +862,7 @@ user.pbThis))
                 targets.each do |target|
                     next if target.damageState.unaffected
                     next unless target.hasActiveAbility?(:SECRETIONSECRET) && user.opposes?(target)
-                    battle.battle.pbShowAbilitySplash(target, ability)
+                    battle.pbShowAbilitySplash(target, ability)
                     user.applyPoison(target, nil) if user.canPoison?(target, true)
                     battle.pbHideAbilitySplash(target)
                 end
@@ -933,10 +931,11 @@ user.pbThis))
         #       message about it only shows here.
         targets.each do |b|
             next if b.damageState.unaffected
-            next unless b.damageState.berryWeakened || b.damageState.feastWeakened
-            name = b.itemName
+            itemTriggered = b.damageState.berryWeakened || b.damageState.feastWeakened
+            next unless itemTriggered
+            name = GameData::Item.get(itemTriggered).real_name
             @battle.pbDisplay(_INTL("The {1} weakened the damage to {2}!", name, b.pbThis(true)))
-            b.pbHeldItemTriggered(b.item) if b.item && b.damageState.berryWeakened
+            b.pbHeldItemTriggered(itemTriggered) if b.hasItem?(itemTriggered) && b.damageState.berryWeakened
         end
         targets.each { |b| b.pbFaint if b && b.fainted? }
         user.pbFaint if user.fainted?

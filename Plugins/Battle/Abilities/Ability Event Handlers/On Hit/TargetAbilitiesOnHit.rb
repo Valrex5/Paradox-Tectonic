@@ -85,7 +85,7 @@ BattleHandlers::TargetAbilityOnHit.add(:RATTLED,
         if aiChecking
             ret = 0
             aiNumHits.times do |i|
-                ret -= getMultiStatUpEffectScore([:SPEED,1], target, user, i)
+                ret -= getMultiStatUpEffectScore([:SPEED,1], user, target, i)
             end
             next ret
         end
@@ -98,7 +98,7 @@ BattleHandlers::TargetAbilityOnHit.add(:STAMINA,
         if aiChecking
             ret = 0
             aiNumHits.times do |i|
-                ret -= getMultiStatUpEffectScore([:DEFENSE,1], target, user, i)
+                ret -= getMultiStatUpEffectScore([:DEFENSE,1], user, target, i)
             end
             next ret
         end
@@ -111,7 +111,7 @@ BattleHandlers::TargetAbilityOnHit.add(:GRIT,
         if aiChecking
             ret = 0
             aiNumHits.times do |i|
-                ret -= getMultiStatUpEffectScore([:SPECIAL_DEFENSE,1], target, user, i)
+                ret -= getMultiStatUpEffectScore([:SPECIAL_DEFENSE,1], user, target, i)
             end
             next ret
         end
@@ -130,7 +130,7 @@ BattleHandlers::TargetAbilityOnHit.add(:ADAPTIVESKIN,
         if aiChecking
             ret = 0
             aiNumHits.times do |i|
-                ret -= getMultiStatUpEffectScore([statToRaise,1], target, user, i)
+                ret -= getMultiStatUpEffectScore([statToRaise,1], user, target, i)
             end
             next ret
         end
@@ -142,8 +142,8 @@ BattleHandlers::TargetAbilityOnHit.add(:WEAKARMOR,
   proc { |ability, user, target, move, battle, aiChecking, aiNumHits|
         next unless move.physicalMove?
         if aiChecking
-            ret = getMultiStatDownEffectScore([:DEFENSE, 1], target, user)
-            ret -= getMultiStatUpEffectScore([:SPEED, 2], target, user)
+            ret = getMultiStatDownEffectScore([:DEFENSE, 1], target, target)
+            ret -= getMultiStatUpEffectScore([:SPEED, 2], target, target)
             next ret
         else
             battle.pbShowAbilitySplash(target, ability)
@@ -158,8 +158,8 @@ BattleHandlers::TargetAbilityOnHit.add(:WEAKSPIRIT,
     proc { |ability, user, target, move, battle, aiChecking, aiNumHits|
         next unless move.specialMove?
         if aiChecking
-            ret = getMultiStatDownEffectScore([:SPECIAL_DEFENSE, 1], target, user)
-            ret -= getMultiStatUpEffectScore([:SPEED, 2], ustargeter, user)
+            ret = getMultiStatDownEffectScore([:SPECIAL_DEFENSE, 1], target, target)
+            ret -= getMultiStatUpEffectScore([:SPEED, 2], target, target)
             next ret
         else
             battle.pbShowAbilitySplash(target, ability)
@@ -176,7 +176,7 @@ BattleHandlers::TargetAbilityOnHit.add(:STEAMENGINE,
         if aiChecking
             ret = 0
             aiNumHits.times do |i|
-                ret -= getMultiStatUpEffectScore([:SPEED,6], target, user, i*6)
+                ret -= getMultiStatUpEffectScore([:SPEED,6], user, target, i*6)
             end
             next ret
         end
@@ -191,7 +191,7 @@ BattleHandlers::TargetAbilityOnHit.add(:FORCEREVERSAL,
             next 0 unless Effectiveness.resistant?(target.damageState.typeMod)
             ret = 0
             aiNumHits.times do |i|
-                ret -= getMultiStatUpEffectScore([:ATTACK, 1, :SPECIAL_ATTACK, 1], target, user, i)
+                ret -= getMultiStatUpEffectScore([:ATTACK, 1, :SPECIAL_ATTACK, 1], user, target, i)
             end
             next ret
         else
@@ -477,14 +477,14 @@ BattleHandlers::TargetAbilityOnHit.add(:MUMMY,
     proc { |ability, user, target, move, battle, aiChecking, aiNumHits|
         next unless move.physicalMove?
         next if user.fainted?
-        next if user.unstoppableAbility? || user.ability == ability
+        next if user.unstoppableAbility? || user.hasAbility?(ability)
         next -5 if aiChecking
         battle.pbShowAbilitySplash(target, ability) if user.opposes?(target)
         oldAbil = user.ability
         battle.pbShowAbilitySplash(user, oldAbil, true, false) if user.opposes?(target)
         user.ability = ability
         battle.pbReplaceAbilitySplash(user) if user.opposes?(target)
-        battle.pbDisplay(_INTL("{1}'s Ability became {2}!", user.pbThis, user.abilityName))
+        battle.pbDisplay(_INTL("{1}'s Ability became {2}!", user.pbThis, abilityName(ability)))
         battle.pbHideAbilitySplash(user) if user.opposes?(target)
         battle.pbHideAbilitySplash(target) if user.opposes?(target)
         user.pbOnAbilityChanged(oldAbil) unless oldAbil.nil?
@@ -495,7 +495,7 @@ BattleHandlers::TargetAbilityOnHit.add(:INFECTED,
     proc { |ability, user, target, move, battle, aiChecking, aiNumHits|
         next unless move.physicalMove?
         next if user.fainted?
-        next if user.unstoppableAbility? || user.ability == ability
+        next if user.unstoppableAbility? || user.hasAbility?(ability)
         next unless user.canChangeType?
         next -5 if aiChecking
         battle.pbShowAbilitySplash(target, ability) if user.opposes?(target)
@@ -503,7 +503,7 @@ BattleHandlers::TargetAbilityOnHit.add(:INFECTED,
         battle.pbShowAbilitySplash(user, oldAbil, true, false) if user.opposes?(target)
         user.ability = ability
         battle.pbReplaceAbilitySplash(user) if user.opposes?(target)
-        battle.pbDisplay(_INTL("{1}'s Ability became {2}!", user.pbThis, user.abilityName))
+        battle.pbDisplay(_INTL("{1}'s Ability became {2}!", user.pbThis, abilityName(ability)))
         user.applyEffect(:Type3,:GRASS) unless user.pbHasType?(:GRASS)
         battle.pbHideAbilitySplash(user) if user.opposes?(target)
         battle.pbHideAbilitySplash(target) if user.opposes?(target)
@@ -599,7 +599,7 @@ BattleHandlers::TargetAbilityOnHit.add(:WANDERINGSPIRIT,
             battle.pbReplaceAbilitySplash(user)
             battle.pbReplaceAbilitySplash(target)
         end
-        battle.pbDisplay(_INTL("{1}'s Ability became {2}!", user.pbThis, user.abilityName))
+        battle.pbDisplay(_INTL("{1}'s Ability became {2}!", user.pbThis, abilityName(ability)))
         battle.pbHideAbilitySplash(user)
         battle.pbHideAbilitySplash(target) if user.opposes?(target)
         if oldAbil

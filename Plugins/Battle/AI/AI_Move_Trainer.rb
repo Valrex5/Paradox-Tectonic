@@ -154,10 +154,9 @@ class PokeBattle_AI
                 begin
                     scoreModifierTargetAbility = 0
                     target.eachActiveAbility do |ability|
-                        scoreModifierUserAbility += 
+                        scoreModifierTargetAbility += 
                             BattleHandlers.triggerTargetAbilityOnHitAI(ability, user, target, move, @battle, numHits)
                     end
-                        
                     score += scoreModifierTargetAbility
                     echoln("[MOVE SCORING] #{user.pbThis}'s #{numHits} hits against #{target.pbThis(false)} adjusts the score by #{scoreModifierTargetAbility} due to the target's ability") if scoreModifierTargetAbility != 0
                 rescue StandardError => exception

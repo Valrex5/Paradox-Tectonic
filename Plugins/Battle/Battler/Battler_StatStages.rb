@@ -396,7 +396,7 @@ class PokeBattle_Battler
         return ret
     end
 
-    def blockAteAbilities(user)
+    def blockAteAbilities(user,ability)
         return true if fainted?
         # NOTE: Substitute intentially blocks Intimidate even if self has Contrary.
         if substituted?
@@ -406,31 +406,31 @@ class PokeBattle_Battler
         if hasActiveAbility?(:INNERFOCUS)
             @battle.pbShowAbilitySplash(self, true)
             @battle.pbDisplay(_INTL("{1}'s {2} prevented {3}'s {4} from working!",
-                    pbThis, abilityName, user.pbThis(true), user.abilityName))
+                    pbThis, abilityName(:INNERFOCUS), user.pbThis(true), abilityName(ability)))
             @battle.pbHideAbilitySplash(self)
             return true
         elsif @battle.pbCheckSameSideAbility(:HEARTENINGAROMA, @index)
             aromaHolder = @battle.pbCheckSameSideAbility(:HEARTENINGAROMA, @index)
             @battle.pbShowAbilitySplash(aromaHolder, true)
             @battle.pbDisplay(_INTL("{1}'s {2} prevented {3}'s {4} from working!",
-                aromaHolder.pbThis, aromaHolder.abilityName, user.pbThis(true), user.abilityName))
+                aromaHolder.pbThis, abilityName(:HEARTENINGAROMA), user.pbThis(true), abilityName(ability)))
             @battle.pbHideAbilitySplash(aromaHolder)
         end
         return false
     end
 
     def pbLowerAttackStatStageIntimidate(user)
-        return false if blockAteAbilities(user)
+        return false if blockAteAbilities(user,:INTIMIDATE)
         return pbLowerStatStageByAbility(:ATTACK, 1, user, false)
     end
 
     def pbLowerSpecialAttackStatStageFascinate(user)
-        return false if blockAteAbilities(user)
+        return false if blockAteAbilities(user,:FASCINATE)
         return pbLowerStatStageByAbility(:SPECIAL_ATTACK, 1, user, false)
     end
 
     def pbLowerSpeedStatStageFrustrate(user)
-        return false if blockAteAbilities(user)
+        return false if blockAteAbilities(user,:FRUSTRATE)
         return pbLowerStatStageByAbility(:SPEED, 1, user, false)
     end
 

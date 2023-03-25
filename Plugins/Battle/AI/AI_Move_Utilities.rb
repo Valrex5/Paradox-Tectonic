@@ -145,7 +145,7 @@ class PokeBattle_AI
         end
         # Target's abilities
         unless moldBreaker
-            target.eachAbillityInEffect do |ability|
+            target.eachActiveAbility do |ability|
                 BattleHandlers.triggerAccuracyCalcTargetAbility(ability,
                     modifiers, user, target, move, type)
             end
