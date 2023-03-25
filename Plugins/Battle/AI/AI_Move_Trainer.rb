@@ -309,6 +309,19 @@ class PokeBattle_AI
             echoln("#{user.pbThis} rejects #{move.id} -- thinks will fail against #{target.pbThis(false)}.")
         end
 
+        # Magic Bounce/Magic Shield checks for moves which don't target
+        if user == target && move.canMagicCoat? && !@battle.moldBreaker
+            @battle.pbPriority(true).each do |b|
+                next unless b
+                next if b.fainted?
+                next unless b.opposes?(user)
+                next if b.semiInvulnerable?
+                next unless b.hasActiveAbilityAI?(%i[MAGICBOUNCE MAGICSHIELD])
+                fails = true
+                break
+            end
+        end
+
         user.turnCount -= 1
 
         return fails
