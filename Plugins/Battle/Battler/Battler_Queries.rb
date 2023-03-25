@@ -61,12 +61,38 @@ class PokeBattle_Battler
         return true
     end
 
+    def abilitiesInEffect
+        abil = []
+        abil.push(@ability_id) if ability
+
+        # Even with the curse, don't add extra abilities if ability was overwritten during battle
+        return abil unless @pokemon.hasAbility?(@ability_id)
+        
+        if @battle.curseActive?(:CURSE_DOUBLE_ABILITIES)
+            @pokemon.species_data.abilities.each do |legalAbility|
+                abil.push(legalAbility) unless abil.include?(legalAbility)
+            end
+        end
+        return abil
+    end
+
+    def eachAbilityInEffect
+        abilitiesInEffect.each do |abilityID|
+            yield abilityID
+        end
+    end
+
     def hasActiveAbility?(check_ability, ignore_fainted = false, checkingForAI = false)
         return hasActiveAbilityAI?(check_ability, ignore_fainted) if checkingForAI
         return false unless abilityActive?(ignore_fainted)
-        return check_ability.include?(@ability_id) if check_ability.is_a?(Array)
-        return false if ability.nil?
-        return check_ability == ability.id
+        abilitiesInEffect.each do |effectingID|
+            if check_ability.is_a?(Array)
+                return true if check_ability.include?(effectingID)
+            else
+                return true if check_ability == effectingID
+            end
+        end
+        return false
     end
     alias hasWorkingAbility hasActiveAbility?
 
@@ -140,6 +166,16 @@ class PokeBattle_Battler
         return ability_blacklist.include?(abil.id)
     end
 
+    def itemsInEffect
+        return [@item_id]
+    end
+
+    def eachItemInEffect
+        itemsInEffect.each do |itemID|
+            yield itemID
+        end
+    end
+
     def itemActive?(ignoreFainted = false)
         return false if fainted? && !ignoreFainted
         return false if effectActive?(:Embargo)
@@ -150,8 +186,14 @@ class PokeBattle_Battler
 
     def hasActiveItem?(check_item, ignore_fainted = false)
         return false unless itemActive?(ignore_fainted)
-        return check_item.include?(@item_id) if check_item.is_a?(Array)
-        return check_item == @item_id
+        eachItemInEffect do |effectiveItem|
+            if check_item.is_a?(Array)
+                return true if check_item.include?(effectiveItem)
+            else
+                return true if check_item == effectiveItem
+            end
+        end
+        return false
     end
     alias hasWorkingItem hasActiveItem?
 
