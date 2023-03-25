@@ -250,7 +250,7 @@ BattleHandlers::UserAbilityEndOfMove.add(:MIDNIGHTOIL,
 )
 
 BattleHandlers::UserAbilityEndOfMove.add(:ICEQUEEN,
-  proc { |ability, user, _targets, move, battle, _switchedBattlers|
+  proc { |ability, user, targets, move, battle, _switchedBattlers|
       next if battle.futureSight
       next unless move.pbDamagingMove?
       next unless battle.pbWeather == :Hail

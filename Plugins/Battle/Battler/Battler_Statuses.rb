@@ -657,7 +657,7 @@ pbThis(true)))
             next unless oldStatus == :SLEEP
             @battle.eachOtherSideBattler(@index) do |b|
                 if b.hasActiveAbility?(:LINGERINGDAZE)
-                    pbLowerMultipleStatStages([:ATTACK, 2, :SPECIAL_ATTACK, 2], b, ability: ability)
+                    pbLowerMultipleStatStages([:ATTACK, 2, :SPECIAL_ATTACK, 2], b, ability: :LINGERINGDAZE)
                 end
             end
         end
