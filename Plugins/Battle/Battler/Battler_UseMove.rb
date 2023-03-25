@@ -300,16 +300,18 @@ class PokeBattle_Battler
         end
         # Move blocking abilities make the move fail here
         @battle.pbPriority(true).each do |b|
-            next if !b || !b.abilityActive?
-            next unless BattleHandlers.triggerMoveBlockingAbility(b.ability, b, user, targets, move, @battle)
-            @battle.pbDisplayBrief(_INTL("{1} tried to use {2}!", user.pbThis, move.name))
-            @battle.pbShowAbilitySplash(b)
-            @battle.pbDisplay(_INTL("But, {1} cannot use {2}!", user.pbThis, move.name))
-            @battle.pbHideAbilitySplash(b)
-            user.lastMoveFailed = true
-            pbCancelMoves
-            pbEndTurn(choice)
-            return
+            next unless b
+            b.eachActiveAbility do |ability|
+                next unless BattleHandlers.triggerMoveBlockingAbility(ability, b, user, targets, move, @battle)
+                @battle.pbDisplayBrief(_INTL("{1} tried to use {2}!", user.pbThis, move.name))
+                @battle.pbShowAbilitySplash(b, ability)
+                @battle.pbDisplay(_INTL("But, {1} cannot use {2}!", user.pbThis, move.name))
+                @battle.pbHideAbilitySplash(b)
+                user.lastMoveFailed = true
+                pbCancelMoves
+                pbEndTurn(choice)
+                return
+            end
         end
         # "X used Y!" message
         # Can be different for Bide, Fling, Focus Punch and Future Sight

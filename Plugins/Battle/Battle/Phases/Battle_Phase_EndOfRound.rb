@@ -78,9 +78,13 @@ class PokeBattle_Battle
         priority.each do |b|
             next if b.fainted?
             # Healer, Hydration, Shed Skin
-            BattleHandlers.triggerEORHealingAbility(b.ability, b, self) if b.abilityActive?
+            b.eachActiveAbility do |ability|
+                BattleHandlers.triggerEORHealingAbility(ability, b, self)
+            end
             # Black Sludge, Leftovers
-            BattleHandlers.triggerEORHealingItem(b.item, b, self) if b.itemActive?
+            b.eachActiveItem do |item|
+                BattleHandlers.triggerEORHealingItem(item, b, self)
+            end
         end
     end
 
@@ -197,11 +201,17 @@ class PokeBattle_Battle
                 end
             end
             # Bad Dreams, Moody, Speed Boost
-            BattleHandlers.triggerEOREffectAbility(b.ability, b, self) if b.abilityActive?
+            b.eachActiveAbility do |ability|
+                BattleHandlers.triggerEOREffectAbility(ability, b, self)
+            end
             # Flame Orb, Sticky Barb, Toxic Orb
-            BattleHandlers.triggerEOREffectItem(b.item, b, self) if b.itemActive?
+            b.eachActiveItem do |item|
+                BattleHandlers.triggerEOREffectItem(item, b, self)
+            end
             # Harvest, Pickup
-            BattleHandlers.triggerEORGainItemAbility(b.ability, b, self) if b.abilityActive?
+            b.eachActiveAbility do |ability|
+                BattleHandlers.triggerEORGainItemAbility(ability, b, self)
+            end
         end
     end
 

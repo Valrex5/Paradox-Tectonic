@@ -113,10 +113,16 @@ class PokeBattle_Battler
         ]
         @battle.pbDisplay(arrStatTexts[[increment - 1, 2].min])
         # Trigger abilities upon stat gain
-        BattleHandlers.triggerAbilityOnStatGain(ability, self, stat, user) if abilityActive?
+        eachActiveAbility do |ability|
+            BattleHandlers.triggerAbilityOnStatGain(ability, self, stat, user)
+        end
         eachOpposing do |b|
-            BattleHandlers.triggerAbilityOnEnemyStatGain(b.ability, b, stat, user, self) if b.abilityActive?
-            BattleHandlers.triggerItemOnEnemyStatGain(b.item, b, user, @battle, self) if b.itemActive?
+            b.eachActiveAbility do |ability|
+                BattleHandlers.triggerAbilityOnEnemyStatGain(ability, b, stat, user, self)
+            end
+            b.eachActiveItem do |item|
+                BattleHandlers.triggerItemOnEnemyStatGain(item, b, user, @battle, self)
+            end
         end
         return true
     end
@@ -153,10 +159,16 @@ class PokeBattle_Battler
         end
         @battle.pbDisplay(arrStatTexts[[increment - 1, 2].min])
         # Trigger abilities upon stat gain
-        BattleHandlers.triggerAbilityOnStatGain(ability, self, stat, user) if abilityActive?
+        eachActiveAbility do |ability|
+            BattleHandlers.triggerAbilityOnStatGain(ability, self, stat, user)
+        end
         eachOpposing do |b|
-            BattleHandlers.triggerAbilityOnEnemyStatGain(b.ability, b, stat, user, self) if b.abilityActive?
-            BattleHandlers.triggerItemOnEnemyStatGain(b.item, b, user, @battle, self) if b.itemActive?
+            b.eachActiveAbility do |ability|
+                BattleHandlers.triggerAbilityOnEnemyStatGain(ability, b, stat, user, self)
+            end
+            b.eachActiveItem do |item|
+                BattleHandlers.triggerItemOnEnemyStatGain(item, b, user, @battle, self)
+            end
         end
         return true
     end
@@ -195,20 +207,18 @@ class PokeBattle_Battler
                 return false
             end
             unless ignoreAbilities
-                if abilityActive?
-                    return false if !@battle.moldBreaker && BattleHandlers.triggerStatLossImmunityAbility(
-                        ability, self, stat, @battle, showFailMsg
-                    )
-                    return false if BattleHandlers.triggerStatLossImmunityAbilityNonIgnorable(
-                        ability, self, stat, @battle, showFailMsg
-                    )
+                eachActiveAbility do |ability|
+                    return false if BattleHandlers.triggerStatLossImmunityAbilityNonIgnorable(ability, self, stat, @battle, showFailMsg)
                 end
                 unless @battle.moldBreaker
+                    eachActiveAbility do |ability|
+                        return false if BattleHandlers.triggerStatLossImmunityAbility(ability, self, stat, @battle, showFailMsg)
+                    end
+
                     eachAlly do |b|
-                        next unless b.abilityActive?
-                        return false if BattleHandlers.triggerStatLossImmunityAllyAbility(
-                            b.ability, b, self, stat, @battle, showFailMsg
-                        )
+                        b.eachActiveAbility do |ability|
+                            return false if BattleHandlers.triggerStatLossImmunityAllyAbility(ability, b, self, stat, @battle, showFailMsg)
+                        end
                     end
                 end
             end
@@ -277,7 +287,9 @@ class PokeBattle_Battler
             if user.pbCanLowerStatStage?(stat, nil, nil, true)
                 user.pbLowerStatStageByAbility(stat, increment, user, false)
                 # Trigger user's abilities upon stat loss
-                BattleHandlers.triggerAbilityOnStatLoss(user.ability, user, stat, self) if user.abilityActive?
+                eachActiveAbility do |ability|
+                    BattleHandlers.triggerAbilityOnStatLoss(ability, user, stat, self)
+                end
             end
             battle.pbHideAbilitySplash(self)
             return false
@@ -304,7 +316,9 @@ class PokeBattle_Battler
         ]
         @battle.pbDisplay(arrStatTexts[[increment - 1, 2].min])
         # Trigger abilities upon stat loss
-        BattleHandlers.triggerAbilityOnStatLoss(ability, self, stat, user) if abilityActive?
+        eachActiveAbility do |ability|
+            BattleHandlers.triggerAbilityOnStatLoss(ability, self, stat, user)
+        end
         applyEffect(:StatsDropped)
         return true
     end
@@ -322,7 +336,9 @@ class PokeBattle_Battler
             if user.pbCanLowerStatStage?(stat, nil, nil, true)
                 user.pbLowerStatStageByAbility(stat, increment, user, false)
                 # Trigger user's abilities upon stat loss
-                BattleHandlers.triggerAbilityOnStatLoss(user.ability, user, stat, self) if user.abilityActive?
+                eachActiveAbility do |ability|
+                    BattleHandlers.triggerAbilityOnStatLoss(ability, user, stat, self)
+                end
             end
             battle.pbHideAbilitySplash(self)
             return false
@@ -362,7 +378,9 @@ class PokeBattle_Battler
         end
         @battle.pbDisplay(arrStatTexts[[increment - 1, 2].min])
         # Trigger abilities upon stat loss
-        BattleHandlers.triggerAbilityOnStatLoss(ability, self, stat, user) if abilityActive?
+        eachActiveAbility do |ability|
+            BattleHandlers.triggerAbilityOnStatLoss(ability, self, stat, user)
+        end
         applyEffect(:StatsDropped)
         return true
     end
@@ -429,7 +447,9 @@ class PokeBattle_Battler
             @battle.pbHideAbilitySplash(user) if showAbilitySplash
 
             # Trigger abilities upon stat loss
-            BattleHandlers.triggerAbilityOnStatLoss(ability, self, stat, user) if abilityActive?
+            eachActiveAbility do |ability|
+                BattleHandlers.triggerAbilityOnStatLoss(ability, self, stat, user)
+            end
             handleStatLossItem(move, user)
         end
     end
@@ -438,7 +458,9 @@ class PokeBattle_Battler
         if move
             applyEffect(:StatsDropped)
         elsif itemActive?
-            BattleHandlers.triggerItemOnStatLoss(item, self, user, move, [], @battle)
+            eachActiveItem do |item|
+                BattleHandlers.triggerItemOnStatLoss(item, self, user, move, [], @battle)
+            end
         end
     end
 

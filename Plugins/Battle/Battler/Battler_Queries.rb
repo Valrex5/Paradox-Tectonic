@@ -61,7 +61,7 @@ class PokeBattle_Battler
         return true
     end
 
-    def abilitiesInEffect
+    def abilities
         abil = []
         abil.push(@ability_id) if ability
 
@@ -76,8 +76,15 @@ class PokeBattle_Battler
         return abil
     end
 
-    def eachAbilityInEffect
-        abilitiesInEffect.each do |abilityID|
+    def eachAbility
+        abilities.each do |abilityID|
+            yield abilityID
+        end
+    end
+
+    def eachActiveAbility(ignore_fainted = false)
+        return unless abilityActive?(ignore_fainted)
+        eachAbility.each do |abilityID|
             yield abilityID
         end
     end
@@ -85,7 +92,7 @@ class PokeBattle_Battler
     def hasActiveAbility?(check_ability, ignore_fainted = false, checkingForAI = false)
         return hasActiveAbilityAI?(check_ability, ignore_fainted) if checkingForAI
         return false unless abilityActive?(ignore_fainted)
-        abilitiesInEffect.each do |effectingID|
+        eachAbility.each do |effectingID|
             if check_ability.is_a?(Array)
                 return true if check_ability.include?(effectingID)
             else
@@ -166,12 +173,24 @@ class PokeBattle_Battler
         return ability_blacklist.include?(abil.id)
     end
 
-    def itemsInEffect
+    def items
         return [@item_id]
     end
 
-    def eachItemInEffect
-        itemsInEffect.each do |itemID|
+    def activeItems
+        return [] unless itemActive?(ignoreFainted)
+        return items
+    end
+
+    def eachItem
+        items.each do |itemID|
+            yield itemID
+        end
+    end
+
+    def eachActiveItem(ignoreFainted = false)
+        return unless itemActive?(ignoreFainted)
+        eachItem do |itemID|
             yield itemID
         end
     end
@@ -186,7 +205,7 @@ class PokeBattle_Battler
 
     def hasActiveItem?(check_item, ignore_fainted = false)
         return false unless itemActive?(ignore_fainted)
-        eachItemInEffect do |effectiveItem|
+        eachItem do |effectiveItem|
             if check_item.is_a?(Array)
                 return true if check_item.include?(effectiveItem)
             else
@@ -615,8 +634,10 @@ class PokeBattle_Battler
 
     def getWeatherSettingDuration(weatherType, baseDuration = 4, ignoreFainted = false)
         duration = baseDuration
-        if duration > 0 && itemActive?(ignoreFainted)
-            duration = BattleHandlers.triggerWeatherExtenderItem(item, weatherType, duration, self, @battle)
+        if duration > 0
+            eachActiveItem(true) do |item|
+                duration = BattleHandlers.triggerWeatherExtenderItem(item, weatherType, duration, self, @battle)
+            end
         end
         return duration
     end

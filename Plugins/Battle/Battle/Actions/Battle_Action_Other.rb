@@ -127,7 +127,7 @@ class PokeBattle_Battle
         return if !battler.hasMega? || battler.mega?
         # Break Illusion
         if battler.hasActiveAbility?(:ILLUSION)
-            BattleHandlers.triggerTargetAbilityOnHit(battler.ability, nil, battler, nil, self)
+            BattleHandlers.triggerTargetAbilityOnHit(:ILLUSION, nil, battler, nil, self)
         end
         # Mega Evolve
         if !battler.boss

@@ -80,7 +80,6 @@ BattleHandlers::TargetItemOnHit.add(:ENIGMABERRY,
 BattleHandlers::TargetItemOnHit.add(:AIRBALLOON,
   proc { |_item, _user, target, _move, battle|
       battle.pbDisplay(_INTL("{1}'s {2} popped!", target.pbThis, target.itemName))
-      target.pbScavenge
       target.pbConsumeItem(false, true)
       target.pbSymbiosis
   }

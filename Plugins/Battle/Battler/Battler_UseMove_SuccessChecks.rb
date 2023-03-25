@@ -264,7 +264,9 @@ GameData::Move.get(@effects[:GorillaTactics]).name)
                 pbOwnSide.applyEffect(:TyranicalImmunity)
             else
                 @battle.pbDisplay(_INTL("{1} flinched and couldn't move!", pbThis))
-                BattleHandlers.triggerAbilityOnFlinch(@ability, self, @battle) if abilityActive?
+                eachActiveAbility do |ability|
+                    BattleHandlers.triggerAbilityOnFlinch(ability, self, @battle)
+                end
                 @lastMoveFailed = true
                 applyEffect(:FlinchImmunity,4)
                 return false

@@ -135,10 +135,13 @@ class PokeBattle_AI
 
             numHits = move.numberOfHits(user, [target], true).ceil
             # Account for the ability of the user
-            if user.abilityActive? && user.aiKnowsAbility?
+            if user.aiKnowsAbility?
                 begin
-                    scoreModifierUserAbility = 
-                        BattleHandlers.triggerUserAbilityOnHitAI(target.ability, user, target, move, @battle, numHits)
+                    scoreModifierUserAbility = 0
+                    user.eachActiveAbility do |ability|
+                        scoreModifierUserAbility += 
+                            BattleHandlers.triggerUserAbilityOnHitAI(ability, user, target, move, @battle, numHits)
+                    end
                     score += scoreModifierUserAbility
                     echoln("[MOVE SCORING] #{user.pbThis}'s #{numHits} hits against #{target.pbThis(false)} adjusts the score by #{scoreModifierUserAbility} due to the user's ability") if scoreModifierUserAbility != 0
                 rescue StandardError => exception
@@ -147,10 +150,14 @@ class PokeBattle_AI
             end
 
             # Account for the ability of the target
-            if target.abilityActive? && target.aiKnowsAbility? && !user.hasActiveItem?(:PROXYFIST)
+            if target.aiKnowsAbility? && !user.hasActiveItem?(:PROXYFIST)
                 begin
-                    scoreModifierTargetAbility = 
-                        BattleHandlers.triggerTargetAbilityOnHitAI(target.ability, user, target, move, @battle, numHits)
+                    scoreModifierTargetAbility = 0
+                    target.eachActiveAbility do |ability|
+                        scoreModifierUserAbility += 
+                            BattleHandlers.triggerTargetAbilityOnHitAI(ability, user, target, move, @battle, numHits)
+                    end
+                        
                     score += scoreModifierTargetAbility
                     echoln("[MOVE SCORING] #{user.pbThis}'s #{numHits} hits against #{target.pbThis(false)} adjusts the score by #{scoreModifierTargetAbility} due to the target's ability") if scoreModifierTargetAbility != 0
                 rescue StandardError => exception
@@ -277,9 +284,14 @@ class PokeBattle_AI
         # Move blocking abilities make the move fail here
         @battle.pbPriority(true).each do |b|
             next unless b
-            next unless b.abilityActive?
             next unless b.aiKnowsAbility?
-            next unless BattleHandlers.triggerMoveBlockingAbility(b.ability, b, user, [target], move, @battle)
+            abilityBlocked = false
+            b.eachActiveAbility do |ability|
+                next unless BattleHandlers.triggerMoveBlockingAbility(ability, b, user, [target], move, @battle)
+                abilityBlocked = true
+                break
+            end
+            next unless abilityBlocked
             fails = true
             echoln("#{user.pbThis} rejects #{move.id} -- thinks will be blocked by an ability.")
             break

@@ -26,7 +26,9 @@ class PokeBattle_Battler
     #			 "counts as having that status", which includes Comatose which can't be
     #			 cured.
     def pbHasStatus?(checkStatus)
-        return true if BattleHandlers.triggerStatusCheckAbilityNonIgnorable(ability, self, checkStatus)
+        eachActiveAbility do |ability|
+            return true if BattleHandlers.triggerStatusCheckAbilityNonIgnorable(ability, self, checkStatus)
+        end
         return getStatuses.include?(checkStatus)
     end
 
@@ -36,7 +38,9 @@ class PokeBattle_Battler
     alias hasStatusNoTrigger? hasStatusNoTrigger
 
     def pbHasAnyStatus?
-        return true if BattleHandlers.triggerStatusCheckAbilityNonIgnorable(ability, self, nil)
+        eachActiveAbility do |ability|
+            return true if BattleHandlers.triggerStatusCheckAbilityNonIgnorable(ability, self, nil)
+        end
         return hasAnyStatusNoTrigger
     end
 
@@ -226,26 +230,31 @@ immuneTypeRealName))
             return false
         end
         # Ability immunity
-        immuneByAbility = false
+        immuneAbility = nil
         immAlly = nil
-        if BattleHandlers.triggerStatusImmunityAbilityNonIgnorable(ability, self, newStatus)
-            immuneByAbility = true
-        elsif selfInflicted || !@battle.moldBreaker
-            if abilityActive? && BattleHandlers.triggerStatusImmunityAbility(ability, self, newStatus)
-                immuneByAbility = true
-            else
-                eachAlly do |b|
-                    next unless b.abilityActive?
-                    next unless BattleHandlers.triggerStatusImmunityAllyAbility(b.ability, self, newStatus)
-                    immuneByAbility = true
+        eachActiveAbility do |ability|
+            next unless BattleHandlers.triggerStatusImmunityAbilityNonIgnorable(ability, self, newStatus)
+            immuneAbility = ability
+            break
+        end
+        if immuneAbility.nil? && selfInflicted || !@battle.moldBreaker
+            eachActiveAbility do |ability|
+                next unless BattleHandlers.triggerStatusImmunityAbility(ability, self, newStatus)
+                immuneAbility = ability
+                break
+            end
+            eachAlly do |b|
+                b.eachActiveAbility do |ability|
+                    next unless BattleHandlers.triggerStatusImmunityAllyAbility(ability, self, newStatus)
+                    immuneAbility = ability
                     immAlly = b
                     break
                 end
             end
         end
-        if immuneByAbility
+        if immuneAbility
             if showMessages
-                @battle.pbShowAbilitySplash(immAlly || self)
+                @battle.pbShowAbilitySplash(immAlly || self, immuneAbility)
                 msg = ""
                 case newStatus
                 when :SLEEP			then msg = _INTL("{1} stays awake!", pbThis)
@@ -302,12 +311,19 @@ immuneTypeRealName))
         end
         return false if hasImmuneType
         # Ability immunity
-        return false if BattleHandlers.triggerStatusImmunityAbilityNonIgnorable(ability, self, newStatus)
-        return false if abilityActive? && BattleHandlers.triggerStatusImmunityAbility(ability, self, newStatus)
+        eachActiveAbility do |ability|
+            return false if BattleHandlers.triggerStatusImmunityAbilityNonIgnorable(ability, self, newStatus)
+        end
+        unless @battle.moldBreaker
+            eachActiveAbility do |ability|
+                return false if BattleHandlers.triggerStatusImmunityAbility(ability, self, newStatus)
+            end
+        end
         eachAlly do |b|
-            next unless b.abilityActive?
-            next unless BattleHandlers.triggerStatusImmunityAllyAbility(b.ability, self, newStatus)
-            return false
+            b.eachActiveAbility do |ability|
+                next unless BattleHandlers.triggerStatusImmunityAllyAbility(ability, self, newStatus)
+                return false
+            end
         end
         # Safeguard immunity
         return false if pbOwnSide.effectActive?(:Safeguard) && !(target && target.hasActiveAbility?(:INFILTRATOR))
@@ -319,11 +335,17 @@ immuneTypeRealName))
     #=============================================================================
     def pbInflictStatus(newStatus, newStatusCount = 0, msg = nil, user = nil)
         newStatusCount = sleepDuration if newStatusCount <= 0 && newStatus == :SLEEP
+
+        statusCheck = false
+        eachActiveAbility do |ability|
+            statusCheck = true if BattleHandlers.triggerStatusCheckAbilityNonIgnorable(ability, self, nil)
+        end
+
         # Inflict the new status
         if !canHaveSecondStatus?
             self.status	= newStatus
-            self.statusCount	= newStatusCount
-        elsif @status == :NONE && !BattleHandlers.triggerStatusCheckAbilityNonIgnorable(ability, self, nil)
+            self.statusCount = newStatusCount
+        elsif @status == :NONE && !statusCheck
             self.status	= newStatus
             self.statusCount = newStatusCount
         else
@@ -373,7 +395,9 @@ immuneTypeRealName))
         # Form change check
         pbCheckFormOnStatusChange
         # Synchronize
-        BattleHandlers.triggerAbilityOnStatusInflicted(ability, self, user, newStatus) if abilityActive?
+        eachActiveAbility do |ability|
+            BattleHandlers.triggerAbilityOnStatusInflicted(ability, self, user, newStatus)
+        end
         # Status cures
         pbItemStatusCureCheck
         pbAbilityStatusCureCheck
@@ -401,19 +425,19 @@ immuneTypeRealName))
                 return false if b.effectActive?(:Uproar)
             end
         end
-        return false if BattleHandlers.triggerStatusImmunityAbilityNonIgnorable(ability, self, :SLEEP)
-        # NOTE: Bulbapedia claims that Flower Veil shouldn't prevent sleep due to
-        #			 drowsiness, but I disagree because that makes no sense. Also, the
-        #			 comparable Sweet Veil does prevent sleep due to drowsiness.
-        return false if abilityActive? && BattleHandlers.triggerStatusImmunityAbility(ability, self, :SLEEP)
-        eachAlly do |b|
-            next unless b.abilityActive?
-            next unless BattleHandlers.triggerStatusImmunityAllyAbility(b.ability, self, :SLEEP)
-            return false
+        eachActiveAbility do |ability|
+            BattleHandlers.triggerStatusImmunityAbilityNonIgnorable(ability, self, :SLEEP)
         end
-        # NOTE: Bulbapedia claims that Safeguard shouldn't prevent sleep due to
-        #			 drowsiness. I disagree with this too. Compare with the other sided
-        #			 effects Misty/Electric Terrain, which do prevent it.
+        unless @battle.moldBreaker
+            eachActiveAbility do |ability|
+                return false if BattleHandlers.triggerStatusImmunityAbility(ability, self, :SLEEP)
+            end
+            eachAlly do |b|
+                b.eachActiveAbility do |ability|
+                    return false if BattleHandlers.triggerStatusImmunityAllyAbility(ability, self, :SLEEP)
+                end
+            end
+        end
         return false if pbOwnSide.effectActive?(:Safeguard)
         return true
     end

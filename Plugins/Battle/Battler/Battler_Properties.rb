@@ -33,7 +33,7 @@ class PokeBattle_Battler
         @pokemon.form = value if @pokemon
     end
 
-    def ability
+    def baseAbility
         return GameData::Ability.try_get(@ability_id)
     end
 
@@ -42,7 +42,7 @@ class PokeBattle_Battler
         @ability_id = new_ability ? new_ability.id : nil
     end
 
-    def item
+    def baseItem
         return GameData::Item.try_get(@item_id)
     end
 
@@ -182,11 +182,6 @@ class PokeBattle_Battler
     end
     alias owned owned?
 
-    def abilityName
-        abil = ability
-        return abil ? abil.name : ""
-    end
-
     def itemName
         itm = item
         return itm ? itm.name : ""
@@ -237,8 +232,14 @@ class PokeBattle_Battler
         end
         ret = ret.round
         ret = 1 if ret < 1
-        ret = BattleHandlers.triggerWeightCalcAbility(ability, self, ret) if abilityActive? && !@battle.moldBreaker
-        ret = BattleHandlers.triggerWeightCalcItem(item, self, ret) if itemActive?
+        unless @battle.moldBreaker
+            eachActiveAbility do |ability|
+                ret = BattleHandlers.triggerWeightCalcAbility(ability, self, ret)
+            end
+        end
+        eachActiveItem do |item|
+            ret = BattleHandlers.triggerWeightCalcItem(item, self, ret)
+        end
         return [ret, 1].max
     end
 

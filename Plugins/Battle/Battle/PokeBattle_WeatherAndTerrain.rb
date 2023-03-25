@@ -172,8 +172,10 @@ class PokeBattle_Battle
         old_terrain = @field.terrain
         @field.terrain = newTerrain
         duration = fixedDuration ? 5 : -1
-        if duration > 0 && user && user.itemActive?
-            duration = BattleHandlers.triggerTerrainExtenderItem(user.item, newTerrain, duration, user, self)
+        if duration > 0 && user
+            user.eachActiveItem do |item|
+                duration = BattleHandlers.triggerTerrainExtenderItem(item, newTerrain, duration, user, self)
+            end
         end
         @field.terrainDuration = duration
         terrain_data = GameData::BattleTerrain.try_get(@field.terrain)
@@ -273,9 +275,10 @@ class PokeBattle_Battle
                     anyAffected = true
                 end
                 pbDisplay(_INTL("But no one was panicked.")) if showWeatherMessages && !anyAffected
-                @battlers.each do |b|
-                    next unless b&.abilityActive?
-                    BattleHandlers.triggerTotalEclipseAbility(b.ability, b, self)
+                eachBattler do |b|
+                    b.eachActiveAbility do |ability|
+                        BattleHandlers.triggerTotalEclipseAbility(ability, b, self)
+                    end
                 end
             when :Moonglow
                 pbDisplay(_INTL("The Full Moon rises!")) if showWeatherMessages
@@ -289,9 +292,10 @@ class PokeBattle_Battle
                     anyAffected = true
                 end
                 pbDisplay(_INTL("But no one was moonstruck.")) if showWeatherMessages && !anyAffected
-                @battlers.each do |b|
-                    next unless b&.abilityActive?
-                    BattleHandlers.triggerFullMoonAbility(b.ability, b, self)
+                eachBattler do |b|
+                    b.eachActiveAbility do |ability|
+                        BattleHandlers.triggerFullMoonAbility(ability, b, self)
+                    end
                 end
             end
             @field.specialTimer = 0
@@ -359,9 +363,11 @@ class PokeBattle_Battle
         priority.each do |b|
             # Weather-related abilities
             if b.abilityActive?
-                oldHP = b.hp
-                BattleHandlers.triggerEORWeatherAbility(b.ability, curWeather, b, self)
-                b.pbHealthLossChecks(oldHP)
+                b.eachActiveAbility do |ability|
+                    oldHP = b.hp
+                    BattleHandlers.triggerEORWeatherAbility(ability, curWeather, b, self)
+                    break if b.pbHealthLossChecks(oldHP)
+                end
             end
             # Weather damage
             # NOTE:
