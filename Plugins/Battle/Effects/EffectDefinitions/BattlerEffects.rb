@@ -1059,7 +1059,7 @@ GameData::BattleEffect.register_effect(:Battler, {
     :info_displayed => false,
     :apply_proc => proc do |battle, battler, _value|
         if battler.hasActiveAbility?(:UNBURDEN)
-            battle.pbShowAbilitySplash(battler, ability)
+            battle.pbShowAbilitySplash(battler, :UNBURDEN)
             battle.pbDisplay(_INTL("{1} is unburdened of its item. Its Speed doubled!", battler.pbThis))
             battle.pbHideAbilitySplash(battler)
         end
