@@ -371,6 +371,14 @@ class PokeBattle_Battle
         @scene.pbChangePokemon(b.index, b.pokemon)
     end
 
+    def getRandomHeldItem
+        heldItemData = nil
+        while heldItemData.nil? || heldItemData.pocket != 5 || heldItemData.is_mega_stone?
+            heldItemData = GameData::Item::DATA.values.sample
+        end
+        return heldItemData.id
+    end
+
     def changesForAutoTesting
         # Change all party members
         unless @bossBattle
@@ -382,7 +390,7 @@ class PokeBattle_Battle
                     pokemon.name = nil
                     pokemon.level = 1 + pbRandom(69).ceil
                     pokemon.calc_stats
-                    pokemon.item = GameData::Item::DATA.values.sample
+                    pokemon.item = getRandomHeldItem
                 end
             end
         end
