@@ -48,7 +48,7 @@ BattleHandlers::SpeedCalcAbility.add(:AQUAPROPULSION,
 
 BattleHandlers::SpeedCalcAbility.add(:UNBURDEN,
   proc { |ability, battler, mult|
-      next mult * 2 if battler.effectActive?(:ItemLost) && !battler.item
+      next mult * 2 if battler.effectActive?(:ItemLost) && !battler.baseItem
   }
 )
 
