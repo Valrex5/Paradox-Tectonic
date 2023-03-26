@@ -68,7 +68,7 @@ class PokeBattle_Battler
         # Even with the curse, don't add extra abilities if ability was overwritten during battle
         return abil unless @pokemon.hasAbility?(@ability_id)
         
-        if @battle.curseActive?(:CURSE_DOUBLE_ABILITIES)
+        if (@battle.curseActive?(:CURSE_DOUBLE_ABILITIES) && opposing?) || (TESTING_DOUBLE_QUALITIES && !boss?)
             @pokemon.species_data.abilities.each do |legalAbility|
                 abil.push(legalAbility) unless abil.include?(legalAbility)
             end
@@ -178,9 +178,12 @@ class PokeBattle_Battler
         return ability_blacklist.include?(abil.id)
     end
 
+    TESTING_DOUBLE_QUALITIES = false
+
     def items
-        return [] if @item_id.nil?
-        return [@item_id]
+        itemArray = @item_id.nil? ? [] : [@item_id]
+        itemArray.push(@battle.getRandomHeldItem)
+        return itemArray
     end
 
     def activeItems(ignoreFainted = false)
