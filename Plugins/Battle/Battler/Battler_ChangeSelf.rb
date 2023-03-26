@@ -479,12 +479,12 @@ class PokeBattle_Battler
         if isSpecies?(:DARMANITAN) && hasAbility?(:ZENMODE)
             if @hp <= @totalhp / 2
                 if @form != 1
-                    @battle.pbShowAbilitySplash(self, true)
+                    @battle.pbShowAbilitySplash(self, :ZENMODE, true)
                     @battle.pbHideAbilitySplash(self)
                     pbChangeForm(1, _INTL("{1} triggered!", getAbilityName(:ZENMODE)))
                 end
             elsif @form != 0
-                @battle.pbShowAbilitySplash(self, true)
+                @battle.pbShowAbilitySplash(self, :ZENMODE, true)
                 @battle.pbHideAbilitySplash(self)
                 pbChangeForm(0, _INTL("{1} triggered!", getAbilityName(:ZENMODE)))
             end
@@ -494,14 +494,14 @@ class PokeBattle_Battler
             if @hp > @totalhp / 2 # Turn into Meteor form
                 newForm = (@form >= 7) ? @form - 7 : @form
                 if @form != newForm
-                    @battle.pbShowAbilitySplash(self, true)
+                    @battle.pbShowAbilitySplash(self, :SHIELDSDOWN, true)
                     @battle.pbHideAbilitySplash(self)
                     pbChangeForm(newForm, _INTL("{1} deactivated!", getAbilityName(:SHIELDSDOWN)))
                 elsif !endOfRound
                     @battle.pbDisplay(_INTL("{1} deactivated!", getAbilityName(:SHIELDSDOWN)))
                 end
             elsif @form < 7 # Turn into Core form
-                @battle.pbShowAbilitySplash(self, true)
+                @battle.pbShowAbilitySplash(self, :SHIELDSDOWN, true)
                 @battle.pbHideAbilitySplash(self)
                 pbChangeForm(@form + 7, _INTL("{1} activated!", getAbilityName(:SHIELDSDOWN)))
             end
@@ -510,12 +510,12 @@ class PokeBattle_Battler
         if isSpecies?(:WISHIWASHI) && hasAbility?(:SCHOOLING)
             if @level >= 20 && @hp > @totalhp / 4
                 if @form != 1
-                    @battle.pbShowAbilitySplash(self, true)
+                    @battle.pbShowAbilitySplash(self, :SCHOOLING, true)
                     @battle.pbHideAbilitySplash(self)
                     pbChangeForm(1, _INTL("{1} formed a school!", pbThis))
                 end
             elsif @form != 0
-                @battle.pbShowAbilitySplash(self, true)
+                @battle.pbShowAbilitySplash(self, :SCHOOLING, true)
                 @battle.pbHideAbilitySplash(self)
                 pbChangeForm(0, _INTL("{1} stopped schooling!", pbThis))
             end
@@ -524,7 +524,7 @@ class PokeBattle_Battler
         if isSpecies?(:ZYGARDE) && hasAbility?(:POWERCONSTRUCT) && endOfRound && (@hp <= @totalhp / 2 && @form < 2) # Turn into Complete Forme
             newForm = @form + 2
             @battle.pbDisplay(_INTL("You sense the presence of many!"))
-            @battle.pbShowAbilitySplash(self, true)
+            @battle.pbShowAbilitySplash(self, :POWERCONSTRUCT, true)
             @battle.pbHideAbilitySplash(self)
             pbChangeForm(newForm, _INTL("{1} transformed into its Complete Forme!", pbThis))
         end
