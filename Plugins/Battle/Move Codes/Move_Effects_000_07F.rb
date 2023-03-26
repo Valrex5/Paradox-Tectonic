@@ -1897,7 +1897,7 @@ class PokeBattle_Move_063 < PokeBattle_Move
         @battle.pbShowAbilitySplash(target, target.baseAbility, true, false)
         oldAbil = target.baseAbility
         target.ability = :SIMPLE
-        @battle.pbReplaceAbilitySplash(target)
+        @battle.pbReplaceAbilitySplash(target, :SIMPLE)
         @battle.pbDisplay(_INTL("{1} acquired {2}!", target.pbThis, getAbilityName(:SIMPLE)))
         @battle.pbHideAbilitySplash(target)
         target.pbOnAbilityChanged(oldAbil)
@@ -1942,7 +1942,7 @@ class PokeBattle_Move_064 < PokeBattle_Move
         @battle.pbShowAbilitySplash(target, target.baseAbility, true, false)
         oldAbil = target.baseAbility
         target.ability = :INSOMNIA
-        @battle.pbReplaceAbilitySplash(target)
+        @battle.pbReplaceAbilitySplash(target, :INSOMNIA)
         @battle.pbDisplay(_INTL("{1} acquired {2}!", target.pbThis, getAbilityName(:INSOMNIA)))
         @battle.pbHideAbilitySplash(target)
         target.pbOnAbilityChanged(oldAbil)
@@ -1995,7 +1995,7 @@ class PokeBattle_Move_065 < PokeBattle_Move
         @battle.pbShowAbilitySplash(user, user.baseAbility, true, false)
         oldAbil = user.baseAbility
         user.ability = target.baseAbility
-        @battle.pbReplaceAbilitySplash(user)
+        @battle.pbReplaceAbilitySplash(user, user.baseAbility)
         @battle.pbDisplay(_INTL("{1} copied {2}'s {3}!",
            user.pbThis, target.pbThis(true), getAbilityName(target.baseAbility)))
         @battle.pbHideAbilitySplash(user)
@@ -2041,7 +2041,7 @@ class PokeBattle_Move_066 < PokeBattle_Move
         oldAbil = target.baseAbility
         @battle.pbShowAbilitySplash(target, oldAbil, true, false)
         target.ability = user.baseAbility
-        @battle.pbReplaceAbilitySplash(target)
+        @battle.pbReplaceAbilitySplash(target, target.baseAbility)
         @battle.pbDisplay(_INTL("{1} acquired {2}!", target.pbThis, getAbilityName(user.baseAbility)))
         @battle.pbHideAbilitySplash(target)
         target.pbOnAbilityChanged(oldAbil)
@@ -2121,8 +2121,8 @@ class PokeBattle_Move_067 < PokeBattle_Move
         user.ability   = oldTargetAbil
         target.ability = oldUserAbil
         if user.opposes?(target)
-            @battle.pbReplaceAbilitySplash(user)
-            @battle.pbReplaceAbilitySplash(target)
+            @battle.pbReplaceAbilitySplash(user, oldTargetAbil)
+            @battle.pbReplaceAbilitySplash(target, oldUserAbil)
         end
         @battle.pbDisplay(_INTL("{1} swapped Abilities with its target!", user.pbThis))
         if user.opposes?(target)

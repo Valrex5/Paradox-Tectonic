@@ -227,9 +227,10 @@ BattleHandlers::AbilityOnSwitchIn.add(:INTIMIDATE,
   proc { |ability, battler, battle|
       battle.pbShowAbilitySplash(battler, ability)
       battle.eachOtherSideBattler(battler.index) do |b|
-          next unless b.near?(battler)
-          b.pbLowerStatStageAteAbility(battler, :ATTACK, ability)
-          b.pbItemOnIntimidatedCheck
+        next unless b.near?(battler)
+        next if b.blockAteAbilities(user, ability)
+        next unless b.tryLowerStat(battler, :ATTACK, ability: ability)
+        b.pbItemOnIntimidatedCheck
       end
       battle.pbHideAbilitySplash(battler)
   }
@@ -240,9 +241,10 @@ BattleHandlers::AbilityOnSwitchIn.add(:FASCINATE,
   proc { |ability, battler, battle|
       battle.pbShowAbilitySplash(battler, ability)
       battle.eachOtherSideBattler(battler.index) do |b|
-          next unless b.near?(battler)
-          b.pbLowerStatStageAteAbility(battler, :SPECIAL_ATTACK, ability)
-          b.pbItemOnIntimidatedCheck
+        next unless b.near?(battler)
+        next if b.blockAteAbilities(user, ability)
+        next unless b.tryLowerStat(battler, :SPEED, ability: ability)
+        b.pbItemOnIntimidatedCheck
       end
       battle.pbHideAbilitySplash(battler)
   }
@@ -253,7 +255,8 @@ BattleHandlers::AbilityOnSwitchIn.add(:FRUSTRATE,
       battle.pbShowAbilitySplash(battler, ability)
       battle.eachOtherSideBattler(battler.index) do |b|
           next unless b.near?(battler)
-          b.pbLowerStatStageAteAbility(battler, :SPEED, ability)
+          next if b.blockAteAbilities(user, ability)
+          next unless b.tryLowerStat(battler, :SPEED, ability: ability)
           b.pbItemOnIntimidatedCheck
       end
       battle.pbHideAbilitySplash(battler)

@@ -69,6 +69,7 @@ class AbilitySplashBar < SpriteWrapper
             setBGSprite(@bgBitmap)
         end
         @abilityName = abilityData.real_name
+        refresh
     end
 
     def x=(value)
@@ -113,7 +114,7 @@ class AbilitySplashBar < SpriteWrapper
 
     def refresh
         self.bitmap.clear
-        return if !@battler
+        return if !@battler || !@abilityName
         textPos = []
         textX = (@side==0) ? 10 : self.bitmap.width-8
         # Draw Pokémon's name

@@ -185,6 +185,7 @@ class PokeBattle_Battle
 
     def aiSeesAbility(battler)
         @knownAbilities[battler.pokemon.personalID] = true if battler.pbOwnedByPlayer?
+        echoln("[AI LEARNING] The AI is now aware of #{battler.pbThis(true)}'s abilities")
     end
 
     def aiKnowsAbility?(pokemon)

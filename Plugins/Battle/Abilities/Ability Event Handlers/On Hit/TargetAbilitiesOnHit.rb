@@ -483,7 +483,7 @@ BattleHandlers::TargetAbilityOnHit.add(:MUMMY,
         oldAbil = user.baseAbility
         battle.pbShowAbilitySplash(user, oldAbil, true, false) if user.opposes?(target)
         user.ability = ability
-        battle.pbReplaceAbilitySplash(user) if user.opposes?(target)
+        battle.pbReplaceAbilitySplash(user, ability) if user.opposes?(target)
         battle.pbDisplay(_INTL("{1}'s Ability became {2}!", user.pbThis, getAbilityName(ability)))
         battle.pbHideAbilitySplash(user) if user.opposes?(target)
         battle.pbHideAbilitySplash(target) if user.opposes?(target)
@@ -502,7 +502,7 @@ BattleHandlers::TargetAbilityOnHit.add(:INFECTED,
         oldAbil = user.baseAbility
         battle.pbShowAbilitySplash(user, oldAbil, true, false) if user.opposes?(target)
         user.ability = ability
-        battle.pbReplaceAbilitySplash(user) if user.opposes?(target)
+        battle.pbReplaceAbilitySplash(user, ability) if user.opposes?(target)
         battle.pbDisplay(_INTL("{1}'s Ability became {2}!", user.pbThis, getAbilityName(ability)))
         user.applyEffect(:Type3,:GRASS) unless user.pbHasType?(:GRASS)
         battle.pbHideAbilitySplash(user) if user.opposes?(target)
@@ -596,8 +596,8 @@ BattleHandlers::TargetAbilityOnHit.add(:WANDERINGSPIRIT,
         user.ability = :WANDERINGSPIRIT
         target.ability = oldAbil
         if user.opposes?(target)
-            battle.pbReplaceAbilitySplash(user)
-            battle.pbReplaceAbilitySplash(target)
+            battle.pbReplaceAbilitySplash(user, user.baseAbility)
+            battle.pbReplaceAbilitySplash(target, target.baseAbility)
         end
         battle.pbDisplay(_INTL("{1}'s Ability became {2}!", user.pbThis, getAbilityName(ability)))
         battle.pbHideAbilitySplash(user)

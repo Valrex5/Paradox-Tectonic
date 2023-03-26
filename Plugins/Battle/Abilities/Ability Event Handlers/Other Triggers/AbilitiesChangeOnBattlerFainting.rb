@@ -6,7 +6,7 @@ BattleHandlers::AbilityChangeOnBattlerFainting.add(:POWEROFALCHEMY,
         battle.pbShowAbilitySplash(battler, ability, true)
         stolenAbility = fainted.baseAbility
         battler.ability = stolenAbility
-        battle.pbReplaceAbilitySplash(battler)
+        battle.pbReplaceAbilitySplash(battler, stolenAbility)
         battle.pbDisplay(_INTL("{1}'s {2} was taken over!", fainted.pbThis, getAbilityName(stolenAbility)))
         battle.pbHideAbilitySplash(battler)
     }

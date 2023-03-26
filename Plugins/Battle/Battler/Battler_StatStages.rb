@@ -419,11 +419,6 @@ class PokeBattle_Battler
         return false
     end
 
-    def pbLowerStatStageAteAbility(user, stat, ability)
-        return false if blockAteAbilities(user, ability)
-        return pbLowerStatStageByAbility(stat, 1, user, ability: ability)
-    end
-
     def pbMinimizeStatStage(stat, user = nil, move = nil, ignoreContrary = false, ability: nil)
         if hasActiveAbility?(:CONTRARY) && !ignoreContrary
             aiSeesAbility
@@ -540,7 +535,7 @@ class PokeBattle_Battler
             increment = statArray[i * 2 + 1]
             next if increment <= 0
             raisedAnyStages = true if tryRaiseStat(stat, user, move: move, increment: increment, showFailMsg: showFailMsg,
-showAnim: showAnim, ability: ability, cause: cause)
+showAnim: showAnim, ability: nil, cause: cause)
             showAnim = false if raisedAnyStages
         end
         @battle.pbHideAbilitySplash(user) if ability
@@ -565,7 +560,7 @@ showAnim: showAnim, ability: ability, cause: cause)
             increment = statArray[i * 2 + 1]
             next if increment <= 0
             raisedAnyStages = true if tryLowerStat(stat, user, move: move, increment: increment, showFailMsg: showFailMsg,
-showAnim: showAnim, ability: ability, cause: cause)
+showAnim: showAnim, ability: nil, cause: cause)
             showAnim = false if raisedAnyStages
         end
         @battle.pbHideAbilitySplash(user) if ability
