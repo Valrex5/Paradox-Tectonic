@@ -341,8 +341,10 @@ class PokeBattle_Battle
     end
 
     def chooseAutoTestingTrainer(idxBattler)
-        moveData = GameData::Move::DATA.values.sample
-        return if moveData.nil? || moveData.zMove?
+        moveData = nil
+        while moveData.nil? || moveData.zMove? || moveData.cut
+            moveData = GameData::Move::DATA.values.sample
+        end
         moveId = moveData.id
 
         user = @battlers[idxBattler]
