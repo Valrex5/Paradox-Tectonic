@@ -653,7 +653,7 @@ user.pbThis))
         if moveSucceeded && @battle.pbCheckGlobalAbility(:FIESTA) && (move.soundMove? || move.danceMove?)
             @battle.pbPriority(true).each do |b|
                 next unless b.index != user.index && b.hasActiveAbility?(:FIESTA)
-                b.applyFractionalHealing(1.0 / 8.0, ability: ability)
+                b.applyFractionalHealing(1.0 / 8.0, ability: :FIESTA)
 			end
         end
 		if moveSucceeded && (move.danceMove?)
