@@ -120,7 +120,7 @@ def setAvatarProperties(pkmn)
         pkmn.learn_move(move, true)
     end
 
-    pkmn.item = avatar_data.item
+    pkmn.giveItem(avatar_data.item)
     pkmn.ability = avatar_data.abilities[0]
     avatar_data.abilities.each_with_index do |ability, index|
         next if index == 0

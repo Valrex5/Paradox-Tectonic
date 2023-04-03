@@ -28,6 +28,7 @@ class PokeBattle_AI
         # Determine types
         tTypes = target.pbTypesAI(true)
         # Get effectivenesses
+        typeMods = [Effectiveness::NORMAL_EFFECTIVE_ONE] * 3 # 3 types max
         tTypes.each_with_index do |defType, i|
             typeMods[i] = move.pbCalcTypeModSingle(moveType, defType, user, target)
         end

@@ -186,12 +186,12 @@ class PokeBattle_Battler
         # Check for end of primordial weather
         @battle.pbEndPrimordialWeather
         
-        if items.length > 1
+        if items.length > 1 && hasAbility?(GameData::Ability::MULTI_ITEM_ABILITIES)
             droppedItems = false
-            MULTI_ITEM_ABILITIES.each do |doubleItemAbility|
+            GameData::Ability::MULTI_ITEM_ABILITIES.each do |doubleItemAbility|
                 next unless oldAbilities.include?(doubleItemAbility)
-                itemKept = @item_ids[0]
-                @item_ids = [itemKept]
+                itemKept = items[0]
+                setItems(itemKept)
                 @battle.pbDisplay(_INTL("{1} dropped all of its items except {2}!", pbThis, getItemName(itemKept)))
                 droppedItems = true
                 break
@@ -203,12 +203,16 @@ class PokeBattle_Battler
     # Held item adding or gifting
     #=============================================================================
     def giveItem(item)
+        return if item.nil?
         return unless canAddItem?(item)
         item = GameData::Item.get(item).id
         disableEffect(:ItemLost)
-        @pokemon.item = @item_id if @pokemon && items.length == 0
-        items.push(item)
+        @pokemon.giveItem(item)
         refreshDataBox
+    end
+    
+    def setItems(value)
+        @pokemon.setItems(value)
     end
 
     def recycleItem(recyclingMsg: nil, ability: nil)
@@ -257,7 +261,6 @@ class PokeBattle_Battler
         end
         disableEffect(:ChoiceBand) if CHOICE_LOCKING_ITEMS.include?(item)
         items.delete_at(itemIndex)
-        pokemon.removeItem(item)
         applyEffect(:ItemLost) if items.length == 0
     end
     alias removeItem removeItem

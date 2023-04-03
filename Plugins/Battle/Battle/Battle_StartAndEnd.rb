@@ -684,7 +684,7 @@ class PokeBattle_Battle
         pbParty(0).each_with_index do |pkmn, i|
             next unless pkmn
             @peer.pbOnLeavingBattle(self, pkmn, @usedInBattle[0][i], true) # Reset form
-            pkmn.item = @initialItems[0][i]
+            pkmn.giveItem(@initialItems[0][i]) 
         end
         # Remove avatars from the trainer's party
         pbParty(0).reject! { |pkmn|

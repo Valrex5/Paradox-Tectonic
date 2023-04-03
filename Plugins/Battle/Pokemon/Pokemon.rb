@@ -26,11 +26,6 @@ class Pokemon
     # This Pokémon's shininess (true, false, nil). Is recalculated if made nil.
     # @param value [Boolean, nil] whether this Pokémon is shiny
     attr_writer   :shiny
-    # The index of this Pokémon's ability (0, 1 are natural abilities, 2+ are
-    # hidden abilities)as defined for its species/form. An ability may not be
-    # defined at this index. Is recalculated (as 0 or 1) if made nil.
-    # @param value [Integer, nil] forced ability index (nil if none is set)
-    attr_writer   :ability_index
     # @return [Array<Pokemon::Move>] the moves known by this Pokémon
     attr_accessor :moves
     # @return [Array<Integer>] the IDs of moves known by this Pokémon when it was obtained
@@ -428,6 +423,15 @@ class Pokemon
       @ability_index = (@personalID & 1) if !@ability_index
       return @ability_index
     end
+
+    # The index of this Pokémon's ability (0, 1 are natural abilities, 2+ are
+    # hidden abilities)as defined for its species/form. An ability may not be
+    # defined at this index. Is recalculated (as 0 or 1) if made nil.
+    # @param value [Integer, nil] forced ability index (nil if none is set)
+    def ability_index=(value)
+      @ability_index = value
+      removeInvalidItems
+    end
   
     # @return [GameData::Ability, nil] an Ability object corresponding to this Pokémon's ability
     def ability
@@ -436,23 +440,31 @@ class Pokemon
   
     # @return [Symbol, nil] the ability symbol of this Pokémon's ability
     def ability_id
-      if !@ability
-        sp_data = species_data
-        abil_index = ability_index
-        if abil_index >= 2   # Hidden ability
-          @ability = sp_data.hidden_abilities[abil_index - 2]
-          abil_index = (@personalID & 1) if !@ability
-        end
-        if !@ability   # Natural ability or no hidden ability defined
-          @ability = sp_data.abilities[abil_index] || sp_data.abilities[0]
-        end
-      end
+      recalculateAbilityFromIndex if @ability.nil?
       return @ability
+    end
+
+    def recalculateAbilityFromIndex
+      sp_data = species_data
+      abil_index = ability_index
+      if abil_index >= 2   # Hidden ability
+        @ability = sp_data.hidden_abilities[abil_index - 2]
+        abil_index = (@personalID & 1) if !@ability
+      end
+      if !@ability   # Natural ability or no hidden ability defined
+        @ability = sp_data.abilities[abil_index] || sp_data.abilities[0]
+      end
     end
   
     def ability=(value)
       return if value && !GameData::Ability.exists?(value)
-      @ability = (value) ? GameData::Ability.get(value).id : value
+      if value.nil?
+        recalculateAbilityFromIndex
+        removeInvalidItems
+      else
+        @ability = GameData::Ability.get(value).id
+        removeInvalidItems
+      end
     end
   
     # Returns whether this Pokémon has a particular ability. If no value
@@ -481,7 +493,7 @@ class Pokemon
       return ret
     end
 
-	def addExtraAbility(ability)
+	  def addExtraAbility(ability)
         @extraAbilities.push(ability) unless @extraAbilities.include?(ability)
     end
 
@@ -629,66 +641,76 @@ class Pokemon
     end
 
     def legalItems?(itemSet, showMessages = false)
-        return true if itemSet.length <= 1
+        if itemSet.length > 1
+          if %i[JEWELER BERRYBUNCH FASHIONABLE].include?(@ability) && itemSet.length >=2
+            pbMessage(_INTL("#{name} is already holding two items!")) if showMessages
+            return false
+          end
 
-        if %i[JEWELER BERRYBUNCH FASHIONABLE].include?(@ability) && itemSet.length >=2
-          pbMessage(_INTL("#{name} is already holding two items!"))
-        end
-
-        # Jeweler
-        if @ability == :JEWELER
-            allGems = true
-            itemSet.each do |item|
-                next if GameData::Item.get(@item).is_gem?
-                allGems = false
-                break
-            end
-            if allGems
-                pbMessage(_INTL("For #{name} to have two items, both must be Gems!")) if showMessages
-                return false
-            end
-            return true
-        end
-
-        # Berry Bunch
-        if @ability == :BERRYBUNCH
-            allBerries = true
-            itemSet.each do |item|
-                next if GameData::Item.get(@item).is_berry?
-                allBerries = false
-                break
-            end
-            if allBerries
-                pbMessage(_INTL("For #{name} to have two items, both must be Berries!")) if showMessages
-                return false
+          # Jeweler
+          if @ability == :JEWELER
+              allGems = true
+              itemSet.each do |item|
+                  next if GameData::Item.get(@item).is_gem?
+                  allGems = false
+                  break
               end
-            return true
+              if allGems
+                  pbMessage(_INTL("For #{name} to have two items, both must be Gems!")) if showMessages
+                  return false
+              end
+              return true
+          end
+
+          # Berry Bunch
+          if @ability == :BERRYBUNCH
+              allBerries = true
+              itemSet.each do |item|
+                  next if GameData::Item.get(@item).is_berry?
+                  allBerries = false
+                  break
+              end
+              if allBerries
+                  pbMessage(_INTL("For #{name} to have two items, both must be Berries!")) if showMessages
+                  return false
+              end
+              return true
+          end
+
+          # Fashionable
+          if @ability == :FASHIONABLE
+              clothingCount = 0
+              itemSet.each do |item|
+                  next unless CLOTHING_ITEMS.include?(item)
+                  clothingCount += 1
+              end
+              if clothingCount == 0
+                  pbMessage(_INTL("For #{name} to have two items, at least one must be Clothing!")) if showMessages
+                  return false
+              end
+              if clothingCount > 1
+                  pbMessage(_INTL("For #{name} to have two items, only one can be Clothing!")) if showMessages
+                  return false
+              end
+              return true
+          end
         end
 
-		    # Fashionable
-        if @ability == :FASHIONABLE
-            clothingCount = 0
-            itemSet.each do |item|
-                next unless CLOTHING_ITEMS.include?(item)
-                clothingCount += 1
-            end
-            if clothingCount == 0
-                pbMessage(_INTL("For #{name} to have two items, at least one must be Clothing!")) if showMessages
-                return false
-            end
-            if clothingCount > 1
-                pbMessage(_INTL("For #{name} to have two items, only one can be Clothing!")) if showMessages
-                return false
-            end
-            return true
-        end
-
-        return false
+        return true
     end
 
     def removeInvalidItems
-        return unless legalItems?(items)
-        pbTakeItemsFromPokemon(self)
+        return unless items && legalItems?(items, ownedByPlayer?)
+        if ownedByPlayer?
+          pbMessage(_INTL("#{name} is no longer allowed to hold its current items."))
+          if boss?
+            removeItems
+          else
+            pbTakeItemsFromPokemon(self)
+          end
+        else
+          removeItems
+        end
     end
 
     def hasMultipleItems?
@@ -1197,7 +1219,7 @@ class Pokemon
 
     def colorShiftID
         colorShiftID = 0
-        if @owner.id == $Trainer.id # Owned by the player
+        if ownedByPlayer? # Owned by the player
             colorShiftID = @personalID ^ @owner.id
         else
             @owner.name.each_byte do |byte|
