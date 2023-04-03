@@ -17,11 +17,15 @@ def pbStorePokemon(pkmn)
                 storingPokemon = $Trainer.party[chosen]
 
                 if storingPokemon.hasItem?
-                    itemName = GameData::Item.get(storingPokemon.item).real_name
-                    if pbConfirmMessageSerious(_INTL("{1} is holding an {2}. Would you like to take it before transferring?",
-          storingPokemon.name, itemName))
-                        pbTakeItemFromPokemon(storingPokemon)
+                    if storingPokemon.hasMultipleItems?
+                        queryMessage = _INTL("{1} is holding multiple items. Would you like to take them before transferring?",
+                            storingPokemon.name)
+                    else
+                        queryMessage = _INTL("{1} is holding an {2}. Would you like to take it before transferring?",
+                            storingPokemon.name, getItemName(storingPokemon.item))
                     end
+                    
+                    pbTakeItemsFromPokemon(storingPokemon) if pbConfirmMessageSerious(queryMessage)
                 end
 
                 $Trainer.party[chosen] = pkmn
@@ -35,33 +39,38 @@ def pbStorePokemon(pkmn)
     end
 end
 
-def pbTakeItemFromPokemon(pkmn, _scene = nil)
-    ret = false
-    if !pkmn.hasItem?
+def pbTakeItemsFromPokemon(pkmn, _scene = nil)
+    if pkmn.items.empty?
         pbMessage(_INTL("{1} isn't holding anything.", pkmn.name))
-    elsif !$PokemonBag.pbCanStore?(pkmn.item)
-        pbMessage(_INTL("The Bag is full. The Pokémon's item could not be removed."))
-    elsif pkmn.mail
-        if pbConfirmMessage(_INTL("Save the removed mail in your PC?"))
-            if !pbMoveToMailbox(pkmn)
-                pbMessage(_INTL("Your PC's Mailbox is full."))
-            else
-                pbMessage(_INTL("The mail was saved in your PC."))
+        return false
+    end
+
+    ret = false
+    pkmn.items.each do |item|
+        if !$PokemonBag.pbCanStore?(item)
+            pbMessage(_INTL("The Bag is full. The Pokémon's item could not be removed."))
+        elsif pkmn.mail
+            if pbConfirmMessage(_INTL("Save the removed mail in your PC?"))
+                if !pbMoveToMailbox(pkmn)
+                    pbMessage(_INTL("Your PC's Mailbox is full."))
+                else
+                    pbMessage(_INTL("The mail was saved in your PC."))
+                    pkmn.item = nil
+                    ret = true
+                end
+            elsif pbConfirmMessage(_INTL("If the mail is removed, its message will be lost. OK?"))
+                $PokemonBag.pbStoreItem(pkmn.item)
+                pbMessage(_INTL("Received the {1} from {2}.", pkmn.item.name, pkmn.name))
                 pkmn.item = nil
+                pkmn.mail = nil
                 ret = true
             end
-        elsif pbConfirmMessage(_INTL("If the mail is removed, its message will be lost. OK?"))
+        else
             $PokemonBag.pbStoreItem(pkmn.item)
             pbMessage(_INTL("Received the {1} from {2}.", pkmn.item.name, pkmn.name))
             pkmn.item = nil
-            pkmn.mail = nil
             ret = true
         end
-    else
-        $PokemonBag.pbStoreItem(pkmn.item)
-        pbMessage(_INTL("Received the {1} from {2}.", pkmn.item.name, pkmn.name))
-        pkmn.item = nil
-        ret = true
     end
     return ret
 end
