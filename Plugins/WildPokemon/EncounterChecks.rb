@@ -50,15 +50,9 @@ class PokemonEncounters
       encounter_chance *= 0.8 if $PokemonGlobal.bicycle
     end
     first_pkmn = $Trainer.first_pokemon
-    if first_pkmn
-      case first_pkmn.item_id
-      when :CLEANSETAG
-        encounter_chance *= 2.0 / 3
-        min_steps_needed *= 4 / 3.0
-      when :PUREINCENSE
-        encounter_chance *= 2.0 / 3
-        min_steps_needed *= 4 / 3.0
-	    end
+    if first_pkmn&.has_item?(:CLEANSETAG)
+      encounter_chance *= 2.0 / 3
+      min_steps_needed *= 4 / 3.0
     end 
     # Wild encounters are much less likely to happen for the first few steps
     # after a previous wild encounter

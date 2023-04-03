@@ -218,11 +218,6 @@ class PokeBattle_Battle
             raise _INTL("{1}'s new level is greater than the level cap, which shouldn't happen.\r\n[Debug: {2}]",
                 pkmn.name, debugInfo)
         end
-        # Give Exp
-        if pkmn.shadowPokemon?
-            pkmn.exp += expGained
-            return
-        end
         tempExp1 = pkmn.exp
         battler = pbFindBattler(idxParty)
         loop do # For each level gained in turn...

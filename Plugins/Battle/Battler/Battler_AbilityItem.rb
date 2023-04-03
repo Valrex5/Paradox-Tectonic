@@ -257,6 +257,7 @@ class PokeBattle_Battler
         end
         disableEffect(:ChoiceBand) if CHOICE_LOCKING_ITEMS.include?(item)
         items.delete_at(itemIndex)
+        pokemon.removeItem(item)
         applyEffect(:ItemLost) if items.length == 0
     end
     alias removeItem removeItem

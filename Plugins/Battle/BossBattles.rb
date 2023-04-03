@@ -147,31 +147,6 @@ def pbPlayCrySpecies(species, form = 0, volume = 90, pitch = nil)
     GameData::Species.play_cry_from_species(species, form, volume, pitch)
 end
 
-class Pokemon
-    attr_accessor :boss
-
-    # @return [0, 1, 2] this Pokémon's gender (0 = male, 1 = female, 2 = genderless)
-    def gender
-        return 2 if boss?
-        unless @gender
-            gender_ratio = species_data.gender_ratio
-            case gender_ratio
-            when :AlwaysMale   then @gender = 0
-            when :AlwaysFemale then @gender = 1
-            when :Genderless   then @gender = 2
-            else
-                female_chance = GameData::GenderRatio.get(gender_ratio).female_chance
-                @gender = ((@personalID & 0xFF) < female_chance) ? 1 : 0
-            end
-        end
-        return @gender
-    end
-
-    def boss?
-        return boss
-    end
-end
-
 def pbPlayerPartyMaxLevel(countFainted = false)
     maxPlayerLevel = -100
     $Trainer.party.each do |pkmn|

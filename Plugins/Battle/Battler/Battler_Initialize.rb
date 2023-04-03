@@ -121,13 +121,12 @@ class PokeBattle_Battler
             end
         end
         @abilityChanged = false
-        @item_ids     = []
-        @item_ids.push(pkmn.item_id) if pkmn.item_id
+        @item_ids     = pkmn.items
         if TESTING_DOUBLE_QUALITIES
             @item_ids.push(@battle.getRandomHeldItem) 
             @itemSlots    = 2
         else
-            @itemSlots = 1
+            @itemSlots = [pkmn.items.length,1].min
         end
         @gender       = pkmn.gender
         @attack       = pkmn.attack
