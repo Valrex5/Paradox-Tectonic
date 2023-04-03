@@ -450,8 +450,7 @@ class Pokemon
       if abil_index >= 2   # Hidden ability
         @ability = sp_data.hidden_abilities[abil_index - 2]
         abil_index = (@personalID & 1) if !@ability
-      end
-      if !@ability   # Natural ability or no hidden ability defined
+      else
         @ability = sp_data.abilities[abil_index] || sp_data.abilities[0]
       end
     end
@@ -641,66 +640,71 @@ class Pokemon
     end
 
     def legalItems?(itemSet, showMessages = false)
-        if itemSet.length > 1
-          if %i[JEWELER BERRYBUNCH FASHIONABLE].include?(@ability) && itemSet.length >=2
-            pbMessage(_INTL("#{name} is already holding two items!")) if showMessages
-            return false
-          end
+      return true unless itemSet.length > 1
 
-          # Jeweler
-          if @ability == :JEWELER
-              allGems = true
-              itemSet.each do |item|
-                  next if GameData::Item.get(@item).is_gem?
-                  allGems = false
-                  break
-              end
-              if allGems
-                  pbMessage(_INTL("For #{name} to have two items, both must be Gems!")) if showMessages
-                  return false
-              end
-              return true
-          end
+      # Item set contains duplicates
+      if itemSet.length != itemSet.uniq.length
+        pbMessage(_INTL("#{name} can't hold two of the same item!")) if showMessages
+        return false
+      end
 
-          # Berry Bunch
-          if @ability == :BERRYBUNCH
-              allBerries = true
-              itemSet.each do |item|
-                  next if GameData::Item.get(@item).is_berry?
-                  allBerries = false
-                  break
-              end
-              if allBerries
-                  pbMessage(_INTL("For #{name} to have two items, both must be Berries!")) if showMessages
-                  return false
-              end
-              return true
-          end
+      if %i[JEWELER BERRYBUNCH FASHIONABLE].include?(@ability) && itemSet.length > 2
+        pbMessage(_INTL("#{name} can't hold more than two items!")) if showMessages
+        return false
+      end
 
-          # Fashionable
-          if @ability == :FASHIONABLE
-              clothingCount = 0
-              itemSet.each do |item|
-                  next unless CLOTHING_ITEMS.include?(item)
-                  clothingCount += 1
-              end
-              if clothingCount == 0
-                  pbMessage(_INTL("For #{name} to have two items, at least one must be Clothing!")) if showMessages
-                  return false
-              end
-              if clothingCount > 1
-                  pbMessage(_INTL("For #{name} to have two items, only one can be Clothing!")) if showMessages
-                  return false
-              end
-              return true
+      # Jeweler
+      if @ability == :JEWELER
+          allGems = true
+          itemSet.each do |item|
+              next if GameData::Item.get(item).is_gem?
+              allGems = false
+              break
           end
-        end
+          unless allGems
+              pbMessage(_INTL("For #{name} to have two items, both must be Gems!")) if showMessages
+              return false
+          end
+          return true
+      end
 
-        return true
+      # Berry Bunch
+      if @ability == :BERRYBUNCH
+          allBerries = true
+          itemSet.each do |item|
+              next if GameData::Item.get(item).is_berry?
+              allBerries = false
+              break
+          end
+          unless allBerries
+              pbMessage(_INTL("For #{name} to have two items, both must be Berries!")) if showMessages
+              return false
+          end
+          return true
+      end
+
+      # Fashionable
+      if @ability == :FASHIONABLE
+          clothingCount = 0
+          itemSet.each do |item|
+              next unless CLOTHING_ITEMS.include?(item)
+              clothingCount += 1
+          end
+          if clothingCount == 0
+              pbMessage(_INTL("For #{name} to have two items, at least one must be Clothing!")) if showMessages
+              return false
+          end
+          if clothingCount > 1
+              pbMessage(_INTL("For #{name} to have two items, only one can be Clothing!")) if showMessages
+              return false
+          end
+          return true
+      end
     end
 
     def removeInvalidItems
-        return unless items && legalItems?(items, ownedByPlayer?)
+        return unless items
+        return if legalItems?(items, ownedByPlayer?)
         if ownedByPlayer?
           pbMessage(_INTL("#{name} is no longer allowed to hold its current items."))
           if boss?

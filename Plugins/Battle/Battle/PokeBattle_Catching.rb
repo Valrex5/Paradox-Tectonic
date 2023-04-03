@@ -8,7 +8,7 @@ class PokeBattle_Battle
         storedBox = @peer.pbStorePokemon(pbPlayer, pkmn)
         if storedBox < 0
             pbDisplayPaused(_INTL("{1} has been added to your party.", pkmn.name))
-            @initialItems[0][pbPlayer.party.length - 1] = pkmn.firstItem if @initialItems
+            @initialItems[0][pbPlayer.party.length - 1] = pkmn.items.clone if @initialItems
             return
         end
         # Messages saying the Pokémon was stored in a PC box
@@ -62,11 +62,11 @@ class PokeBattle_Battle
                     pbDisplay(_INTL("Choose which Pokemon will be sent back to the PC."))
                     # if Y, select pokemon to store instead
                     pbChoosePokemon(1, 3)
-                    chosen = $game_variables[1]
+                    chosenIndex = $game_variables[1]
                     # Didn't cancel
-                    if chosen != -1
-                        chosenPokemon = $Trainer.party[chosen]
-                        @peer.pbOnLeavingBattle(self, chosenPokemon, @usedInBattle[0][chosen], true) # Reset form
+                    if chosenIndex != -1
+                        chosenPokemon = $Trainer.party[chosenIndex]
+                        @peer.pbOnLeavingBattle(self, chosenPokemon, @usedInBattle[0][chosenIndex], true) # Reset form
 
                         # Find the battler which matches with the chosen pokemon
                         chosenBattler = nil
@@ -83,13 +83,13 @@ class PokeBattle_Battle
                             end
                         end
 
-                        chosenPokemon.item = @initialItems[0][chosen]
-                        @initialItems[0][chosen] = pkmn.item
+                        restoreInitialItemsTo(chosenPokemon,chosenIndex)
+                        @initialItems[0][chosenIndex] = pkmn.items
 
                         promptToTakeItems(chosenPokemon)
 
                         pbStorePokemon(chosenPokemon)
-                        $Trainer.party[chosen] = pkmn
+                        $Trainer.party[chosenIndex] = pkmn
                     else
                         # Store caught Pokémon if cancelled
                         pbStorePokemon(pkmn)

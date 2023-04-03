@@ -32,7 +32,7 @@ end
 def promptToTakeItems(pkmn)
     if pkmn.hasItem?
         if pkmn.hasMultipleItems?
-            queryMessage = _INTL("{1} is holding multiple items. Would you like to take them before transferring?",
+            queryMessage = _INTL("{1} is holding multiple items. Take them before transferring?",
                 pkmn.name)
         else
             queryMessage = _INTL("{1} is holding an {2}. Would you like to take it before transferring?",

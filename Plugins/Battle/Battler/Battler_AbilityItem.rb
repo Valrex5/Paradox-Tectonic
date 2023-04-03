@@ -253,7 +253,6 @@ class PokeBattle_Battler
         return false
     end
 
-
     def removeItem(item)
         itemIndex = items.index(item)
         unless itemIndex
@@ -262,6 +261,7 @@ class PokeBattle_Battler
         disableEffect(:ChoiceBand) if CHOICE_LOCKING_ITEMS.include?(item)
         items.delete_at(itemIndex)
         applyEffect(:ItemLost) if items.length == 0
+        refreshDataBox
     end
     alias removeItem removeItem
 
@@ -344,16 +344,17 @@ class PokeBattle_Battler
 
         forced = !item_to_use.nil?
 
-        itemsToCheck = forced ? [item_to_use] : activeItems
+        itemsToCheck = forced ? [item_to_use] : activeItems.clone
+
         itemsToCheck.each do |item|
             # Check for user
-            if BattleHandlers.triggerHPHealItem(item, self, @battle, forced, nil)
-                pbHeldItemTriggered(item, !forced, fling)
-                break
-            elsif !forced
-                pbItemTerrainStatBoostCheck
-                pbItemFieldEffectCheck
-            end
+            next unless BattleHandlers.triggerHPHealItem(item, self, @battle, forced, nil)
+            pbHeldItemTriggered(item, !forced, fling)
+        end
+
+        unless forced
+            pbItemTerrainStatBoostCheck
+            pbItemFieldEffectCheck
         end
     end
 
@@ -366,11 +367,10 @@ class PokeBattle_Battler
 
         forced = !item_to_use.nil?
 
-        itemsToCheck = forced ? [item_to_use] : activeItems
+        itemsToCheck = forced ? [item_to_use] : activeItems.clone
         itemsToCheck.each do |item|
             if BattleHandlers.triggerStatusCureItem(item, self, @battle, forced)
                 pbHeldItemTriggered(item, !forced, fling)
-                break
             end
         end
     end
@@ -383,14 +383,12 @@ class PokeBattle_Battler
 
         forced = !item_to_use.nil?
 
-        itemsToCheck = forced ? [item_to_use] : activeItems
+        itemsToCheck = forced ? [item_to_use] : activeItems.clone
         itemsToCheck.each do |item|
             if BattleHandlers.triggerEndOfMoveItem(item, self, @battle, forced)
                 pbHeldItemTriggered(item, !forced, fling)
-                break
             elsif BattleHandlers.triggerEndOfMoveStatRestoreItem(item, self, @battle, forced)
                 pbHeldItemTriggered(item, !forced, fling)
-                break
             end
         end
     end
@@ -405,25 +403,26 @@ class PokeBattle_Battler
 
         forced = !item_to_use.nil?
 
-        itemsToCheck = forced ? [item_to_use] : activeItems
+        itemsToCheck = forced ? [item_to_use] : activeItems.clone
 
         itemsToCheck.each do |item|
             if BattleHandlers.triggerEndOfMoveStatRestoreItem(item, self, @battle, forced)
                 pbHeldItemTriggered(item, !forced, fling)
-                break
             end
         end
     end
 
     # Called when the battle terrain changes and when a Pokémon loses HP.
     def pbItemTerrainStatBoostCheck
-        eachActiveItem do |item|
+        itemsToCheck = activeItems.clone
+        itemsToCheck.each do |item|
             pbHeldItemTriggered(item) if BattleHandlers.triggerTerrainStatBoostItem(item, self, @battle)
         end
     end
 
     def pbItemFieldEffectCheck
-        eachActiveItem do |item|
+        itemsToCheck = activeItems.clone
+        itemsToCheck.each do |item|
             pbHeldItemTriggered(item) if BattleHandlers.triggerFieldEffectItem(item, self, @battle)
         end
     end
@@ -431,7 +430,8 @@ class PokeBattle_Battler
     # Used for Adrenaline Orb. Called when Intimidate is triggered (even if
     # Intimidate has no effect on the Pokémon).
     def pbItemOnIntimidatedCheck
-        eachActiveItem do |item|
+        itemsToCheck = activeItems.clone
+        itemsToCheck.each do |item|
             pbHeldItemTriggered(item) if BattleHandlers.triggerItemOnIntimidated(item, self, @battle)
         end
     end

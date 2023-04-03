@@ -59,15 +59,19 @@ def pbTakeItemsFromPokemon(pkmn, _scene = nil)
     end
 
     ret = false
+    itemsToRemove = []
     pkmn.items.each do |item|
         if !$PokemonBag.pbCanStore?(item)
             pbMessage(_INTL("The Bag is full. The Pokémon's {1} could not be removed.",getItemName(item)))
         else
             $PokemonBag.pbStoreItem(item)
             pbMessage(_INTL("Received the {1} from {2}.", getItemName(item), pkmn.name))
-            pkmn.removeItem(item)
+            itemsToRemove.push(item)
             ret = true
         end
+    end
+    itemsToRemove.each do |itemToRemove|
+        pkmn.removeItem(itemToRemove)
     end
     return ret
 end

@@ -684,14 +684,27 @@ class PokeBattle_Battle
         pbParty(0).each_with_index do |pkmn, i|
             next unless pkmn
             @peer.pbOnLeavingBattle(self, pkmn, @usedInBattle[0][i], true) # Reset form
-            pkmn.giveItem(@initialItems[0][i]) 
         end
+        restoreInitialItems
         # Remove avatars from the trainer's party
         pbParty(0).reject! { |pkmn|
             pkmn.boss?
         }
         pbParty(0).compact!
         return @decision
+    end
+
+    def restoreInitialItems
+        pbParty(0).each_with_index do |pkmn, i|
+            next unless pkmn
+            restoreInitialItemsTo(pkmn,i)
+        end
+    end
+
+    def restoreInitialItemsTo(pkmn,i)
+        @initialItems[0][i].each do |itemToRestore|
+            pkmn.giveItem(itemToRestore) unless pkmn.hasItem?(itemToRestore)
+        end
     end
 
     #=============================================================================
