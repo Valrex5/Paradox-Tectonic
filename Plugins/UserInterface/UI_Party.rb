@@ -210,8 +210,13 @@ end
         @pkmnsprite.setOffset(PictureOrigin::Center)
         @pkmnsprite.active = @active
         @pkmnsprite.z      = self.z+2
-        @helditemsprite = HeldItemIconSprite.new(0,0,@pokemon.firstItem,viewport)
-        @helditemsprite.z = self.z+3
+        @heldItemIcons = []
+        for i in 0..2 do # creating 3 of them
+          newHeldItemIcon = HeldItemIconSprite.new(0,0,nil,viewport)
+          newHeldItemIcon.z = self.z+3
+          @heldItemIcons.push(newHeldItemIcon)
+        end
+        refreshHeldItemIcons
         @overlaysprite = BitmapSprite.new(Graphics.width,Graphics.height,viewport)
         @overlaysprite.z = self.z+4
         @hpbar    = AnimatedBitmap.new("Graphics/Pictures/Party/overlay_hp")
@@ -224,13 +229,22 @@ end
         @refreshing    = false
         refresh
     end
+
+    def refreshHeldItemIcons
+      @heldItemIcons.each_with_index do |heldItemIcon, index|
+        heldItemIcon.visible = true
+        heldItemIcon.item = @pokemon.items[index]
+      end
+    end
   
     def dispose
       @panelbgsprite.dispose
       @hpbgsprite.dispose
       @ballsprite.dispose
       @pkmnsprite.dispose
-      @helditemsprite.dispose
+      @heldItemIcons.each_with_index do |heldItemIcon|
+        heldItemIcon.dispose
+      end
       @overlaysprite.bitmap.dispose
       @overlaysprite.dispose
       @hpbar.dispose
@@ -264,7 +278,7 @@ end
     def pokemon=(value)
       @pokemon = value
       @pkmnsprite.pokemon = value if @pkmnsprite && !@pkmnsprite.disposed?
-      @helditemsprite.item = value.firstItem if @helditemsprite && !@helditemsprite.disposed?
+      refreshHeldItemIcons
       @refreshBitmap = true
       refresh
     end
@@ -337,12 +351,12 @@ end
           @pkmnsprite.color    = self.color
           @pkmnsprite.selected = self.selected
         end
-        if @helditemsprite && !@helditemsprite.disposed?
-          if @helditemsprite.visible
-            @helditemsprite.x     = self.x+62
-            @helditemsprite.y     = self.y+48
-            @helditemsprite.color = self.color
-          end
+        @heldItemIcons.each_with_index do |heldItemIcon, index|
+          next if heldItemIcon.disposed?
+          next unless heldItemIcon.visible
+          heldItemIcon.x     = self.x + 62 + 8 * index
+          heldItemIcon.y     = self.y + 48 + 4 * index
+          heldItemIcon.color = self.color
         end
         if @overlaysprite && !@overlaysprite.disposed?
           @overlaysprite.x     = self.x
@@ -425,7 +439,10 @@ end
       @hpbgsprite.update if @hpbgsprite && !@hpbgsprite.disposed?
       @ballsprite.update if @ballsprite && !@ballsprite.disposed?
       @pkmnsprite.update if @pkmnsprite && !@pkmnsprite.disposed?
-      @helditemsprite.update if @helditemsprite && !@helditemsprite.disposed?
+      @heldItemIcons.each do |heldItemIcon|
+        next if heldItemIcon.disposed?
+        heldItemIcon.update
+      end
     end
   end
   

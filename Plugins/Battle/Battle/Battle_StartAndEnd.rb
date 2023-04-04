@@ -697,13 +697,7 @@ class PokeBattle_Battle
     def restoreInitialItems
         pbParty(0).each_with_index do |pkmn, i|
             next unless pkmn
-            restoreInitialItemsTo(pkmn,i)
-        end
-    end
-
-    def restoreInitialItemsTo(pkmn,i)
-        @initialItems[0][i].each do |itemToRestore|
-            pkmn.giveItem(itemToRestore) unless pkmn.hasItem?(itemToRestore)
+            pkmn.setItems(@initialItems[0][i])
         end
     end
 

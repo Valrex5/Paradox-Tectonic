@@ -202,9 +202,9 @@ class PokeBattle_Battler
     #=============================================================================
     # Held item adding or gifting
     #=============================================================================
-    def giveItem(item)
+    def giveItem(item,stolen = false)
         return if item.nil?
-        return unless canAddItem?(item)
+        return unless canAddItem?(item, stolen)
         item = GameData::Item.get(item).id
         disableEffect(:ItemLost)
         @pokemon.giveItem(item)

@@ -83,7 +83,7 @@ class PokeBattle_Battle
                             end
                         end
 
-                        restoreInitialItemsTo(chosenPokemon,chosenIndex)
+                        chosenPokemon.setItems(@initialItems[0][chosenIndex])
                         @initialItems[0][chosenIndex] = pkmn.items
 
                         promptToTakeItems(chosenPokemon)
