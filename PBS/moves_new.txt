@@ -15,7 +15,7 @@
 1014,ELECTROSLASH,Electroslash,000,90,ELECTRIC,Physical,100,12,0,NearOther,0,abefhp,"The user harnesses a blade of lightning and slices at the target. Critical hits land more easily.",
 1015,CURRENTCRASH,Current Crash,599,55,ELECTRIC,Physical,100,25,0,NearOther,0,abef,"The user wraps their body in electricity and crashes into the target. The user also takes 20% recoil.",WILDCHARGE
 1016,FAVOR,Favor,089,9,NORMAL,Special,100,15,0,NearOther,0,bef,"A full-power special attack that grows more powerful the more the user likes its Trainer.",RETURN
-1017,ESSENCEARROW,Essence Arrow,020,40,GRASS,Special,100,30,10,NearOther,0,befn,"The user fires a small bolt of energy at the target. It has a 10% chance to raise user's Sp. Atk.",ENERGYBALL
+1017,ESSENCEARROW,Essence Arrow,5DC,40,GRASS,Special,100,30,10,NearOther,0,befn,"The user fires a small bolt of energy at the target. It has a 10% chance to raise user's Sp. Atk.",ENERGYBALL
 1018,ROOTWRACK,Rootwrack,504,60,GRASS,Physical,100,20,0,NearOther,0,bef,"The user sends its roots to attack. Deals 25% more damage if the target attacked first.",VINEWHIP
 1019,EAGERTICKLING,Eager Tickling,042,40,FAIRY,Physical,100,25,10,NearOther,0,abef,"The user tickles the target excessively, damaging it. This has a 10% chance to lower Attack.",PLAYROUGH
 1020,TREADON,Tread On,044,40,GROUND,Physical,100,30,10,NearOther,0,abef,"The user attacks the opposing Pokémon by trampling it. It has a 10% chance to lower Speed.",STOMPINGTANTRUM
@@ -42,14 +42,14 @@
 1041,CRIPPLINGBREATH,Crippling Breath,50A,70,DRAGON,Special,100,15,50,NearOther,0,bef,"Exhales magical fumes with a 50% chance to burn or frostbite the target depending on their stats.",DRAGONBREATH
 1042,TORNADO,Tornado,00F,80,DRAGON,Special,100,12,30,AllNearFoes,0,beq,"The user whips up a tornado to tear at the enemy team. It has a 30% chance to make them flinch.",
 1043,HARSHVOICE,Harsh Voice,00F,40,DARK,Special,100,20,30,NearOther,0,bek,"The target is confronted with painful words. It has a 30% chance to make the target flinch.",
-1044,SLIGHT,Slight,50B,50,DARK,Special,100,20,0,NearOther,0,abefk,"When the user knocks out a target with this move, the user's Sp. Atk stat rises drastically.",
+1044,SLIGHT,Slight,50B,50,DARK,Special,100,20,0,NearOther,0,abefk,"When the user knocks out a target with this move, the user's Sp. Atk stat rises by 5 stages.",
 1045,MASSDESTRUCTION,Mass Destruction,0FC,130,DARK,Special,100,10,0,AllNearOthers,0,bef,"The user emits a wave of anxious feelings which overwhelms all nearby Pokémon, taking 50% recoil.",BRUTALSWING
 1046,ICEIMPACT,Ice Impact,50C,70,ICE,Physical,100,10,0,NearOther,0,bef,"The user targets the target's coldest spots. Its power doubles if the target is frostbitten.",ICEPUNCH
 1047,HALTINGCOLD,Halting Cold,044,75,ICE,Special,100,12,100,NearOther,0,befq,"The user attacks the target with a frontal cold wind. It reduces the target's Speed.",ICYWIND
 1048,CHIBURST,Chi Burst,03F,130,FIGHTING,Special,100,5,0,NearOther,0,bef,"The user attacks with a burst of inner energy. This sharply reduces the user's Sp. Atk stat.",AURASPHERE
 1049,TRAINEDOUTBURST,Trained Outburst,08E,20,FIGHTING,Special,100,10,0,NearOther,0,befk,"The user attacks with focus. The more the user's stats are raised, the greater the damage.",
 1050,BEARHUG,Bear Hug,0CF,85,FIGHTING,Physical,100,12,0,NearOther,0,bef,"The user hugs the target intensely, trapping and damaging it for three turns.",
-1051,INFERNOCHARGE,Inferno Charge,01F,90,FIRE,Physical,100,15,30,NearOther,0,abef,"The user cloaks itself in an inferno of flame and attacks. It has a 30% chance to raise Speed.",
+1051,INFERNOCHARGE,Inferno Charge,5E0,90,FIRE,Physical,100,15,30,NearOther,0,abef,"The user cloaks itself in an inferno of flame and attacks. It has a 10% chance to raise Speed.",
 1052,FLAREUP,Flare Up,50E,70,FIRE,Physical,100,10,0,NearOther,0,bef,"The user targets the opponents soft spots with a fiery strike. Its power doubles if the target is burned.",FIREPUNCH
 1053,PERFUMEDPUNCH,Perfumed Punch,0A5,60,FAIRY,Physical,0,20,0,NearOther,0,aef,"The user throws a sweet-smelling punch. Can't miss and skips protections.",SPIRITBREAK
 1054,INFINITEFORCE,Infinite Force,50F,130,FAIRY,Physical,100,10,0,NearOther,0,abef,"The user wields an exaggerated power to strike the target. Sharply reduces the user's Attack stat.",SPIRITBREAK
@@ -60,7 +60,7 @@
 1059,GRANITEHEAD,Granite Head,0FB,85,ROCK,Physical,100,12,0,NearOther,0,abef,"The user charges into the target with its stony body. The user also takes 33% recoil.",HEADSMASH
 1060,BEDROCKBREAKER,Bedrock Breaker,0FB,120,ROCK,Physical,100,10,0,NearOther,0,abef,"The user smashes its rock-hard head into the target. The user also takes 33% recoil.",HEADSMASH
 1061,TEMPEST,Tempest,401,100,FLYING,Special,50,10,100,Other,0,befq,"Chaotic winds push the target around, dizzying it.",HURRICANE
-1062,BLUSTER,Bluster,020,40,FLYING,Special,100,10,100,NearOther,0,befq,"The user fires a stormy gust at the target. This also raises the user's Sp. Atk.",GUST
+1062,BLUSTER,Bluster,020,40,FLYING,Special,100,10,100,NearOther,0,befq,"The user fires a stormy gust at the target. This also raises the user's Sp. Atk by 2 stages.",GUST
 1063,SHREDSHOT,Shred Shot,511,55,STEEL,Special,100,30,100,NearOther,0,befn,"The user shreads off bits of its own body to launch at the target. This also damages the user.",SPIKECANNON
 1064,SHARDS,Shards,511,90,STEEL,Special,100,10,100,NearOther,0,bef,"The user shoots shards of its own body at the target. This also damages the user.",SPIKECANNON
 1065,SPITEFULCHANT,Spiteful Chant,521,70,GHOST,Special,100,15,100,NearOther,0,befk,"The user unleashes its grudge, damaging the target and cutting 4 PP from the move last used by it.",NIGHTSHADE
@@ -74,12 +74,12 @@
 1073,DOUSE,Douse,518,40,WATER,Special,100,10,0,NearFoe,0,bef,"The user douses the target, healing itself by a third of its maximum HP in the process.",BRINE
 1074,AQUAINSTINCT,Aqua Instinct,517,65,WATER,Physical,100,10,0,NearOther,0,bef,"The user preys on the target. This move goes first if the target is below half health.",FISHIOUSREND
 1075,CREEPOUT,Creep Out,51D,50,BUG,Special,100,12,100,NearOther,0,bef,"The user preys on the target's fear of insects, giving it a weakness to the Bug type.",
-1076,ROCKAPULT,Rockapult,51F,140,ROCK,Special,50,10,0,NearOther,0,bef,"The user throws a large rock at the target. If it misses, the user's accuracy is raised.",ROCKTHROW
-1077,LAHAR,Lahar,51E,125,GROUND,Special,75,10,0,NearOther,0,bef,"The user causes a mud slide. If the move misses, it sharply raises the user's Speed.",
+1076,ROCKAPULT,Rockapult,51F,170,ROCK,Special,50,10,0,NearOther,0,bef,"The user throws a large rock at the target. If it misses, the user's accuracy is raised.",ROCKTHROW
+1077,LAHAR,Lahar,51E,140,GROUND,Special,75,10,0,NearOther,0,bef,"The user causes a mud slide. If the move misses, it raises the User's speed by 2 stages.",
 1078,STARFALL,Star Fall,520,50,ROCK,Special,100,12,100,NearOther,0,bef,"A star falls on the target. Witnessing this lucky star also increases the user's critical hit chance.",DOOMDESIRE
 1079,BUBBLEBLAST,Bubble Blast,044,80,WATER,Special,100,12,30,NearOther,0,bef,"A blast of bubbles is shot at the target. It has a 30% chance to lower the target's Speed stat.",
 1080,AURASTRIKE,Aura Strike,007,60,FIGHTING,Special,100,15,30,NearOther,0,bef,"The user shoots a blast of aura. This has a 30% chance to numb the target.",
-1081,COURAGEBOLT,Courage Bolt,020,40,FIGHTING,Special,100,30,10,NearOther,0,bef,"The user manifests a bolt of pure courage. This has a 10% chance of raising the user's Sp. Atk.",AURASPHERE
+1081,COURAGEBOLT,Courage Bolt,5DC,40,FIGHTING,Special,100,30,10,NearOther,0,bef,"The user manifests a bolt of pure courage. This has a 10% chance of raising the user's Sp. Atk.",AURASPHERE
 1082,PSYCHICOVERLOAD,Psychic Overload,55F,120,PSYCHIC,Special,100,10,0,RandomNearFoe,0,abef,"The user overloads its mind to attack for three turns.",PSYCHOBOOST
 1083,PSYPIERCE,Psypierce,046,70,PSYCHIC,Special,100,15,50,NearOther,0,bef,"The user manifests a piercing bolt of psychic energy. It has a 50% chance to lower Sp. Def.",PSYSHOCK
 1084,LIGHTSHOW,Light Show,401,40,BUG,Special,100,25,10,NearOther,0,bef,"The user attacks with small beams of light. It has a 10% chance to dizzy.",SIGNALBEAM
@@ -88,7 +88,7 @@
 1087,CRYSTALGLEAM,Crystal Gleam,000,60,ROCK,Special,100,15,0,NearOther,0,befh,"The user attacks with the bright glint of crystals. Critical hits land more easily.",
 1088,WAILINGBLOW,Wailing Blow,010,80,GHOST,Physical,100,12,40,NearOther,0,abe,"The user attacks while wailing. This has a 40% chance to make the target flinch.",SHADOWCLAW
 1089,SAPPINGWIND,Sapping Wind,403,80,ICE,Special,100,12,30,AllNearOthers,0,befq,"The user summons a wind that drains the target's vitality. This has a 30% chance to frostbite it.",ICYWIND
-1090,DREAMDANCE,Dream Dance,032,0,FAIRY,Status,0,15,0,User,0,do,"The user dances in tune with a dreamlike energy, sharply raising their Sp. Atk.",
+1090,DREAMDANCE,Dream Dance,032,0,FAIRY,Status,0,15,0,User,0,do,"The user dances in tune with a dreamlike energy, raising their Sp. Atk by 4 stages.",
 1091,TONGUETWISTER,Tongue Twister,007,120,GHOST,Physical,100,10,50,NearOther,0,abef,"The target is pestered by a giant tongue. This has a 50% chance to numb it.",LICK
 1092,SMOGSTORM,Smog Storm,005,80,POISON,Special,100,5,30,AllNearOthers,0,bef,"Summons a storm of poisonous gas to hit all nearby pokemon with a a 30% chance to poison.",SMOG
 1093,COLDSNOT,Cold Snot,005,65,ICE,Physical,100,20,30,NearOther,0,bef,"The user launches snot at the target. This has a 30% chance to poison the target.",SNOWBALL
@@ -103,12 +103,12 @@
 1102,ECHOLOCATE,Echolocate,52E,0,FLYING,Status,0,12,0,AllNearFoes,0,cek,"Harshly lowers the target's Defense and evasion. This move can't miss and skips protections.",SUPERSONIC
 1103,WINGSPANECLIPSE,Wingspan Eclipse,52F,0,DRAGON,Status,0,12,0,AllNearFoes,0,bce,"The Pokémon blots out the sky with huge wings, ending weather. It also lowers the opponent's Attack.",
 1104,ALLERGY,Allergy,04D,70,BUG,Special,100,12,100,NearOther,0,bef,"The user makes the target have an allergic reaction. This harshly reduces its Speed.",
-1105,LIGHTNINGSHRIEK,Lightning Shriek,030,40,ELECTRIC,Special,100,5,100,NearOther,0,bef,"The user lets out an electric roar, sharply raising the user's Speed.",ROAR
+1105,LIGHTNINGSHRIEK,Lightning Shriek,030,60,ELECTRIC,Special,100,5,100,NearOther,0,bef,"The user lets out an electric roar, raising the user's Speed by 4 stages.",ROAR
 1106,IGNITE,Ignite,00A,0,FIRE,Status,100,12,0,NearOther,0,bce,"The user sets the target on fire, inflicting a burn.",EMBER
 1107,HYDROSCYTHE,Hydro Scythe,000,120,WATER,Physical,100,12,0,NearOther,0,abefhp,"The user uses a jet of water like a sword and attacks by slashing. Critical hits land more easily.",LIQUIDATION
 1108,STAREDOWN,Stare Down,535,100,DARK,Special,100,5,0,NearOther,2,bef,"Stares harshly, dealing double damage if they hurt the user this turn. Only usable on the first turn.",FREEZINGGLARE
 1109,INURE,Inure,531,0,ICE,Status,0,10,0,User,0,d,"The user inures themselves to a harsh environment, shedding their type weaknesses.",
-1110,BREAKDANCE,Breakdance,532,0,FIGHTING,Status,0,15,0,User,0,do,"The user improvises a dance, sharply raising its weakest stat, and raising its second weakest stat.",WORKUP
+1110,BREAKDANCE,Breakdance,532,0,FIGHTING,Status,0,15,0,User,0,do,"The user improvises a dance, raising its two weakest stats by 3 stages each.",WORKUP
 1111,SHIVERDANCE,Shiver Dance,525,0,ICE,Status,0,15,0,User,0,do,"The user shivers rhythmically. It boosts the user's Attack, Defense, and Speed stats.",
 1112,AMBUSH,Ambush,516,110,DARK,Physical,70,10,0,NearOther,2,abef,"The user tries to surprise-attack the target. Cannot miss in moonglow. Critical hits land more easily.",NIGHTSLASH
 1113,STITCHUP,Stitch Up,524,0,GHOST,Status,0,5,0,User,0,d,"The user restores two thirds of its own HP. Then, this move is disabled.",RECOVER
@@ -124,12 +124,12 @@
 1123,PRIMALIMPACT,Primal Impact,0AD,90,NORMAL,Physical,100,10,0,NearOther,0,aef,"An attack empowered by the might of a lazy king. It skips and destroys protections.",
 1124,ADAMANTINEPRESS,Adamantine Press,000,95,ROCK,Physical,100,10,0,NearOther,0,abef,"The user slams the target with their rock-hard body.",HEADSMASH
 1125,CLAMOR,Clamor,0D1,75,NORMAL,Special,100,10,0,RandomNearFoe,0,befk,"The user attacks in an uproar for three turns. Over that time, no one can fall asleep.",UPROAR
-1126,COMETSMASH,Comet Smash,01C,95,NORMAL,Physical,100,10,20,NearOther,0,abefj,"The user throws a comet-like punch. It has a 20% chance to raise Attack.",MEGAPUNCH
+1126,COMETSMASH,Comet Smash,5D8,95,NORMAL,Physical,100,10,10,NearOther,0,abefj,"The user throws a comet-like punch. It has a 20% chance to raise Attack.",MEGAPUNCH
 1127,DOUBLEPUNCH,Double Punch,0BD,45,NORMAL,Physical,100,10,0,NearOther,0,abefj,"The user punches the target twice in quick succession.",
-1128,PULVERIZE,Pulverize,01C,100,NORMAL,Physical,80,5,10,NearOther,0,abefj,"The user pulverizes the target with both its fists. It has a 50% chance to raise Attack.",MEGAPUNCH
-1129,PUMMEL,Pummel,01C,40,NORMAL,Physical,100,15,100,NearOther,0,abefj,"The user warms up by treating the target as a punching bag, damaging them and raising Attack.",MEGAPUNCH
+1128,PULVERIZE,Pulverize,5D8,75,NORMAL,Physical,100,5,100,NearOther,0,abefj,"The user pulverizes the target with both its fists. This raises the user's Attack.",MEGAPUNCH
+1129,PUMMEL,Pummel,01C,40,NORMAL,Physical,100,15,100,NearOther,0,abefj,"The user warms up by treating the target as a punching bag, damaging them and raising Attack by 2 stages.",MEGAPUNCH
 1130,SLICE,Slice,000,95,NORMAL,Physical,100,12,0,NearOther,0,abefhp,"The target is cut by a clean slice. Critical hits land more easily.",SLASH
-1131,FURY,Fury,093,60,NORMAL,Physical,100,12,0,NearOther,0,abef,"As long as this move is in use, the user's Attack rises each time the user is hit in battle.",RAGE
+1131,FURY,Fury,093,60,NORMAL,Physical,100,12,0,NearOther,0,abef,"As long as this move is in use, the user's Attack is raised 2 stages each time the user is hit.",RAGE
 1132,SPELLBIND,Spellbind,401,0,FAIRY,Status,100,10,0,NearOther,0,bce,"Dizzies the target by putting them under a magical spell.",CHARM
 1133,BIRDSTRIKE,Bird Strike,0FA,90,FLYING,Physical,100,15,0,Other,0,abef,"A reckless charge attack from the air. It also damages the user by 25% of the damage dealt.",BRAVEBIRD
 1134,TERRAFORM,Terraform,538,70,ROCK,Special,100,12,0,AllNearOthers,0,bef,"Churns nearby rocks, dealing damage to nearby Pokémon and removing hazards from both sides.",
@@ -137,8 +137,8 @@
 1136,RAKE,Rake,000,65,BUG,Physical,100,20,0,NearOther,0,abefp,"The user rakes the target with sharp claws.",FURYCUTTER
 1137,WATERSPIRAL,Water Spiral,16F,85,WATER,Special,100,12,0,NearOther,0,befn,"Fires a spiral of water at enemies, or a HP-restoring one at allies.",WATERPULSE
 1138,SPATTERINGRAM,Spattering Ram,043,60,WATER,Physical,100,20,30,NearOther,0,abef,"The user rams the target like a ship. It has a 30% chance to lower Defense.",
-1139,BLOSSOM,Blossom,020,40,GRASS,Special,100,30,100,NearOther,0,befn,"Flowers blooms with intensity, damaging the target and raising the user's Sp. Atk.",GRASSPLEDGE
-1140,THRIVINGFORCE,Thriving Force,020,90,GRASS,Special,100,12,10,NearOther,0,befn,"The user attacks with the bursting power of nature. It has a 10% chance to raise user's Sp. Atk.",ENERGYBALL
+1139,BLOSSOM,Blossom,020,40,GRASS,Special,100,30,100,NearOther,0,befn,"Flowers blooms with intensity, damaging the target and raising the user's Sp. Atk by 2 stages.",GRASSPLEDGE
+1140,THRIVINGFORCE,Thriving Force,5DC,90,GRASS,Special,100,12,10,NearOther,0,befn,"The user attacks with the bursting power of nature. It has a 10% chance to raise user's Sp. Atk.",ENERGYBALL
 1141,TERADRAIN,Tera Drain,14F,100,GRASS,Special,50,12,0,NearOther,0,befh,"A nutrient-draining attack. The user's HP is restored by 75% of the damage taken by the target.",GIGADRAIN
 1142,MENDINGSPRING,Mending Spring,0DA,40,WATER,Special,100,12,0,NearOther,0,bef,"The user opens a spring to blast the target, also forming an Aqua Ring around themselves.",WATERGUN
 1143,INERTIASHOCK,Inertia Shock,53B,80,ELECTRIC,Physical,100,10,10,NearOther,0,bef,"Deals 50% more damage if faster than the target. Lowers the user's Speed.",VOLTTACKLE
@@ -169,10 +169,10 @@
 1168,MOONIMPACT,Moon Impact,516,110,FAIRY,Physical,85,12,0,NearOther,0,abef,"Cannot miss in moonglow. 30% chance to dizzy the target.",SPIRITBREAK
 1169,AURATRICK,Aura Trick,540,80,FAIRY,Special,100,10,0,NearOther,0,bef,"The user attacks with its aura, dealing damage based on the user's Sp. Def stat.",FAIRYWIND
 1170,DISTORT,Distort,043,40,FIGHTING,Special,100,30,10,NearOther,0,abef,"The user distorts the target's aura, damaging it. This has a 10% chance of reducing the target's Defense.",VACUUMWAVE
-1171,ADRENALASH,Adrenalash,020,90,FIGHTING,Special,100,12,20,NearOther,0,bef,"The user forms their excitement into a lash with a 10% chance of raising the user's Sp. Atk.",FOCUSBLAST
+1171,ADRENALASH,Adrenalash,5DC,90,FIGHTING,Special,100,12,20,NearOther,0,bef,"The user forms their excitement into a lash with a 10% chance of raising the user's Sp. Atk.",FOCUSBLAST
 1172,EARTHRIFT,Earth Rift,50F,130,GROUND,Physical,100,10,0,NearOther,0,abef,"The user cracks the earth under the target with a massive strike. This sharply reduces the user's Attack stat.",FISSURE
 1173,UPINFLAMES,Up In Flames,541,80,FIRE,Special,100,10,0,NearOther,0,bef,"The user surrounds the target with fire which also destroys any 'clothing' items it's holding.",INCINERATE
-1174,PROPELLANT,Propellant,03E,100,FIRE,Physical,100,10,100,NearOther,0,abef,"The user explodes itself into the target. It lowers the user's Speed, however.",FLAMECHARGE
+1174,PROPELLANT,Propellant,542,105,FIRE,Physical,100,10,100,NearOther,0,abef,"The user explodes itself into the target. The target is harmed, but also their Speed is raised.",FLAMECHARGE
 1175,PSYCHOBLADE,Psychoblade,000,90,PSYCHIC,Physical,100,10,0,NearOther,0,abefhp,"The user manifests a blade of psychic energy to slash the target. Critical hits land more easily.",PSYCHOCUT
 1176,CHILL,Chill,403,0,ICE,Status,100,12,0,NearOther,0,bce,"The user lowers the target's body temperature, afflicting it with frostbite.",
 1177,GLITTERBOMB,Glitter Bomb,546,40,FAIRY,Physical,100,25,0,NearOther,0,abefn,"Chuck a party favor. Guaranteed critical hit on targets with boosted stats.",SPIRITBREAK
@@ -182,11 +182,11 @@
 1181,ENVENOM,Envenom,005,0,POISON,Status,100,30,0,NearFoe,0,bce,"Venom is strategically introduced into the target, poisoning it.",POISONSTING
 1182,CHAOSWHEEL,Chaos Wheel,547,80,NORMAL,Physical,100,10,33,NearOther,0,bef,"The user thrashes while infused with elements. It has a 11% chance each to poison, dizzy, or leech.",FIERYWRATH
 1183,MINDLINK,Mind Link,549,0,PSYCHIC,Status,0,30,0,User,0,d,"The user syncs its mind with its teammates, raising the Sp. Atk of itself and its allies.",CONFUSION
-1184,BULLETCHARGE,Bullet Charge,01F,60,STEEL,Physical,100,15,20,NearOther,0,abef,"The user uses gunpowder to rocket at its foe. It has a 20% chance to increase its Speed stat.",BULLETPUNCH
+1184,BULLETCHARGE,Bullet Charge,5E0,60,STEEL,Physical,100,15,30,NearOther,0,abef,"The user uses gunpowder to rocket at its foe. It has a 30% chance to raise its Speed.",BULLETPUNCH
 1185,SEEDSURPRISE,Seed Surprise,096,140,NORMAL,Special,100,12,0,NearOther,0,bef,"The user draws power to attack by using a held Berry. The Berry used determines its type.",NATURALGIFT
 1186,SPOOKYSNUGGLING,Spooky Snuggling,54A,0,GHOST,Status,100,5,0,NearOther,0,abef,"The user harnesses its jealousy to attack the opponent with ghostly hugs, cursing them.",
 1187,DUSTFORCE,Dust Force,54D,110,GROUND,Special,70,12,10,AllNearFoes,0,bef,"The user controls turbulent sands. ",SCORCHINGSANDS
-1188,BULLETTRAIN,Bullet Train,01F,90,STEEL,Physical,100,15,20,NearOther,0,abef,"The user becomes a pain train. It has a 20% chance to increase the user's Speed stat.",HEAVYSLAM
+1188,BULLETTRAIN,Bullet Train,5E0,90,STEEL,Physical,100,15,10,NearOther,0,abef,"The user becomes a pain train. It has a 10% chance to raise the user's Speed.",HEAVYSLAM
 1189,POISONPOLLEN,Poison Pollen,005,0,GRASS,Status,100,30,0,NearOther,0,bce,"The user scatters a cloud of poisonous dust on the target. It poisons the target.",POISONPOWDER
 1190,PARAPOLLEN,Para-Pollen,007,0,GRASS,Status,100,12,0,NearOther,0,bce,"The user scatters a cloud of painful dust that leaves the target numb.",STUNSPORE
 1191,BLACKPOWDER,Blackpowder,148,0,BUG,Status,100,15,0,NearOther,1,bce,"The target is covered in a powder that explodes if it uses a Fire-type move. It always goes first.",POWDER
@@ -270,8 +270,8 @@
 1269,VICIOUSCLEANING,Vicious Cleaning,580,80,NORMAL,Special,100,10,0,NearOther,0,be,"The user flings the dirty oil on its fur. It transfers any status condition to the target.",ACIDSPRAY
 1270,SEDATINGDUST,Sedating Dust,581,0,BUG,Status,100,10,0,NearOther,0,bce,"If the user is faster than the target, puts the target to sleep, then minimizes the user's Speed stat.",POISONPOWDER
 1271,ODDROOM,Odd Room,582,0,PSYCHIC,Status,0,10,0,BothSides,0,e,"The user creates an odd area in which Pokémon's offensive and defensive stats are swapped.",MAGICROOM
-1272,MULCHMEAL,Mulch Meal,583,0,GRASS,Status,0,10,0,User,0,d,"The user eats decaying leaves, restoring its HP by 33% and raising its Speed.",RECOVER
-1273,GUIDINGAROMA,Guiding Aroma,584,0,BUG,Status,0,12,0,NearAlly,0,,"The user raises the target's three lowest stats by using a helpful scent.",AROMATICMIST
+1272,MULCHMEAL,Mulch Meal,583,0,GRASS,Status,0,10,0,User,0,d,"The user eats decaying leaves, restoring its HP by 50% and raising its Speed.",RECOVER
+1273,GUIDINGAROMA,Guiding Aroma,584,0,BUG,Status,0,12,0,NearAlly,0,,"The user raises all of the target's attacking and defensive stats.",AROMATICMIST
 1274,FLAREWITCH,Flare Witch,585,0,FIRE,Status,0,10,0,User,0,d,"Raises Sp. Atk. Until switch out, the user's attacks spread to hit all nearby foes.",
 1275,WHIPTRANCE,Whip Trance,55F,120,FIGHTING,Special,100,10,0,NearOther,0,abefh,"The user relentlessly attacks with its whip-like hands for three turns. Critical hits land more easily.",
 1276,CRUELWHIPBLADE,Cruel Whipblade,104,30,GRASS,Physical,100,12,0,NearOther,0,abefp,"The user flicks its thorns, dealing damage and setting a layer of poison spikes around the target.",
@@ -332,7 +332,7 @@
 1331,SCARRINGSWING,Scarring Swing,042,80,DARK,Physical,100,10,100,AllNearFoes,0,abef,"The user slashes all around them, creating deep scars. This lowers each target's Attack.",
 1332,HIVEMIND,Hive Mind,57A,0,BUG,Status,0,10,0,NearAlly,0,,"The user makes its ally perform the move in the user's first slot.",
 1333,DOCILEMASK,Docile Mask,0D0,0,FAIRY,Status,100,15,0,NearOther,1,bce,"The target is taunted by a deceptive look. It can't use status moves this or next turn. This move always goes first.",PLAYNICE
-1334,MUCUSARMOR,Mucus Armor,57B,0,POISON,Status,0,10,0,User,0,d,"The user protects itself by excreting a thick mucus, drastically raising its Sp. Def stat.",
+1334,MUCUSARMOR,Mucus Armor,57B,0,POISON,Status,0,10,0,User,0,d,"The user protects itself by excreting a thick mucus, raising its Sp. Def stat by 5 stages.",
 1335,LONGSHOT,Long Shot,57C,90,NORMAL,Physical,75,25,0,NearOther,0,bef,"Inflicts physical or special damage based on the user's stats. However, it's likely to miss.",
 1336,DRYHEAT,Dry Heat,57D,90,FIRE,Special,100,10,10,NearOther,0,bef,"The target is dried out and loses Water-type. Then, it bursts into flame from the heat.",
 1337,ICICLEARMOR,Icicle Armor,57E,0,ICE,Status,0,3,0,User,4,,"Protects the user from attacks. Also frostbites any attacker who physically attacks the user.",DEFENSECURL
@@ -352,13 +352,13 @@
 1351,BEDTIME,Bed Time,003,0,FAIRY,Status,100,1,0,NearOther,0,bcel,"The target is lulled to sleep. Can only be used during a Full Moon.",SING
 1352,SKYFALL,Sky Fall,5B5,130,FLYING,Special,100,5,0,NearOther,0,abef,"Attacks while clearing weather. This move fails in the absence of a weather.",
 1353,HEARTSTOP,Heart Stop,53A,90,DARK,Special,100,12,100,AllNearOthers,0,bef,"For the rest of the round, the healing of all damaged Pokemon is reversed.",GLARE
-1354,PSYSHIELDBASH,Psyshield Bash,01D,80,PSYCHIC,Physical,100,20,100,NearOther,0,abef,"Cloaking itself in psychic energy, the user slams into the target, raising the user's Defense.",ZENHEADBUTT
+1354,PSYSHIELDBASH,Psyshield Bash,01D,80,PSYCHIC,Physical,100,20,100,NearOther,0,abef,"Cloaking itself in psychic energy, the user slams into the target, raising the user's Defense by 2 stages.",ZENHEADBUTT
 1355,HEADLONGRUSH,Headlong Rush,03C,120,GROUND,Physical,100,5,0,NearOther,0,abef,"The user smashes into the target in a full-body tackle. This cuts the user's Defenses.",STOMPINGTANTRUM
 1356,PURIFYINGFLAME,Purifying Flame,5B6,80,FIRE,Special,100,10,0,NearOther,0,bef,"If the target has a status condition, this deals double damage and heals every battler's status condition.",HEX
 1357,CEASELESSEDGE,Ceaseless Edge,103,65,DARK,Physical,100,10,0,NearOther,0,abefp,"The user slashes its shell blade at the target. Shell splinters remain scattered under the target as spikes.",NIGHTSLASH
 1358,STONEAXE,Stone Axe,105,55,ROCK,Physical,100,10,0,NearOther,0,abefp,"The user swings its stone axes. This leaves stone splinters floating around the target.",STONEEDGE
 1359,AURAARROWS,Aura Arrows,500,30,FIGHTING,Special,100,15,0,Other,0,befhn,"The user shoots three arrows made of Aura with extreme precision. Critical hits are more likely.",AURASPHERE
-1360,ESPERDIVE,Esper Dive,01F,80,PSYCHIC,Physical,100,10,100,NearOther,0,abef,"The user slashes the target with aura-enriched wings. This also boosts the user's Speed stat.",SKYATTACK
+1360,ESPERDIVE,Esper Dive,01F,80,PSYCHIC,Physical,100,10,100,NearOther,0,abef,"The user slashes the target with aura-enriched wings. This boosts the user's Speed by 2 stages.",SKYATTACK
 1361,TRIUMPHANTDANCE,Triumphant Dance,5B0,0,FIGHTING,Status,100,5,0,User,0,do,"The user dances to celebrate victory. This raises all stats if a foe fainted last turn.",WORKUP
 1362,ICEBREAKER,Icebreaker,5B1,120,ROCK,Physical,100,10,0,NearOther,0,abef,"The user charges at the target, sweeping away hazards in the with its armored jaw. The user also takes 33% recoil.",HEADSMASH
 1363,ZAPYAPPING,Zap Yapping,5B9,0,ELECTRIC,Status,0,15,0,User,2,,"This turn, all Enemies attacks becomes Electric-type and can only target the user.",GROWL
@@ -375,11 +375,11 @@
 1374,MOUTHFUL,Mouthful,5BE,1,DARK,Physical,100,10,0,NearOther,0,abef,"The user chomps hard, cutting the target's HP by half, and healing for half of that.",SUPERFANG
 1375,GOLEMGUARD,Golem Guard,5BF,0,ROCK,Status,0,5,0,User,3,d,"The user and its allies are protected from wide-ranging attacks this turn, and enemies can only target the user. Fails if used in succession.",WIDEGUARD
 1376,FREEZERAY,Freeze Ray,5C0,70,ICE,Special,100,10,100,NearOther,0,bef,"The user freezes the target in place, dealing damage and minimizing their Speed and evasiveness.",ICEBEAM
-1377,WARPEDSTRIKE,Warped Strike,5C1,80,STEEL,Physical,100,15,100,NearOther,0,abefj,"Inflicts physical or special damage, whichever deals more. Then, raises the attacking stat which wasn't used.",
+1377,WARPEDSTRIKE,Warped Strike,5C1,90,STEEL,Physical,100,15,100,NearOther,0,abefj,"Inflicts physical or special damage, whichever deals more. Then, raises the attacking stat which wasn't used.",
 1378,OPTIMIZEDACTION,Optimized Action,5C2,0,ELECTRIC,Status,0,15,0,User,0,,"The user finds the highest base power move among your able party members, and uses it.",
 1379,DRAGONASPECT,Dragon Aspect,5C3,0,DRAGON,Status,0,5,0,User,0,,"Invokes the aspects of multiple dragons, striking with two fitting moves in a row.",
-1380,CAPOEIRA,Capoeira,01F,50,FIGHTING,Physical,100,10,100,NearOther,0,befo,"Combining dance and martial art, the user strikes the target and raises its Speed.",RAPIDSPIN
-1381,FLAMEDANCE,Flame Dance,020,50,FIRE,Special,100,10,100,NearOther,0,befo,"Cloaked in flames, the user dances rhythmically, raising its Sp. Atk.",FIERYDANCE
+1380,CAPOEIRA,Capoeira,01F,50,FIGHTING,Physical,100,10,100,NearOther,0,befo,"Combining dance and martial art, the user strikes the target and raises its Speed by 2 stages.",RAPIDSPIN
+1381,FLAMEDANCE,Flame Dance,020,50,FIRE,Special,100,10,100,NearOther,0,befo,"Cloaked in flames, the user dances rhythmically, raising its Sp. Atk by 2 stages.",FIERYDANCE
 1382,AQUAWALTZ,Aqua Waltz,0DA,65,WATER,Physical,100,10,100,NearOther,0,befo,"The user attacks the target using graceful fluid movements, also forming an Aqua Ring around themselves.",
 1383,ABSOLUTERADIANCE,Absolute Radiance,5C4,120,FIRE,Special,100,5,0,Other,0,bef,"Summons sun for five turns on the first turn, then overwhelms the foe with fiery light on the second.",SURF
 1384,MAGNETIZE,Magnetize,0CF,50,STEEL,Physical,100,15,0,NearOther,0,bef,"The user strikes the target while magnetizing it, trapping and damaging it for three turns.",MAGNETBOMB
@@ -404,7 +404,7 @@
 1403,GEMSEAL,Gem Seal,5CF,0,GHOST,Status,100,15,0,NearOther,0,bce,"Disables the targets last used move for 4 turns, and cuts 4 PP from it.",DISABLE
 1404,RIVERREST,River Rest,5D0,0,WATER,Status,0,10,0,User,0,d,"The user resets in a riverbed, restoring its HP by half of max, and forming an Aqua Ring around itself.",REST
 1405,WHALESONG,Whale Song,5D1,0,WATER,Status,0,5,0,UserAndAllies,0,dk,"The user's song heals the status problems of all the party Pokémon, and forms an Aqua Ring around itself.",HEALBELL
-1406,DEEPBREATHING,Deep Breathing,5AD,0,FIGHTING,Status,0,15,0,User,0,d,"The user breathes deeply, boosting its Speed and quadrupling its critical hit chance.",FOCUSENERGY
+1406,DEEPBREATHING,Deep Breathing,5AD,0,FIGHTING,Status,0,15,0,User,0,d,"The user breathes deeply, raising its Speed by 4 stages and quadrupling its critical hit chance.",FOCUSENERGY
 1407,ANGELSKISS,Angel's Kiss,401,0,FAIRY,Status,100,10,0,NearOther,0,bce,"The user kisses the target with a sweet, angelic cuteness that dizzies the target.",SWEETKISS
 1408,MISTBURST,Mist Burst,510,130,FAIRY,Special,100,5,0,AllNearFoes,0,bef,"Attacks nearby foes with a misty explosion. User is damaged for 50% of their current HP.",MISTYEXPLOSION
 1409,ENERGYTRICK,Energy Trick,056,0,PSYCHIC,Status,0,10,0,User,0,d,"The user employs psychic power to switch its base Sp. Atk with its base Sp. Def stat.",POWERTRICK
@@ -418,3 +418,7 @@
 1417,NOISEORDER,Noise Order,401,60,BUG,Special,100,12,100,NearOther,0,bce,"The user calls out its underlings to annoy the target with buzzing sounds, dizzying it.",BUGBUZZ
 1418,REGALIA,Regalia,5D7,0,NORMAL,Status,100,15,0,NearOther,0,bce,"The user adorns the target with precious stones, changing it to your choice of Fairy, Dragon, or Steel-type.",LUCKYCHANT
 1419,ROLLINGARSENAL,Rolling Arsenal,547,90,BUG,Physical,100,10,33,NearOther,0,bef,"The user bites, claws, and stings the target while rolling. It has a 11% chance each to poison, dizzy, or leech.",CHAOSWHEEL
+220,ZEPHYRWING,Zephyr Wing,536,130,FLYING,Physical,100,5,30,Other,0,bef,"The user flies up to raise its Sp. Def by 4 stages in the first turn, then rams the foe on the second.",
+492,SWAGGER,Swagger,55D,0,NORMAL,Status,100,12,0,NearOther,0,bce,"The target's Attack stat is raised by 3 stages. It then hits itself in a rage.",
+50,FLATTER,Flatter,55E,0,DARK,Status,100,12,0,NearOther,0,bce,"The target's Sp. Atk stat is raised by 3 stages. It then hurts itself in its mental turmoil.",
+4100,SHELLSHELTER,Shell Shelter,01D,0,WATER,Status,0,30,0,User,0,d,"The user withdraws its body into its hard shell, raises both Defensive stats and gaining Shell Armor.",

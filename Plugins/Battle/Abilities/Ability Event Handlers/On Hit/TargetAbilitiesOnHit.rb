@@ -77,20 +77,6 @@ BattleHandlers::TargetAbilityOnHit.add(:COTTONDOWN,
             battle.pbHideAbilitySplash(target)
         end
     }
-  )
-
-BattleHandlers::TargetAbilityOnHit.add(:RATTLED,
-  proc { |ability, user, target, move, _battle, aiChecking, aiNumHits|
-        next unless %i[BUG DARK GHOST].include?(move.calcType)
-        if aiChecking
-            ret = 0
-            aiNumHits.times do |i|
-                ret -= getMultiStatUpEffectScore([:SPEED,1], user, target, i)
-            end
-            next ret
-        end
-        target.tryRaiseStat(:SPEED, target, ability: ability)
-  }
 )
 
 BattleHandlers::TargetAbilityOnHit.add(:STAMINA,
@@ -102,7 +88,7 @@ BattleHandlers::TargetAbilityOnHit.add(:STAMINA,
             end
             next ret
         end
-        target.tryRaiseStat(:DEFENSE, target, ability: ability)
+        target.tryRaiseStat(:DEFENSE, target, ability: ability, increment: 2)
   }
 )
 
@@ -115,7 +101,7 @@ BattleHandlers::TargetAbilityOnHit.add(:GRIT,
             end
             next ret
         end
-        target.tryRaiseStat(:SPECIAL_DEFENSE, target, ability: ability)
+        target.tryRaiseStat(:SPECIAL_DEFENSE, target, ability: ability, increment: 2)
     }
 )
 
@@ -134,7 +120,7 @@ BattleHandlers::TargetAbilityOnHit.add(:ADAPTIVESKIN,
             end
             next ret
         end
-        target.tryRaiseStat(statToRaise, target, ability: ability)
+        target.tryRaiseStat(statToRaise, target, ability: ability, increment: 2)
     }
 )
 
@@ -176,11 +162,11 @@ BattleHandlers::TargetAbilityOnHit.add(:STEAMENGINE,
         if aiChecking
             ret = 0
             aiNumHits.times do |i|
-                ret -= getMultiStatUpEffectScore([:SPEED,6], user, target, i*6)
+                ret -= getMultiStatUpEffectScore([:SPEED,12], user, target, i*6)
             end
             next ret
         end
-        target.tryRaiseStat(:SPEED, target, increment: 6, ability: ability)
+        target.pbMaximizeStatStage(:SPEED, target, target, ability: ability)
     }
 )
 
@@ -191,12 +177,12 @@ BattleHandlers::TargetAbilityOnHit.add(:FORCEREVERSAL,
             next 0 unless Effectiveness.resistant?(target.damageState.typeMod)
             ret = 0
             aiNumHits.times do |i|
-                ret -= getMultiStatUpEffectScore([:ATTACK, 1, :SPECIAL_ATTACK, 1], user, target, i)
+                ret -= getMultiStatUpEffectScore([:ATTACK, 2, :SPECIAL_ATTACK, 2], user, target, i)
             end
             next ret
         else
             next unless Effectiveness.resistant?(target.damageState.typeMod)
-            target.pbRaiseMultipleStatStages([:ATTACK, 1, :SPECIAL_ATTACK, 1], target, ability: ability)
+            target.pbRaiseMultipleStatStages([:ATTACK, 2, :SPECIAL_ATTACK, 2], target, ability: ability)
         end
     }
 )
@@ -253,7 +239,7 @@ BattleHandlers::TargetAbilityOnHit.add(:SPINTENSITY,
         battle.pbShowAbilitySplash(target, ability)
         battle.pbDisplay(_INTL("#{user.pbThis} catches the full force of #{target.pbThis(true)}'s Speed!"))
         oldStage = target.stages[:SPEED]
-        user.applyFractionalDamage(oldStage / 6.0)
+        user.applyFractionalDamage(oldStage / 8.0)
         battle.pbCommonAnimation("StatDown", target)
         target.stages[:SPEED] = 0
         battle.pbHideAbilitySplash(target)

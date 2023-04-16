@@ -8,7 +8,7 @@
 2007,PRIMEVALBULKUP,Primeval Bulk Up,606,0,FIGHTING,Status,0,1,0,User,0,dy,"The user boosts its Attack and Defense, gains a lot of weight, and becomes Fighting-type.",BULKUP
 2008,PRIMEVALSPIKES,Primeval Spikes,607,0,GROUND,Status,0,1,0,FoeSide,0,y,"The user lays 3 layers of spike traps at the foe's feet, and becomes Ground-type.",SPIKES
 2009,PRIMEVALTAILWIND,Primeval Tailwind,608,0,FLYING,Status,0,1,0,UserSide,0,dy,"The user ups the Speed and attack count of itself and allies, and becomes Flying-type.",TAILWIND
-2010,PRIMEVALCALMMIND,Primeval Calm Mind,609,0,PSYCHIC,Status,0,1,0,User,0,dy,"The user raises its Sp. Atk and Sp. Def, drastically raises its accuracy, and becomes Psychic-type.",CALMMIND
+2010,PRIMEVALCALMMIND,Primeval Calm Mind,609,0,PSYCHIC,Status,0,1,0,User,0,dy,"The user raises its Sp. Atk and Sp. Def, maximizes its Accuracy, and becomes Psychic-type.",CALMMIND
 2011,PRIMEVALSTRINGSHOT,Primeval String Shot,60A,0,BUG,Status,100,1,0,AllNearFoes,0,bey,"Nearby foes are bound with silk, sharply lowering their Speed, Atk., and Sp. Atk User also becomes Bug-type.",STRINGSHOT
 2012,PRIMEVALSANDSTORM,Primeval Sandstorm,60B,0,ROCK,Status,0,1,0,BothSides,0,y,"The user summons a sandstorm for 5 turns, boosts its Def. and Sp. Def, and becomes Rock-type.",SANDSTORM
 2013,PRIMEVALCURSE,Primeval Curse,60C,0,GHOST,Status,100,1,0,AllNearFoes,0,bey,"The user applies a damaging curse to all nearby foes. User becomes a Ghost-type.",CURSE
@@ -40,13 +40,13 @@
 2039,PRIMEVALAMNESIA,Primeval Amnesia,626,0,PSYCHIC,Status,0,1,0,User,0,dy,"The user sharply boosts its Sp. Def, gains the ability Unaware, and becomes Psychic-type.",AMNESIA
 2040,PRIMEVALHOWL,Primeval Howl,627,0,DARK,Status,0,1,0,User,0,dy,"The user summons an allied Poochyena, raises the Attack stat of itself and its allies, and becomes Dark-type.",
 2041,PRIMEVALMINDLINK,Primeval Mind Link,628,0,PSYCHIC,Status,0,1,0,User,0,dy,"The user summons an allied Abra, raises the Sp. Atk stat of itself and its allies, and becomes Psychic-type.",
-2042,PRIMEVALMETEORMASH,Primeval Meteor Mash,636,160,STEEL,Physical,100,10,100,NearOther,0,abefjy,"The target is obliterated by a meteoric strike, which raises the user's attack.",METEORMASH
+2042,PRIMEVALMETEORMASH,Primeval Meteor Mash,636,160,STEEL,Physical,100,10,100,NearOther,0,abefjy,"The target is obliterated by a meteoric strike, which raises the user's attack by 2 stages.",METEORMASH
 2043,PRIMEVALICEBEAM,Primeval Ice Beam,637,160,ICE,Special,100,10,100,NearOther,0,befy,"The target is struck with an absolute zero beam of energy, frostbiting it.",ICEBEAM
 2044,PRIMEVALROCKTOMB,Primeval Rock Tomb,638,90,ROCK,Physical,100,10,100,AllNearFoes,0,befy,"Boulders are hurled at all near enemies, harshly lowering their Speed by preventing their movement.",ROCKTOMB
 2045,PRIMEVALANCIENTPOWER,Primeval Ancient Power,639,80,ROCK,Special,100,10,100,NearOther,0,befy,"The user attacks with a prehistoric power which raises all its stats",ANCIENTPOWER
 2046,PRIMEVALTHUNDERBOLT,Primeval Thunderbolt,640,160,ELECTRIC,Special,100,1,100,NearOther,0,befy,"A powerful electric blast is let loose on the target, numbing it.",THUNDERBOLT
 2047,PRIMEVALFLAREBLITZ,Primeval Flare Blitz,641,200,FIRE,Physical,100,10,0,NearOther,0,abefy,"The user cloaks itself in fire and charges at the foe. The user also takes 33% recoil.",FLAREBLITZ
-2048,PRIMEVALMETALCLAW,Primeval Metal Claw,642,60,STEEL,Physical,100,30,100,NearOther,0,abefy,"The target is raked with steel claws twice. The user raises its attack after each hit.",METALCLAW
+2048,PRIMEVALMETALCLAW,Primeval Metal Claw,642,80,STEEL,Physical,100,30,100,NearOther,0,abefy,"The target is raked with steel claws twice. The user raises its attack after each hit.",METALCLAW
 2049,PRIMEVALSLASH,Primeval Slash,643,120,NORMAL,Physical,100,15,0,NearOther,0,abefpy,"The target is attacked with a slash of claws or blades, always critting.",SLASH
 2050,PRIMEVALBRICKBREAK,Primeval Brick Break,644,140,FIGHTING,Physical,100,12,100,NearOther,0,abefy,"The user attacks with a swift chop, destroying barriers, and drastically reducing the target's defense.",BRICKBREAK
 2051,PRIMEVALCROSSPOISON,Primeval Cross Poison,645,70,POISON,Physical,100,10,10,AllNearFoes,0,abefpy,"The user slashes all near foes with with poisonous blades or edges. Will be critical against poisoned targets.",CROSSPOISON

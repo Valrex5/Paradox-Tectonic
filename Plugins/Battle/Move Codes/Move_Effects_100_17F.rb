@@ -1213,16 +1213,13 @@ class PokeBattle_Move_135 < PokeBattle_FrostbiteMove
 end
 
 #===============================================================================
-# Increases the user's Defense by 2 stages. (Diamond Storm)
+# Currently unused.
 #===============================================================================
-class PokeBattle_Move_136 < PokeBattle_Move_02F
-    # NOTE: In Gen 6, this move increased the user's Defense by 1 stage for each
-    #       target it hit. This effect changed in Gen 7 and is now identical to
-    #       function code 02F.
+class PokeBattle_Move_136 < PokeBattle_Move
 end
 
 #===============================================================================
-# TODO: Currently unused.
+# Currently unused.
 #===============================================================================
 class PokeBattle_Move_137 < PokeBattle_Move
 end
@@ -1805,7 +1802,7 @@ class PokeBattle_Move_14F < PokeBattle_DrainMove
 end
 
 #===============================================================================
-# If this move KO's the target, increases the user's Attack by 3 stages.
+# If this move KO's the target, increases the user's Attack by 5 stages.
 # (Fell Stinger)
 #===============================================================================
 class PokeBattle_Move_150 < PokeBattle_Move
@@ -1817,7 +1814,7 @@ class PokeBattle_Move_150 < PokeBattle_Move
 
     def pbEffectAfterAllHits(user, target)
         return unless target.damageState.fainted
-        user.tryRaiseStat(:ATTACK, user, increment: 3, move: self)
+        user.tryRaiseStat(:ATTACK, user, increment: 5, move: self)
     end
 end
 

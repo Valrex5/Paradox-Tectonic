@@ -1,0 +1,11 @@
+tryRaiseStat
+StatUpMove
+
+
+MultiStatUpMove
+TargetMultiStatUpMove
+tryLowerStat
+StatDownMove
+MultiStatDownMove
+TargetMultiStatDownMove
+StatUpDownMove

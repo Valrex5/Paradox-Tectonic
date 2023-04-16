@@ -51,7 +51,7 @@ class PokeBattle_Move_182 < PokeBattle_Move
 end
 
 #===============================================================================
-# Consumes berry and raises the user's Defense by 2 stages. (Stuff Cheeks)
+# Consumes berry and raises the user's Defense and Sp. Def by 3 stages. (Stuff Cheeks)
 #===============================================================================
 class PokeBattle_Move_183 < PokeBattle_Move
     def pbMoveFailed?(user, _targets, show_message)
@@ -61,7 +61,7 @@ class PokeBattle_Move_183 < PokeBattle_Move
     end
 
     def pbEffectGeneral(user)
-        user.tryRaiseStat(:DEFENSE, user, increment: 2, move: self)
+        user.pbRaiseMultipleStatStages([:DEFENSE, 3, :SPECIAL_DEFENSE, 3], user, move: self)
         user.eachItem do |item|
             next unless GameData::Item.get(item).is_berry?
             user.pbHeldItemTriggerCheck(item, false)
@@ -70,7 +70,7 @@ class PokeBattle_Move_183 < PokeBattle_Move
     end
 
     def getEffectScore(user, target)
-        score = getMultiStatUpEffectScore([:DEFENSE, 2], user, target)
+        score = getMultiStatUpEffectScore([:DEFENSE, 3, :SPECIAL_DEFENSE, 3], user, target)
         user.eachItem do |item|
             next unless GameData::Item.get(item).is_berry?
             score += 40

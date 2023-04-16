@@ -76,13 +76,9 @@ class PokeBattle_Move_582 < PokeBattle_Move
 end
 
 #===============================================================================
-# Restores health by 33% and raises Speed by one stage. (Mulch Meal)
+# Restores health by 50% and raises Speed by one stage. (Mulch Meal)
 #===============================================================================
-class PokeBattle_Move_583 < PokeBattle_HealingMove
-    def healRatio(_user)
-        return 1.0 / 3.0
-    end
-
+class PokeBattle_Move_583 < PokeBattle_HalfHealingMove
     def pbMoveFailed?(user, _targets, show_message)
         if !user.canHeal? && !user.pbCanRaiseStatStage?(:SPEED, user, self, true)
             @battle.pbDisplay(_INTL("But it failed, since #{user.pbThis(true)} can't heal or raise its Speed!")) if show_message
@@ -140,7 +136,7 @@ class PokeBattle_Move_584 < PokeBattle_Move
 end
 
 #===============================================================================
-# Raises the user's Sp. Atk, and the user's attacks become spread. (Flare Witch)
+# Raises the user's Sp. Atk by 2 stages, and the user's attacks become spread. (Flare Witch)
 #===============================================================================
 class PokeBattle_Move_585 < PokeBattle_Move
     def pbMoveFailed?(user, _targets, show_message)
@@ -152,8 +148,14 @@ class PokeBattle_Move_585 < PokeBattle_Move
     end
 
     def pbEffectGeneral(user)
-        user.tryRaiseStat(:SPECIAL_ATTACK, user, move: self)
+        user.tryRaiseStat(:SPECIAL_ATTACK, user, move: self, increment: 3)
         user.applyEffect(:FlareWitch)
+    end
+
+    def getEffectScore(user, target)
+        score = getMultiStatUpEffectScore([:SPECIAL_ATTACK,2], user, target)
+        score += 30 unless user.effectActive?(:FlareWitch)
+        return score
     end
 end
 
@@ -255,7 +257,7 @@ class PokeBattle_Move_58B < PokeBattle_Move
 end
 
 #===============================================================================
-# The user's Speed raises two stages, and it gains the Flying-type. (Mach Flight)
+# The user's Speed raises 4 stages, and it gains the Flying-type. (Mach Flight)
 #===============================================================================
 class PokeBattle_Move_58C < PokeBattle_Move_030
     def pbMoveFailed?(user, targets, show_message)
@@ -1746,12 +1748,12 @@ class PokeBattle_Move_5D1 < PokeBattle_Move_019
 end
 
 #===============================================================================
-# Increases Speed by 1 stage and Crit Chance by 2 stages. (Deep Breathing)
+# Increases Speed by 4 stages and Crit Chance by 2 stages. (Deep Breathing)
 #===============================================================================
 class PokeBattle_Move_5D2 < PokeBattle_StatUpMove
     def initialize(battle, move)
         super
-        @statUp = [:SPEED, 1]
+        @statUp = [:SPEED, 4]
     end
 
     def pbMoveFailed?(user, _targets, show_message)
@@ -1913,5 +1915,120 @@ class PokeBattle_Move_5D7 < PokeBattle_Move
 
     def getEffectScore(_user, _target)
         return 80
+    end
+end
+
+#===============================================================================
+# Increases the user's Attack by 1 stage.
+#===============================================================================
+class PokeBattle_Move_5D8 < PokeBattle_StatUpMove
+    def initialize(battle, move)
+        super
+        @statUp = [:ATTACK, 1]
+    end
+end
+
+#===============================================================================
+# Increases the user's Attack by 3 stages.
+#===============================================================================
+class PokeBattle_Move_5D9 < PokeBattle_StatUpMove
+    def initialize(battle, move)
+        super
+        @statUp = [:ATTACK, 3]
+    end
+end
+
+#===============================================================================
+# Increases the user's Defense by 1 stage.
+#===============================================================================
+class PokeBattle_Move_5DA < PokeBattle_StatUpMove
+    def initialize(battle, move)
+        super
+        @statUp = [:DEFENSE, 1]
+    end
+end
+
+#===============================================================================
+# Increases the user's Defense by 3 stages.
+#===============================================================================
+class PokeBattle_Move_5DB < PokeBattle_StatUpMove
+    def initialize(battle, move)
+        super
+        @statUp = [:DEFENSE, 3]
+    end
+end
+
+#===============================================================================
+# Increases the user's Sp. Atk by 1 stage.
+#===============================================================================
+class PokeBattle_Move_5DC < PokeBattle_StatUpMove
+    def initialize(battle, move)
+        super
+        @statUp = [:SPECIAL_ATTACK, 1]
+    end
+end
+
+#===============================================================================
+# Increases the user's Sp. Atk by 3 stages.
+#===============================================================================
+class PokeBattle_Move_5DD < PokeBattle_StatUpMove
+    def initialize(battle, move)
+        super
+        @statUp = [:SPECIAL_ATTACK, 3]
+    end
+end
+
+#===============================================================================
+# Increases the user's Sp. Def by 1 stage.
+#===============================================================================
+class PokeBattle_Move_5DE < PokeBattle_StatUpMove
+    def initialize(battle, move)
+        super
+        @statUp = [:SPECIAL_DEFENSE, 1]
+    end
+end
+
+#===============================================================================
+# Increases the user's Sp. Def by 3 stages.
+#===============================================================================
+class PokeBattle_Move_5DF < PokeBattle_StatUpMove
+    def initialize(battle, move)
+        super
+        @statUp = [:SPECIAL_DEFENSE, 3]
+    end
+end
+
+#===============================================================================
+# Increases the user's Speed by 1 stage.
+#===============================================================================
+class PokeBattle_Move_5E0 < PokeBattle_StatUpMove
+    def initialize(battle, move)
+        super
+        @statUp = [:SPEED, 1]
+    end
+end
+
+#===============================================================================
+# Increases the user's Speed by 3 stages.
+#===============================================================================
+class PokeBattle_Move_5E1 < PokeBattle_StatUpMove
+    def initialize(battle, move)
+        super
+        @statUp = [:SPEED, 3]
+    end
+end
+
+#===============================================================================
+# Increases the user's defensive stats by 2 stages and gives them the Shell Armor ability.
+#===============================================================================
+class PokeBattle_Move_02A < PokeBattle_MultiStatUpMove
+    def initialize(battle, move)
+        super
+        @statUp = [:DEFENSE, 2, :SPECIAL_DEFENSE, 2]
+    end
+
+    def pbEffectGeneral(user)
+        super
+        user.addAbility(:SHELLARMOR,true)
     end
 end

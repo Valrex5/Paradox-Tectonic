@@ -24,7 +24,7 @@ BattleHandlers::EOREffectAbility.add(:MOODY,
       if randomUp.length > 0
           r = battle.pbRandom(randomUp.length)
           randomUpStat = randomUp[r]
-          battler.tryRaiseStat(randomUpStat, battler, increment: 2)
+          battler.tryRaiseStat(randomUpStat, battler, increment: 3)
           randomDown.delete(randomUp[r])
       end
       if randomDown.length > 0
@@ -51,11 +51,17 @@ BattleHandlers::EOREffectAbility.add(:SPEEDBOOST,
   proc { |ability, battler, _battle|
       # A Pokémon's turnCount is 0 if it became active after the beginning of a
       # round
-      battler.tryRaiseStat(:SPEED, battler, ability: ability) if battler.turnCount > 0
+      battler.tryRaiseStat(:SPEED, battler, ability: ability, increment: 2) if battler.turnCount > 0
   }
 )
 
-BattleHandlers::EOREffectAbility.copy(:SPEEDBOOST, :SPINTENSITY)
+BattleHandlers::EOREffectAbility.add(:SPINTENSITY,
+  proc { |ability, battler, _battle|
+      # A Pokémon's turnCount is 0 if it became active after the beginning of a
+      # round
+      battler.tryRaiseStat(:SPEED, battler, ability: ability) if battler.turnCount > 0
+  }
+)
 
 BattleHandlers::EOREffectAbility.add(:BALLFETCH,
   proc { |ability, battler, battle|
@@ -98,7 +104,7 @@ BattleHandlers::EOREffectAbility.add(:WARMTHCYCLE,
   proc { |ability, battler, battle|
       battle.pbShowAbilitySplash(battler, ability)
       if !battler.statStageAtMax?(:SPEED)
-          if battler.tryRaiseStat(:SPEED, battler, increment: 2)
+          if battler.tryRaiseStat(:SPEED, battler, increment: 3)
               battler.applyFractionalDamage(1.0 / 8.0, false)
               battle.pbDisplay(_INTL("{1} warmed up!", battler.pbThis))
           end

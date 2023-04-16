@@ -146,7 +146,7 @@ class PokeBattle_Move_609 < PokeBattle_Move_02C
     include EmpoweredMove
 
     def pbEffectGeneral(user)
-        user.tryRaiseStat(:ACCURACY, user, increment: 3, move: self)
+        user.pbMaximizeStatStage(:ACCURACY, user, move: self)
         super
         transformType(user, :PSYCHIC)
     end
@@ -578,7 +578,7 @@ class PokeBattle_Move_641 < PokeBattle_Move_0FB
 end
 
 # Empowered Metal Claw
-class PokeBattle_Move_642 < PokeBattle_Move_01C
+class PokeBattle_Move_642 < PokeBattle_Move_5D8
     include EmpoweredMove
 
     def multiHitMove?; return true; end

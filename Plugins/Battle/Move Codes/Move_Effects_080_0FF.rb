@@ -2110,7 +2110,7 @@ class PokeBattle_Move_0C7 < PokeBattle_TwoTurnMove
 end
 
 #===============================================================================
-# Two turn attack. Ups user's Defense by 2 stages first turn, attacks second turn.
+# Two turn attack. Ups user's Defense by 4 stages first turn, attacks second turn.
 # (Skull Bash)
 #===============================================================================
 class PokeBattle_Move_0C8 < PokeBattle_TwoTurnMove
@@ -2119,7 +2119,7 @@ class PokeBattle_Move_0C8 < PokeBattle_TwoTurnMove
     end
 
     def pbChargingTurnEffect(user, _target)
-        user.tryRaiseStat(:DEFENSE, user, increment: 2, move: self)
+        user.tryRaiseStat(:DEFENSE, user, increment: 4, move: self)
     end
 
     def getEffectScore(user, target)

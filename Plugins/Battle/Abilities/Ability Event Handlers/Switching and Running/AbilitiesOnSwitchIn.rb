@@ -176,7 +176,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:DOWNLOAD,
           oSpDef += b.spdef
       end
       stat = (oDef < oSpDef) ? :ATTACK : :SPECIAL_ATTACK
-      battler.tryRaiseStat(stat, battler, ability: ability)
+      battler.tryRaiseStat(stat, battler, ability: ability, increment: 2)
   }
 )
 
@@ -541,7 +541,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:FREERIDE,
       next unless battler.hasAlly?
       battle.pbShowAbilitySplash(battler, ability)
       battler.eachAlly do |b|
-          b.tryRaiseStat(:SPEED, battler)
+          b.tryRaiseStat(:SPEED, battler, increment: 2)
       end
       battle.pbHideAbilitySplash(battler)
   }

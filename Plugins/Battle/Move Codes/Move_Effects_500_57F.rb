@@ -195,7 +195,7 @@ class PokeBattle_Move_50A < PokeBattle_Move
 end
 
 #===============================================================================
-# If this move KO's the target, increases the user's Sp. Atk by 3 stages.
+# If this move KO's the target, increases the user's Sp. Atk by 5 stages.
 # (Slight)
 #===============================================================================
 class PokeBattle_Move_50B < PokeBattle_Move
@@ -207,7 +207,7 @@ class PokeBattle_Move_50B < PokeBattle_Move
 
     def pbEffectAfterAllHits(user, target)
         return unless target.damageState.fainted
-        user.tryRaiseStat(:SPECIAL_ATTACK, user, increment: 3, move: self)
+        user.tryRaiseStat(:SPECIAL_ATTACK, user, increment: 5, move: self)
     end
 end
 
@@ -491,7 +491,7 @@ class PokeBattle_Move_51E < PokeBattle_Move
 end
 
 #===============================================================================
-# If the move misses, the user gains Special Attack and Accuracy. (Rockapult)
+# If the move misses, the user gains Accuracy. (Rockapult)
 #===============================================================================
 class PokeBattle_Move_51F < PokeBattle_Move
     # This method is called if a move fails to hit all of its targets
@@ -501,7 +501,7 @@ class PokeBattle_Move_51F < PokeBattle_Move
     end
 
     def getEffectScore(user, _target)
-        return getMultiStatUpEffectScore([:SPECIAL_ATTACK, 1, :ACCURACY, 1], user, user) * 0.5
+        return getMultiStatUpEffectScore([:ACCURACY, 1], user, user) * 0.5
     end
 end
 
@@ -812,7 +812,7 @@ class PokeBattle_Move_531 < PokeBattle_Move
 end
 
 #===============================================================================
-# Raises worst stat two stages, second worst stat by one stage. (Breakdance)
+# Raises worst stat four stages, second worst stat by two stages. (Breakdance)
 #===============================================================================
 class PokeBattle_Move_532 < PokeBattle_Move
     def pbMoveFailed?(user, _targets, show_message)
@@ -833,8 +833,8 @@ class PokeBattle_Move_532 < PokeBattle_Move
             next user.pbCanRaiseStatStage?(stat, user, self)
         end
         statsRanked = statsUserCanRaise.sort_by { |_s, v| v }
-        user.tryRaiseStat(statsRanked[0][0], user, increment: 2, move: self) if statsRanked.length > 0
-        user.tryRaiseStat(statsRanked[1][0], user, move: self) if statsRanked.length > 1
+        user.tryRaiseStat(statsRanked[0][0], user, increment: 3, move: self) if statsRanked.length > 0
+        user.tryRaiseStat(statsRanked[1][0], user, increment: 3, move: self) if statsRanked.length > 1
     end
 
     # TODO
@@ -889,7 +889,7 @@ class PokeBattle_Move_535 < PokeBattle_Move
 end
 
 #===============================================================================
-# Two turn attack. Ups user's Special Defense by 2 stage first turn, attacks second turn.
+# Two turn attack. Ups user's Special Defense by 4 stages first turn, attacks second turn.
 # (Zephyr Wing)
 #===============================================================================
 class PokeBattle_Move_536 < PokeBattle_TwoTurnMove
@@ -898,7 +898,7 @@ class PokeBattle_Move_536 < PokeBattle_TwoTurnMove
     end
 
     def pbChargingTurnEffect(user, _target)
-        user.tryRaiseStat(:SPECIAL_DEFENSE, user, increment: 2, move: self)
+        user.tryRaiseStat(:SPECIAL_DEFENSE, user, increment: 4, move: self)
     end
 
     def getEffectScore(user, target)
@@ -1034,7 +1034,7 @@ end
 #===============================================================================
 # (Not currently used)
 #===============================================================================
-class PokeBattle_Move_53D < PokeBattle_HealingMove
+class PokeBattle_Move_53D < PokeBattle_Move
 end
 
 #===============================================================================
@@ -1129,17 +1129,17 @@ class PokeBattle_Move_541 < PokeBattle_Move
 end
 
 #===============================================================================
-# Target's speed is drastically raised. (Propellant)
+# Target's speed is raised. (Propellant)
 #===============================================================================
 class PokeBattle_Move_542 < PokeBattle_Move
     def pbAdditionalEffect(user, target)
         return if target.damageState.substitute
-        target.tryRaiseStat(:SPEED, user, increment: 2, move: self)
+        target.tryRaiseStat(:SPEED, user, move: self)
     end
 
     def getEffectScore(user, target)
         return 0 if target.damageState.substitute
-        return -getMultiStatUpEffectScore([:SPEED, 2], user, target)
+        return -getMultiStatUpEffectScore([:SPEED, 1], user, target)
     end
 end
 
@@ -1525,40 +1525,40 @@ end
 
 def selfHitBasePower(level)
     calcLevel = [level, 50].min
-    selfHitBasePower = (20 + calcLevel)
+    selfHitBasePower = (25 + calcLevel * 1.2)
     selfHitBasePower = selfHitBasePower.ceil
     return selfHitBasePower
 end
 
 #===============================================================================
-# Increases the target's Attack by 2 stages, then the target hits itself with its own attack. (new!Swagger)
+# Increases the target's Attack by 3 stages, then the target hits itself with its own attack. (Swagger)
 #===============================================================================
 class PokeBattle_Move_55D < PokeBattle_Move
     def pbEffectAgainstTarget(user, target)
-        target.tryRaiseStat(:ATTACK, user, increment: 2, move: self)
+        target.tryRaiseStat(:ATTACK, user, increment: 3, move: self)
         target.pbConfusionDamage(_INTL("It hurt itself in rage!"), false, false, selfHitBasePower(target.level))
     end
 
     def getEffectScore(user, target)
         score = 120
-        score -= getMultiStatUpEffectScore([:ATTACK, 2], user, target)
+        score -= getMultiStatUpEffectScore([:ATTACK, 3], user, target)
         return score
     end
 end
 
 #===============================================================================
-# Increases the target's Sp. Atk. by 2 stages, then the target hits itself with its own Sp. Atk. (new!Flatter)
+# Increases the target's Sp. Atk. by 3 stages, then the target hits itself with its own Sp. Atk. (Flatter)
 #===============================================================================
 class PokeBattle_Move_55E < PokeBattle_Move
     def pbEffectAgainstTarget(user, target)
-        target.tryRaiseStat(:SPECIAL_ATTACK, user, increment: 2, move: self)
+        target.tryRaiseStat(:SPECIAL_ATTACK, user, increment: 3, move: self)
         target.pbConfusionDamage(_INTL("It hurt itself in mental turmoil!"), true, false,
 selfHitBasePower(target.level))
     end
 
     def getEffectScore(user, target)
         score = 120
-        score -= getMultiStatUpEffectScore([:SPECIAL_ATTACK, 2], user, target)
+        score -= getMultiStatUpEffectScore([:SPECIAL_ATTACK, 3], user, target)
         return score
     end
 end
@@ -2034,12 +2034,12 @@ class PokeBattle_Move_57A < PokeBattle_Move
 end
 
 #===============================================================================
-# Increases the user's Sp. Def by 3 stages. (Mucus Armor)
+# Increases the user's Sp. Def by 5 stages. (Mucus Armor)
 #===============================================================================
 class PokeBattle_Move_57B < PokeBattle_StatUpMove
     def initialize(battle, move)
         super
-        @statUp = [:SPECIAL_DEFENSE, 3]
+        @statUp = [:SPECIAL_DEFENSE, 5]
     end
 end
 

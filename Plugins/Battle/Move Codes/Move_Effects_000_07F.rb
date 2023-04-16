@@ -441,34 +441,29 @@ class PokeBattle_Move_01B < PokeBattle_Move
 end
 
 #===============================================================================
-# Increases the user's Attack by 1 stage.
+# Increases the user's Attack by 2 stage.
 #===============================================================================
 class PokeBattle_Move_01C < PokeBattle_StatUpMove
     def initialize(battle, move)
         super
-        @statUp = [:ATTACK, 1]
+        @statUp = [:ATTACK, 2]
     end
 end
 
 #===============================================================================
-# Increases the user's Defense by 1 stage. (Harden, Steel Wing, Withdraw)
+# Increases the user's Defense by 2 stages.
 #===============================================================================
 class PokeBattle_Move_01D < PokeBattle_StatUpMove
     def initialize(battle, move)
         super
-        @statUp = [:DEFENSE, 1]
+        @statUp = [:DEFENSE, 2]
     end
 end
 
 #===============================================================================
-# Increases the user's Defense by 1 stage. User curls up. (Defense Curl)
+# Increases the user's Defense and Sp. Def by 2 stages. User curls up. (Defense Curl)
 #===============================================================================
-class PokeBattle_Move_01E < PokeBattle_StatUpMove
-    def initialize(battle, move)
-        super
-        @statUp = [:DEFENSE, 1]
-    end
-
+class PokeBattle_Move_01E < PokeBattle_Move_02A
     def pbEffectGeneral(user)
         user.applyEffect(:DefenseCurl)
         super
@@ -476,33 +471,33 @@ class PokeBattle_Move_01E < PokeBattle_StatUpMove
 end
 
 #===============================================================================
-# Increases the user's Speed by 1 stage. (Flame Charge)
+# Increases the user's Speed by 2 stages.
 #===============================================================================
 class PokeBattle_Move_01F < PokeBattle_StatUpMove
     def initialize(battle, move)
         super
-        @statUp = [:SPEED, 1]
+        @statUp = [:SPEED, 2]
     end
 end
 
 #===============================================================================
-# Increases the user's Special Attack by 1 stage. (Charge Beam, Fiery Dance)
+# Increases the user's Special Attack by 2 stage.
 #===============================================================================
 class PokeBattle_Move_020 < PokeBattle_StatUpMove
     def initialize(battle, move)
         super
-        @statUp = [:SPECIAL_ATTACK, 1]
+        @statUp = [:SPECIAL_ATTACK, 2]
     end
 end
 
 #===============================================================================
-# Increases the user's Special Defense by 1 stage.
+# Increases the user's defensive stats by 2 stages each.
 # Charges up user's next attack if it is Electric-type. (Charge)
 #===============================================================================
-class PokeBattle_Move_021 < PokeBattle_StatUpMove
+class PokeBattle_Move_021 < PokeBattle_MultiStatUpMove
     def initialize(battle, move)
         super
-        @statUp = [:SPECIAL_DEFENSE, 1]
+        @statUp = [:DEFENSE, 2, :SPECIAL_DEFENSE, 2]
     end
 
     def pbEffectGeneral(user)
@@ -528,13 +523,9 @@ class PokeBattle_Move_021 < PokeBattle_StatUpMove
 end
 
 #===============================================================================
-# Increases the user's evasion by 1 stage. (Double Team)
+# (Not currently used.)
 #===============================================================================
-class PokeBattle_Move_022 < PokeBattle_StatUpMove
-    def initialize(battle, move)
-        super
-        @statUp = [:EVASION, 1]
-    end
+class PokeBattle_Move_022 < PokeBattle_Move
 end
 
 #===============================================================================
@@ -677,32 +668,32 @@ class PokeBattle_Move_02D < PokeBattle_MultiStatUpMove
 end
 
 #===============================================================================
-# Increases the user's Attack by 2 stages. (Swords Dance)
+# Increases the user's Attack by 4 stages. (Swords Dance)
 #===============================================================================
 class PokeBattle_Move_02E < PokeBattle_StatUpMove
     def initialize(battle, move)
         super
-        @statUp = [:ATTACK, 2]
+        @statUp = [:ATTACK, 4]
     end
 end
 
 #===============================================================================
-# Increases the user's Defense by 2 stages. (Acid Armor, Barrier, Iron Defense)
+# Increases the user's Defense by 4 stages. (Barrier, Iron Defense)
 #===============================================================================
 class PokeBattle_Move_02F < PokeBattle_StatUpMove
     def initialize(battle, move)
         super
-        @statUp = [:DEFENSE, 2]
+        @statUp = [:DEFENSE, 4]
     end
 end
 
 #===============================================================================
-# Increases the user's Speed by 2 stages. (Agility, Rock Polish)
+# Increases the user's Speed by 4 stages. (Agility, Rock Polish)
 #===============================================================================
 class PokeBattle_Move_030 < PokeBattle_StatUpMove
     def initialize(battle, move)
         super
-        @statUp = [:SPEED, 2]
+        @statUp = [:SPEED, 4]
     end
 
     def getEffectScore(user, target)
@@ -713,57 +704,48 @@ class PokeBattle_Move_030 < PokeBattle_StatUpMove
 end
 
 #===============================================================================
-# Increases the user's Speed by 2 stages. Lowers user's weight by 100kg.
+# Increases the user's Speed by 4 stages. Lowers user's weight by 100kg.
 # (Autotomize)
 #===============================================================================
 class PokeBattle_Move_031 < PokeBattle_StatUpMove
     def initialize(battle, move)
         super
-        @statUp = [:SPEED, 2]
+        @statUp = [:SPEED, 4]
     end
 
     def pbEffectGeneral(user)
         if user.pbWeight + user.effects[:WeightChange] > 1
             user.effects[:WeightChange] -= 100
-            @battle.pbDisplay(_INTL("{1} became nimble!", user.pbThis))
+            @battle.pbDisplay(_INTL("{1} became lighter!", user.pbThis))
         end
         super
     end
 end
 
 #===============================================================================
-# Increases the user's Special Attack by 2 stages. (Nasty Plot)
+# Increases the user's Special Attack by 4 stages. (Nasty Plot)
 #===============================================================================
 class PokeBattle_Move_032 < PokeBattle_StatUpMove
     def initialize(battle, move)
         super
-        @statUp = [:SPECIAL_ATTACK, 2]
+        @statUp = [:SPECIAL_ATTACK, 4]
     end
 end
 
 #===============================================================================
-# Increases the user's Special Defense by 2 stages. (Amnesia)
+# Increases the user's Special Defense by 4 stages. (Amnesia)
 #===============================================================================
 class PokeBattle_Move_033 < PokeBattle_StatUpMove
     def initialize(battle, move)
         super
-        @statUp = [:SPECIAL_DEFENSE, 2]
+        @statUp = [:SPECIAL_DEFENSE, 4]
     end
 end
 
 #===============================================================================
-# Increases the user's evasion by 2 stages. Minimizes the user. (Minimize)
+# Currently unused.
 #===============================================================================
-class PokeBattle_Move_034 < PokeBattle_StatUpMove
-    def initialize(battle, move)
-        super
-        @statUp = [:EVASION, 2]
-    end
-
-    def pbEffectGeneral(user)
-        user.applyEffect(:Minimize)
-        super
-    end
+class PokeBattle_Move_034 < PokeBattle_Move
 end
 
 #===============================================================================
@@ -790,54 +772,28 @@ class PokeBattle_Move_036 < PokeBattle_MultiStatUpMove
 end
 
 #===============================================================================
-# Increases one random stat of the target by 2 stages (except HP). (Acupressure)
+# (Currently unused)
 #===============================================================================
 class PokeBattle_Move_037 < PokeBattle_Move
-    def pbFailsAgainstTarget?(user, target, show_message)
-        @statArray = []
-        GameData::Stat.each_battle do |s|
-            @statArray.push(s.id) if target.pbCanRaiseStatStage?(s.id, user, self)
-        end
-        if @statArray.length == 0
-            @battle.pbDisplay(_INTL("{1}'s stats won't go any higher!", target.pbThis)) if show_message
-            return true
-        end
-        return false
-    end
-
-    def pbEffectAgainstTarget(user, target)
-        stat = @statArray.sample
-        target.tryRaiseStat(stat, user, increment: 2, move: self)
-    end
-
-    def getEffectScore(_user, target)
-        score = 80 # Annoying moves tax
-        statStageTotal = 0
-        GameData::Stat.each_battle do |s|
-            statStageTotal += target.stages[s.id]
-        end
-        score -= statStageTotal * 5
-        return score
-    end
 end
 
 #===============================================================================
-# Increases the user's Defense by 3 stages. (Cotton Guard)
+# Increases the user's Defense by 5 stages. (Cotton Guard)
 #===============================================================================
 class PokeBattle_Move_038 < PokeBattle_StatUpMove
     def initialize(battle, move)
         super
-        @statUp = [:DEFENSE, 3]
+        @statUp = [:DEFENSE, 5]
     end
 end
 
 #===============================================================================
-# Increases the user's Special Attack by 3 stages. (Tail Glow)
+# Increases the user's Special Attack by 5 stages. (Tail Glow)
 #===============================================================================
 class PokeBattle_Move_039 < PokeBattle_StatUpMove
     def initialize(battle, move)
         super
-        @statUp = [:SPECIAL_ATTACK, 3]
+        @statUp = [:SPECIAL_ATTACK, 5]
     end
 end
 
@@ -926,67 +882,15 @@ class PokeBattle_Move_03F < PokeBattle_StatDownMove
 end
 
 #===============================================================================
-# Increases the target's Special Attack by 2 stages. Charms the target. (Old!Flatter)
+# Currently unused.
 #===============================================================================
 class PokeBattle_Move_040 < PokeBattle_Move
-    def pbMoveFailed?(user, targets, show_message)
-        failed = true
-        targets.each do |b|
-            next if !b.pbCanRaiseStatStage?(:SPECIAL_ATTACK, user, self) &&
-                    !b.canCharm?(user, false, self)
-            failed = false
-            break
-        end
-        if failed
-            @battle.pbDisplay(_INTL("But it failed, since #{target.pbThis(true)} can't be confused or have its Sp. Atk raised!")) if show_message
-            return true
-        end
-        return false
-    end
-
-    def pbEffectAgainstTarget(user, target)
-        target.tryRaiseStat(:SPECIAL_ATTACK, user, self, 2)
-        target.pbCharm if target.canCharm?(user, false, self)
-    end
-
-    def getEffectScore(user, target)
-        return 0 if target.canCharm?(user, false, self)
-        score = 100
-        score += 30 unless target.hasSpecialAttack?
-        return score
-    end
 end
 
 #===============================================================================
-# Increases the target's Attack by 2 stages. Confuses the target. (Old!Swagger)
+# Currently unused.
 #===============================================================================
 class PokeBattle_Move_041 < PokeBattle_Move
-    def pbMoveFailed?(user, targets, show_message)
-        failed = true
-        targets.each do |b|
-            next if !b.pbCanRaiseStatStage?(:ATTACK, user, self) &&
-                    !b.canConfuse?(user, false, self)
-            failed = false
-            break
-        end
-        if failed
-            @battle.pbDisplay(_INTL("But it failed, since #{target.pbThis(true)} can't be confused or have its Attack raised!")) if show_message
-            return true
-        end
-        return false
-    end
-
-    def pbEffectAgainstTarget(user, target)
-        target.tryRaiseStat(:ATTACK, user, self, 2)
-        target.pbConfuse if target.canConfuse?(user, false, self)
-    end
-
-    def getEffectScore(user, target)
-        return 0 if target.canConfuse?(user, false, self)
-        score = 100
-        score += 30 unless target.hasPhysicalAttack?
-        return score
-    end
 end
 
 #===============================================================================
