@@ -1225,14 +1225,14 @@ class PokeBattle_Move_137 < PokeBattle_Move
 end
 
 #===============================================================================
-# Increases target's Defense and Special Defense by 1 stage. (Aromatic Mist)
+# Increases target's Defense and Special Defense by 3 stages. (Aromatic Mist)
 #===============================================================================
 class PokeBattle_Move_138 < PokeBattle_TargetMultiStatUpMove
     def ignoresSubstitute?(_user); return true; end
 
     def initialize(battle, move)
         super
-        @statUp = [:DEFENSE, 1, :SPECIAL_DEFENSE, 1]
+        @statUp = [:DEFENSE, 3, :SPECIAL_DEFENSE, 3]
     end
 end
 
@@ -1320,83 +1320,15 @@ class PokeBattle_Move_13D < PokeBattle_TargetStatDownMove
 end
 
 #===============================================================================
-# Increases the Attack and Special Attack of all Grass-type Pokémon in battle by
-# 1 stage each. (Rototiller)
+# (Not currently used)
 #===============================================================================
 class PokeBattle_Move_13E < PokeBattle_Move
-    def initialize(battle, move)
-        super
-        @statUp = [:ATTACK, 1, :SPECIAL_ATTACK, 1]
-    end
-
-    def pbMoveFailed?(user, _targets, show_message)
-        @battle.eachBattler do |b|
-            return false if isValidTarget?(user, b)
-        end
-        @battle.pbDisplay(_INTL("But it failed, since it has no valid targets!")) if show_message
-        return true
-    end
-
-    def isValidTarget?(user, target)
-        return false unless target.pbHasType?(:GRASS)
-        return false if target.semiInvulnerable?
-        return false if !target.pbCanRaiseStatStage?(:ATTACK, user,
-  self) && !target.pbCanRaiseStatStage?(:SPECIAL_ATTACK, user, self)
-        return true
-    end
-
-    def pbFailsAgainstTarget?(user, target, _show_message)
-        return !isValidTarget?(user, target)
-    end
-
-    def pbEffectAgainstTarget(user, target)
-        target.pbRaiseMultipleStatStages(@statUp, user, move: self)
-    end
-
-    def getEffectScore(user, target)
-        return getMultiStatUpEffectScore(@statUp, user, target) if isValidTarget?(user, target)
-        return 0
-    end
 end
 
 #===============================================================================
-# Increases the Defense and Sp. Def of all Grass-type self and allies by 1 stage each.
-# (Flower Shield)
+# (Not currently used)
 #===============================================================================
 class PokeBattle_Move_13F < PokeBattle_Move
-    def initialize(battle, move)
-        super
-        @statUp = [:DEFENSE, 1, :SPECIAL_DEFENSE, 1]
-    end
-
-    def pbMoveFailed?(user, _targets, show_message)
-        @battle.eachBattler do |b|
-            return false if isValidTarget?(user, b)
-        end
-        @battle.pbDisplay(_INTL("But it failed, since it has no valid targets!")) if show_message
-        return true
-    end
-
-    def isValidTarget?(user, target)
-        return false unless target.pbHasType?(:GRASS)
-        return false if target.semiInvulnerable?
-        return false if !target.pbCanRaiseStatStage?(:DEFENSE, user,
-  self) && !target.pbCanRaiseStatStage?(:SPECIAL_DEFENSE, user, self)
-        return true
-    end
-
-    def pbFailsAgainstTarget?(user, target, _show_message)
-        return !isValidTarget?(user, target)
-    end
-
-    def pbEffectAgainstTarget(user, target)
-        target.pbRaiseMultipleStatStages(@statUp, user, move: self)
-    end
-
-    def getEffectScore(user, target)
-        return getMultiStatUpEffectScore(@statUp, user, target) if isValidTarget?(user, target)
-        return 0
-    end
 end
 
 #===============================================================================
@@ -2720,13 +2652,13 @@ class PokeBattle_Move_178 < PokeBattle_Move
 end
 
 #===============================================================================
-# Raises all user's stats by 1 stage in exchange for the user losing 1/3 of its
+# Raises all user's stats by 2 stages in exchange for the user losing 1/3 of its
 # maximum HP, rounded down. Fails if the user would faint. (Clangorous Soul)
 #===============================================================================
 class PokeBattle_Move_179 < PokeBattle_MultiStatUpMove
     def initialize(battle, move)
         super
-        @statUp = [:ATTACK, 1, :DEFENSE, 1, :SPECIAL_ATTACK, 1, :SPECIAL_DEFENSE, 1, :SPEED, 1]
+        @statUp = [:ATTACK, 2, :DEFENSE, 2, :SPECIAL_ATTACK, 2, :SPECIAL_DEFENSE, 2, :SPEED, 2]
     end
 
     def pbMoveFailed?(user, targets, show_message)
@@ -2783,13 +2715,13 @@ class PokeBattle_Move_17A < PokeBattle_Move
 end
 
 #===============================================================================
-# The user sharply raises the target's Attack and Sp. Atk stats by decorating
+# The user raises the target's Attack and Sp. Atk by 5 stages by decorating
 # the target. (Decorate)
 #===============================================================================
 class PokeBattle_Move_17B < PokeBattle_TargetMultiStatUpMove
     def initialize(battle, move)
         super
-        @statUp = [:ATTACK, 2, :SPECIAL_ATTACK, 2]
+        @statUp = [:ATTACK, 5, :SPECIAL_ATTACK, 5]
     end
 end
 
@@ -2934,7 +2866,7 @@ end
 class PokeBattle_Move_17F < PokeBattle_MultiStatUpMove
     def initialize(battle, move)
         super
-        @statUp = [:ATTACK, 1, :DEFENSE, 1, :SPECIAL_ATTACK, 1, :SPECIAL_DEFENSE, 1, :SPEED, 1]
+        @statUp = [:ATTACK, 2, :DEFENSE, 2, :SPECIAL_ATTACK, 2, :SPECIAL_DEFENSE, 2, :SPEED, 2]
     end
 
     def pbMoveFailed?(user, targets, show_message)

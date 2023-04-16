@@ -857,13 +857,13 @@ class PokeBattle_Move_5AC < PokeBattle_Move
 end
 
 #===============================================================================
-# Increases Attack, Defense and Crit Chance
+# Raises Attack and Defense by 2 stages, and Crit Chance by 1.
 # (Martial Mastery)
 #===============================================================================
 class PokeBattle_Move_5AD < PokeBattle_MultiStatUpMove
     def initialize(battle, move)
         super
-        @statUp = [:ATTACK, 1, :DEFENSE, 1]
+        @statUp = [:ATTACK, 2, :DEFENSE, 2]
 	end
 
 	def pbMoveFailed?(user, _targets, show_message)
@@ -1028,13 +1028,13 @@ class PokeBattle_Move_5B6 < PokeBattle_Move
 end
 
 #===============================================================================
-# All stats up, fails if the attack was not used the turn after a foe fainted.
+# All stats raised by 1 stage. Fails if the attack was not used the turn after a foe fainted.
 # (Triumphant Dance)
 #===============================================================================
 class PokeBattle_Move_5B7 < PokeBattle_MultiStatUpMove
 	def initialize(battle, move)
         super
-        @statUp = [:ATTACK, 1, :DEFENSE, 1, :SPECIAL_ATTACK, 1, :SPECIAL_DEFENSE, 1, :SPEED, 1]
+        @statUp = [:ATTACK, 2, :DEFENSE, 2, :SPECIAL_ATTACK, 2, :SPECIAL_DEFENSE, 2, :SPEED, 2]
     end
 	
 	def pbMoveFailed?(user, targets, show_message)
@@ -1088,20 +1088,20 @@ class PokeBattle_Move_5B9 < PokeBattle_Move_117
 end
 
 #===============================================================================
-# Increases the user's Attack and Sp. Attack by 1 stage each.
-# In moonglow, also increases the user's Speed. (Scheme)
+# Increases the user's Attack and Sp. Attack by 2 stage eachs.
+# In moonglow, also increases the user's Speed by 2 stages. (Scheme)
 #===============================================================================
 class PokeBattle_Move_5BA < PokeBattle_MultiStatUpMove
     def initialize(battle, move)
         super
-        @statUp = [:ATTACK, 1, :SPECIAL_ATTACK, 1]
+        @statUp = [:ATTACK, 2, :SPECIAL_ATTACK, 2]
     end
 
     def pbOnStartUse(_user, _targets)
         if @battle.pbWeather == :Moonglow
-            @statUp = [:ATTACK, 1, :SPECIAL_ATTACK, 1, :SPEED, 1]
+            @statUp = [:ATTACK, 1, :SPECIAL_ATTACK, 2, :SPEED, 2]
         else
-            @statUp = [:ATTACK, 1, :SPECIAL_ATTACK, 1]
+            @statUp = [:ATTACK, 2, :SPECIAL_ATTACK, 2]
         end
     end
 
@@ -1524,13 +1524,13 @@ class PokeBattle_Move_5C9 < PokeBattle_Move
 end
 
 #===============================================================================
-# Increases Sp. Atk, Sp. Def and Crit Chance
+# Increases Sp. Atk and Sp. Def by 2 stages, and Crit Chance by 1 stage.
 # (Tranquil Prayer)
 #===============================================================================
 class PokeBattle_Move_5CA < PokeBattle_MultiStatUpMove
     def initialize(battle, move)
         super
-        @statUp = [:SPECIAL_ATTACK, 1, :SPECIAL_DEFENSE, 1]
+        @statUp = [:SPECIAL_ATTACK, 2, :SPECIAL_DEFENSE, 2]
 	end
     
 	def pbMoveFailed?(user, _targets, show_message)
@@ -1649,12 +1649,12 @@ class PokeBattle_Move_5CD < PokeBattle_Move
 end
 
 #===============================================================================
-# Boosts Targets' Sp. Atk and Sp. Def (Tutelage)
+# Boosts Targets' Sp. Atk and Sp. Def by 2 stages. (Tutelage)
 #===============================================================================
 class PokeBattle_Move_5CE < PokeBattle_TargetMultiStatUpMove
     def initialize(battle, move)
         super
-        @statUp = [:SPECIAL_ATTACK, 1, :SPECIAL_DEFENSE, 1]
+        @statUp = [:SPECIAL_ATTACK, 2, :SPECIAL_DEFENSE, 2]
     end
 end
 
@@ -2021,7 +2021,7 @@ end
 #===============================================================================
 # Increases the user's defensive stats by 2 stages and gives them the Shell Armor ability.
 #===============================================================================
-class PokeBattle_Move_02A < PokeBattle_MultiStatUpMove
+class PokeBattle_Move_5E2 < PokeBattle_MultiStatUpMove
     def initialize(battle, move)
         super
         @statUp = [:DEFENSE, 2, :SPECIAL_DEFENSE, 2]
@@ -2030,5 +2030,27 @@ class PokeBattle_Move_02A < PokeBattle_MultiStatUpMove
     def pbEffectGeneral(user)
         super
         user.addAbility(:SHELLARMOR,true)
+    end
+end
+
+#===============================================================================
+# Increases the user's Speed and Sp. Atk by 2 stages. (Frolic)
+#===============================================================================
+class PokeBattle_Move_5E3 < PokeBattle_MultiStatUpMove
+    def aiAutoKnows?(pokemon); return true; end
+
+    def initialize(battle, move)
+        super
+        @statUp = [:SPEED, 2, :SPECIAL_ATTACK, 2]
+    end
+end
+
+#===============================================================================
+# Increases the user's Sp. Atk and accuracy by 3 stages each.
+#===============================================================================
+class PokeBattle_Move_5E4 < PokeBattle_MultiStatUpMove
+    def initialize(battle, move)
+        super
+        @statUp = [:SPECIAL_ATTACK, 3, :ACCURACY, 3]
     end
 end

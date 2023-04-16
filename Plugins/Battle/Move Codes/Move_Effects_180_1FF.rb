@@ -249,12 +249,12 @@ class PokeBattle_Move_18D < PokeBattle_Move
 end
 
 #===============================================================================
-# Boosts Targets' Attack and Defense (Coaching)
+# Boosts Targets' Attack and Defense by 2 stages each. (Coaching)
 #===============================================================================
 class PokeBattle_Move_18E < PokeBattle_TargetMultiStatUpMove
     def initialize(battle, move)
         super
-        @statUp = [:ATTACK, 1, :DEFENSE, 1]
+        @statUp = [:ATTACK, 2, :DEFENSE, 2]
     end
 end
 

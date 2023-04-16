@@ -99,6 +99,9 @@
 4098,BREACH,Breach,174,90,WATER,Physical,100,10,0,NearOther,2,abef,"Only works on the first turn the user is in battle. This move always goes first.",DIVE
 4099,PREYMARK,Prey Mark,402,60,BUG,Physical,100,15,100,NearOther,0,abef,"The user marks the target as eternal prey, leeching it.",MEANLOOK
 4100,WITHDRAW,Withdraw,01D,0,WATER,Status,0,30,0,User,0,d,"The user withdraws its body into its hard shell, raising its Defense stat.",
-4100,BARRIER,Barrier,02F,0,PSYCHIC,Status,0,15,0,User,0,d,"The user throws up a sturdy wall that sharply raises its Defense stat.",
-4100,ACIDARMOR,Acid Armor,02F,0,POISON,Status,0,15,0,User,0,d,"The user alters its cellular structure to liquefy itself, sharply raising its Defense stat.",
-4101,NASTYPLOT,Nasty Plot,032,0,DARK,Status,0,15,0,User,0,d,"The user stimulates its brain by thinking bad thoughts. It raises the user's Sp. Atk by 4 stages.",
+4101,BARRIER,Barrier,02F,0,PSYCHIC,Status,0,15,0,User,0,d,"The user throws up a sturdy wall that sharply raises its Defense stat.",
+4102,ACIDARMOR,Acid Armor,02F,0,POISON,Status,0,15,0,User,0,d,"The user alters its cellular structure to liquefy itself, sharply raising its Defense stat.",
+4103,NASTYPLOT,Nasty Plot,032,0,DARK,Status,0,15,0,User,0,d,"The user stimulates its brain by thinking bad thoughts. It raises the user's Sp. Atk by 4 stages.",
+4104,GEARUP,Gear Up,15C,0,STEEL,Status,0,15,0,UserAndAllies,0,d,"The user engages its gears to raise the Attack and Sp. Atk of allies with the Plus or Minus Ability.",
+4105,ROTOTILLER,Rototiller,13E,0,GROUND,Status,0,10,0,UserAndAllies,0,,"The user tills the soil to encourage plant growth. This raises the Attack and Sp. Atk of Grass type allies.",
+4106,FLOWERSHIELD,Flower Shield,13F,0,FAIRY,Status,0,10,0,UserAndAllies,0,,"The user raises the Defense and Sp. Def of all Grass-type Pokémon on its side.",

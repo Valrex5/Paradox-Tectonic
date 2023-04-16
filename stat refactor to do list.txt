@@ -1,9 +1,10 @@
 tryRaiseStat
 StatUpMove
-
-
 MultiStatUpMove
 TargetMultiStatUpMove
+PokeBattle_TeamStatBuffMove
+
+
 tryLowerStat
 StatDownMove
 MultiStatDownMove

@@ -3,7 +3,7 @@
 2002,PRIMEVALSUNSHINE,Primeval Sunshine,601,0,FIRE,Status,0,1,0,BothSides,0,y,"The user summons sunshine for 5 turns, boosts its Atk. and Sp. Atk, and becomes Fire-type.",SUNSHINE
 2003,PRIMEVALRAIN,Primeval Rain,602,0,WATER,Status,0,1,0,BothSides,0,y,"The user summons rain for 5 turns, surrounds itself with healing water, and becomes Water-type.",RAIN
 2004,PRIMEVALLEECHSEED,Primeval Leech Seed,603,0,GRASS,Status,100,1,0,AllNearFoes,0,bey,"Plants seeds on all near foes, draining HP each turn. User becomes Grass-type.",LEECHSEED
-2005,PRIMEVALLIGHTNINGDANCE,Primeval Lightning Dance,604,0,ELECTRIC,Status,0,1,0,User,0,doy,"The user sharply boosts its Sp. Atk and Speed stats, and becomes Electric-type.",LIGHTNINGDANCE
+2005,PRIMEVALLIGHTNINGDANCE,Primeval Lightning Dance,604,0,ELECTRIC,Status,0,1,0,User,0,doy,"The user raises its Sp. Atk and Speed by 2 stages, and becomes Electric-type.",LIGHTNINGDANCE
 2006,PRIMEVALHAIL,Primeval Hail,605,0,ICE,Status,0,1,0,BothSides,0,y,"The user summons a hail storm for 5 turns, harshly reduces the speed of all enemies, and becomes Ice-type.",HAIL
 2007,PRIMEVALBULKUP,Primeval Bulk Up,606,0,FIGHTING,Status,0,1,0,User,0,dy,"The user boosts its Attack and Defense, gains a lot of weight, and becomes Fighting-type.",BULKUP
 2008,PRIMEVALSPIKES,Primeval Spikes,607,0,GROUND,Status,0,1,0,FoeSide,0,y,"The user lays 3 layers of spike traps at the foe's feet, and becomes Ground-type.",SPIKES
@@ -12,7 +12,7 @@
 2011,PRIMEVALSTRINGSHOT,Primeval String Shot,60A,0,BUG,Status,100,1,0,AllNearFoes,0,bey,"Nearby foes are bound with silk, sharply lowering their Speed, Atk., and Sp. Atk User also becomes Bug-type.",STRINGSHOT
 2012,PRIMEVALSANDSTORM,Primeval Sandstorm,60B,0,ROCK,Status,0,1,0,BothSides,0,y,"The user summons a sandstorm for 5 turns, boosts its Def. and Sp. Def, and becomes Rock-type.",SANDSTORM
 2013,PRIMEVALCURSE,Primeval Curse,60C,0,GHOST,Status,100,1,0,AllNearFoes,0,bey,"The user applies a damaging curse to all nearby foes. User becomes a Ghost-type.",CURSE
-2014,PRIMEVALDRAGONDANCE,Primeval Dragon Dance,60D,0,DRAGON,Status,0,1,0,User,0,doy,"The user sharply boosts its Attack and Speed, and becomes Dragon-type.",DRAGONDANCE
+2014,PRIMEVALDRAGONDANCE,Primeval Dragon Dance,60D,0,DRAGON,Status,0,1,0,User,0,doy,"The user raises its Attack and Speed by 2 stages, and becomes Dragon-type.",DRAGONDANCE
 2015,PRIMEVALTORMENT,Primeval Torment,60E,0,DARK,Status,100,1,0,AllNearFoes,0,bey,"The user torments and enrages the foe, making it incapable of using the same move twice in a row.",TORMENT
 2016,PRIMEVALLASERFOCUS,Primeval Laser Focus,60F,0,STEEL,Status,0,1,0,User,0,dy,"The user focuses intently, making every future attack critical. The user becomes a Steel-type.",LASERFOCUS
 2017,PRIMEVALPUZZLEROOM,Primeval Puzzle Room,610,0,FAIRY,Status,0,1,0,User,0,dy,"The user creates a Puzzle Room for 5 turns, raises both of its Attacking stats, and becomes Fairy-type.",PUZZLEROOM

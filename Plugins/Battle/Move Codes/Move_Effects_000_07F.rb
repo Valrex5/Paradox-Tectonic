@@ -463,7 +463,12 @@ end
 #===============================================================================
 # Increases the user's Defense and Sp. Def by 2 stages. User curls up. (Defense Curl)
 #===============================================================================
-class PokeBattle_Move_01E < PokeBattle_Move_02A
+class PokeBattle_Move_01E < PokeBattle_StatUpMove
+    def initialize(battle, move)
+        super
+        @statUp = [:DEFENSE, 2, :SPECIAL_DEFENSE, 2]
+    end
+
     def pbEffectGeneral(user)
         user.applyEffect(:DefenseCurl)
         super
@@ -555,45 +560,43 @@ end
 class PokeBattle_Move_024 < PokeBattle_MultiStatUpMove
     def initialize(battle, move)
         super
-        @statUp = [:ATTACK, 1, :DEFENSE, 1]
+        @statUp = [:ATTACK, 2, :DEFENSE, 2]
     end
 end
 
 #===============================================================================
-# Increases the user's Attack, Defense and accuracy by 1 stage each. (Coil)
+# Increases the user's Attack, Defense and accuracy by 2 stages each. (Coil)
 #===============================================================================
 class PokeBattle_Move_025 < PokeBattle_MultiStatUpMove
     def initialize(battle, move)
         super
-        @statUp = [:ATTACK, 1, :DEFENSE, 1, :ACCURACY, 1]
+        @statUp = [:ATTACK, 2, :DEFENSE, 2, :ACCURACY, 2]
     end
 end
 
 #===============================================================================
-# Increases the user's Attack and Speed by 1 stage each. (Dragon Dance)
+# Increases the user's Attack by 2 stages, and Speed by 1. (Dragon Dance)
 #===============================================================================
 class PokeBattle_Move_026 < PokeBattle_MultiStatUpMove
-    def aiAutoKnows?(pokemon); return true; end
-
     def initialize(battle, move)
         super
-        @statUp = [:ATTACK, 1, :SPEED, 1]
+        @statUp = [:ATTACK, 2, :SPEED, 1]
     end
 end
 
 #===============================================================================
-# Increases the user's Attack and Special Attack by 1 stage each. (Work Up)
+# Increases the user's Attack and Special Attack by 2 stages each. (Work Up)
 #===============================================================================
 class PokeBattle_Move_027 < PokeBattle_MultiStatUpMove
     def initialize(battle, move)
         super
-        @statUp = [:ATTACK, 1, :SPECIAL_ATTACK, 1]
+        @statUp = [:ATTACK, 2, :SPECIAL_ATTACK, 2]
     end
 end
 
 #===============================================================================
-# Increases the user's Attack and Sp. Attack by 1 stage each.
-# In sunny weather, increases are 2 stages each instead. (Growth)
+# Increases the user's Attack and Sp. Attack by 2 stage eachs.
+# In sunny weather, increases are 4 stages each instead. (Growth)
 #===============================================================================
 class PokeBattle_Move_028 < PokeBattle_MultiStatUpMove
     def initialize(battle, move)
@@ -613,28 +616,28 @@ class PokeBattle_Move_028 < PokeBattle_MultiStatUpMove
 end
 
 #===============================================================================
-# Increases the user's Attack and accuracy by 1 stage each. (Hone Claws)
+# Increases the user's Attack and accuracy by 3 stages each. (Hone Claws)
 #===============================================================================
 class PokeBattle_Move_029 < PokeBattle_MultiStatUpMove
     def initialize(battle, move)
         super
-        @statUp = [:ATTACK, 1, :ACCURACY, 1]
+        @statUp = [:ATTACK, 3, :ACCURACY, 3]
     end
 end
 
 #===============================================================================
-# Increases the user's Defense and Special Defense by 1 stage each.
+# Increases the user's Defense and Special Defense by 2 stages each.
 # (Cosmic Power, Defend Order)
 #===============================================================================
 class PokeBattle_Move_02A < PokeBattle_MultiStatUpMove
     def initialize(battle, move)
         super
-        @statUp = [:DEFENSE, 1, :SPECIAL_DEFENSE, 1]
+        @statUp = [:DEFENSE, 2, :SPECIAL_DEFENSE, 2]
     end
 end
 
 #===============================================================================
-# Increases the user's Sp. Attack, Sp. Defense and Speed by 1 stage each.
+# Raises the user's Sp. Attack and Sp. Defense by 2 stages each, and Speed by 1.
 # (Quiver Dance)
 #===============================================================================
 class PokeBattle_Move_02B < PokeBattle_MultiStatUpMove
@@ -642,22 +645,22 @@ class PokeBattle_Move_02B < PokeBattle_MultiStatUpMove
 
     def initialize(battle, move)
         super
-        @statUp = [:SPECIAL_ATTACK, 1, :SPECIAL_DEFENSE, 1, :SPEED, 1]
+        @statUp = [:SPECIAL_ATTACK, 2, :SPECIAL_DEFENSE, 2, :SPEED, 1]
     end
 end
 
 #===============================================================================
-# Increases the user's Sp. Attack and Sp. Defense by 1 stage each. (Calm Mind)
+# Raises the user's Sp. Attack and Sp. Defense by 2 stage eachs. (Calm Mind)
 #===============================================================================
 class PokeBattle_Move_02C < PokeBattle_MultiStatUpMove
     def initialize(battle, move)
         super
-        @statUp = [:SPECIAL_ATTACK, 1, :SPECIAL_DEFENSE, 1]
+        @statUp = [:SPECIAL_ATTACK, 2, :SPECIAL_DEFENSE, 2]
     end
 end
 
 #===============================================================================
-# Increases the user's Attack, Defense, Speed, Special Attack and Special Defense
+# Raises the user's Attack, Defense, Speed, Special Attack and Special Defense
 # by 1 stage each. (Ancient Power, Ominous Wind, Silver Wind)
 #===============================================================================
 class PokeBattle_Move_02D < PokeBattle_MultiStatUpMove
@@ -762,12 +765,14 @@ class PokeBattle_Move_035 < PokeBattle_StatUpDownMove
 end
 
 #===============================================================================
-# Increases the user's Speed by 2 stages, and its Attack by 1 stage. (Shift Gear)
+# Increases the user's Attack and Speed by 2 stages each. (Shift Gear)
 #===============================================================================
 class PokeBattle_Move_036 < PokeBattle_MultiStatUpMove
+    def aiAutoKnows?(pokemon); return true; end
+
     def initialize(battle, move)
         super
-        @statUp = [:SPEED, 2, :ATTACK, 1]
+        @statUp = [:SPEED, 2, :ATTACK, 2]
     end
 end
 
