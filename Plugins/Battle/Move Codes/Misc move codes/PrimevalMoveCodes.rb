@@ -25,20 +25,20 @@ module EmpoweredMove
     end
 end
 
-# Empowered Heal Bell
-class PokeBattle_Move_600 < PokeBattle_Move_019
-    include EmpoweredMove
+# # Empowered Heal Bell
+# class PokeBattle_Move_600 < PokeBattle_Move_019
+#     include EmpoweredMove
 
-    def pbEffectGeneral(user)
-        # Double supers here is intentional
-        super
-        super
-        @battle.eachSameSideBattler(user) do |b|
-            b.applyFractionalHealing(1.0 / 2.0)
-        end
-        transformType(user, :NORMAL)
-    end
-end
+#     def pbEffectGeneral(user)
+#         # Double supers here is intentional
+#         super
+#         super
+#         @battle.eachSameSideBattler(user) do |b|
+#             b.applyFractionalHealing(1.0 / 2.0)
+#         end
+#         transformType(user, :NORMAL)
+#     end
+# end
 
 # Empowered Sunshine
 class PokeBattle_Move_601 < PokeBattle_Move_0FF
@@ -297,16 +297,45 @@ class PokeBattle_Move_614 < PokeBattle_MultiStatUpMove
     end
 end
 
-# Empowered Aromatherapy
-class PokeBattle_Move_615 < PokeBattle_Move_019
+# # Empowered Aromatherapy
+# class PokeBattle_Move_615 < PokeBattle_Move_019
+#     include EmpoweredMove
+
+#     def pbEffectGeneral(user)
+#         # Double supers here is intentional
+#         super
+#         super
+#         user.pbRaiseMultipleStatStages([:ATTACK, 1, :SPECIAL_ATTACK, 1], user, move: self)
+#         transformType(user, :GRASS)
+#     end
+# end
+
+# Empowered Ingrain
+class PokeBattle_Move_615 < PokeBattle_Move
     include EmpoweredMove
 
+    def pbMoveFailed?(user, _targets, show_message)
+        if user.effectActive?(:EmpoweredIngrain)
+            if show_message
+                @battle.pbDisplay(_INTL("But it failed, since #{user.pbThis(true)}'s roots are already planted!"))
+            end
+            return true
+        end
+        return false
+    end
+
     def pbEffectGeneral(user)
-        # Double supers here is intentional
-        super
-        super
-        user.pbRaiseMultipleStatStages(ATTACKING_STATS_1, user, move: self)
+        user.applyEffect(:EmpoweredIngrain,4)
         transformType(user, :GRASS)
+    end
+
+    def getEffectScore(user, _target)
+        score = 50
+        score += 30 if @battle.pbIsTrapped?(user.index)
+        score += 20 if user.firstTurn?
+        score += 20 if user.aboveHalfHealth?
+        score *= 2
+        return score
     end
 end
 
@@ -329,8 +358,7 @@ class PokeBattle_Move_617 < PokeBattle_Move_09D
 
     def pbEffectGeneral(user)
         super
-        GameData::Stat.each_battle { |s| user.stages[s.id] = 0 if user.stages[s.id] < 0 }
-        @battle.pbDisplay(_INTL("{1}'s negative stat changes were eliminated!", user.pbThis))
+        user.pbRaiseMultipleStatStages([:ATTACK, 1, :SPECIAL_ATTACK, 1], user, move: self)
         transformType(user, :PSYCHIC)
     end
 end
@@ -540,6 +568,28 @@ class PokeBattle_Move_628 < PokeBattle_Move_549
         summonAvatar(user, :ABRA, _INTL("#{user.pbThis} gathers an new mind!"))
         super
         transformType(user, :PSYCHIC)
+    end
+end
+
+# Empowered Growl
+class PokeBattle_Move_629 < PokeBattle_Move_042
+    include EmpoweredMove
+
+    def pbEffectGeneral(user)
+        super
+        user.tryRaiseStat(:ATTACK, user, move: self, increment: 2)
+        transformType(user, :NORMAL)
+    end
+end
+
+# Empowered Dazzle
+class PokeBattle_Move_630 < PokeBattle_Move_045
+    include EmpoweredMove
+
+    def pbEffectGeneral(user)
+        super
+        user.tryRaiseStat(:SPECIAL_ATTACK, user, move: self, increment: 2)
+        transformType(user, :NORMAL)
     end
 end
 

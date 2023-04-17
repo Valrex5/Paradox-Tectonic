@@ -26,7 +26,7 @@ class PokeBattle_Battler
         end
         shiftedStage = stage + STAT_STAGE_BOUND
         mult = STAGE_MULTIPLIERS[shiftedStage].to_f / STAGE_DIVISORS[shiftedStage].to_f
-        mult = (mult + 1.0) / 2.0 if boss?
+        mult = (mult + 1.0) / 2.0 if boss? && AVATAR_DILUTED_STAT_STAGES
         return mult
     end
 
@@ -113,6 +113,7 @@ class PokeBattle_Battler
         return false if increment <= 0
         # Stat up animation and message
         @battle.pbCommonAnimation("StatUp", self) if showAnim
+        increment /= 2.0 if boss? && AVATAR_DILUTED_STAT_STAGES
         if increment == 1
             raiseMessage = _INTL("{1}'s {2} rose!", pbThis, GameData::Stat.get(stat).name)
         else
@@ -145,6 +146,7 @@ class PokeBattle_Battler
         return false if increment <= 0
         # Stat up animation and message
         @battle.pbCommonAnimation("StatUp", self) if showAnim
+        increment /= 2.0 if boss? && AVATAR_DILUTED_STAT_STAGES
         if user.index == @index
             if increment == 1
                 raiseMessage = _INTL("{1}'s {2} raised its {3}!", pbThis, cause, GameData::Stat.get(stat).name)
@@ -312,6 +314,7 @@ class PokeBattle_Battler
         trauma = user&.hasActiveAbility?(:TRAUMATIZING)
         @battle.pbShowAbilitySplash(user, :TRAUMATIZING) if trauma
         @battle.pbCommonAnimation("StatDown", self) if showAnim
+        increment /= 2.0 if boss? && AVATAR_DILUTED_STAT_STAGES
         if increment == 1
             lowerMessage = _INTL("{1}'s {2} fell!", pbThis, GameData::Stat.get(stat).name)
         else
@@ -384,6 +387,7 @@ class PokeBattle_Battler
         return false if increment <= 0
         # Stat down animation and message
         @battle.pbCommonAnimation("StatDown", self) if showAnim
+        increment /= 2.0 if boss? && AVATAR_DILUTED_STAT_STAGES
         if user.index == @index
             if increment == 1
                 lowerMessage = _INTL("{1}'s {2} lowered its {3}!", pbThis, cause, GameData::Stat.get(stat).name)
@@ -615,5 +619,15 @@ showAnim: showAnim, ability: nil, cause: cause)
 
     def pbResetStatStages
         GameData::Stat.each_battle { |s| @stages[s.id] = 0 }
+    end
+    
+    def pbResetLoweredStatStages(showMessage = false)
+        anyReset = false
+        GameData::Stat.each_battle { |s|
+            next unless @stages[s.id] < 0
+            @stages[s.id] = 0
+            anyReset = true
+        }
+        @battle.pbDisplay(_INTL("{1}'s negative stat changes were eliminated!", pbThis)) if showMessage && anyReset
     end
 end
