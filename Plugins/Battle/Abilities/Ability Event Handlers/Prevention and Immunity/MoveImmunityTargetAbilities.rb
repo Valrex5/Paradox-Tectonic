@@ -178,7 +178,7 @@ BattleHandlers::MoveImmunityTargetAbility.add(:TELEPATHY,
 )
 
 BattleHandlers::MoveImmunityTargetAbility.add(:WONDERGUARD,
-  proc { |ability, _user, target, move, type, battle, showMessages, aiChecking|
+  proc { |ability, user, target, move, type, battle, showMessages, aiChecking|
       next false if move.statusMove?
       next false if !type
       if aiChecking

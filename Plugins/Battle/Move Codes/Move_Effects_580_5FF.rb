@@ -2212,7 +2212,7 @@ end
 #===============================================================================
 # Does Double Damage under gravity (Falling Apple)
 #===============================================================================
-class PokeBattle_Move_5F2 < PokeBattle_TargetStatDownMove
+class PokeBattle_Move_5F2 < PokeBattle_Move
     def pbBaseDamage(baseDmg, _user, _target)
         baseDmg *= 2.0 if @battle.field.effectActive?(:Gravity)
         return baseDmg
