@@ -7,14 +7,15 @@ PokeBattle_TeamStatBuffMove
 pbBattleStatIncreasingBerry
 pbRaiseMultipleStatStages
 pbBattleMoveImmunityStatAbility
-
 tryLowerStat
-@statDown
-StatDownMove
-MultiStatDownMove
 TargetMultiStatDownMove
+StatDownMove
 StatUpDownMove
+@statDown
+PokeBattle_TargetStatDownMove
 pbLowerMultipleStatStages
+New applin sig move
 
-meteor beam...?
 harshly/sharply/drastically
+Standardize capitalization of stat names
+stages => steps

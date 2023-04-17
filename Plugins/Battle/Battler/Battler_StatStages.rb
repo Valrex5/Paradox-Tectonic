@@ -1,3 +1,10 @@
+ALL_STATS_1 = [:ATTACK, 1, :SPECIAL_ATTACK, 1, :DEFENSE, 1, :SPECIAL_DEFENSE, 1, :SPEED, 1].freeze
+ALL_STATS_2 = [:ATTACK, 2, :SPECIAL_ATTACK, 2, :DEFENSE, 2, :SPECIAL_DEFENSE, 2, :SPEED, 2].freeze
+ATTACKING_STATS_1 = [:ATTACK, 1, :SPECIAL_ATTACK, 2].freeze
+ATTACKING_STATS_2 = [:ATTACK, 2, :SPECIAL_ATTACK, 2].freeze
+DEFENDING_STATS_1 = [:DEFENSE, 1, :SPECIAL_DEFENSE, 2].freeze
+DEFENDING_STATS_2 = [:DEFENSE, 2, :SPECIAL_DEFENSE, 2].freeze
+
 class PokeBattle_Battler
     def validateStat(stat)
         raise "Given #{stat} is not a symbol!" unless stat.is_a?(Symbol)
@@ -9,7 +16,7 @@ class PokeBattle_Battler
     #=============================================================================
     # Calculate stats based on stat stages.
     #=============================================================================
-    STAT_STAGE_BOUND = 6
+    STAT_STAGE_BOUND = 12
     STAGE_MULTIPLIERS = [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8].freeze
     STAGE_DIVISORS    = [8, 7.5, 7, 6.5, 6, 5.5, 5, 4.5, 4, 3.5, 3, 2.5, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2].freeze
 

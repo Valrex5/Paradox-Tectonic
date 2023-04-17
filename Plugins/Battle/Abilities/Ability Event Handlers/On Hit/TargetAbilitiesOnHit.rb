@@ -189,12 +189,12 @@ BattleHandlers::TargetAbilityOnHit.add(:FORCEREVERSAL,
             next 0 unless Effectiveness.resistant?(target.damageState.typeMod)
             ret = 0
             aiNumHits.times do |i|
-                ret -= getMultiStatUpEffectScore([:ATTACK, 2, :SPECIAL_ATTACK, 2], user, target, i)
+                ret -= getMultiStatUpEffectScore(ATTACKING_STATS_2, user, target, i)
             end
             next ret
         else
             next unless Effectiveness.resistant?(target.damageState.typeMod)
-            target.pbRaiseMultipleStatStages([:ATTACK, 2, :SPECIAL_ATTACK, 2], target, ability: ability)
+            target.pbRaiseMultipleStatStages(ATTACKING_STATS_2, target, ability: ability)
         end
     }
 )

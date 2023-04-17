@@ -427,7 +427,7 @@ end
 class PokeBattle_Move_112 < PokeBattle_MultiStatUpMove
     def initialize(battle, move)
         super
-        @statUp = [:DEFENSE, 1, :SPECIAL_DEFENSE, 1]
+        @statUp = DEFENDING_STATS_1
     end
 
     def pbMoveFailed?(user, _targets, show_message)
@@ -991,163 +991,81 @@ class PokeBattle_Move_125 < PokeBattle_Move
 end
 
 #===============================================================================
-# NOTE: Shadow moves use function codes 126-132 inclusive.
+# Not currently used.
 #===============================================================================
-module ShadowMoveAI
-    def getEffectScore(user, target)
-        echoln("The AI for Shadow moves is not created.")
-        super
-    end
+class PokeBattle_Move_126 < PokeBattle_Move
 end
 
 #===============================================================================
-# No additional effect. (Shadow Blast, Shadow Blitz, Shadow Break, Shadow Rave,
-# Shadow Rush, Shadow Wave)
+# Not currently used.
 #===============================================================================
-class PokeBattle_Move_126 < PokeBattle_Move_000
-    include ShadowMoveAI
+class PokeBattle_Move_127 < PokeBattle_Move
 end
 
 #===============================================================================
-# Numbs the target. (Shadow Bolt)
+# Not currently used.
 #===============================================================================
-class PokeBattle_Move_127 < PokeBattle_Move_007
-    include ShadowMoveAI
+class PokeBattle_Move_128 < PokeBattle_Move
 end
 
 #===============================================================================
-# Burns the target. (Shadow Fire)
+# Not currently used.
 #===============================================================================
-class PokeBattle_Move_128 < PokeBattle_Move_00A
-    include ShadowMoveAI
+class PokeBattle_Move_129 < PokeBattle_Move
 end
 
 #===============================================================================
-# Freezes the target. (Shadow Chill)
+# Not currently used.
 #===============================================================================
-class PokeBattle_Move_129 < PokeBattle_Move_00C
-    include ShadowMoveAI
+class PokeBattle_Move_12A < PokeBattle_Move
 end
 
 #===============================================================================
-# Confuses the target. (Shadow Panic)
+# Not currently used.
 #===============================================================================
-class PokeBattle_Move_12A < PokeBattle_Move_013
-    include ShadowMoveAI
+class PokeBattle_Move_12B < PokeBattle_Move
 end
 
 #===============================================================================
-# Decreases the target's Defense by 2 stages. (Shadow Down)
+# Not currently used.
 #===============================================================================
-class PokeBattle_Move_12B < PokeBattle_Move_04C
-    include ShadowMoveAI
+class PokeBattle_Move_12C < PokeBattle_Move
 end
 
 #===============================================================================
-# Decreases the target's evasion by 2 stages. (Shadow Mist)
+# Not currently used.
 #===============================================================================
-class PokeBattle_Move_12C < PokeBattle_TargetStatDownMove
-    include ShadowMoveAI
-
-    def initialize(battle, move)
-        super
-        @statDown = [:EVASION, 2]
-    end
+class PokeBattle_Move_12D < PokeBattle_Move
 end
 
 #===============================================================================
-# Power is doubled if the target is using Dive. (Shadow Storm)
-#===============================================================================
-class PokeBattle_Move_12D < PokeBattle_Move_075
-    include ShadowMoveAI
-end
-
-#===============================================================================
-# Two turn attack. On first turn, halves the HP of all active Pokémon.
-# Skips second turn (if successful). (Shadow Half)
+# Not currently used.
 #===============================================================================
 class PokeBattle_Move_12E < PokeBattle_Move
-    include ShadowMoveAI
-
-    def pbMoveFailed?(_user, _targets, show_message)
-        failed = true
-        @battle.eachBattler do |b|
-            next if b.hp == 1
-            failed = false
-            break
-        end
-        if failed
-            @battle.pbDisplay(_INTL("But it failed!")) if show_message
-            return true
-        end
-        return false
-    end
-
-    def pbEffectGeneral(user)
-        @battle.eachBattler do |b|
-            next if b.hp == 1
-            b.pbReduceHP(i.hp / 2, false)
-        end
-        @battle.pbDisplay(_INTL("Each Pokémon's HP was halved!"))
-        @battle.eachBattler { |b| b.pbItemHPHealCheck }
-        user.applyEffect(:HyperBeam, 2)
-    end
 end
 
 #===============================================================================
-# Target can no longer switch out or flee, as long as the user remains active.
-# (Shadow Hold)
+# Not currently used.
 #===============================================================================
-class PokeBattle_Move_12F < PokeBattle_Move_0EF
-    include ShadowMoveAI
+class PokeBattle_Move_12F < PokeBattle_Move
 end
 
 #===============================================================================
-# User takes recoil damage equal to 1/2 of its current HP. (Shadow End)
+# Not currently used.
 #===============================================================================
-class PokeBattle_Move_130 < PokeBattle_RecoilMove
-    include ShadowMoveAI
-
-    def recoilFactor; return 0.5; end
-
-    def pbEffectAfterAllHits(user, target)
-        return if user.fainted? || target.damageState.unaffected
-        # NOTE: This move's recoil is not prevented by Rock Head/Magic Guard.
-        amt = pbRecoilDamage(user, target)
-        amt = 1 if amt < 1
-        user.pbReduceHP(amt, false)
-        @battle.pbDisplay(_INTL("{1} is damaged by recoil!", user.pbThis))
-        user.pbItemHPHealCheck
-    end
+class PokeBattle_Move_130 < PokeBattle_Move
 end
 
 #===============================================================================
-# Starts shadow weather. (Shadow Sky)
+# Not currently used.
 #===============================================================================
-class PokeBattle_Move_131 < PokeBattle_WeatherMove
-    include ShadowMoveAI
-
-    def initialize(battle, move)
-        super
-        @weatherType = :ShadowSky
-    end
+class PokeBattle_Move_131 < PokeBattle_Move
 end
 
 #===============================================================================
-# Ends the effects of Light Screen, Reflect and Safeguard on both sides.
-# (Shadow Shed)
+# Not currently used.
 #===============================================================================
 class PokeBattle_Move_132 < PokeBattle_Move
-    include ShadowMoveAI
-
-    def pbEffectGeneral(_user)
-        @battle.sides.each do |side|
-            side.eachEffect(true) do |effect, _value, data|
-                side.disableEffect(effect) if data.is_screen?
-            end
-        end
-        @battle.pbDisplay(_INTL("It broke all barriers!"))
-    end
 end
 
 #===============================================================================
@@ -1173,13 +1091,13 @@ class PokeBattle_Move_135 < PokeBattle_FrostbiteMove
 end
 
 #===============================================================================
-# Currently unused.
+# (Not currently used.)
 #===============================================================================
 class PokeBattle_Move_136 < PokeBattle_Move
 end
 
 #===============================================================================
-# Currently unused.
+# (Not currently used.)
 #===============================================================================
 class PokeBattle_Move_137 < PokeBattle_Move
 end
@@ -1197,21 +1115,13 @@ class PokeBattle_Move_138 < PokeBattle_TargetMultiStatUpMove
 end
 
 #===============================================================================
-# Decreases the target's Attack by 1 stage. Always hits. (Play Nice)
+# (Not currently used)
 #===============================================================================
-class PokeBattle_Move_139 < PokeBattle_TargetStatDownMove
-    def ignoresSubstitute?(_user); return true; end
-
-    def initialize(battle, move)
-        super
-        @statDown = [:ATTACK, 1]
-    end
-
-    def pbAccuracyCheck(_user, _target); return true; end
+class PokeBattle_Move_139 < PokeBattle_Move
 end
 
 #===============================================================================
-# Decreases the target's Attack and Special Attack by 1 stage each. Always hits.
+# Decreases the target's Attack and Special Attack by 2 stages each. Always hits.
 # (Noble Roar)
 #===============================================================================
 class PokeBattle_Move_13A < PokeBattle_TargetMultiStatDownMove
@@ -1219,7 +1129,7 @@ class PokeBattle_Move_13A < PokeBattle_TargetMultiStatDownMove
 
     def initialize(battle, move)
         super
-        @statDown = [:ATTACK, 1, :SPECIAL_ATTACK, 1]
+        @statDown = ATTACKING_STATS_2
     end
 
     def pbAccuracyCheck(_user, _target); return true; end
@@ -1234,7 +1144,7 @@ class PokeBattle_Move_13B < PokeBattle_StatDownMove
 
     def initialize(battle, move)
         super
-        @statDown = [:DEFENSE, 1]
+        @statDown = [:DEFENSE, 2]
     end
 
     def pbMoveFailed?(user, _targets, show_message)
@@ -1256,26 +1166,18 @@ class PokeBattle_Move_13B < PokeBattle_StatDownMove
 end
 
 #===============================================================================
-# Decreases the target's Special Attack by 1 stage. Always hits. (Confide)
+# (Not currently used.)
 #===============================================================================
-class PokeBattle_Move_13C < PokeBattle_TargetStatDownMove
-    def ignoresSubstitute?(_user); return true; end
-
-    def initialize(battle, move)
-        super
-        @statDown = [:SPECIAL_ATTACK, 1]
-    end
-
-    def pbAccuracyCheck(_user, _target); return true; end
+class PokeBattle_Move_13C < PokeBattle_Move
 end
 
 #===============================================================================
-# Decreases the target's Special Attack by 2 stages. (Eerie Impulse)
+# Decreases the target's Special Attack by 4 stages. (Eerie Impulse)
 #===============================================================================
 class PokeBattle_Move_13D < PokeBattle_TargetStatDownMove
     def initialize(battle, move)
         super
-        @statDown = [:SPECIAL_ATTACK, 2]
+        @statDown = [:SPECIAL_ATTACK, 4]
     end
 end
 
@@ -1293,12 +1195,12 @@ end
 
 #===============================================================================
 # Decreases the Attack, Special Attack and Speed of all nearby poisoned foes
-# by 1. (Venom Drench)
+# by 3 stages each. (Venom Drench)
 #===============================================================================
 class PokeBattle_Move_140 < PokeBattle_Move
     def initialize(battle, move)
         super
-        @statDown = [:ATTACK, 1, :SPECIAL_ATTACK, 1, :SPEED, 1]
+        @statDown = [:ATTACK, 3, :SPECIAL_ATTACK, 3, :SPEED, 3]
     end
 
     def pbMoveFailed?(user, _targets, show_message)
@@ -1719,7 +1621,7 @@ class PokeBattle_Move_151 < PokeBattle_TargetMultiStatDownMove
 
     def initialize(battle, move)
         super
-        @statDown = [:ATTACK, 1, :SPECIAL_ATTACK, 1]
+        @statDown = ATTACKING_STATS_2
     end
 
     def pbEndOfMoveUsageEffect(user, targets, numHits, switchedBattlers)
@@ -2011,12 +1913,12 @@ class PokeBattle_Move_15E < PokeBattle_Move
 end
 
 #===============================================================================
-# Decreases the user's Defense by 1 stage. (Clanging Scales)
+# Decreases the user's Defense by 3 stages. (Clanging Scales)
 #===============================================================================
 class PokeBattle_Move_15F < PokeBattle_StatDownMove
     def initialize(battle, move)
         super
-        @statDown = [:DEFENSE, 1]
+        @statDown = [:DEFENSE, 3]
     end
 end
 

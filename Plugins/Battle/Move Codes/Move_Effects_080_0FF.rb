@@ -2804,32 +2804,9 @@ class PokeBattle_Move_0E1 < PokeBattle_FixedDamageMove
 end
 
 #===============================================================================
-# Decreases the target's Attack and Special Attack by 2 stages each. (Memento)
-# User faints (if successful).
+# (Not currently used.)
 #===============================================================================
-class PokeBattle_Move_0E2 < PokeBattle_TargetMultiStatDownMove
-    def initialize(battle, move)
-        super
-        @statDown = [:ATTACK, 2, :SPECIAL_ATTACK, 2]
-    end
-
-    # NOTE: The user faints even if the target's stats cannot be changed, so this
-    #       method must always return false to allow the move's usage to continue.
-    def pbFailsAgainstTarget?(_user, _target, _show_message)
-        return false
-    end
-
-    def pbSelfKO(user)
-        return if user.fainted?
-        user.pbReduceHP(user.hp, false)
-        user.pbItemHPHealCheck
-    end
-
-    def getEffectScore(user, target)
-        score = super
-        score += getSelfKOMoveScore(user, target)
-        return score
-    end
+class PokeBattle_Move_0E2 < PokeBattle_Move
 end
 
 #===============================================================================

@@ -466,7 +466,7 @@ end
 class PokeBattle_Move_01E < PokeBattle_StatUpMove
     def initialize(battle, move)
         super
-        @statUp = [:DEFENSE, 2, :SPECIAL_DEFENSE, 2]
+        @statUp = DEFENDING_STATS_2
     end
 
     def pbEffectGeneral(user)
@@ -502,7 +502,7 @@ end
 class PokeBattle_Move_021 < PokeBattle_MultiStatUpMove
     def initialize(battle, move)
         super
-        @statUp = [:DEFENSE, 2, :SPECIAL_DEFENSE, 2]
+        @statUp = DEFENDING_STATS_2
     end
 
     def pbEffectGeneral(user)
@@ -590,7 +590,7 @@ end
 class PokeBattle_Move_027 < PokeBattle_MultiStatUpMove
     def initialize(battle, move)
         super
-        @statUp = [:ATTACK, 2, :SPECIAL_ATTACK, 2]
+        @statUp = ATTACKING_STATS_2
     end
 end
 
@@ -601,7 +601,7 @@ end
 class PokeBattle_Move_028 < PokeBattle_MultiStatUpMove
     def initialize(battle, move)
         super
-        @statUp = [:ATTACK, 1, :SPECIAL_ATTACK, 1]
+        @statUp = ATTACKING_STATS_1
     end
 
     def pbOnStartUse(_user, _targets)
@@ -632,7 +632,7 @@ end
 class PokeBattle_Move_02A < PokeBattle_MultiStatUpMove
     def initialize(battle, move)
         super
-        @statUp = [:DEFENSE, 2, :SPECIAL_DEFENSE, 2]
+        @statUp = DEFENDING_STATS_2
     end
 end
 
@@ -759,8 +759,8 @@ end
 class PokeBattle_Move_035 < PokeBattle_StatUpDownMove
     def initialize(battle, move)
         super
-        @statUp   = [:ATTACK, 2, :SPECIAL_ATTACK, 2, :SPEED, 2]
-        @statDown = [:DEFENSE, 1, :SPECIAL_DEFENSE, 1]
+        @statUp   = [:ATTACK, 4, :SPECIAL_ATTACK, 4, :SPEED, 4]
+        @statDown = DEFENDING_STATS_2
     end
 end
 
@@ -835,54 +835,54 @@ class PokeBattle_Move_03A < PokeBattle_Move
 end
 
 #===============================================================================
-# Decreases the user's Attack and Defense by 1 stage each. (Superpower)
+# Decreases the user's Attack and Defense by 2 stages each. (Superpower)
 #===============================================================================
 class PokeBattle_Move_03B < PokeBattle_StatDownMove
     def initialize(battle, move)
         super
-        @statDown = [:ATTACK, 1, :DEFENSE, 1]
+        @statDown = [:ATTACK, 2, :DEFENSE, 2]
     end
 end
 
 #===============================================================================
-# Decreases the user's Defense and Special Defense by 1 stage each.
+# Decreases the user's Defense and Special Defense by 2 stages each.
 # (Close Combat, Dragon Ascent)
 #===============================================================================
 class PokeBattle_Move_03C < PokeBattle_StatDownMove
     def initialize(battle, move)
         super
-        @statDown = [:DEFENSE, 1, :SPECIAL_DEFENSE, 1]
+        @statDown = DEFENDING_STATS_2
     end
 end
 
 #===============================================================================
-# Decreases the user's Defense, Special Defense and Speed by 1 stage each.
+# Decreases the user's Defense, Special Defense and Speed by 2 stages each.
 # (V-create)
 #===============================================================================
 class PokeBattle_Move_03D < PokeBattle_StatDownMove
     def initialize(battle, move)
         super
-        @statDown = [:SPEED, 1, :DEFENSE, 1, :SPECIAL_DEFENSE, 1]
+        @statDown = [:SPEED, 2, :DEFENSE, 2, :SPECIAL_DEFENSE, 2]
     end
 end
 
 #===============================================================================
-# Decreases the user's Speed by 1 stage. (Hammer Arm, Ice Hammer)
+# Decreases the user's Speed by 2 stages. (Hammer Arm, Ice Hammer)
 #===============================================================================
 class PokeBattle_Move_03E < PokeBattle_StatDownMove
     def initialize(battle, move)
         super
-        @statDown = [:SPEED, 1]
+        @statDown = [:SPEED, 2]
     end
 end
 
 #===============================================================================
-# Decreases the user's Special Attack by 2 stages.
+# Decreases the user's Special Attack by 4 stages.
 #===============================================================================
 class PokeBattle_Move_03F < PokeBattle_StatDownMove
     def initialize(battle, move)
         super
-        @statDown = [:SPECIAL_ATTACK, 2]
+        @statDown = [:SPECIAL_ATTACK, 4]
     end
 end
 
@@ -899,85 +899,76 @@ class PokeBattle_Move_041 < PokeBattle_Move
 end
 
 #===============================================================================
-# Decreases the target's Attack by 1 stage.
+# Decreases the target's Attack by 2 stages.
 #===============================================================================
 class PokeBattle_Move_042 < PokeBattle_TargetStatDownMove
     def initialize(battle, move)
         super
-        @statDown = [:ATTACK, 1]
+        @statDown = [:ATTACK, 2]
     end
 end
 
 #===============================================================================
-# Decreases the target's Defense by 1 stage.
+# Decreases the target's Defense by 2 stages.
 #===============================================================================
 class PokeBattle_Move_043 < PokeBattle_TargetStatDownMove
     def initialize(battle, move)
         super
-        @statDown = [:DEFENSE, 1]
+        @statDown = [:DEFENSE, 2]
     end
 end
 
 #===============================================================================
-# Decreases the target's Speed by 1 stage.
+# Decreases the target's Speed by 2 stages.
 #===============================================================================
 class PokeBattle_Move_044 < PokeBattle_TargetStatDownMove
     def initialize(battle, move)
         super
-        @statDown = [:SPEED, 1]
+        @statDown = [:SPEED, 2]
     end
 end
 
 #===============================================================================
-# Decreases the target's Special Attack by 1 stage.
+# Decreases the target's Special Attack by 2 stages.
 #===============================================================================
 class PokeBattle_Move_045 < PokeBattle_TargetStatDownMove
     def initialize(battle, move)
         super
-        @statDown = [:SPECIAL_ATTACK, 1]
+        @statDown = [:SPECIAL_ATTACK, 2]
     end
 end
 
 #===============================================================================
-# Decreases the target's Special Defense by 1 stage.
+# Decreases the target's Special Defense by 2 stages.
 #===============================================================================
 class PokeBattle_Move_046 < PokeBattle_TargetStatDownMove
     def initialize(battle, move)
         super
-        @statDown = [:SPECIAL_DEFENSE, 1]
+        @statDown = [:SPECIAL_DEFENSE, 2]
     end
 end
 
 #===============================================================================
-# Decreases the target's accuracy by 1 stage.
+# (Not currently used)
 #===============================================================================
-class PokeBattle_Move_047 < PokeBattle_TargetStatDownMove
-    def initialize(battle, move)
-        super
-        @statDown = [:ACCURACY, 1]
-    end
+class PokeBattle_Move_047 < PokeBattle_Move
 end
 
 #===============================================================================
-# Decreases the target's evasion by 2 stages. (Sweet Scent)
+# (Not currently used)
 #===============================================================================
-class PokeBattle_Move_048 < PokeBattle_TargetStatDownMove
-    def initialize(battle, move)
-        super
-        @statDown = [:EVASION, 2]
-    end
+class PokeBattle_Move_048 < PokeBattle_Move
 end
 
 #===============================================================================
-# Decreases the target's evasion by 1 stage. Ends all barriers and entry
-# hazards for the target's side OR on both sides. (Defog)
+# Ends all barriers and entry hazards for the target's side. (Defog)
+# And all entry hazard's for the user's side.
 #===============================================================================
-class PokeBattle_Move_049 < PokeBattle_TargetStatDownMove
+class PokeBattle_Move_049 < PokeBattle_Move
     def ignoresSubstitute?(_user); return true; end
 
     def initialize(battle, move)
         super
-        @statDown = [:EVASION, 1]
         @miscEffects = %i[Mist Safeguard]
     end
 
@@ -1000,7 +991,6 @@ class PokeBattle_Move_049 < PokeBattle_TargetStatDownMove
         eachDefoggable(ourSide, true) do |_effect, _data|
             return false
         end
-        return super
     end
 
     def blowAwayEffect(user, side, effect, data)
@@ -1012,7 +1002,6 @@ class PokeBattle_Move_049 < PokeBattle_TargetStatDownMove
     end
 
     def pbEffectAgainstTarget(user, target)
-        super
         targetSide = target.pbOwnSide
         ourSide = user.pbOwnSide
         eachDefoggable(targetSide, false) do |effect, data|
@@ -1024,7 +1013,7 @@ class PokeBattle_Move_049 < PokeBattle_TargetStatDownMove
     end
 
     def getEffectScore(user, target)
-        score = super
+        score = 0
         # Dislike removing hazards that affect the enemy
         score -= hazardWeightOnSide(target.pbOwnSide)
         # Like removing hazards that affect us
@@ -1037,87 +1026,58 @@ class PokeBattle_Move_049 < PokeBattle_TargetStatDownMove
 end
 
 #===============================================================================
-# Decreases the target's Attack and Defense by 1 stage each. (Tickle)
+# Decreases the target's Attack and Defense by 2 stages each. (Tickle)
 #===============================================================================
 class PokeBattle_Move_04A < PokeBattle_TargetMultiStatDownMove
     def initialize(battle, move)
         super
-        @statDown = [:ATTACK, 1, :DEFENSE, 1]
+        @statDown = [:ATTACK, 2, :DEFENSE, 2]
     end
 end
 
 #===============================================================================
-# Decreases the target's Attack by 2 stages. (Charm, Feather Dance)
+# Decreases the target's Attack by 4 stages.
 #===============================================================================
 class PokeBattle_Move_04B < PokeBattle_TargetStatDownMove
     def initialize(battle, move)
         super
-        @statDown = [:ATTACK, 2]
+        @statDown = [:ATTACK, 4]
     end
 end
 
 #===============================================================================
-# Decreases the target's Defense by 2 stages. (Screech)
+# Decreases the target's Defense by 4 stages.
 #===============================================================================
 class PokeBattle_Move_04C < PokeBattle_TargetStatDownMove
     def initialize(battle, move)
         super
-        @statDown = [:DEFENSE, 2]
+        @statDown = [:DEFENSE, 4]
     end
 end
 
 #===============================================================================
-# Decreases the target's Speed by 2 stages. (Cotton Spore, Scary Face, String Shot)
+# Decreases the target's Speed by 4 stages.
 #===============================================================================
 class PokeBattle_Move_04D < PokeBattle_TargetStatDownMove
     def initialize(battle, move)
         super
-        @statDown = [:SPEED, 2]
+        @statDown = [:SPEED, 4]
     end
 end
 
 #===============================================================================
-# Decreases the target's Special Attack by 2 stages. Only works on the opposite
-# gender. (Captivate)
+# (Not currently used.)
 #===============================================================================
 class PokeBattle_Move_04E < PokeBattle_TargetStatDownMove
-    def initialize(battle, move)
-        super
-        @statDown = [:SPECIAL_ATTACK, 2]
-    end
-
-    def pbFailsAgainstTarget?(user, target, show_message)
-        return true if super
-        return false if damagingMove?
-        if user.gender == 2 || target.gender == 2 || user.gender == target.gender
-            @battle.pbDisplay(_INTL("{1} is unaffected!", target.pbThis)) if show_message
-            return true
-        end
-        if target.hasActiveAbility?(:OBLIVIOUS) && !@battle.moldBreaker
-            if show_message
-                @battle.pbShowAbilitySplash(target, ability)
-                @battle.pbDisplay(_INTL("{1} is unaffected!", target.pbThis))
-                @battle.pbHideAbilitySplash(target)
-            end
-            return true
-        end
-        return false
-    end
-
-    def pbAdditionalEffect(user, target)
-        return if user.gender == 2 || target.gender == 2 || user.gender == target.gender
-        return if target.hasActiveAbilityAI?(:OBLIVIOUS) && !@battle.moldBreaker
-        super
-    end
 end
 
 #===============================================================================
-# Decreases the target's Special Defense by 2 stages.
+# Decreases the target's Special Defense by 4 stages.
 #===============================================================================
 class PokeBattle_Move_04F < PokeBattle_TargetStatDownMove
     def initialize(battle, move)
         super
-        @statDown = [:SPECIAL_DEFENSE, 2]
+        @statDown = [:SPECIAL_DEFENSE, 4]
     end
 end
 

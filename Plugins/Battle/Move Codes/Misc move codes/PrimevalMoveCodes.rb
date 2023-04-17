@@ -46,7 +46,7 @@ class PokeBattle_Move_601 < PokeBattle_Move_0FF
 
     def pbEffectGeneral(user)
         super
-        user.pbRaiseMultipleStatStages([:ATTACK, 1, :SPECIAL_ATTACK, 1], user, move: self)
+        user.pbRaiseMultipleStatStages(ATTACKING_STATS_1, user, move: self)
         transformType(user, :FIRE)
     end
 end
@@ -172,7 +172,7 @@ class PokeBattle_Move_60B < PokeBattle_Move_101
 
     def pbEffectGeneral(user)
         super
-        user.pbRaiseMultipleStatStages([:DEFENSE, 1, :SPECIAL_DEFENSE, 1], user, move: self)
+        user.pbRaiseMultipleStatStages(DEFENDING_STATS_1, user, move: self)
         transformType(user, :ROCK)
     end
 end
@@ -216,7 +216,7 @@ class PokeBattle_Move_60E < PokeBattle_Move_0B7
 
     def pbEffectAgainstTarget(user, target)
         target.applyEffect(:Torment)
-        target.pbLowerMultipleStatStages([:ATTACK, 1, :SPECIAL_ATTACK, 1], user, move: self)
+        target.pbLowerMultipleStatStages(ATTACKING_STATS_1, user, move: self)
     end
 end
 
@@ -236,7 +236,7 @@ class PokeBattle_Move_610 < PokeBattle_Move_51A
 
     def pbEffectGeneral(user)
         super
-        user.pbRaiseMultipleStatStages([:ATTACK, 1, :SPECIAL_ATTACK, 1], user, move: self)
+        user.pbRaiseMultipleStatStages(ATTACKING_STATS_1, user, move: self)
         transformType(user, :FAIRY)
     end
 end
@@ -305,7 +305,7 @@ class PokeBattle_Move_615 < PokeBattle_Move_019
         # Double supers here is intentional
         super
         super
-        user.pbRaiseMultipleStatStages([:ATTACK, 1, :SPECIAL_ATTACK, 1], user, move: self)
+        user.pbRaiseMultipleStatStages(ATTACKING_STATS_1, user, move: self)
         transformType(user, :GRASS)
     end
 end
@@ -343,7 +343,7 @@ class PokeBattle_Move_618 < PokeBattle_Move_09E
         super
 
         @battle.eachSameSideBattler(user) do |b|
-            b.pbRaiseMultipleStatStages([:DEFENSE, 1, :SPECIAL_DEFENSE, 1], user, move: self)
+            b.pbRaiseMultipleStatStages(DEFENDING_STATS_1, user, move: self)
         end
 
         transformType(user, :FAIRY)
@@ -612,7 +612,7 @@ class PokeBattle_Move_644 < PokeBattle_TargetStatDownMove
 
     def initialize(battle, move)
         super
-        @statDown = [:DEFENSE, 3]
+        @statDown = [:DEFENSE, 5]
     end
 end
 

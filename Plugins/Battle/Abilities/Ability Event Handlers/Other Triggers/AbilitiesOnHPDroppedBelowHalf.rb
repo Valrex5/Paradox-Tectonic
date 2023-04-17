@@ -22,7 +22,7 @@ BattleHandlers::AbilityOnHPDroppedBelowHalf.copy(:EMERGENCYEXIT, :WIMPOUT)
 
 BattleHandlers::AbilityOnHPDroppedBelowHalf.add(:BERSERK,
   proc { |ability, battler, _battle|
-      battler.pbRaiseMultipleStatStages([:ATTACK, 2, :SPECIAL_ATTACK, 2], battler, ability: ability)
+      battler.pbRaiseMultipleStatStages(ATTACKING_STATS_2, battler, ability: ability)
       next false
   }
 )

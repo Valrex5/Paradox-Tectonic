@@ -331,13 +331,9 @@ class PokeBattle_Move_58F < PokeBattle_Move
 end
 
 #===============================================================================
-# Decreases the target's Defense by 3 stages. (Eroding Foam)
+# (Not currently used.)
 #===============================================================================
-class PokeBattle_Move_590 < PokeBattle_TargetStatDownMove
-    def initialize(battle, move)
-        super
-        @statDown = [:DEFENSE, 3]
-    end
+class PokeBattle_Move_590 < PokeBattle_Move
 end
 
 #===============================================================================
@@ -530,7 +526,7 @@ end
 class PokeBattle_Move_59F < PokeBattle_TargetMultiStatDownMove
     def initialize(battle, move)
         super
-        @statDown = [:ATTACK, 1, :SPECIAL_ATTACK, 1]
+        @statDown = ATTACKING_STATS_1
     end
 end
 
@@ -583,18 +579,18 @@ end
 class PokeBattle_Move_5A2 < PokeBattle_StatUpDownMove
     def initialize(battle, move)
         super
-        @statUp   = [:SPEED, 2, :SPECIAL_ATTACK, 1]
-        @statDown = [:SPECIAL_DEFENSE, 1]
+        @statUp   = [:SPEED, 3, :SPECIAL_ATTACK, 3]
+        @statDown = [:SPECIAL_DEFENSE, 2]
     end
 end
 
 #===============================================================================
-# Decreases the user's Speed by 2 stages. (Razor Plunge)
+# Decreases the user's Speed by 3 stages. (Razor Plunge)
 #===============================================================================
 class PokeBattle_Move_5A3 < PokeBattle_StatDownMove
     def initialize(battle, move)
         super
-        @statDown = [:SPEED, 2]
+        @statDown = [:SPEED, 3]
     end
 end
 
@@ -801,7 +797,7 @@ class PokeBattle_Move_5AB < PokeBattle_HealingMove
     end
 
     def pbEffectGeneral(user)
-        user.pbRaiseMultipleStatStages([:DEFENSE, 2, :SPECIAL_DEFENSE, 2], user, move: self)
+        user.pbRaiseMultipleStatStages(DEFENDING_STATS_2, user, move: self)
         super
         user.incrementEffect(:Refurbished)
     end
@@ -1094,14 +1090,14 @@ end
 class PokeBattle_Move_5BA < PokeBattle_MultiStatUpMove
     def initialize(battle, move)
         super
-        @statUp = [:ATTACK, 2, :SPECIAL_ATTACK, 2]
+        @statUp = ATTACKING_STATS_2
     end
 
     def pbOnStartUse(_user, _targets)
         if @battle.pbWeather == :Moonglow
             @statUp = [:ATTACK, 1, :SPECIAL_ATTACK, 2, :SPEED, 2]
         else
-            @statUp = [:ATTACK, 2, :SPECIAL_ATTACK, 2]
+            @statUp = ATTACKING_STATS_2
         end
     end
 
@@ -1459,13 +1455,13 @@ class PokeBattle_Move_5C7 < PokeBattle_HalfHealingMove
 
     def pbEffectGeneral(user)
         super
-        user.pbRaiseMultipleStatStages([:DEFENSE, 1, :SPECIAL_DEFENSE, 1], user, move: self)
+        user.pbRaiseMultipleStatStages(DEFENDING_STATS_1, user, move: self)
         user.incrementEffect(:FocusEnergy, 1) unless user.effectAtMax?(:FocusEnergy)
     end
 
     def getEffectScore(user, target)
         score = super
-        score += getMultiStatUpEffectScore([:DEFENSE, 1, :SPECIAL_DEFENSE, 1], user, target)
+        score += getMultiStatUpEffectScore(DEFENDING_STATS_1, user, target)
         score += getCriticalRateBuffEffectScore(user, 1)
         return score
     end
@@ -2020,7 +2016,7 @@ end
 class PokeBattle_Move_5E2 < PokeBattle_MultiStatUpMove
     def initialize(battle, move)
         super
-        @statUp = [:DEFENSE, 2, :SPECIAL_DEFENSE, 2]
+        @statUp = DEFENDING_STATS_2
     end
 
     def pbEffectGeneral(user)
@@ -2100,5 +2096,135 @@ class PokeBattle_Move_5E5 < PokeBattle_Move
         score = getMultiStatDownEffectScore([:SPECIAL_ATTACK, 1], user, target)
         score += getHealingEffectScore(user, user, 2)
         return score
+    end
+end
+
+#===============================================================================
+# Decreases the target's Attack by 1 stage.
+#===============================================================================
+class PokeBattle_Move_5E6 < PokeBattle_TargetStatDownMove
+    def initialize(battle, move)
+        super
+        @statDown = [:ATTACK, 1]
+    end
+end
+
+#===============================================================================
+# Decreases the target's Attack by 3 stages.
+#===============================================================================
+class PokeBattle_Move_5E7 < PokeBattle_TargetStatDownMove
+    def initialize(battle, move)
+        super
+        @statDown = [:ATTACK, 3]
+    end
+end
+
+#===============================================================================
+# Decreases the target's Defense by 1 stage.
+#===============================================================================
+class PokeBattle_Move_5E8 < PokeBattle_TargetStatDownMove
+    def initialize(battle, move)
+        super
+        @statDown = [:DEFENSE, 1]
+    end
+end
+
+#===============================================================================
+# Decreases the target's Defense by 3 stage.
+#===============================================================================
+class PokeBattle_Move_5E9 < PokeBattle_TargetStatDownMove
+    def initialize(battle, move)
+        super
+        @statDown = [:DEFENSE, 3]
+    end
+end
+
+#===============================================================================
+# Decreases the target's Speed by 1 stage.
+#===============================================================================
+class PokeBattle_Move_5EA < PokeBattle_TargetStatDownMove
+    def initialize(battle, move)
+        super
+        @statDown = [:SPEED, 1]
+    end
+end
+
+#===============================================================================
+# Decreases the target's Speed by 3 stage.
+#===============================================================================
+class PokeBattle_Move_5EB < PokeBattle_TargetStatDownMove
+    def initialize(battle, move)
+        super
+        @statDown = [:SPEED, 3]
+    end
+end
+
+#===============================================================================
+# Decreases the target's Special Attack by 1 stage.
+#===============================================================================
+class PokeBattle_Move_5EC < PokeBattle_TargetStatDownMove
+    def initialize(battle, move)
+        super
+        @statDown = [:SPECIAL_ATTACK, 1]
+    end
+end
+
+#===============================================================================
+# Decreases the target's Special Attack by 3 stages.
+#===============================================================================
+class PokeBattle_Move_5ED < PokeBattle_TargetStatDownMove
+    def initialize(battle, move)
+        super
+        @statDown = [:SPECIAL_ATTACK, 3]
+    end
+end
+
+#===============================================================================
+# Decreases the target's Special Defense by 1 stage.
+#===============================================================================
+class PokeBattle_Move_5EF < PokeBattle_TargetStatDownMove
+    def initialize(battle, move)
+        super
+        @statDown = [:SPECIAL_DEFENSE, 1]
+    end
+end
+
+#===============================================================================
+# Decreases the target's Special Defense by 3 stages.
+#===============================================================================
+class PokeBattle_Move_5F0 < PokeBattle_TargetStatDownMove
+    def initialize(battle, move)
+        super
+        @statDown = [:SPECIAL_DEFENSE, 3]
+    end
+end
+
+#===============================================================================
+# Decreases the target's Attack by 5 stages. (Feather Dance)
+#===============================================================================
+class PokeBattle_Move_5F1 < PokeBattle_TargetStatDownMove
+    def initialize(battle, move)
+        super
+        @statDown = [:ATTACK, 5]
+    end
+end
+
+#===============================================================================
+# Does Double Damage under gravity (Falling Apple)
+#===============================================================================
+class PokeBattle_Move_5F2 < PokeBattle_TargetStatDownMove
+    def pbBaseDamage(baseDmg, _user, _target)
+        baseDmg *= 2.0 if @battle.field.effectActive?(:Gravity)
+        return baseDmg
+    end
+end
+
+#===============================================================================
+# Decreases the target's Sp. Atk by 5 stages. (Star Dance)
+#===============================================================================
+class PokeBattle_Move_5F3 < PokeBattle_TargetStatDownMove
+    def initialize(battle, move)
+        super
+        @statDown = [:SPECIAL_ATTACK, 5]
     end
 end

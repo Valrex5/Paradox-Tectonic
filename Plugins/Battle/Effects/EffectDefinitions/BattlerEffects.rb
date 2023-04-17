@@ -1249,7 +1249,7 @@ GameData::BattleEffect.register_effect(:Battler, {
     end,
     :eor_proc => proc do |battle, battler, _value|
         octouser = battle.battlers[battler.effects[:OctolockUser]]
-        battler.pbLowerMultipleStatStages([:DEFENSE, 1, :SPECIAL_DEFENSE, 1], octouser)
+        battler.pbLowerMultipleStatStages(DEFENDING_STATS_2, octouser)
     end,
     :sub_effects => [:OctolockUser],
     :disable_proc => proc do |battle, battler|
@@ -1596,8 +1596,8 @@ GameData::BattleEffect.register_effect(:Battler, {
         battle.pbDisplay(_INTL("{1} began eroding!", battler.pbThis))
     end,
     :eor_proc => proc do |_battle, battler, _value|
-        battler.pbLowerMultipleStatStages([:DEFENSE, 1, :SPECIAL_DEFENSE, 1], battler)
-        battler.pbRaiseMultipleStatStages([:ATTACK, 1, :SPECIAL_ATTACK, 1], battler)
+        battler.pbLowerMultipleStatStages(DEFENDING_STATS_1, battler)
+        battler.pbRaiseMultipleStatStages(ATTACKING_STATS_1, battler)
         battler.pbItemStatRestoreCheck
     end,
 })

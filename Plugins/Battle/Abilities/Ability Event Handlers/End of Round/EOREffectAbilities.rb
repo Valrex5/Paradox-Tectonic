@@ -132,7 +132,7 @@ BattleHandlers::EOREffectAbility.add(:TENDERIZE,
   proc { |ability, battler, _battle|
       battler.eachOther do |b|
           next unless b.numbed?
-          b.pbLowerMultipleStatStages([:DEFENSE, 1, :SPECIAL_DEFENSE, 1], battler, ability: ability)
+          b.pbLowerMultipleStatStages(DEFENDING_STATS_2, battler, ability: ability)
       end
   }
 )

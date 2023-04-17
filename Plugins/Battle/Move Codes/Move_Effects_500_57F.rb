@@ -90,14 +90,9 @@ class PokeBattle_Move_506 < PokeBattle_Move
 end
 
 #===============================================================================
-# Lowers the target's Sp. Def. Effectiveness against Steel-type is 2x. (Corrode)
+# Effectiveness against Steel-type is 2x. (Corrode)
 #===============================================================================
-class PokeBattle_Move_507 < PokeBattle_TargetStatDownMove
-    def initialize(battle, move)
-        super
-        @statDown = [:SPECIAL_DEFENSE, 1]
-    end
-
+class PokeBattle_Move_507 < PokeBattle_Move
     def pbCalcTypeModSingle(moveType, defType, user, target)
         return Effectiveness::SUPER_EFFECTIVE_ONE if defType == :STEEL
         return super
@@ -111,8 +106,8 @@ end
 class PokeBattle_Move_508 < PokeBattle_StatUpDownMove
     def initialize(battle, move)
         super
-        @statUp   = [:ATTACK,3]
-        @statDown = [:SPEED,3]
+        @statUp   = [:ATTACK,6]
+        @statDown = [:SPEED,6]
     end
 end
 
@@ -240,12 +235,12 @@ class PokeBattle_Move_50E < PokeBattle_Move
 end
 
 #===============================================================================
-# Decreases the user's Attack by 2 stages. (Infinite Force)
+# Decreases the user's Attack by 4 stages. (Infinite Force)
 #===============================================================================
 class PokeBattle_Move_50F < PokeBattle_StatDownMove
     def initialize(battle, move)
         super
-        @statDown = [:ATTACK, 2]
+        @statDown = [:ATTACK, 4]
     end
 end
 
@@ -623,12 +618,12 @@ class PokeBattle_Move_527 < PokeBattle_Move_004
 
     def pbEffectAgainstTarget(user, target)
         target.applyEffect(:Yawn, 2)
-        target.pbLowerMultipleStatStages([:ATTACK, 1, :SPECIAL_ATTACK, 1], user, move: self) if @battle.sunny?
+        target.pbLowerMultipleStatStages(ATTACKING_STATS_2, user, move: self) if @battle.sunny?
     end
 
     def getEffectScore(user, target)
         score = super
-        score += getMultiStatDownEffectScore([:ATTACK, 1, :SPECIAL_ATTACK, 1], user, target) if @battle.sunny?
+        score += getMultiStatDownEffectScore(ATTACKING_STATS_2, user, target) if @battle.sunny?
         return score
     end
 
@@ -1026,12 +1021,12 @@ class PokeBattle_Move_53D < PokeBattle_Move
 end
 
 #===============================================================================
-# Decreases the user's Sp. Atk and Sp. Atk by 1 stage each. (Geyser)
+# Decreases the user's Sp. Atk and Sp. Def by 2 stages each. (Geyser, Phantom Gate)
 #===============================================================================
 class PokeBattle_Move_53E < PokeBattle_StatDownMove
     def initialize(battle, move)
         super
-        @statDown = [:SPECIAL_ATTACK, 1, :SPECIAL_DEFENSE, 1]
+        @statDown = [:SPECIAL_ATTACK, 2, :SPECIAL_DEFENSE, 2]
     end
 end
 
@@ -1440,13 +1435,9 @@ class PokeBattle_Move_559 < PokeBattle_Move
 end
 
 #===============================================================================
-# Lowers the user's Sp. Atk and Sp. Def (Phantom Gate)
+# (Not currently used.)
 #===============================================================================
-class PokeBattle_Move_55A < PokeBattle_StatDownMove
-    def initialize(battle, move)
-        super
-        @statDown = [:SPECIAL_ATTACK, 1, :SPECIAL_DEFENSE, 1]
-    end
+class PokeBattle_Move_55A < PokeBattle_Move
 end
 
 #===============================================================================
@@ -1532,12 +1523,12 @@ class PokeBattle_Move_55F < PokeBattle_Move
 end
 
 #===============================================================================
-# Decreases the target's Sp. Atk and Sp. Def by 1 stage each. (Prank)
+# Decreases the target's Sp. Atk and Sp. Def by 2 stages each. (Prank)
 #===============================================================================
 class PokeBattle_Move_560 < PokeBattle_TargetMultiStatDownMove
     def initialize(battle, move)
         super
-        @statDown = [:SPECIAL_ATTACK, 1, :SPECIAL_DEFENSE, 1]
+        @statDown = [:SPECIAL_ATTACK, 2, :SPECIAL_DEFENSE, 2]
     end
 end
 

@@ -158,14 +158,14 @@ BattleHandlers::UserAbilityEndOfMove.add(:FOLLOWTHROUGH,
 BattleHandlers::UserAbilityEndOfMove.add(:SOUNDBARRIER,
   proc { |ability, user, _targets, move, _battle, _switchedBattlers|
       next unless move.soundMove?
-      user.pbRaiseMultipleStatStages([:DEFENSE, 1, :SPECIAL_DEFENSE, 1], user, ability: ability)
+      user.pbRaiseMultipleStatStages(DEFENDING_STATS_1, user, ability: ability)
   }
 )
 
 BattleHandlers::UserAbilityEndOfMove.add(:WINDBUFFER,
   proc { |ability, user, _targets, move, _battle, _switchedBattlers|
     next unless move.windMove?
-    user.pbRaiseMultipleStatStages([:DEFENSE, 1, :SPECIAL_DEFENSE, 1], user, ability: ability)
+    user.pbRaiseMultipleStatStages(DEFENDING_STATS_1, user, ability: ability)
   }
 )
 

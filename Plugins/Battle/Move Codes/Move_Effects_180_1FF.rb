@@ -120,19 +120,9 @@ class PokeBattle_Move_184 < PokeBattle_Move
 end
 
 #===============================================================================
-# Decreases Opponent's Defense by 1 stage. Does Double Damage under gravity
-# (Grav Apple)
+# (Not currently used)
 #===============================================================================
-class PokeBattle_Move_185 < PokeBattle_TargetStatDownMove
-    def initialize(battle, move)
-        super
-        @statDown = [:DEFENSE, 1]
-    end
-
-    def pbBaseDamage(baseDmg, _user, _target)
-        baseDmg *= 1.5 if @battle.field.effectActive?(:Gravity)
-        return baseDmg
-    end
+class PokeBattle_Move_185 < PokeBattle_Move
 end
 
 #===============================================================================
@@ -305,7 +295,7 @@ class PokeBattle_Move_191 < PokeBattle_TwoTurnMove
     end
 
     def pbChargingTurnEffect(user, _target)
-        user.tryRaiseStat(:SPECIAL_ATTACK, user, move: self)
+        user.tryRaiseStat(:SPECIAL_ATTACK, user, move: self, increment: 3)
     end
 end
 
