@@ -533,7 +533,7 @@ class PokeBattle_Move_521 < PokeBattle_Move
 end
 
 #===============================================================================
-# Target's highest stat is drastically reduced. (Loom Over)
+# Target's highest stat is lowered by 4 stages. (Loom Over)
 #===============================================================================
 class PokeBattle_Move_522 < PokeBattle_Move
     def pbFailsAgainstTarget?(user, target, show_message)
@@ -541,11 +541,11 @@ class PokeBattle_Move_522 < PokeBattle_Move
     end
 
     def pbEffectAgainstTarget(user, target)
-        target.tryLowerStat(target.highestStat, user, increment: 2, move: self)
+        target.tryLowerStat(target.highestStat, user, increment: 4, move: self)
     end
 
     def getEffectScore(user, target)
-        return getMultiStatDownEffectScore([target.highestStat, 2], user, target)
+        return getMultiStatDownEffectScore([target.highestStat, 4], user, target)
     end
 end
 
@@ -1645,19 +1645,19 @@ class PokeBattle_Move_567 < PokeBattle_ProtectMove
 end
 
 #===============================================================================
-# Reduces the target's defense by one stage.
+# Reduces the target's defense by two stages.
 # After inflicting damage, user switches out. Ignores trapping moves.
 # (Rip Turn)
 #===============================================================================
 class PokeBattle_Move_568 < PokeBattle_Move_0EE
     def pbAdditionalEffect(user, target)
         return if target.damageState.substitute
-        target.tryLowerStat(:DEFENSE, user, move: self)
+        target.tryLowerStat(:DEFENSE, user, move: self, increment: 2)
     end
 
     def getEffectScore(user, target)
         score = super
-        score += getMultiStatDownEffectScore([:DEFENSE, 1], user, target)
+        score += getMultiStatDownEffectScore([:DEFENSE, 2], user, target)
         return score
     end
 end
@@ -1750,11 +1750,11 @@ class PokeBattle_Move_56F < PokeBattle_Move
     def pbAdditionalEffect(user, target)
         return if target.damageState.substitute
         targetChoice = @battle.choices[target.index][0]
-        target.tryLowerStat(:SPEED, user, move: self) if targetChoice == :UseMove && target.movedThisRound?
+        target.tryLowerStat(:SPEED, user, move: self, increment: 3) if targetChoice == :UseMove && target.movedThisRound?
     end
 
     def getEffectScore(user, target)
-        return getWantsToBeSlowerScore(user, target, 2)
+        return getWantsToBeSlowerScore(user, target, 4)
     end
 end
 

@@ -110,7 +110,7 @@ BattleHandlers::EOREffectAbility.add(:WARMTHCYCLE,
           end
       else
           battle.pbDisplay(_INTL("{1} vents its accumulated heat!", battler.pbThis))
-          battler.tryLowerStat(:SPEED, battler, increment: 6)
+          battler.stages[:SPEED] = 0
           battler.pbRecoverHP(battler.totalhp - battler.hp)
       end
 

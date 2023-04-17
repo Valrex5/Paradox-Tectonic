@@ -2050,3 +2050,55 @@ class PokeBattle_Move_5E4 < PokeBattle_MultiStatUpMove
         @statUp = [:SPECIAL_ATTACK, 3, :ACCURACY, 3]
     end
 end
+
+#===============================================================================
+# Decreases the target's Sp. Atk by 1 stage. Heals user by an amount equal to the
+# target's Sp. Atk stat. (Mind Sap)
+#===============================================================================
+class PokeBattle_Move_5E5 < PokeBattle_Move
+    def healingMove?; return true; end
+
+    def pbFailsAgainstTarget?(_user, target, show_message)
+        # NOTE: The official games appear to just check whether the target's Attack
+        #       stat stage is -6 and fail if so, but I've added the "fail if target
+        #       has Contrary and is at +6" check too for symmetry. This move still
+        #       works even if the stat stage cannot be changed due to an ability or
+        #       other effect.
+        if !@battle.moldBreaker && target.hasActiveAbility?(:CONTRARY) &&
+           target.statStageAtMax?(:SPECIAL_ATTACK)
+            if show_message
+                @battle.pbDisplay(_INTL("But it failed, since #{target.pbThis(true)}'s Attack can't go any higher!"))
+            end
+            return true
+        elsif target.statStageAtMin?(:SPECIAL_ATTACK)
+            if show_message
+                @battle.pbDisplay(_INTL("But it failed, since #{target.pbThis(true)}'s Attack can't go any lower!"))
+            end
+            return true
+        end
+        return false
+    end
+
+    def pbEffectAgainstTarget(user, target)
+        healAmount = target.pbSpAtk
+        # Reduce target's Attack stat
+        target.tryLowerStat(:SPECIAL_ATTACK, user, move: self)
+        # Heal user
+        if target.hasActiveAbility?(:LIQUIDOOZE)
+            @battle.pbShowAbilitySplash(target, :LIQUIDOOZE)
+            user.pbReduceHP(healAmount)
+            @battle.pbDisplay(_INTL("{1} sucked up the liquid ooze!", user.pbThis))
+            @battle.pbHideAbilitySplash(target)
+            user.pbItemHPHealCheck
+        elsif user.canHeal?
+            healAmount *= 1.3 if user.hasActiveItem?(:BIGROOT)
+            user.pbRecoverHP(healAmount)
+        end
+    end
+
+    def getEffectScore(user, target)
+        score = getMultiStatDownEffectScore([:SPECIAL_ATTACK, 1], user, target)
+        score += getHealingEffectScore(user, user, 2)
+        return score
+    end
+end

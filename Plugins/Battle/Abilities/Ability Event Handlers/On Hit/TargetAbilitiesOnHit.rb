@@ -48,31 +48,43 @@ BattleHandlers::TargetAbilityOnHit.add(:GOOEY,
         if aiChecking
             ret = 0
             aiNumHits.times do |i|
-                ret -= getMultiStatDownEffectScore([:SPEED,1], target, user, i)
+                ret -= getMultiStatDownEffectScore([:ATTACK,1,:SPEED,1], target, user, i)
             end
             next ret
         end
-        user.tryLowerStat(:SPEED, target, ability: ability)
+        user.pbLowerMultipleStatStages([:ATTACK,1,:SPEED,1], target, ability: ability)
   }
 )
 
-BattleHandlers::TargetAbilityOnHit.copy(:GOOEY, :TANGLINGHAIR)
+BattleHandlers::TargetAbilityOnHit.add(:TANGLINGHAIR,
+    proc { |ability, user, target, move, _battle, aiChecking, aiNumHits|
+          next unless move.physicalMove?
+          if aiChecking
+              ret = 0
+              aiNumHits.times do |i|
+                  ret -= getMultiStatDownEffectScore([:SPEED,3], target, user, i)
+              end
+              next ret
+          end
+          user.tryLowerStat(:SPEED, target, ability: ability, increment: 3)
+    }
+)
 
 BattleHandlers::TargetAbilityOnHit.add(:COTTONDOWN,
     proc { |ability, user, target, move, battle, aiChecking, aiNumHits|
         if aiChecking
             ret = 0
             aiNumHits.times do |i|
-                ret -= getMultiStatDownEffectScore([:SPEED,1], target, user, i)
+                ret -= getMultiStatDownEffectScore([:SPEED,2], target, user, i)
             end
             next ret
         else
             battle.pbShowAbilitySplash(target, ability)
             target.eachOpposing do |b|
-                b.tryLowerStat(:SPEED, target)
+                b.tryLowerStat(:SPEED, target, increment: 2)
             end
             target.eachAlly do |b|
-                b.tryLowerStat(:SPEED, target)
+                b.tryLowerStat(:SPEED, target, increment: 2)
             end
             battle.pbHideAbilitySplash(target)
         end
@@ -84,7 +96,7 @@ BattleHandlers::TargetAbilityOnHit.add(:STAMINA,
         if aiChecking
             ret = 0
             aiNumHits.times do |i|
-                ret -= getMultiStatUpEffectScore([:DEFENSE,1], user, target, i)
+                ret -= getMultiStatUpEffectScore([:DEFENSE,2], user, target, i)
             end
             next ret
         end
@@ -97,7 +109,7 @@ BattleHandlers::TargetAbilityOnHit.add(:GRIT,
         if aiChecking
             ret = 0
             aiNumHits.times do |i|
-                ret -= getMultiStatUpEffectScore([:SPECIAL_DEFENSE,1], user, target, i)
+                ret -= getMultiStatUpEffectScore([:SPECIAL_DEFENSE,2], user, target, i)
             end
             next ret
         end
@@ -529,7 +541,7 @@ BattleHandlers::TargetAbilityOnHit.add(:GULPMISSILE,
             battle.scene.pbDamageAnimation(user)
             user.applyFractionalDamage(1.0 / 4.0) if user.takesIndirectDamage?(true)
             if gulpform == 1
-                user.tryLowerStat(:DEFENSE, target, ability: ability)
+                user.tryLowerStat(:DEFENSE, target, ability: ability, increment: 2)
             elsif gulpform == 2
                 msg = nil
                 user.applyNumb(target, msg)

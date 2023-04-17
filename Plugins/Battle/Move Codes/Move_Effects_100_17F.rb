@@ -1874,7 +1874,7 @@ class PokeBattle_Move_158 < PokeBattle_Move
 end
 
 #===============================================================================
-# Poisons the target and decreases its Speed by 2 stage. (Toxic Thread)
+# Poisons the target and decreases its Speed by 4 stages. (Toxic Thread)
 #===============================================================================
 class PokeBattle_Move_159 < PokeBattle_Move
     def pbFailsAgainstTarget?(user, target, show_message)
@@ -1888,7 +1888,13 @@ class PokeBattle_Move_159 < PokeBattle_Move
 
     def pbEffectAgainstTarget(user, target)
         target.applyPoison(user) if target.canPoison?(user, false, self)
-        target.tryLowerStat(:SPEED, user, increment: 2, move: self)
+        target.tryLowerStat(:SPEED, user, increment: 4, move: self)
+    end
+
+    def getEffectScore(user, target)
+        score = getMultiStatDownEffectScore([:SPEED,4],user,target)
+        score += getPoisonEffectScore(user, target)
+        return score
     end
 end
 
@@ -2016,8 +2022,7 @@ end
 
 #===============================================================================
 # Decreases the target's Attack by 1 stage. Heals user by an amount equal to the
-# target's Attack stat (after applying stat stages, before this move decreases
-# it). (Strength Sap)
+# target's Attack stat. (Strength Sap)
 #===============================================================================
 class PokeBattle_Move_160 < PokeBattle_Move
     def healingMove?; return true; end

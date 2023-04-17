@@ -136,7 +136,7 @@ class PokeBattle_Move_185 < PokeBattle_TargetStatDownMove
 end
 
 #===============================================================================
-# Decrease 1 stage of speed and weakens target to fire moves. (Tar Shot)
+# Decrease 3 stages of speed and weakens target to fire moves. (Tar Shot)
 #===============================================================================
 class PokeBattle_Move_186 < PokeBattle_Move
     def pbFailsAgainstTarget?(_user, target, show_message)
@@ -148,14 +148,14 @@ class PokeBattle_Move_186 < PokeBattle_Move
     end
 
     def pbEffectAgainstTarget(user, target)
-        target.tryLowerStat(:SPEED, user, move: self)
+        target.tryLowerStat(:SPEED, user, move: self, increment: 3)
         target.applyEffect(:TarShot)
     end
 
     def getEffectScore(user, target)
         score = 0
-        score += getMultiStatDownEffectScore([:SPEED, 1], user, target)
-        score += 60 unless target.effectActive?(:TarShot)
+        score += getMultiStatDownEffectScore([:SPEED, 3], user, target)
+        score += 50 unless target.effectActive?(:TarShot)
         return score
     end
 end
@@ -326,20 +326,9 @@ class PokeBattle_Move_192 < PokeBattle_Move
 end
 
 #===============================================================================
-# Reduces Defense and Raises Speed after all hits (Scale Shot)
+# (Not currently used.)
 #===============================================================================
-class PokeBattle_Move_193 < PokeBattle_Move_0C0
-    def pbEffectAfterAllHits(user, _target)
-        user.tryLowerStat(:DEFENSE, user, move: self)
-        user.tryRaiseStat(:SPEED, user, move: self)
-    end
-
-    def getEffectScore(user, target)
-        score = super
-        score += getMultiStatUpEffectScore([:SPEED, 1], user, target)
-        score -= getMultiStatDownEffectScore([:DEFENSE, 1], user, target)
-        return score
-    end
+class PokeBattle_Move_193 < PokeBattle_Move
 end
 
 #===============================================================================

@@ -881,12 +881,12 @@ user.pbThis))
 
                 # Unassuming
                 if user.hasActiveAbility?(:UNASSUMING)
-                    target.tryLowerStat(:DEFENSE, user, move: move, showFailMsg: true, ability: :UNASSUMING)
+                    target.tryLowerStat(:DEFENSE, user, move: move, showFailMsg: true, ability: :UNASSUMING, increment: 2)
                 end
 
                 # Recon
                 if user.hasActiveAbility?(:RECON)
-                    target.tryLowerStat(:SPECIAL_DEFENSE, user, move: move, showFailMsg: true, ability: :RECON)
+                    target.tryLowerStat(:SPECIAL_DEFENSE, user, move: move, showFailMsg: true, ability: :RECON, increment: 2)
                 end
             end
         end

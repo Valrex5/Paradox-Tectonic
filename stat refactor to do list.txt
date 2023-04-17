@@ -1,4 +1,5 @@
 tryRaiseStat
+@statUp
 StatUpMove
 MultiStatUpMove
 TargetMultiStatUpMove
@@ -8,7 +9,12 @@ pbRaiseMultipleStatStages
 pbBattleMoveImmunityStatAbility
 
 tryLowerStat
+@statDown
 StatDownMove
 MultiStatDownMove
 TargetMultiStatDownMove
 StatUpDownMove
+pbLowerMultipleStatStages
+
+meteor beam...?
+harshly/sharply/drastically

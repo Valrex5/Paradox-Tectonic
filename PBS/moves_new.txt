@@ -98,7 +98,7 @@
 1097,DEMONSKISS,Demon's Kiss,526,0,DARK,Status,100,5,0,NearOther,0,bce,"By sacrificing half its HP, the user jinxes the target with a kiss, making it fall asleep.",LOVELYKISS
 1098,RUIN,Ruin,000,100,NORMAL,Special,100,10,0,NearOther,0,bef,"The user brings down a ruinous power on the target, damaging it.",JUDGMENT
 1099,HARDFEELINGS,Hard Feelings,07E,70,NORMAL,Special,100,12,0,NearOther,0,bef,"Doubles its power if the user has a status condition. Ignores frostbite Sp. Atk reduction.",
-1100,SOULDRAIN,Soul Drain,52C,50,GHOST,Special,100,15,100,NearOther,0,bef,"The user absorbs the target's soul, lowering its Sp. Def and draining its life in the process.",NIGHTSHADE
+1100,SOULDRAIN,Soul Drain,52C,65,GHOST,Special,100,15,100,NearOther,0,bef,"The user absorbs the target's soul, lowering its Sp. Def and draining its life in the process.",NIGHTSHADE
 1101,ABYSSALRESET,Abyssal Reset,52D,60,DARK,Special,100,12,0,AllNearOthers,0,bce,"Darkness rolls over the field, damaging all other Pokémon, ending weather, and healing statuses.",
 1102,ECHOLOCATE,Echolocate,52E,0,FLYING,Status,0,12,0,AllNearFoes,0,cek,"Harshly lowers the target's Defense and evasion. This move can't miss and skips protections.",SUPERSONIC
 1103,WINGSPANECLIPSE,Wingspan Eclipse,52F,0,DRAGON,Status,0,12,0,AllNearFoes,0,bce,"The Pokémon blots out the sky with huge wings, ending weather. It also lowers the opponent's Attack.",
@@ -113,7 +113,7 @@
 1112,AMBUSH,Ambush,516,110,DARK,Physical,70,10,0,NearOther,2,abef,"The user tries to surprise-attack the target. Cannot miss in moonglow. Critical hits land more easily.",NIGHTSLASH
 1113,STITCHUP,Stitch Up,524,0,GHOST,Status,0,5,0,User,0,d,"The user restores two thirds of its own HP. Then, this move is disabled.",RECOVER
 1114,PHANTOMBREAK,Phantom Break,523,120,GHOST,Physical,100,5,0,NearOther,0,abef,"Although this move has great power, it disables itself after use.",SHADOWPUNCH
-1115,LOOMOVER,Loom Over,522,0,DRAGON,Status,0,12,0,NearOther,0,ce,"The user looms over the target with awful menace, causing their best stat to drop harshly.",
+1115,LOOMOVER,Loom Over,522,0,DRAGON,Status,0,12,0,NearOther,0,ce,"The user looms over the target with awful menace, lowering their highest stat by 4 stages.",
 1116,SUMMERDAZE,Summer Daze,527,0,GRASS,Status,100,12,0,NearOther,0,bcek,"The user plays a melody, making the target drowsy. In Sunlight, lowers the target's Attack and Sp. Atk.",GRASSWHISTLE
 1117,PACIFY,Pacify,534,0,PSYCHIC,Status,100,15,0,NearOther,0,bce,"The user employs hypnotic suggestion to make a dizzy target fall into a deep sleep.",HYPNOSIS
 1118,LULLABY,Lullaby,528,0,NORMAL,Status,100,12,0,NearOther,0,bcek,"A lullaby is sung in a calming voice that puts the target with half its HP or less left into a deep sleep.",SING
@@ -232,8 +232,8 @@
 1231,THUNDERCLAP,Thunderclap,00F,80,ELECTRIC,Physical,100,15,40,NearOther,0,abe,"The user jabs the target with electric charges. It has a 40% chance to make the target flinch.",SPARK
 1232,SINISTERSPINES,Sinister Spines,116,70,GRASS,Physical,100,5,0,NearOther,1,abef,"This move enables the user to attack first. It fails if the target is not readying an attack, however.",SPIKECANNON
 1233,MIRAGEFLARE,Mirage Flare,000,120,FLYING,Special,100,5,0,AllNearOthers,0,bef,"The user creates a storm using its flaming body, damaging everything around it.",
-1234,HAREHEROICS,Hare Heroics,566,1,NORMAL,Physical,100,15,0,NearOther,0,abef,"Deals more damage the less HP the user has. After attacking, it returns to switch with a party Pokémon.",
-1235,RIPTURN,Rip Turn,568,70,WATER,Physical,100,10,100,NearOther,0,abef,"Deals damage, lowering the target's Defense. After attacking, it returns to switch with a party Pokémon.",
+1234,HAREHEROICS,Hare Heroics,566,1,NORMAL,Physical,100,15,0,NearOther,0,abef,"Deals more damage the less HP the user has. After attacking, the user switches out.",
+1235,RIPTURN,Rip Turn,568,70,WATER,Physical,100,10,100,NearOther,0,abef,"The user rips the target, lowering the their defense by 2 stages. After attacking, the user switches out.",
 1236,REDHOTRETREAT,Red-Hot Retreat,567,0,FIRE,Status,0,3,0,User,4,,"Protects the user from attacks. Also burns any attacker who specially attacks the user.",WITHDRAW
 1237,FROSTSPIKES,Frost Spikes,569,0,ICE,Status,0,15,0,FoeSide,0,c,"The user lays frozen spikes on the foe's side. One layer hurts switched in foes, two layers frostbites.",
 1238,SANDTOSS,Sand Toss,00A,40,GROUND,Special,100,30,10,NearOther,0,bef,"The user tosses hot desert sand on the target. It has a 10% chance to burn.",SCORCHINGSANDS
@@ -247,7 +247,7 @@
 1246,THUNDERBELLY,Thunder Belly,56B,200,ELECTRIC,Physical,100,10,0,AllNearFoes,0,abef,"The user takes an entire grid of power into its belly to slam the target. The user takes 100% recoil.",BODYSLAM
 1247,VOLLEYSTANCE,Volley Stance,56D,0,STEEL,Status,0,10,0,User,0,d,"The user prepares its dual cannons. Until switch out, each special attack hits twice.",FOCUSENERGY
 1248,ASTRALDREAM,Astral Dream,56C,0,PSYCHIC,Status,0,10,0,User,0,d,"This move raises all the user's stats by 2 stages. Can only be used while asleep.",COSMICPOWER
-1249,VINEMAZE,Vine Maze,56F,85,GRASS,Physical,100,10,100,AllNearFoes,0,abef,"The user spurs hundreds of vines to ensnare all enemies, lowering the Speed of any that moved first.",FRENZYPLANT
+1249,VINEMAZE,Vine Maze,56F,85,GRASS,Physical,100,10,100,AllNearFoes,0,abef,"The user sends vines to ensnare all enemies, lowering the Speed of any that moved first by 3 stages.",FRENZYPLANT
 1250,JOKEJOLT,Joke Jolt,0BA,60,ELECTRIC,Special,100,10,100,NearOther,0,bef,"The target is pranked by an electric jolt. They are taunted and unable to use status moves for 3 turns.",THUNDERSHOCK
 1251,PHOTONEDGE,Photon Edge,007,85,ELECTRIC,Physical,100,15,50,NearOther,0,abeh,"The user slices with claws of light that have a 50% chance to numb. Critical hits land more easily.",
 1252,FRANTICFANG,Frantic Fang,571,60,NORMAL,Physical,100,10,0,NearOther,0,abei,"Channeling fear, the user bites the target. Deals double damage if the user is below half health.",HYPERFANG
@@ -283,13 +283,13 @@
 1282,VIPERSHOCK,Vipershock,58A,80,POISON,Physical,100,5,0,NearOther,0,abef,"The user finishes off its prey. Power is tripled against poisoned targets.",POISONFANG
 1283,ONAROLL,On A Roll,58B,90,GROUND,Physical,100,15,0,NearOther,0,abef,"The user attacks while balled up. This counts as a usage of Fury Cutter, Rock Roll, or Snowball.",ROCKROLL
 1284,MACHFLIGHT,Mach Flight,58C,0,FLYING,Status,0,15,0,User,0,d,"The user takes off at sonic speeds, raising its Speed by 2 stages and gaining the Flying type.",AGILITY
-1285,CALTROPSTYLE,Caltrop Style,58E,50,DARK,Special,100,15,100,NearOther,0,bef,"Attacks and sets a layer of spikes. Afterwards, it returns to switch with a party Pokémon.",UTURN
+1285,CALTROPSTYLE,Caltrop Style,58E,50,DARK,Special,100,15,100,NearOther,0,bef,"Attacks and sets a layer of spikes. After attacking, the user switches out.",UTURN
 1286,CULL,Cull,58F,40,DARK,Special,100,10,0,NearOther,0,bef,"The user tries to pick off a weak target. After damage, if the target is below 1/4 HP, they instantly faint.",NIGHTSLASH
 1287,TRIPLETHREAT,Triple Threat,017,90,DRAGON,Special,100,10,60,NearOther,0,bef,"The user strikes with a simultaneous three-beam attack. It has a 20% chance each to numb, burn, or frostbite.",TRIATTACK
 1288,ERODINGFOAM,Eroding Foam,590,80,WATER,Special,100,20,100,NearOther,0,bef,"The user spews alkaline bubbles that melt the target, drastically lowering their Defense.",BUBBLEBEAM
 1289,COCODROP,Coco Drop,591,1,GRASS,Physical,100,12,0,NearOther,0,abef,"The user drops a head from high up. The taller the user compared to the target, the greater the damage.",
 1290,LIGHTNINGSPEAR,Lightning Spear,5C8,90,ELECTRIC,Special,100,12,0,NearOther,0,bef,"Shoots a damaging spear at enemies, or a 4-stage Speed-increasing electric charge at allies.",THUNDERBOLT
-1291,TARVOLLEY,Tar Volley,592,35,FIRE,Special,100,10,100,AllNearFoes,0,bef,"The user attacks twice with tar globs. If two targets, the hits spread. Reduces targets' Speed.",SMOKESCREEN
+1291,TARVOLLEY,Tar Volley,592,45,FIRE,Special,100,10,100,AllNearFoes,0,bef,"The user attacks twice with tar globs. If two targets, the hits spread. Reduces targets' Speed.",SMOKESCREEN
 1292,WAXINGWATER,Waxing Water,100,50,WATER,Special,0,10,0,NearFoe,0,bef,"Strikes the target with lunar tides, then summons rain for five turns.",SURF
 1293,HEATGYRE,Heat Gyre,0FF,50,FIRE,Physical,0,10,0,NearFoe,0,abef,"Spins into the target while emitting heat, then summons sunshine for five turns.",FLAMEWHEEL
 1294,MIRRORSHIELD,Mirror Shield,593,0,STEEL,Status,0,3,0,User,4,,"Protects the user from attacks. Special attackers take 1/8th HP damage.",PROTECT
@@ -341,7 +341,7 @@
 1340,GREYMIST,Grey Mist,587,0,POISON,Status,0,10,0,User,0,,"A Grey Mist covers the battlefield. For 5 turns, stats are reset at the end of each turn.",MIST
 1341,PATIENTTRAINING,Patient Training,508,0,BUG,Status,0,12,0,User,0,d,"The user prepares its weapons, drastically raising Attack but drastically lowering Speed.",SWORDSDANCE
 1342,MARTIALMASTERY,Martial Mastery,5AD,0,FIGHTING,Status,0,15,0,User,0,d,"The user doubles its critical strike chance and raises its Attack and Defense by 2 stages each.",FOCUSENERGY
-1343,REVERBWARD,Reverb Ward,5AE,0,PSYCHIC,Status,0,3,0,User,4,,"Protects the user from all attacks. Special attacks harshly lower the attacker's Sp. Def stat.",PROTECT
+1343,REVERBWARD,Reverb Ward,5AE,0,PSYCHIC,Status,0,3,0,User,4,,"Protects the user from all attacks. Special attacks lower the attacker's Sp. Def stat by 4 stages.",PROTECT
 1344,MOONGLOW,Moon Glow,09E,0,FAIRY,Status,0,10,0,BothSides,0,,"Summons moonglow for eight turns, boosting Fairy-type attacks and heralding the Full Moon.",
 1345,ECLIPSE,Eclipse,09D,0,PSYCHIC,Status,0,10,0,BothSides,0,,"Summons eclipse for eight turns, boosting Psychic-type attacks and heralding the Total Eclipse.",
 1346,CAPTIVATINGSIGHT,Captivating Sight,59F,0,PSYCHIC,Status,0,5,0,NearFoe,0,,"Summons eclipse for eight turns. The target becomes obsessed with the sky, trapping it.",MIRACLEEYE
@@ -366,7 +366,7 @@
 1365,RAGINGFURY,Raging Fury,55F,120,FIRE,Physical,100,10,0,RandomNearFoe,0,abef,"The user rampages and attacks while spewing flames for three turns.",FLAREBLITZ
 1366,CHLOROBLAST,Chloroblast,510,150,GRASS,Special,100,5,100,NearOther,0,bef,"The user launches its amassed chlorophyll to inflict damage on the target. The user loses half its current HP.",SOLARBEAM
 1367,DIRECLAW,Dire Claw,005,85,POISON,Physical,100,15,50,NearOther,0,abefh,"The user lashes out with its claws. 50% chance to poison. Critical hits are more likely.",CROSSPOISON
-1368,SHIELDSHELL,Shield Shell,5BB,0,STEEL,Status,0,3,0,User,4,,"Protects itself from damage. It also lowers the Sp. Atk of special attackers.",PROTECT
+1368,SHIELDSHELL,Shield Shell,5BB,0,STEEL,Status,0,3,0,User,4,,"Protects itself from damage. It also lowers the Sp. Atk of special attackers by 2 stages.",PROTECT
 1369,SPIKYBURST,Spiky Burst,5BC,300,DARK,Physical,100,5,0,NearFoe,0,bef,"Exlodes, dealing an extra 50 base power to all foes for each layer of spikes underneath them. The user faints.",EXPLOSION
 1370,MALEFICPHANTOM,Malefic Phantom,0EE,70,GHOST,Special,100,15,0,NearOther,-1,bef,"The user swaps out using an illusion made from the hatred of their opponent. This move always goes last.",PURSUIT
 1371,HAIRCURL,Hair Curl,0CF,80,STEEL,Special,100,15,0,NearOther,0,abef,"The user curls its metal hair around the target, trapping and damaging it for three turns.",BIND
@@ -425,3 +425,4 @@
 1424,TUNEUP,Tune Up,5E3,0,BUG,Status,0,10,0,User,0,d,"The user amps itself up for performance, raising its Sp. Atk and Speed by 2 stages each.",
 1425,HONESIGHT,Hone Sight,5E4,0,NORMAL,Status,0,12,0,User,0,d,"The user focuses its aim to raise its Sp. Atk and Accuracy by 3 stages each.",
 1426,CURSEDOATH,Cursed Oath,10D,0,GHOST,Status,0,10,0,User,0,,"The user spends 1/4th of their max HP to curse the target, damaging their HP by 1/4th each turn.",
+1427,MINDSAP,Mind Sap,5E5,0,GRASS,Status,100,10,0,NearOther,0,bce,"Restores its own HP by the target's Attack stat amount, then lowers the target's Attack stat.",
