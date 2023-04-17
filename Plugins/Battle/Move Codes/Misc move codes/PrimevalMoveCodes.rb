@@ -177,7 +177,7 @@ class PokeBattle_Move_60B < PokeBattle_Move_101
     end
 end
 
-# Empowered Curse
+# Empowered Cursed Oath
 class PokeBattle_Move_60C < PokeBattle_Move
     include EmpoweredMove
 

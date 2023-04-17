@@ -105,3 +105,4 @@
 4104,GEARUP,Gear Up,15C,0,STEEL,Status,0,15,0,UserAndAllies,0,d,"The user engages its gears to raise the Attack and Sp. Atk of allies with the Plus or Minus Ability.",
 4105,ROTOTILLER,Rototiller,13E,0,GROUND,Status,0,10,0,UserAndAllies,0,,"The user tills the soil to encourage plant growth. This raises the Attack and Sp. Atk of Grass type allies.",
 4106,FLOWERSHIELD,Flower Shield,13F,0,FAIRY,Status,0,10,0,UserAndAllies,0,,"The user raises the Defense and Sp. Def of all Grass-type Pokémon on its side.",
+4107,CURSE,Curse,10D,0,GHOST,Status,0,10,0,User,0,,"Curses the target if user is Ghost type. Otherwise, lowers Spe. and raises Atk. and Def.",

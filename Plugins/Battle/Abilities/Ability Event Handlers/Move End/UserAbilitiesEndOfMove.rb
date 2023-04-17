@@ -135,7 +135,7 @@ BattleHandlers::UserAbilityEndOfMove.add(:CALAMITY,
       numFainted = 0
       targets.each { |b| numFainted += 1 if b.damageState.fainted }
       next if numFainted == 0
-      user.pbRaiseMultipleStatStages([:ATTACK, numFainted, :SPECIAL_ATTACK, numFainted], user, ability: ability)
+      user.pbRaiseMultipleStatStages([:ATTACK, numFainted * 2, :SPECIAL_ATTACK, numFainted * 2], user, ability: ability)
   }
 )
 

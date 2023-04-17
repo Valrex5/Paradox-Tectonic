@@ -3,7 +3,9 @@ StatUpMove
 MultiStatUpMove
 TargetMultiStatUpMove
 PokeBattle_TeamStatBuffMove
-
+pbBattleStatIncreasingBerry
+pbRaiseMultipleStatStages
+pbBattleMoveImmunityStatAbility
 
 tryLowerStat
 StatDownMove

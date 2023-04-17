@@ -431,19 +431,9 @@ class PokeBattle_Move_51B < PokeBattle_Move
 end
 
 #===============================================================================
-# Heals user by half, then raises both Attack and Sp. Atk if still unhealed fully. (Dragon Blood)
+# (Not currently used)
 #===============================================================================
-class PokeBattle_Move_51C < PokeBattle_HalfHealingMove
-    def pbEffectGeneral(user)
-        super
-        user.pbRaiseMultipleStatStages([:ATTACK, 1, :SPECIAL_ATTACK, 1], user, move: self) if user.hp < user.totalhp
-    end
-
-    def getEffectScore(user, target)
-        score = super
-        score += getMultiStatUpEffectScore([:ATTACK, 1, :SPECIAL_ATTACK, 1], user, target) * 0.5
-        return score
-    end
+class PokeBattle_Move_51C < PokeBattle_Move
 end
 
 #===============================================================================

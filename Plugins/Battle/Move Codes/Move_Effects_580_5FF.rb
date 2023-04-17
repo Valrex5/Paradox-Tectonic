@@ -801,7 +801,7 @@ class PokeBattle_Move_5AB < PokeBattle_HealingMove
     end
 
     def pbEffectGeneral(user)
-        user.pbRaiseMultipleStatStages([:DEFENSE, 1, :SPECIAL_DEFENSE, 1], user, move: self)
+        user.pbRaiseMultipleStatStages([:DEFENSE, 2, :SPECIAL_DEFENSE, 2], user, move: self)
         super
         user.incrementEffect(:Refurbished)
     end
@@ -1446,13 +1446,9 @@ class PokeBattle_Move_5C6 < PokeBattle_Move
 end
 
 #===============================================================================
-# Heals user by 1/3, raises Defense, Sp. Defense, Crit Chance. (Divination)
+# Heals user by 1/2, raises Defense, Sp. Defense, Crit Chance. (Divination)
 #===============================================================================
-class PokeBattle_Move_5C7 < PokeBattle_HealingMove
-    def healRatio(_user)
-        return 1.0 / 3.0
-    end
-
+class PokeBattle_Move_5C7 < PokeBattle_HalfHealingMove
     def pbMoveFailed?(user, _targets, show_message)
         if user.effectAtMax?(:FocusEnergy) && !user.pbCanRaiseStatStage?(:DEFENSE, user, self) && 
                 !user.pbCanRaiseStatStage?(:SPECIAL_DEFENSE, user, self)
@@ -1464,7 +1460,7 @@ class PokeBattle_Move_5C7 < PokeBattle_HealingMove
     def pbEffectGeneral(user)
         super
         user.pbRaiseMultipleStatStages([:DEFENSE, 1, :SPECIAL_DEFENSE, 1], user, move: self)
-		user.incrementEffect(:FocusEnergy, 1) unless user.effectAtMax?(:FocusEnergy)
+        user.incrementEffect(:FocusEnergy, 1) unless user.effectAtMax?(:FocusEnergy)
     end
 
     def getEffectScore(user, target)
@@ -1477,7 +1473,7 @@ end
 
 #===============================================================================
 # Damages target if target is a foe, or buff's the target's Speed
-# by two stages if it's an ally. (Lightning Spear)
+# by four stages if it's an ally. (Lightning Spear)
 #===============================================================================
 class PokeBattle_Move_5C8 < PokeBattle_Move
     def pbOnStartUse(user, targets)
@@ -1497,7 +1493,7 @@ class PokeBattle_Move_5C8 < PokeBattle_Move
 
     def pbEffectAgainstTarget(user, target)
         return unless @buffing
-        target.pbRaiseMultipleStatStages([:SPEED, 2], user, move: self)
+        target.pbRaiseMultipleStatStages([:SPEED, 4], user, move: self)
     end
 
     def pbShowAnimation(id, user, targets, hitNum = 0, showAnimation = true)

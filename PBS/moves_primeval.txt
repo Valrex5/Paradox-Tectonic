@@ -11,7 +11,7 @@
 2010,PRIMEVALCALMMIND,Primeval Calm Mind,609,0,PSYCHIC,Status,0,1,0,User,0,dy,"The user raises its Sp. Atk and Sp. Def, maximizes its Accuracy, and becomes Psychic-type.",CALMMIND
 2011,PRIMEVALSTRINGSHOT,Primeval String Shot,60A,0,BUG,Status,100,1,0,AllNearFoes,0,bey,"Nearby foes are bound with silk, sharply lowering their Speed, Atk., and Sp. Atk User also becomes Bug-type.",STRINGSHOT
 2012,PRIMEVALSANDSTORM,Primeval Sandstorm,60B,0,ROCK,Status,0,1,0,BothSides,0,y,"The user summons a sandstorm for 5 turns, boosts its Def. and Sp. Def, and becomes Rock-type.",SANDSTORM
-2013,PRIMEVALCURSE,Primeval Curse,60C,0,GHOST,Status,100,1,0,AllNearFoes,0,bey,"The user applies a damaging curse to all nearby foes. User becomes a Ghost-type.",CURSE
+2013,PRIMEVALCURSEDOATH,Primeval Cursed Oath,60C,0,GHOST,Status,100,1,0,AllNearFoes,0,bey,"The user applies a damaging curse to all nearby foes. User becomes a Ghost-type.",CURSE
 2014,PRIMEVALDRAGONDANCE,Primeval Dragon Dance,60D,0,DRAGON,Status,0,1,0,User,0,doy,"The user raises its Attack and Speed by 2 stages, and becomes Dragon-type.",DRAGONDANCE
 2015,PRIMEVALTORMENT,Primeval Torment,60E,0,DARK,Status,100,1,0,AllNearFoes,0,bey,"The user torments and enrages the foe, making it incapable of using the same move twice in a row.",TORMENT
 2016,PRIMEVALLASERFOCUS,Primeval Laser Focus,60F,0,STEEL,Status,0,1,0,User,0,dy,"The user focuses intently, making every future attack critical. The user becomes a Steel-type.",LASERFOCUS

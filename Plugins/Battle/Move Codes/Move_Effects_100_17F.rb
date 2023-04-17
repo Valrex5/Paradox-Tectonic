@@ -258,69 +258,29 @@ class PokeBattle_Move_10C < PokeBattle_Move
 end
 
 #===============================================================================
-# User is Ghost: User loses 1/2 of max HP, and curses the target.
-# Cursed Pokémon lose 1/4 of their max HP at the end of each round.
-# User is not Ghost: Decreases the user's Speed by 1 stage, and increases the
-# user's Attack and Defense by 1 stage each. (Curse)
+# User is Ghost: User loses 1/4 of max HP, and curses the target. (Cursed Oath)
 #===============================================================================
 class PokeBattle_Move_10D < PokeBattle_Move
     def ignoresSubstitute?(_user); return true; end
 
-    def pbTarget(user)
-        return GameData::Target.get(:NearFoe) if user.pbHasType?(:GHOST)
-        return super
-    end
-
-    def pbMoveFailed?(user, _targets, show_message)
-        return false if user.pbHasType?(:GHOST)
-        if !user.pbCanLowerStatStage?(:SPEED, user, self) &&
-           !user.pbCanRaiseStatStage?(:ATTACK, user, self) &&
-           !user.pbCanRaiseStatStage?(:DEFENSE, user, self)
-            @battle.pbDisplay(_INTL("But it failed, since #{user.pbThis(true)} can't raise their Attack or Defense and can't lower their Speed!")) if show_message
-            return true
-        end
-        return false
-    end
-
     def pbFailsAgainstTarget?(user, target, show_message)
-        if user.pbHasType?(:GHOST) && target.effectActive?(:Curse)
+        if target.effectActive?(:Curse)
             @battle.pbDisplay(_INTL("But it failed, since #{target.pbThis(true)} is already cursed!")) if show_message
             return true
         end
         return false
     end
 
-    def pbEffectGeneral(user)
-        return if user.pbHasType?(:GHOST)
-        # Non-Ghost effect
-        user.tryLowerStat(:SPEED, user, increment: 1, move: self)
-        user.pbRaiseMultipleStatStages([:ATTACK, 1, :DEFENSE, 1], user, move: self)
-    end
-
     def pbEffectAgainstTarget(user, target)
-        return unless user.pbHasType?(:GHOST)
-        # Ghost effect
         @battle.pbDisplay(_INTL("{1} cut its own HP!", user.pbThis))
         user.applyFractionalDamage(1.0 / 4.0, false)
         target.applyEffect(:Curse)
     end
 
-    def pbShowAnimation(id, user, targets, hitNum = 0, showAnimation = true)
-        hitNum = 1 unless user.pbHasType?(:GHOST) # Non-Ghost anim
-        super
-    end
-
     def getEffectScore(user, target)
-        if user.pbHasTypeAI?(:GHOST)
-            score = getCurseEffectScore(user, target)
-            score += getHPLossEffectScore(user, 0.5)
-            return score
-        else
-            statUp = [:ATTACK, 1, :DEFENSE, 1]
-            score = getMultiStatUpEffectScore(statUp, user, target)
-            score -= user.stages[:SPEED] * 10
-            return score
-        end
+        score = getCurseEffectScore(user, target)
+        score += getHPLossEffectScore(user, 0.25)
+        return score
     end
 end
 
@@ -1696,7 +1656,7 @@ end
 class PokeBattle_Move_14E < PokeBattle_TwoTurnMove
     def initialize(battle, move)
         super
-        @statUp = [:SPECIAL_ATTACK, 2, :SPECIAL_DEFENSE, 2, :SPEED, 2]
+        @statUp = [:SPECIAL_ATTACK, 4, :SPECIAL_DEFENSE, 4, :SPEED, 4]
     end
 
     def pbMoveFailed?(user, _targets, show_message)

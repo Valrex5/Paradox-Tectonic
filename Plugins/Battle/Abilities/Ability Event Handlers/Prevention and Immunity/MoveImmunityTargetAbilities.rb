@@ -68,7 +68,7 @@ BattleHandlers::MoveImmunityTargetAbility.add(:ROCKCLIMBER,
 
 BattleHandlers::MoveImmunityTargetAbility.add(:FILTHY,
   proc { |ability, user, target, move, type, battle, showMessages, aiChecking|
-      next pbBattleMoveImmunityStatAbility(ability, user, target, move, type, :POISON, :ATTACK, 1, battle, showMessages, aiChecking)
+      next pbBattleMoveImmunityStatAbility(ability, user, target, move, type, :POISON, [:DEFENSE, 1, :SPECIAL_DEFENSE, 1], nil, battle, showMessages, aiChecking)
   }
 )
 
