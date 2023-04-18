@@ -5,6 +5,7 @@ class PokeBattle_Scene
     attr_reader   :sprites
     attr_accessor :lastCmd
     attr_accessor :lastMove
+    attr_reader :animations
   
     BLANK       = 0
     MESSAGE_BOX = 1

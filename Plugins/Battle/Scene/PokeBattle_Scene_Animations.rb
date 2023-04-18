@@ -133,6 +133,17 @@ class PokeBattle_Scene
         pbCommonAnimation("Shiny",@battle.battlers[b[0]])
       end
     end
+    
+    def animateIntroNewAvatar(battlerIndexNew)
+      # Animation of new pokemon appearing
+      dataBoxAnim = DataBoxAppearAnimation.new(@sprites, @viewport, battlerIndexNew)
+      @animations.push(dataBoxAnim)
+      # Set up wild Pokémon returning to normal colour and playing intro
+      # animations (including cry)
+      @animations.push(BattleIntroAnimationSolo.new(@sprites, @viewport, battlerIndexNew))
+      # Play all the animations
+      pbUpdate while inPartyAnimation?
+  end
   
     #=============================================================================
     # Animates a Pokémon being recalled into its Poké Ball and its data box hiding
