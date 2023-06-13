@@ -192,10 +192,31 @@ module Game
 		# Set resize factor
 		pbSetResizeFactor([$PokemonSystem.screensize, 4].min)
 		# Set language (and choose language if there is no save file)
-		if Settings::LANGUAGES.length >= 2 && $DEBUG
+		if Settings::LANGUAGES.length >= 2
 		  $PokemonSystem.language = pbChooseLanguage if save_data.empty?
 		  pbLoadMessages('Data/' + Settings::LANGUAGES[$PokemonSystem.language][1])
 		end
+	end
+
+	# Called when starting a new game. Initializes global variables
+	# and transfers the player into the map scene.
+	def self.start_new
+		mainMenuLanguage = $PokemonSystem.language
+		if $game_map && $game_map.events
+			$game_map.events.each_value { |event| event.clear_starting }
+		end
+		$game_temp.common_event_id = 0 if $game_temp
+		$PokemonTemp.begunNewGame = true
+		$scene = Scene_Map.new
+		SaveData.load_new_game_values
+		$PokemonSystem.language = mainMenuLanguage
+		$MapFactory = PokemonMapFactory.new($data_system.start_map_id)
+		$game_player.moveto($data_system.start_x, $data_system.start_y)
+		$game_player.refresh
+		$PokemonEncounters = PokemonEncounters.new
+		$PokemonEncounters.setup($game_map.map_id)
+		$game_map.autoplay
+		$game_map.update
 	end
 end
 
@@ -732,7 +753,7 @@ class ScreenChooseFileSave
 						dispose; draw = true; loadmenu=false; infor = false
 					}
 				# Language
-				elsif Settings::LANGUAGES.length >= 2 && ( @posinfor==2 || (@posinfor==1 && !@mysgif)) && $DEBUG
+				elsif Settings::LANGUAGES.length >= 2 && ( @posinfor==2 || (@posinfor==1 && !@mysgif))
 					$PokemonSystem.language = pbChooseLanguage
 					pbLoadMessages('Data/' + Settings::LANGUAGES[$PokemonSystem.language][1])
 					saveData = self.fileLoad(true)

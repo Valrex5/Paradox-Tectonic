@@ -1918,6 +1918,7 @@ ShowArea = true
 Bicycle = true
 #-------------------------------
 [365]
+# MAP365
 Outdoor = false
 ShowArea = true
 Bicycle = true
