@@ -66,7 +66,7 @@ def getMoveLearnableGroups()
 			firstSpecies = GameData::Species.get(firstSpecies.get_previous_species())
 		end
 
-		firstSpecies.egg_moves.each do |eggMoveID|
+		firstSpecies.line_moves.each do |eggMoveID|
 			move_counts[eggMoveID][groupIndex].push(species_data.id)
 		end
 	end

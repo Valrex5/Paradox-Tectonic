@@ -750,14 +750,7 @@ sp.form) && !Settings::DEX_SHOWS_ALL_FORMS
             next unless i[2] == @form
             formname = i[0]
             species_data = GameData::Species.get_species_form(@species, i[2])
-            firstSpecies = species_data
-            while GameData::Species.get(firstSpecies.get_previous_species) != firstSpecies
-                firstSpecies = GameData::Species.get(firstSpecies.get_previous_species)
-            end
-
-            compatibleMoves = firstSpecies.egg_moves + species_data.tutor_moves
-            compatibleMoves.uniq!
-            compatibleMoves.compact!
+            compatibleMoves = species_data.learnable_moves
             compatiblePhysMoves = compatibleMoves.select do |move|
                 movaData = GameData::Move.get(move)
                 next movaData.category == 0

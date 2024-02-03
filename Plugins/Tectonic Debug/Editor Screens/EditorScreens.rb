@@ -1041,7 +1041,7 @@ def pbEncountersEditor
               spec.happiness,
               moves,
               spec.tutor_moves.clone,
-              spec.egg_moves.clone,
+              spec.line_moves.clone,
               spec.abilities[0],
               spec.abilities[1],
               spec.hidden_abilities[0],
@@ -1098,7 +1098,7 @@ def pbEncountersEditor
                 :happiness             => data[13],
                 :moves                 => data[14],
                 :tutor_moves           => data[15],
-                :egg_moves             => data[16],
+                :line_moves             => data[16],
                 :abilities             => abilities,          # 17, 18
                 :hidden_abilities      => hidden_abilities,   # 19, 20, 21, 22
                 :wild_item_common      => data[23],

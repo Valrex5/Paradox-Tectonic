@@ -23,15 +23,15 @@ class PokemonPokedex_Scene
         @hwbitmap           	= AnimatedBitmap.new("Graphics/Pictures/Pokedex/icon_hw")
         @selbitmap          	= AnimatedBitmap.new("Graphics/Pictures/Pokedex/icon_searchsel")
         @searchsliderbitmap 	= AnimatedBitmap.new(_INTL("Graphics/Pictures/Pokedex/icon_searchslider"))
-      @search2Cursorbitmap	= AnimatedBitmap.new(_INTL("Graphics/Pictures/Pokedex/cursor_search"))
+        @search2Cursorbitmap	= AnimatedBitmap.new(_INTL("Graphics/Pictures/Pokedex/cursor_search"))
         @sprites = {}
         @viewport = Viewport.new(0,0,Graphics.width,Graphics.height)
         @viewport.z = 99999
         addBackgroundPlane(@sprites,"background","Pokedex/bg_list",@viewport)
         addBackgroundPlane(@sprites,"searchbg","Pokedex/bg_search",@viewport)
-      addBackgroundPlane(@sprites,"searchbg2","Pokedex/bg_search_2",@viewport)
+        addBackgroundPlane(@sprites,"searchbg2","Pokedex/bg_search_2",@viewport)
         @sprites["searchbg"].visible = false
-      @sprites["searchbg2"].visible = false
+        @sprites["searchbg2"].visible = false
         @sprites["pokedex"] = Window_Pokedex.new(206,30,276,364,@viewport)
         @sprites["icon"] = PokemonSprite.new(@viewport)
         @sprites["icon"].setOffset(PictureOrigin::Center)
@@ -176,15 +176,9 @@ class PokemonPokedex_Scene
         weight = species_data.weight
         
         abilities = species_data.abilities
-            lvlmoves = species_data.moves
-        tutormoves = species_data.tutor_moves
+        lvlmoves = species_data.moves
         
-        firstSpecies = GameData::Species.get(species)
-        while GameData::Species.get(firstSpecies.get_previous_species()) != firstSpecies do
-        firstSpecies = GameData::Species.get(firstSpecies.get_previous_species())
-        end
-      
-        eggmoves = firstSpecies.egg_moves
+        learnable_moves = species_data.learnable_moves
         
         evos = species_data.get_evolutions
         prevos = species_data.get_prevolutions
@@ -195,8 +189,26 @@ class PokemonPokedex_Scene
         useCounts = [0,0]
         end
   
-        ret.push([species, species_data.name, height, weight, i + 1, shift, type1, type2, 
-          color, shape, abilities, lvlmoves, tutormoves, eggmoves, evos, prevos, useCounts[0], useCounts[1]])
+        ret.push([
+          species, # 0
+          species_data.name, # 1
+          height, # 2
+          weight, # 3
+          i + 1, # 4
+          shift, # 5
+          type1, # 6
+          type2, # 7
+          color, # 8
+          shape, # 9
+          abilities, # 10
+          lvlmoves, # 11
+          learnable_moves, # 12
+          nil, # 13
+          evos, # 14
+          prevos, # 15
+          useCounts[0], # 16
+          useCounts[1] # 17
+        ])
       end
       return ret
     end
@@ -1331,7 +1343,7 @@ class PokemonPokedex_Scene
 					echoln("Adding #{actualMoveID} to tutorable movesets:")
 					speciesToEdit.each do |species|
 						speciesData = GameData::Species.get(species)
-						movesList = [speciesData.egg_moves,speciesData.tutor_moves][lineBehaviourSelection]
+						movesList = [speciesData.line_moves,speciesData.tutor_moves][lineBehaviourSelection]
 						movesList = speciesData.tutor_moves if speciesData.is_solitary?
 						next if movesList.include?(actualMoveID)
 						movesList.push(actualMoveID)
@@ -1342,7 +1354,7 @@ class PokemonPokedex_Scene
 					echoln("Deleting #{actualMoveID} from tutorable movesets:")
 					speciesToEdit.each do |species|
 						speciesData = GameData::Species.get(species)
-						movesList = [speciesData.egg_moves,speciesData.tutor_moves][lineBehaviourSelection]
+						movesList = [speciesData.line_moves,speciesData.tutor_moves][lineBehaviourSelection]
 						movesList = speciesData.tutor_moves if speciesData.is_solitary?
 						next unless movesList.include?(actualMoveID)
 						movesList.delete(actualMoveID)
@@ -1353,7 +1365,7 @@ class PokemonPokedex_Scene
 					echoln("Replacing #{actualMoveID} in tutorable movesets with #{replacementActualMoveID}:")
 					speciesToEdit.each do |species|
 						speciesData = GameData::Species.get(species)
-						movesList = [speciesData.egg_moves,speciesData.tutor_moves][lineBehaviourSelection]
+						movesList = [speciesData.line_moves,speciesData.tutor_moves][lineBehaviourSelection]
 						movesList = speciesData.tutor_moves if speciesData.is_solitary?
 						next unless movesList.include?(actualMoveID)
 						next if movesList.include?(replacementActualMoveID)

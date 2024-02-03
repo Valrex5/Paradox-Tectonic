@@ -290,13 +290,8 @@ DebugMenuCommands.register("analyzeitemdistribution", {
               tutorSet.push(move_id)
           end
   
-          # Gather line moves
-          firstSpecies = species_data
-          while GameData::Species.get(firstSpecies.get_previous_species()) != firstSpecies do
-              firstSpecies = GameData::Species.get(firstSpecies.get_previous_species())
-          end
-          
-          firstSpecies.egg_moves.each do |move_id| 
+          # Gather line moves          
+          species_data.inherited_moves.each do |move_id| 
               next if tutorSet.include?(move_id)
               move_counts[move_id][1] += 1
               learnSet.push(move_id)

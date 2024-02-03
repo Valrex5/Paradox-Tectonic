@@ -482,14 +482,7 @@ Events.onWildPokemonCreate += proc {|sender,e|
 def getRandomMentorMove(species)
 	return nil if !defined?($PokemonGlobal.dexNavEggMovesUnlocked) || !$PokemonGlobal.dexNavEggMovesUnlocked
 	generatedSpeciesData = GameData::Species.get(species)
-	firstSpecies = generatedSpeciesData
-	while GameData::Species.get(firstSpecies.get_previous_species()) != firstSpecies do
-		firstSpecies = GameData::Species.get(firstSpecies.get_previous_species())
-	end
-	moves = firstSpecies.egg_moves.concat(generatedSpeciesData.tutor_moves)
-	moves.uniq!
-	moves.compact!
-	return moves.sample
+	return generatedSpeciesData.learnable_moves_non_level.sample
 end
 
 def incrementDexNavCounts(caught)

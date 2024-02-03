@@ -265,7 +265,7 @@ DebugMenuCommands.register("setmetadata", {
         fullLine = evolutions.clone
         fullLine.push(species_data.id) # This might be unneccessary, not sure if its there already
         sharedTutorMoves.each do |sharedTutorMove|
-          species_data.egg_moves.push(sharedTutorMove)
+          species_data.line_moves.push(sharedTutorMove)
   
           fullLine.each do |lineSpecies|
             lineSpeciesData = GameData::Species.get(lineSpecies)
@@ -273,8 +273,8 @@ DebugMenuCommands.register("setmetadata", {
           end
         end
   
-        species_data.egg_moves.uniq!
-        species_data.egg_moves.compact!
+        species_data.line_moves.uniq!
+        species_data.line_moves.compact!
         fullLine.each do |lineSpecies|
           lineSpeciesData = GameData::Species.get(lineSpecies)
           lineSpeciesData.tutor_moves.uniq!

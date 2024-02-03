@@ -193,16 +193,8 @@ class PokemonPokedex_Scene
                     end
 
                     if [0, 3].include?(learningMethodSelection)
-                        eggmoves = item[13]
-                        eggmoves.each do |move|
-                            if move == actualMove
-                                contains = true
-                                break
-                            end
-                        end
-
-                        tutormoves = item[12]
-                        tutormoves.each do |move|
+                        # All learnable moves
+                        item[12].each do |move|
                             if move == actualMove
                                 contains = true
                                 break
@@ -604,27 +596,7 @@ class PokemonPokedex_Scene
 
                 hasSignatureMove = false
 
-                # By level up
-                dex_item[11].each do |learnset_entry|
-                    if GameData::Move.get(learnset_entry[1]).is_signature?
-                        hasSignatureMove = true
-                        break
-                    end
-                end
-
-                next true if hasSignatureMove && !reversed
-
-                # Egg moves
-                dex_item[13].each do |move|
-                    if GameData::Move.get(move).is_signature?
-                        hasSignatureMove = true
-                        break
-                    end
-                end
-
-                next true if hasSignatureMove && !reversed
-
-                # Tutor moves
+                # All learnable moves
                 dex_item[12].each do |move|
                     if GameData::Move.get(move).is_signature?
                         hasSignatureMove = true
