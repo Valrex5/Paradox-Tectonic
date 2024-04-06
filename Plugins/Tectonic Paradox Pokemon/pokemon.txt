@@ -1,4 +1,7 @@
 ﻿#-------------------------------
+[636]
+Evolutions = VOLCARONA,Level,44,SLITHERWING,Item,FIRESTONE,IRONMOTH,Item,THUNDERSTONE
+#-------------------------------
 [934]
 Name = Megadon
 InternalName = GREATTUSK
