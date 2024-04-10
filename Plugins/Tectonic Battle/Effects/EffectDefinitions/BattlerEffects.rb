@@ -2053,12 +2053,6 @@ GameData::BattleEffect.register_effect(:Battler, {
 })
 
 GameData::BattleEffect.register_effect(:Battler, {
-    :id => :RocketHands,
-    :real_name => "Rocket Hands",
-    :resets_eor	=> true,
-})
-
-GameData::BattleEffect.register_effect(:Battler, {
     :id => :BurningBalwark,
     :real_name => "Burning Balwark",
     :resets_eor	=> true,
