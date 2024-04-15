@@ -54,6 +54,7 @@ Description = Raises both defensive stats whenever any Pokémon uses a dance mov
 [ANCIENTDANCE]
 Name = Ancient Dance
 Description = Uses Dragon Dance after a Total Eclipse.
+Flags = EclipseSynergy
 #-------------------------------
 [APPREHENSIVE]
 Name = Apprehensive
@@ -325,6 +326,7 @@ Description = When hit with a special move, hits back instantly with Breach.
 [CRIMSONSKIES]
 Name = Crimson Skies
 Description = Dragon-type moves deal 50% more damage in moonglow.
+Flags = MoonglowSynergy
 #-------------------------------
 [CURSEDTAIL]
 Name = Cursed Tail
@@ -791,6 +793,7 @@ Description = Upon entry, traps each opponent in a whirlpool for two turns.
 [HADRONSYSTEM]
 Name = Hadron System
 Description = Combines moonglow and rain.
+Flags = RainSynergy,MoonglowSynergy
 #-------------------------------
 [HARBINGER]
 Name = Harbinger
@@ -1262,6 +1265,7 @@ Description = Prevents other Pokémon from lowering its stat steps, and its weig
 [ORICHALCHUMPRESENCE]
 Name = Orichalchum Presence
 Description = Combines sun and eclipse.
+Flags = EclipseSynergy,SunSynergy
 #-------------------------------
 [OUTRIDER]
 Name = Outrider
@@ -1396,6 +1400,7 @@ Description = Random added effects of sound attacks are +50% more likely to occu
 [PROTOINSTINCT]
 Name = Protoinstinct
 Description = On switch-in, raises both offensive stats in eclipse, or lowers the enemy's in sun.
+Flags = EclipseSynergy,SunSynergy
 #-------------------------------
 [PUNISHER]
 Name = Punisher
@@ -1412,6 +1417,7 @@ Description = Upon entry, creates a Puzzle Room for five turns, swapping base At
 [QUARKPROTOCOL]
 Name = Quark Protocol
 Description = On switch-in, raises both offensive stats in rain, or lowers the enemy's in moonglow.
+Flags = RainSynergy,MoonglowSynergy
 #-------------------------------
 [QUARRELSOME]
 Name = Quarrelsome
@@ -1685,6 +1691,7 @@ Flags = SunSynergy
 [SOLARPANEL]
 Name = Solar Panel
 Description = Heals 1/8th of its HP and takes 35% less damage under sunlight.
+Flags = SunSynergy
 #-------------------------------
 [SOLONOCTURNE]
 Name = Solo Nocturne
@@ -1905,6 +1912,7 @@ Description = Becomes charged upon entry, doubling the power of its next Electri
 [THUNDERSTORM]
 Name = Thunderstorm
 Description = Once per switch-in, Charges in sandstorm, doubling the power of its next Electric-type move.
+Flags = SandSynergy
 #-------------------------------
 [THUNDERSTRUCK]
 Name = Thunderstruck
