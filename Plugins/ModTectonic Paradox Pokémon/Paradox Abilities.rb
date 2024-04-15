@@ -7,10 +7,22 @@ BattleHandlers::AbilityOnSwitchIn.add(:ROCKETHANDS,
   }
 )
 
+BattleHandlers::MoveSpeedModifierAbility.add(:ROCKETHANDS,
+    proc { |ability, battler, move, battle, mult, aiCheck|
+        next unless (aiCheck && move.nil?) || move.punchingMove?
+        if aiCheck
+            next mult * 2.0
+        else
+            battler.applyEffect(:MoveSpeedDoubled,ability)
+        end
+    }
+)
+
 BattleHandlers::SpeedCalcAbility.add(:ROCKETHANDS,
-  proc { |ability, battler, mult|
-      next mult * 2 if battler.effectActive?(:RocketHands)
-  }
+    proc { |ability, battler, mult|
+        next unless battler.effectActive?(:MoveSpeedDoubled)
+        next mult * 2 if battler.effects[:MoveSpeedDoubled] == ability
+    }
 )
 
 BattleHandlers::TotalEclipseAbility.add(:ANCIENTDANCE,
@@ -121,5 +133,12 @@ BattleHandlers::AbilityOnSwitchIn.add(:QUARKPROTOCOL,
       elsif battle.moonGlowing?
       next entryDebuffAbility(ability, battler, battle, ATTACKING_STATS_2, aiCheck: aiCheck) 
       end   
+    }
+)
+
+BattleHandlers::AddedEffectChanceModifierUserAbility.add(:PRIMALECHO,
+    proc { |ability, user, target, move, chance|
+        chance += 50 if move.soundMove?
+        next chance
     }
 )
