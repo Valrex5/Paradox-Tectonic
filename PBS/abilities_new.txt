@@ -32,11 +32,6 @@ Description = HP-fraction-based damage effects deal 50% more damage to opponents
 Name = All-Consuming
 Description = When another Pokémon faints, consumes their item, ability, and stat steps.
 #-------------------------------
-[ALLTERRAIN]
-Name = All-Terrain
-Description = Prevents hazard damage and weather downsides.
-Flags = HazardImmunity,AllWeatherSynergy
-#-------------------------------
 [ALLTHATGLITTERS]
 Name = All That Glitters
 Description = Can hold two different items, if both are Gems.
@@ -133,11 +128,6 @@ Description = Deals more damage to targets the faster it is than them. Up to a 5
 [BALLMIMIC]
 Name = Ball Mimic
 Description = Your Poké Balls are 50% more effective.
-#-------------------------------
-[BANSHEESMELISMA]
-Name = Banshee's Melisma
-Description = Boosts Special Attack by 50% but the user is locked into the first move they use.
-Flags = ChoiceLocking
 #-------------------------------
 [BARRIERMAKER]
 Name = Barrier Maker
@@ -794,7 +784,7 @@ Description = Upon entry, traps each opponent in a whirlpool for two turns.
 Name = Hadron System
 Description = Combines moonglow and rain.
 Flags = RainSynergy,MoonglowSynergy
-#-------------------------------
+
 [HARBINGER]
 Name = Harbinger
 Description = Summons eclipse for four turns when it enters battle.
@@ -1266,7 +1256,6 @@ Description = Prevents other Pokémon from lowering its stat steps, and its weig
 Name = Orichalchum Presence
 Description = Combines sun and eclipse.
 Flags = EclipseSynergy,SunSynergy
-#-------------------------------
 [OUTRIDER]
 Name = Outrider
 Description = After knocking out any Pokémon, raises its Attack and Speed.
@@ -1502,10 +1491,6 @@ Description = Heals 1/8th of its max HP each turn during sandstorm.
 [ROCKCLIMBER]
 Name = Rock Climber
 Description = Immune to Rock-type moves and to Stealth Rock, and raises Speed whenever one would hit it.
-#-------------------------------
-[ROCKETHANDS]
-Name = Rocket Hands
-Description = Doubles the speed of Punch-based moves.
 #-------------------------------
 [ROOTED]
 Name = Rooted
@@ -1800,10 +1785,6 @@ Name = Strikes Twice
 Description = In rain, each of its hits is followed by an extra hit at 25% power.
 Flags = RainSynergy
 #-------------------------------
-[STRONGMAGNETISM]
-Name = Strong Magnetism
-Description = Uses Magnet Rise after losing half of its HP.
-#-------------------------------
 [STUBBORN]
 Name = Stubborn
 Description = Prevents its stats from being lowered by more than 1 step at a time.
@@ -2058,11 +2039,6 @@ Flags = EclipseSynergy
 Name = Weathered
 Description = Immune to weather downsides, and takes 20% less damage from attacks during weather.
 Flags = AllWeatherSynergy
-#-------------------------------
-[WELLEQUIPPED]
-Name = Well-Equipped
-Description = Can hold two items, but loses 1/10th HP each turn and takes 15% more damage.
-Flags = MultipleItems
 #-------------------------------
 [WELLSUITED]
 Name = Well Suited

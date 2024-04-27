@@ -2045,6 +2045,7 @@ GameData::BattleEffect.register_effect(:Battler, {
     :id => :AutoPilot,
     :real_name => "Auto-Pilot",
     :resets_eor => true,
+
 })
 
 GameData::BattleEffect.register_effect(:Battler, {
