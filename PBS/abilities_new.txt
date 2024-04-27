@@ -784,7 +784,7 @@ Description = Upon entry, traps each opponent in a whirlpool for two turns.
 Name = Hadron System
 Description = Combines moonglow and rain.
 Flags = RainSynergy,MoonglowSynergy
-
+#-------------------------------
 [HARBINGER]
 Name = Harbinger
 Description = Summons eclipse for four turns when it enters battle.
@@ -1256,6 +1256,7 @@ Description = Prevents other Pokémon from lowering its stat steps, and its weig
 Name = Orichalchum Presence
 Description = Combines sun and eclipse.
 Flags = EclipseSynergy,SunSynergy
+#-------------------------------
 [OUTRIDER]
 Name = Outrider
 Description = After knocking out any Pokémon, raises its Attack and Speed.
@@ -2081,3 +2082,27 @@ Flags = EclipseSynergy
 [WRATHINSTINCT]
 Name = Wrath Instinct
 Description = Uses Dragon Dance if an attack lowers its HP to half or below.
+#-------------------------------
+[ALLTERRAIN]
+Name = All-Terrain
+Description = Prevents hazard damage and weather downsides.
+Flags = HazardImmunity,AllWeatherSynergy
+#-------------------------------
+[BANSHEESMELISMA]
+Name = Banshee's Melisma
+Description = Boosts Special Attack by 50% but the user is locked into the first move they use.
+Flags = ChoiceLocking
+#-------------------------------
+[ROCKETHANDS]
+Name = Rocket Hands
+Description = Doubles the speed of Punch-based moves.
+#-------------------------------
+[STRONGMAGNETISM]
+Name = Strong Magnetism
+Description = Uses Magnet Rise after losing half of its HP.
+#-------------------------------
+[WELLEQUIPPED]
+Name = Well-Equipped
+Description = Can hold two items, but loses 1/10th HP each turn and takes 15% more damage.
+Flags = MultipleItems
+#-------------------------------

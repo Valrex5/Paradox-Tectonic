@@ -48,3 +48,29 @@ class PokeBattle_Move_BoostIfSuperEffective < PokeBattle_Move
         return baseDmg
     end
 end
+
+#===============================================================================
+# Two turn attack. Skips first turn, attacks second turn. In sunshine, takes 1 turn instead. (Solar Beam)
+#===============================================================================
+class PokeBattle_Move_TwoTurnAttackCanChooseOne < PokeBattle_TwoTurnMove
+    def pbChargingTurnMessage(user, _targets)
+        @battle.pbDisplay(_INTL("{1} charges power!",user.pbThis))
+    end
+
+    def resolutionChoice(user)
+        choices = [_INTL("Attack"),_INTL("Charge")]
+        choice = @battle.scene.pbShowCommands(_INTL("Should #{user.pbThis(true)} charge the attack?"),choices,0)
+    end 
+
+    def skipChargingTurn?(user)
+        if choice == 0?
+    end
+
+    def resetMoveUsageState
+        choice = nil
+    end
+
+    def getEffectScore(_user, _target)
+        return 100
+    end
+end
