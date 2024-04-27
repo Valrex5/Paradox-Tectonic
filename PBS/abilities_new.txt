@@ -46,6 +46,11 @@ Flags = EclipseSynergy
 Name = Ancestral Dance
 Description = Raises both defensive stats whenever any Pokémon uses a dance move.
 #-------------------------------
+[ANCIENTDANCE]
+Name = Ancient Dance
+Description = Uses Dragon Dance after a Total Eclipse.
+Flags = EclipseSynergy
+#-------------------------------
 [APPREHENSIVE]
 Name = Apprehensive
 Description = Takes 30% less damage in eclipse, except in Total Eclipse.
@@ -307,6 +312,11 @@ Description = Upon entry, creates a substitute from 1/4th of its HP.
 [COUNTERFLOW]
 Name = Counter Flow
 Description = When hit with a special move, hits back instantly with Breach.
+#-------------------------------
+[CRIMSONSKIES]
+Name = Crimson Skies
+Description = Dragon-type moves deal 50% more damage in moonglow.
+Flags = MoonglowSynergy
 #-------------------------------
 [CURSEDTAIL]
 Name = Cursed Tail
@@ -770,6 +780,11 @@ Description = Heals 1/12th HP every turn. Protected from being poisoned.
 Name = Gyre Spinner
 Description = Upon entry, traps each opponent in a whirlpool for two turns.
 #-------------------------------
+[HADRONSYSTEM]
+Name = Hadron System
+Description = Combines moonglow and rain.
+Flags = RainSynergy,MoonglowSynergy
+
 [HARBINGER]
 Name = Harbinger
 Description = Summons eclipse for four turns when it enters battle.
@@ -1237,6 +1252,10 @@ Description = Sets a Tailwind for four turns upon entering the battle, increasin
 Name = Optimized Alloy
 Description = Prevents other Pokémon from lowering its stat steps, and its weight is doubled.
 #-------------------------------
+[ORICHALCHUMPRESENCE]
+Name = Orichalchum Presence
+Description = Combines sun and eclipse.
+Flags = EclipseSynergy,SunSynergy
 [OUTRIDER]
 Name = Outrider
 Description = After knocking out any Pokémon, raises its Attack and Speed.
@@ -1363,6 +1382,15 @@ Name = Pressure Valve
 Description = Right before the Pokémon is attacked, the attacker's stat changes are reset.
 Flags = SetupCounterAI
 #-------------------------------
+[PRIMALECHO]
+Name = Primal Echo
+Description = Random added effects of sound attacks are +50% more likely to occur.
+#-------------------------------
+[PROTOINSTINCT]
+Name = Protoinstinct
+Description = On switch-in, raises both offensive stats in eclipse, or lowers the enemy's in sun.
+Flags = EclipseSynergy,SunSynergy
+#-------------------------------
 [PUNISHER]
 Name = Punisher
 Description = Special moves against the Pokémon have a 30% chance to leech the attacker.
@@ -1374,6 +1402,11 @@ Description = Raises the Pokémon's Sp. Atk by 50%, including Style Values and o
 [PUZZLING]
 Name = Puzzling
 Description = Upon entry, creates a Puzzle Room for five turns, swapping base Attack and Sp. Atk.
+#-------------------------------
+[QUARKPROTOCOL]
+Name = Quark Protocol
+Description = On switch-in, raises both offensive stats in rain, or lowers the enemy's in moonglow.
+Flags = RainSynergy,MoonglowSynergy
 #-------------------------------
 [QUARRELSOME]
 Name = Quarrelsome
@@ -1640,6 +1673,11 @@ Name = Solar Cell
 Description = In sunshine, gets a 25% boost to Sp. Atk and Sp. Def.
 Flags = SunSynergy
 #-------------------------------
+[SOLARPANEL]
+Name = Solar Panel
+Description = Heals 1/8th of its HP and takes 35% less damage under sunlight.
+Flags = SunSynergy
+#-------------------------------
 [SOLONOCTURNE]
 Name = Solo Nocturne
 Description = Doubles Defense in moonglow.
@@ -1851,6 +1889,11 @@ Description = Moves that can flinch are twice as likely to do so.
 [TESLACOILS]
 Name = Tesla Coils
 Description = Becomes charged upon entry, doubling the power of its next Electric-type attack.
+#-------------------------------
+[THUNDERSTORM]
+Name = Thunderstorm
+Description = Once per switch-in, Charges in sandstorm, doubling the power of its next Electric-type move.
+Flags = SandSynergy
 #-------------------------------
 [THUNDERSTRUCK]
 Name = Thunderstruck
