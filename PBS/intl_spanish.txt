@@ -3429,8 +3429,8 @@ Might even be Champion material. Let me get your Pokémon back into tip-top shap
 Hasta podrías ser material de Campeón. Déjame devolver a tus Pokémon a su mejor estado.
 As for you, here: the Loyalty Badge. It ain’t much, but you earned it.
 Y para ti, toma: la Medalla Lealtad. No es mucho, pero te la ganaste.
-Come see me again some time. I’m itching for a rematch.
-Vuelve cuando tengas tiempo. Estoy impaciente por una revancha.
+Come see me again some time. I’m itching for a <imp>rematch</imp>.
+Vuelve cuando tengas tiempo. Estoy impaciente por una <imp>revancha</imp>.
 Oh, I was hoping you’d say that. You ain’t facing Gym Leader Lambert today.
 Oh, estaba esperando que dijeras eso. Hoy no te estás enfrentando al Líder de Gimnasio Lambert.
 No, this is former Team Chasm Captain Lambert, at your service.
@@ -3592,8 +3592,8 @@ It's a Heatmor, and it always looks like it wants to burn something.
 Es un Heatmor, y siempre parece que quiere quemar algo.
 I'm honestly worried about my health.
 Honestamente estoy preocupado por mi salud.
-Having a Dark-type is something I can also brag about, maybe with less black eye potential.
-Tener un tipo Siniestro es algo de lo que puedo presumir, quizá con menos potencial de un ojo morado.
+Having a Dark-type is something I can also brag about, maybe with less burning potential.
+Tener un tipo Siniestro es algo de lo que puedo presumir, quizá con menos potencial de un incendio.
 If you've got one, I'll trade you for it.
 Si tienes uno, te lo intercambiaré por este.
 Guess I'll have to talk to a different stranger then.
@@ -9757,14 +9757,14 @@ Sí
 
 [Map145]
 
-You and the maid move to pincer the Deerling...
-Tú y la criada se mueven para interceptar al Deerling…
-The maid moves into position...
-La criada se mueve a la posición.
-You tackle the Deerling before it can react!
-¡Embistes al Deerling antes de que pueda reaccionar!
-The maid hands you a Pokeball to catch the Deerling!
-¡La criada te alcanza un Pokémon para atrapar el Deerling!
+You walk over to the Deerling, and the maid hands you a Pokeball...
+Te acercas al Deerling y la doncella te entrega eres una pokebola...
+You move into position...
+Te colocas en posición...
+And tackle the Deerling before it can react!
+¡Y enfréntate al Deerling antes de que pueda reaccionar!
+You toss the Pokeball to catch the Deerling!
+¡Lanzas la Pokebola para atrapar al Deerling!
 Whew...
 Whew...
 Good work. I thought I'd be working for hours to fix a mess caused by that Deerling.
@@ -9781,14 +9781,10 @@ This Deerling wandered in. Help me here, would you?
 Este Deerling deambuló hasta aquí. ¿Me puedes ayudar por aquí?
 If you could get around this table, we might be able to trap it between us.
 Si puedes ir alrededor de la mesa, podríamos atraparlo entre nosotros.
-Make sure it doesn't spot you until you get close.
-Aségurate de que no te vea hasta que estés cerca. 
-It'll get spooked and wreck the place.
-Se asustará y destrozará el lugar.
-You almost spooked the Deerling!
-¡Casi asustas al Deerling!
-Time to take a step back...
-Hora de retroceder… 
+Go up and catch it while it's not looking at us.
+Sube y atrápalo mientras no nos mira.
+Just sneak up to it, it seems like it's tired.
+Acércate sigilosamente, parece que está cansado.
 
 
 [Map146]
@@ -10374,6 +10370,14 @@ Why wouldn’t you annihilate a team without a scratch on yours? How could I not
 ¿Por qué no aniquilarías un equipo sin siquiera un rasguño en el tuyo? ¿Cómo no podría haber esperado esto?
 Why would I think my work would count for ANYTHING? Ugh. You’re infuriating.
 ¿Por qué nada de mi trabajo serviría de ALGO? Dios. Eres exasperante.
+Makyan Air Travel Agency
+Agencia de Viajes Aéreos Makya
+Aegis Insurance
+Aseguradora Aegis
+Full Blast Records
+Récords A Tope
+Prizca Traffic Control
+Control de Tráfico Prizca
 [Map157]
 
 The destruction of the bridge over at the Eleig River Crossing has really put a hamper on things.
@@ -10394,6 +10398,8 @@ Tampoco es como si no lo fuera, con el puente colapsado y el túnel hacia Sweetr
 [Map158]
 Thanks to my Swoobat's ability, it's completely code compliant for construction!
 ¡Gracias a la habilidad de mi Swoobat, cumple al pie de la letra el código para la construcción!
+Thanks to it's ability, Swoobat can wear two pieces of saftey gear! It can work on construction sites!
+Gracias a su habilidad, Swoobat puede usar dos piezas.de equipo de seguridad! Puede funcionar en la construcción sitios!
 I'll take your Pokémon for a few seconds.
 Tomaré tus Pokémon por un par de segundos.
 First, you should restore your Pokémon to full health.
