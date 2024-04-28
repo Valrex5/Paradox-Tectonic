@@ -132,7 +132,7 @@ Description = Deals more damage to targets the faster it is than them. Up to a 5
 #-------------------------------
 [BALLMIMIC]
 Name = Ball Mimic
-Description = Your Poké Balls are 50% more effective.
+Description = Adds the Poison-type and your Poké Balls are 50% more effective.
 #-------------------------------
 [BANSHEESMELISMA]
 Name = Banshee's Melisma
@@ -602,7 +602,7 @@ Description = Heals by 1/8th HP whenever any Pokémon uses a dance or sound move
 #-------------------------------
 [FIGHTINGVIGOR]
 Name = Fighting Vigor
-Description = Heals 1/12th HP every turn. Protected from being numbed.
+Description = Heals 1/12th HP every turn. Protected from being numbed and leeched.
 #-------------------------------
 [FILTHY]
 Name = Filthy
@@ -909,6 +909,10 @@ Description = Each turn, raises Speed by three steps and loses HP. If Speed was 
 Name = Illuminance
 Description = Boosts Sp. Atk by 30% in moonglow.
 Flags = MoonglowSynergy
+#-------------------------------
+[IMPENETRABLESHELL]
+Name = Impenetrable Shell
+Description = Immune to Bug-type moves and raises Speed if hit by one.
 #-------------------------------
 [IMPERIOUS]
 Name = Imperious

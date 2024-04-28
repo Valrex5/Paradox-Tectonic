@@ -142,3 +142,15 @@ BattleHandlers::AddedEffectChanceModifierUserAbility.add(:PRIMALECHO,
         next chance
     }
 )
+
+BattleHandlers::MoveImmunityTargetAbility.add(:IMPENETRABLESHELL,
+  proc { |ability, user, target, move, type, battle, showMessages, aiCheck|
+      next pbBattleMoveImmunityStatAbility(ability, user, target, move, type, :BUG, :SPEED, 1, battle, showMessages, aiCheck)
+  }
+)
+
+BattleHandlers::StatusImmunityAbility.add(:FIGHTINGVIGOR,
+  proc { |ability, _battler, status|
+      next true if status == :LEECHED
+  }
+)
