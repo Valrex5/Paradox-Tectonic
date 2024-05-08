@@ -6817,11 +6817,24 @@ Description = The user slashes target, removing weather, rooms, and hazards in b
 Name = Atomic Breath
 Type = ELECTRIC
 Category = Special
-Power = 120
+Power = 140
 Accuracy = 100
 TotalPP = 10
 Target = NearOther
 FunctionCode = TwoTurnAttackCanChooseOne
 Flags = CanProtect,CanMirrorMove
 Description = The user charges, can used instantly for half of its power.
-Animation = WILDCHARGE
+Animation = HYPERBEAM
+#-------------------------------
+[ORIGINALSTATE]
+Name = Original State
+Type = GROUND
+Category = Special
+Power = 65
+Accuracy = 100
+TotalPP = 30
+Target = NearOther
+FunctionCode = RapidSpin
+Flags = CanProtect,CanMirrorMove
+EffectChance = 100
+Description = The user brings the terrain to its original form, eliminating trapping, hazards, and raising its speed.
