@@ -1351,3 +1351,241 @@ BattlerEnemyY = 17
 FormName = Harvest
 BaseStats = 120,130,81,68,130,81
 Abilities = AUTUMNAL
+#-------------------------------
+[VENUSAUR,1]
+FormName = Mega Style
+#-------------------------------
+[VENUSAUR,2]
+FormName = Max Style
+#-------------------------------
+[CHARIZARD,1]
+FormName = Mega Style X
+BattlerEnemyY = 17
+#-------------------------------
+[CHARIZARD,2]
+FormName = Mega Style Y
+BattlerPlayerY = 4
+BattlerEnemyY = 12
+#-------------------------------
+[CHARIZARD,3]
+FormName = Max Style
+BattlerPlayerY = 2
+BattlerEnemyX = 2
+BattlerEnemyY = 11
+BattlerShadowX = -10
+#-------------------------------
+[BLASTOISE,1]
+FormName = Mega Style
+#-------------------------------
+[BLASTOISE,2]
+FormName = Max Style
+#-------------------------------
+[ALAKAZAM,1]
+FormName = Mega Style
+BattlerPlayerY = 2
+BattlerEnemyX = 2
+BattlerEnemyY = 10
+#-------------------------------
+[GENGAR,1]
+FormName = Mega Style
+BattlerPlayerY = 18
+BattlerEnemyY = 25
+BattlerShadowX = 4
+BattlerShadowSize = 3
+#-------------------------------
+[GENGAR,2]
+FormName = Max Style
+BattlerPlayerY = 9
+#-------------------------------
+[TYRANITAR,1]
+FormName = Mega Style
+BattlerPlayerY = 10
+BattlerEnemyY = 14
+BattlerShadowX = -7
+#-------------------------------
+[BLAZIKEN,1]
+FormName = Mega Style
+BattlerPlayerX = 1
+BattlerPlayerY = 1
+BattlerEnemyX = 18
+BattlerEnemyY = 4
+#-------------------------------
+[AGGRON,1]
+FormName = Mega Style
+BattlerPlayerX = 10
+BattlerPlayerY = 4
+BattlerEnemyX = -3
+BattlerEnemyY = 14
+#-------------------------------
+[PIDGEOT,1]
+FormName = Mega Style
+BattlerPlayerX = 2
+BattlerPlayerY = -4
+BattlerEnemyX = 4
+BattlerEnemyY = 15
+#-------------------------------
+[SLOWBRO,2]
+FormName = Mega Style
+BattlerPlayerX = 2
+BattlerPlayerY = 6
+#-------------------------------
+[SCEPTILE,1]
+FormName = Mega Style
+BattlerPlayerX = 4
+BattlerPlayerY = 0
+BattlerEnemyY = 12
+BattlerShadowX = 20
+BattlerShadowSize = 3
+#-------------------------------
+[SWAMPERT,1]
+FormName = Mega Style
+BattlerPlayerX = 2
+BattlerPlayerY = 12
+BattlerEnemyY = 20
+BattlerShadowX = 10
+BattlerShadowSize = 3
+#-------------------------------
+[GLALIE,1]
+FormName = Mega Style
+BattlerPlayerX = 1
+BattlerPlayerY = 12
+BattlerEnemyX = -1
+BattlerEnemyY = 16
+#-------------------------------
+[SALAMENCE,1]
+FormName = Mega Style
+BattlerPlayerX = 5
+BattlerPlayerY = 4
+BattlerEnemyX = -5
+BattlerEnemyY = 21
+#-------------------------------
+[METAGROSS,1]
+FormName = Mega Style
+BattlerPlayerX = 1
+BattlerPlayerY = 14
+BattlerEnemyY = 10
+BattlerShadowX = 3
+#-------------------------------
+[LATIAS,1]
+FormName = Mega Style
+BattlerPlayerX = 2
+BattlerPlayerY = 13
+BattlerEnemyX = -2
+BattlerEnemyY = 13
+#-------------------------------
+[LATIOS,1]
+FormName = Mega Style
+BattlerPlayerX = 1
+BattlerPlayerY = 10
+BattlerEnemyX = -2
+BattlerEnemyY = 12
+#-------------------------------
+[DIANCIE,1]
+FormName = Mega Style
+BattlerPlayerX = 1
+BattlerPlayerY = 4
+BattlerEnemyY = 7
+BattlerShadowX = 1
+#-------------------------------
+[MACHAMP,1]
+FormName = Max Style
+BattlerPlayerX = 3
+BattlerPlayerY = 1
+BattlerEnemyY = 7
+#-------------------------------
+[SNORLAX,1]
+FormName = Max Style
+BattlerPlayerY = 12
+BattlerEnemyY = 18
+#-------------------------------
+[MELMETAL,1]
+FormName = Max Style
+BattlerPlayerX = 3
+BattlerPlayerY = 11
+BattlerEnemyY = 10
+BattlerShadowX = -3
+#-------------------------------
+[CORVIKNIGHT,1]
+FormName = Max Style
+BattlerPlayerX = 13
+BattlerPlayerY = 7
+BattlerEnemyX = -9
+BattlerEnemyY = 11
+BattlerShadowX = 10
+#-------------------------------
+[ORBEETLE,1]
+FormName = Max Style
+BattlerPlayerX = 3
+BattlerPlayerY = 18
+BattlerEnemyY = 18
+#-------------------------------
+[COALOSSAL,1]
+FormName = Max Style
+BattlerPlayerX = 2
+BattlerPlayerY = 2
+BattlerEnemyY = 9
+BattlerShadowX = 2
+#-------------------------------
+[FLAPPLE,1]
+FormName = Max Style
+BattlerPlayerY = 0
+BattlerEnemyX = -2
+BattlerEnemyY = 11
+#-------------------------------
+[APPLETUN,1]
+FormName = Max Style
+BattlerPlayerY = 0
+BattlerEnemyX = -5
+BattlerEnemyY = 10
+#-------------------------------
+[HATTERENE,1]
+FormName = Max Style
+BattlerPlayerX = 1
+BattlerPlayerY = 0
+BattlerEnemyX = 1
+BattlerEnemyY = 4
+BattlerShadowX = -1
+BattlerShadowSize = 3
+#-------------------------------
+[GRIMMSNARL,1]
+FormName = Max Style
+BattlerPlayerY = 1
+BattlerEnemyY = 4
+#-------------------------------
+[RILLABOOM,1]
+FormName = Max Style
+BattlerPlayerY = 0
+BattlerEnemyX = -3
+BattlerEnemyY = 10
+#-------------------------------
+[CINDERACE,1]
+FormName = Max Style
+BattlerPlayerY = 1
+BattlerEnemyX = 8
+#-------------------------------
+[INTELEON,1]
+FormName = Max Style
+BattlerPlayerY = 3
+BattlerEnemyX = -4
+BattlerEnemyY = 9
+#-------------------------------
+[ETERNATUS,1]
+FormName = Max Style
+#-------------------------------
+[URSHIFU,2]
+FormName = Max Style (Rapid)
+Type1 = FIGHTING
+Type2 = WATER
+Moves = 0,SURGINGSTRIKES,1,SURGINGSTRIKES,1,SMASH,1,LEER,4,ENDURE,8,FOCUSENERGY,12,AERIALACE,16,SCARYFACE,20,BULKUP,24,PROTECT,28,AQUAJET,32,COUNTER,36,LIQUIDATION,40,BRICKBREAK,44,DYNAMICPUNCH,48,IRONHEAD,52,CLOSECOMBAT,56,FOCUSPUNCH,60,HARBORBREAKER
+Pokedex = This form of Urshifu is a strong believer in defeating foes by raining many blows down on them. Its strikes are nonstop, flowing like a river.
+BattlerPlayerX = 2
+BattlerPlayerY = -2
+BattlerEnemyY = 7
+#-------------------------------
+[URSHIFU,3]
+FormName = Max Style (Single)
+BattlerPlayerY = 1
+BattlerEnemyY = 9
+#-------------------------------
+[GRENINJA,2]
+FormName = Ash Style
