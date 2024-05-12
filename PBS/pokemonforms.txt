@@ -1571,6 +1571,8 @@ BattlerEnemyY = 9
 #-------------------------------
 [ETERNATUS,1]
 FormName = Max Style
+BattlerPlayerY = 3
+BattlerShadowX = 3
 #-------------------------------
 [URSHIFU,2]
 FormName = Max Style (Rapid)
@@ -1589,3 +1591,7 @@ BattlerEnemyY = 9
 #-------------------------------
 [GRENINJA,2]
 FormName = Ash Style
+BattlerPlayerX = 3
+BattlerPlayerY = 12
+BattlerEnemyX = 6
+BattlerEnemyY = 18
