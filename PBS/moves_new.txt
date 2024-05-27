@@ -6826,15 +6826,26 @@ Flags = CanProtect,CanMirrorMove
 Description = The user charges, can used instantly for half of its power.
 Animation = HYPERBEAM
 #-------------------------------
-[ORIGINALSTATE]
-Name = Original State
+[ONEWITHTHEEARTH]
+Name = One With The Earth
 Type = GROUND
-Category = Special
-Power = 65
+Category = Status
+Accuracy = 0
+TotalPP = 5
+Target = User
+FunctionCode = HealUserOneQuartersRemoveHazards
+Flags = CanSnatch
+Description = The user absorbs the ground beneath it, restoring 25% of its max HP and removing hazards on its side.
+#-------------------------------
+[DRAGRACE]
+Name = Drag Race
+Type = STEEL
+Category = Physical
+Power = 60
 Accuracy = 100
 TotalPP = 30
 Target = NearOther
-FunctionCode = RapidSpin
+FunctionCode = DragRace
 Flags = CanProtect,CanMirrorMove
-EffectChance = 100
-Description = The user brings the terrain to its original form, eliminating trapping, hazards, and raising its speed.
+Description = The user rolls into the target. Gains +30 BP if it hits in succession, with a maximum of 150.
+Animation = ROLLOUT
