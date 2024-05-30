@@ -1,0 +1,3 @@
+﻿Name      = Superboss Regigigas
+Requires  = Tectonic Modding Base
+Credits   = Valrex

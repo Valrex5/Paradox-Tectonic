@@ -903,3 +903,58 @@ TotalPP = 1
 Target = BothSides
 FunctionCode = GroudonStartGravity10DoubleFoeWeight
 Description = A move that only the avatar of Groudon can use. Gravity is intensified for five turns and enemy Pokemon have their weight doubled.
+#-------------------------------
+[PREHISTORICAGE]
+Name = Prehistoric Age
+Type = DRAGON
+Category = Status
+Accuracy = 0
+TotalPP = 1
+Target = None
+Priority = 2
+FunctionCode = SummonAvatarRegidrago
+Description = The user creates a Regidrago avatar to join it.
+#-------------------------------
+[ICEAGE]
+Name = Ice Age
+Type = ICE
+Category = Status
+Accuracy = 0
+TotalPP = 1
+Target = None
+Priority = 2
+FunctionCode = SummonAvatarRegice
+Description = The user creates a Regice avatar to join it.
+#-------------------------------
+[STONEAGE]
+Name = Stone Age
+Type = ROCK
+Category = Status
+Accuracy = 0
+TotalPP = 1
+Target = None
+Priority = 2
+FunctionCode = SummonAvatarRegirock
+Description = The user creates a Regirock avatar to join it.
+#-------------------------------
+[IRONAGE]
+Name = Iron Age
+Type = STEEL
+Category = Status
+Accuracy = 0
+TotalPP = 1
+Target = None
+Priority = 2
+FunctionCode = SummonAvatarRegisteel
+Description = The user creates a Registeel avatar to join it.
+#-------------------------------
+[ELECTRICAGE]
+Name = Electric Age
+Type = ELECTRIC
+Category = Status
+Accuracy = 0
+TotalPP = 1
+Target = None
+Priority = 2
+FunctionCode = SummonAvatarRegieleki
+Description = The user creates a Regieleki avatar to join it.
