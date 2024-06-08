@@ -1351,3 +1351,21 @@ BattlerEnemyY = 17
 FormName = Harvest
 BaseStats = 120,130,81,68,130,81
 Abilities = AUTUMNAL
+#-------------------------------
+[DIALGA,1]
+FormName = Origin
+BaseStats = 100,100,120,90,150,120
+Abilities = MENTALBLOCK
+Height = 7.0
+Weight = 850.0
+BattlerPlayerY = 2
+BattlerEnemyY = 6
+#-------------------------------
+[PALKIA,1]
+FormName = Origin
+BaseStats = 90,100,100,120,150,120
+Abilities = REALIST
+Height = 6.3
+Weight = 660.0
+BattlerPlayerY = 1
+BattlerEnemyY = 7
