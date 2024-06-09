@@ -903,3 +903,27 @@ TotalPP = 1
 Target = BothSides
 FunctionCode = GroudonStartGravity10DoubleFoeWeight
 Description = A move that only the avatar of Groudon can use. Gravity is intensified for five turns and enemy Pokemon have their weight doubled.
+#-------------------------------
+[NOACHIANLIGHT]
+Name = Noachian Light
+Type = PSYCHIC
+Category = Status
+Accuracy = 0
+TotalPP = 1
+Target = BothSides
+FunctionCode = StartDarkenedSun8
+Flags = Empowered
+Description = Summons a darkened sun for 8 turns, and user becomes Psychic- and Fire-type.
+Animation = ECLIPSE
+#-------------------------------
+[NOUVELLENIGHT]
+Name = Nouevelle Night
+Type = WATER
+Category = Status
+Accuracy = 0
+TotalPP = 1
+Target = BothSides
+FunctionCode = StartBrilliantRain8
+Flags = Empowered
+Description = Summons a brilliant rain for 8 turns, and user becomes Water- and Fairy-type.
+Animation = RAIN
