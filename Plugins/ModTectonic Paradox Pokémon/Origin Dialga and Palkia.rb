@@ -28,16 +28,17 @@ class PokeBattle_Move_StartDarkenedSun8 < PokeBattle_WeatherMove
     super
   end
 
-  def initialize(battle, move)
-      super
-      @weatherType = :DarkenedSun
-  end
-
   def pbEffectGeneral(user)
+    @battle.endWeather
     super
     transformType(user, :PSYCHIC)
     user.applyEffect(:Type3, :FIRE)
   end
+
+  def initialize(battle, move)
+    super
+    @weatherType = :DarkenedSun
+end
 end
 
 #===============================================================================
@@ -50,14 +51,45 @@ class PokeBattle_Move_StartBrilliantRain8 < PokeBattle_WeatherMove
     super
   end
 
-  def initialize(battle, move)
-      super
-      @weatherType = :BrilliantRain
-  end
-
   def pbEffectGeneral(user)
+    @battle.endWeather
     super
     transformType(user, :WATER)
     user.applyEffect(:Type3, :FAIRY)
+  end
+
+  def initialize(battle, move)
+    super
+    @weatherType = :BrilliantRain
+end
+end
+
+class PokeBattle_AI_DIALGA < PokeBattle_AI_Boss
+  def initialize(user, battle)
+      super
+      @warnedIFFMove.add(:WEATHERBURST, {
+          :condition => proc { |_move, _user, _target, battle|
+              next battle.pbWeather == :BrilliantRain
+              next battle.turnCount > 0 && battle.turnCount % 3 == 0
+          },
+          :warning => proc { |_move, user, targets, _battle|
+              _INTL("{1} takes power from the weird conditions!",user.pbThis)
+          },
+      })
+  end
+end
+
+class PokeBattle_AI_PALKIA < PokeBattle_AI_Boss
+  def initialize(user, battle)
+      super
+      @warnedIFFMove.add(:WEATHERBURST, {
+          :condition => proc { |_move, _user, _target, battle|
+              next battle.pbWeather == :DarkenedSun
+              next battle.turnCount > 0 && battle.turnCount % 3 == 0
+          },
+          :warning => proc { |_move, user, targets, _battle|
+              _INTL("{1} takes power from the weird conditions!",user.pbThis)
+          },
+      })
   end
 end
