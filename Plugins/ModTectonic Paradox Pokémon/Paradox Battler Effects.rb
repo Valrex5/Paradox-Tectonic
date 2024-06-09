@@ -13,3 +13,13 @@ GameData::BattleEffect.register_effect(:Battler, {
         end,
     },
 })
+
+GameData::BattleEffect.register_effect(:Battler, {
+    :id => :DragRace,
+    :real_name => "Drag Race Count",
+    :type => :Integer,
+    :maximum => 4,
+    :resets_on_cancel => true,
+    :resets_on_move_start => true,
+    :snowballing_move_counter => true,
+})
