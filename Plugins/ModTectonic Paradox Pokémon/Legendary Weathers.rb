@@ -160,19 +160,19 @@ class PokeBattle_Battle
     end
 
   def sunny?
-    return %i[DarkenedSun].include?(pbWeather)
+    return %i[Sun HarshSun DarkenedSun].include?(pbWeather)
   end
 
   def eclipsed?
-    return %i[DarkenedSun].include?(pbWeather)
+    return %i[Eclipse RingEclipse DarkenedSun].include?(pbWeather)
   end
 
   def rainy?
-    return %i[BrilliantRain].include?(pbWeather)
+    return %i[Rain HeavyRain BrilliantRain].include?(pbWeather)
   end 
 
   def moonGlowing?
-    return %i[BrilliantRain].include?(pbWeather)
+    return %i[Moonglow BloodMoon BrilliantRain].include?(pbWeather)
   end   
 end 
 end
