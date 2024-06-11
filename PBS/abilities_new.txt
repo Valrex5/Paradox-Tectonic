@@ -792,7 +792,7 @@ Description = Upon entry, traps each opponent in a whirlpool for two turns.
 #-------------------------------
 [HADRONSYSTEM]
 Name = Hadron System
-Description = Combines moonglow and rain.
+Description = Summons brilliant rain, which combines the effects of moonglow and rain for four turns.
 Flags = RainSynergy,MoonglowSynergy
 #-------------------------------
 [HARBINGER]
@@ -1268,7 +1268,7 @@ Description = Prevents other Pokémon from lowering its stat steps, and its weig
 #-------------------------------
 [ORICHALCHUMPRESENCE]
 Name = Orichalchum Presence
-Description = Combines sun and eclipse.
+Description = Summons darkened sun, which combines the effects of sun and eclipse for four turns.
 Flags = EclipseSynergy,SunSynergy
 #-------------------------------
 [OUTRIDER]
