@@ -6750,7 +6750,7 @@ TotalPP = 3
 Target = User
 Priority = 4
 FunctionCode = ProtectUserBurnPhysAttacker
-Description = Protects the user from attacks. Also burns any attacker who physically
+Description = Protects the user from attacks. Also burns any attacker who physically attacks it.
 #-------------------------------
 [SUDDENSTORM]
 Name = Sudden Storm
@@ -6849,3 +6849,43 @@ FunctionCode = DragRace
 Flags = CanProtect,CanMirrorMove
 Description = The user rolls into the target. Gains +30 BP if it hits in succession, with a maximum of 150.
 Animation = ROLLOUT
+#-------------------------------
+[COLDMELODY]
+Name = Cold Melody
+Type = ICE
+Category = Special
+Power = 65
+Accuracy = 100
+TotalPP = 5
+Target = NearOther
+Priority = 1
+FunctionCode = FailsIfTargetActedUpsSpecialAttack
+Flags = CanProtect,CanMirrorMove,Sound
+EffectChance = 100
+Description = This move enables the user to attack first. It fails if the target is not readying an attack. Raises Sp. Atk one step.
+Animation = PERISHSONG
+#-------------------------------
+[ZAPCRESCENT]
+Name = Zap Crescent
+Type = ELECTRIC
+Category = Physical
+Power = 75
+Accuracy = 100
+TotalPP = 15
+Target = NearOther
+FunctionCode = DoublesPowerRemovesMagnetRise
+Flags = CanProtect,CanMirrorMove,Kicking
+Description = The user attacks with a kick from above. Doubles power in Magnet Rise, but removes it.
+Animation = VOLTTACKLE
+#-------------------------------
+[PHOTOVOLTAICGUARD]
+Name = Photovoltaic Guard
+Type = ELECTRIC
+Category = Status
+Accuracy = 0
+TotalPP = 4
+Target = User
+FunctionCode = RaiseUserDefSpDef2Or4InSun
+Flags = CanSnatch
+Description = The user transforms solar energy into an electric shield, raising both defensive stats by two steps, or four steps in sun.
+Animation = SYNTHESIS
