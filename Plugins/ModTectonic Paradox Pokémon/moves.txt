@@ -228,7 +228,7 @@ Animation = SYNTHESIS
 [EXPLOSIVENAP]
 Name = Explosive Nap
 Type = NORMAL
-Category = Special
+Category = Adaptive
 Power = 300
 Accuracy = 50
 TotalPP = 3
