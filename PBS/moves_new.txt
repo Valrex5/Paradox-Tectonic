@@ -6889,3 +6889,15 @@ FunctionCode = RaiseUserDefSpDef2Or4InSun
 Flags = CanSnatch
 Description = The user transforms solar energy into an electric shield, raising both defensive stats by two steps, or four steps in sun.
 Animation = SYNTHESIS
+#-------------------------------
+[EXPLOSIVENAP]
+Name = Explosive Nap
+Type = NORMAL
+Category = Special
+Power = 300
+Accuracy = 50
+TotalPP = 3
+Target = NearOther
+FunctionCode = HealUserFullyAndFallAsleepDownDefenses4IfMisses
+Flags = CanProtect,CanMirrorMove
+Description = The user sleeps next to the target, sending it to fly. Lowers the user's defensive stats four steps if it misses.
