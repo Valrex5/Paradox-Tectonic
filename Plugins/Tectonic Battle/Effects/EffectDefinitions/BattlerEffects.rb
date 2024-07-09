@@ -401,6 +401,27 @@ GameData::BattleEffect.register_effect(:Battler, {
 })
 
 GameData::BattleEffect.register_effect(:Battler, {
+    :id => :MirrorHerbConsumed,
+    :real_name => "Mirror Herb Consumed",
+    :type => :Position,
+    :resets_battlers_eot => true,
+    :sub_effects => [:MirrorHerbCopiedStats]
+})
+
+GameData::BattleEffect.register_effect(:Battler, {
+    :id => :MirrorHerbCopiedStats,
+    :real_name => "Mirror Herb Copied Stats",
+    :type => :Hash,
+})
+
+GameData::BattleEffect.register_effect(:Battler, {
+    :id => :ParadoxHerbConsumed,
+    :type => :Position,
+    :real_name => "Paradox Herb Consumed",
+    :resets_battlers_eot => true,
+})
+
+GameData::BattleEffect.register_effect(:Battler, {
     :id => :Grudge,
     :real_name => "Grudge",
     :resets_battlers_sot => true,
@@ -948,6 +969,12 @@ GameData::BattleEffect.register_effect(:Battler, {
     :id => :Roost,
     :real_name => "Roosting",
     :resets_eor	=> true,
+    :apply_proc => proc do |_battle, battler, _value|
+        battler.refreshDataBox
+    end,
+    :disable_proc => proc do |battle, battler|
+        battler.refreshDataBox
+    end,
 })
 
 GameData::BattleEffect.register_effect(:Battler, {
@@ -1018,6 +1045,7 @@ GameData::BattleEffect.register_effect(:Battler, {
     :id => :Spotlight,
     :real_name => "Spotlight",
     :type => :Integer,
+    :resets_eor	=> true,
     :apply_proc => proc do |battle, battler, _value|
         battle.pbDisplay(_INTL("{1} became the center of attention!", battler.pbThis))
     end,
@@ -1185,7 +1213,7 @@ GameData::BattleEffect.register_effect(:Battler, {
         when :FIRESPIN, :CRIMSONSTORM       then battle.pbCommonAnimation("FireSpin", battler)
         when :MAGMASTORM                    then battle.pbCommonAnimation("MagmaStorm", battler)
         when :SANDTOMB, :SANDVORTEX         then battle.pbCommonAnimation("SandTomb", battler)
-        when :INFESTATION                   then battle.pbCommonAnimation("Infestation", battler)
+        when :INFESTATION, :TERRORSWARM     then battle.pbCommonAnimation("Infestation", battler)
         when :SNAPTRAP                      then battle.pbCommonAnimation("SnapTrap", battler)
         when :THUNDERCAGE                   then battle.pbCommonAnimation("ThunderCage", battler)
         when :WHIRLPOOL, :MAELSTROM         then battle.pbCommonAnimation("Whirlpool", battler)
@@ -1326,12 +1354,6 @@ GameData::BattleEffect.register_effect(:Battler, {
     :real_name => "Choice Locking",
     :type => :Move,
     :info_displayed => false,
-})
-
-GameData::BattleEffect.register_effect(:Battler, {
-    :id => :BallFetch,
-    :real_name => "BallFetch",
-    :type => :Item,
 })
 
 GameData::BattleEffect.register_effect(:Battler, {
@@ -1782,7 +1804,8 @@ GameData::BattleEffect.register_effect(:Battler, {
     :real_name => "Indestructible",
     :type => :Type,
     :apply_proc => proc do |battle, battler, value|
-        battle.pbDisplay(_INTL("{1} is now immune to #{value}-type!", battler.pbThis(true)))
+        typeName = GameData::Type.get(value).name
+        battle.pbDisplay(_INTL("{1} is now immune to {2}-type!", battler.pbThis, typeName))
     end,
 })
 
@@ -1827,8 +1850,8 @@ GameData::BattleEffect.register_effect(:Battler, {
     :real_name => "King's Shield",
     :resets_eor	=> true,
     :protection_info => {
-        :hit_proc => proc do |user, _target, move, _battle|
-            user.tryLowerStat(:ATTACK, user, increment: 2) if move.physicalMove?
+        :hit_proc => proc do |user, target, move, _battle|
+            user.tryLowerStat(:ATTACK, target, increment: 2) if move.physicalMove?
         end,
         :does_negate_proc => proc do |_user, _target, move, _battle|
             move.damagingMove?
@@ -1841,8 +1864,8 @@ GameData::BattleEffect.register_effect(:Battler, {
     :real_name => "Shining Shell",
     :resets_eor	=> true,
     :protection_info => {
-        :hit_proc => proc do |user, _target, move, _battle|
-            user.tryLowerStat(:SPECIAL_ATTACK, user, increment: 2) if move.specialMove?
+        :hit_proc => proc do |user, target, move, _battle|
+            user.tryLowerStat(:SPECIAL_ATTACK, target, increment: 2) if move.specialMove?
         end,
         :does_negate_proc => proc do |_user, _target, move, _battle|
             move.damagingMove?
@@ -1855,8 +1878,8 @@ GameData::BattleEffect.register_effect(:Battler, {
     :real_name => "Obstruct",
     :resets_eor	=> true,
     :protection_info => {
-        :hit_proc => proc do |user, _target, move, _battle|
-            user.tryLowerStat(:DEFENSE, user, increment: 4) if move.physicalMove?
+        :hit_proc => proc do |user, target, move, _battle|
+            user.tryLowerStat(:DEFENSE, target, increment: 4) if move.physicalMove?
         end,
         :does_negate_proc => proc do |_user, _target, move, _battle|
             move.damagingMove?
@@ -1869,8 +1892,8 @@ GameData::BattleEffect.register_effect(:Battler, {
     :real_name => "Reverb Ward",
     :resets_eor	=> true,
     :protection_info => {
-        :hit_proc => proc do |user, _target, move, _battle|
-            user.tryLowerStat(:SPECIAL_DEFENSE, user, increment: 4) if move.specialMove?
+        :hit_proc => proc do |user, target, move, _battle|
+            user.tryLowerStat(:SPECIAL_DEFENSE, target, increment: 4) if move.specialMove?
         end,
         :does_negate_proc => proc do |_user, _target, move, _battle|
             move.damagingMove?
@@ -2045,5 +2068,16 @@ GameData::BattleEffect.register_effect(:Battler, {
     :id => :AutoPilot,
     :real_name => "Auto-Pilot",
     :resets_eor => true,
+})
 
+GameData::BattleEffect.register_effect(:Battler, {
+    :id => :LastGasp,
+    :real_name => "Last Gasp",
+    :trapping => true,
+    :apply_proc => proc do |battle, battler, _value|
+        battle.pbDisplay(_INTL("{1} can't take damage or switch out!", battler.pbThis))
+    end,
+    :disable_proc => proc do |battle, battler|
+        raise _INTL("Last Gasp was disabled somehow.")
+    end,
 })

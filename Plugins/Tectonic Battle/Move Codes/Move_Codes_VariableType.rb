@@ -1,8 +1,7 @@
 #===============================================================================
 # Type changes depending on the weather. (Weather Burst)
-# Changes category based on your better attacking stat.
 #===============================================================================
-class PokeBattle_Move_TypeDependsOnWeatherUsesBetterAttackingStat < PokeBattle_Move
+class PokeBattle_Move_TypeDependsOnWeather < PokeBattle_Move
     def aiAutoKnows?(pokemon); return true; end
 
     def immuneToRainDebuff?; return true; end
@@ -15,9 +14,9 @@ class PokeBattle_Move_TypeDependsOnWeatherUsesBetterAttackingStat < PokeBattle_M
     def pbBaseType(_user)
         ret = :NORMAL
         case @battle.pbWeather
-        when :Sun, :HarshSun
+        when :Sunshine, :HarshSun
             ret = :FIRE if GameData::Type.exists?(:FIRE)
-        when :Rain, :HeavyRain
+        when :Rainstorm, :HeavyRain
             ret = :WATER if GameData::Type.exists?(:WATER)
         when :Sandstorm
             ret = :ROCK if GameData::Type.exists?(:ROCK)
@@ -39,10 +38,6 @@ class PokeBattle_Move_TypeDependsOnWeatherUsesBetterAttackingStat < PokeBattle_M
     #     hitNum = 4 if t == :ICE
     #     super
     # end
-
-    def calculateCategory(user, _targets)
-        return selectBestCategory(user)
-    end
 end
 
 #===============================================================================
