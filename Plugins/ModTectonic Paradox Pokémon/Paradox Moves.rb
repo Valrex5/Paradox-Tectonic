@@ -22,6 +22,47 @@ class PokeBattle_Move_HealUserOneQuartersRemoveHazards < PokeBattle_HealingMove
 end
 
 #===============================================================================
+# Heals user to full HP. User falls asleep for 2 more rounds, lowers both defenses 4 steps if it misses. (Explosive Nap)
+#===============================================================================
+class PokeBattle_Move_HealUserFullyAndFallAsleepDownDefenses4IfMisses < PokeBattle_HealingMove
+    def healRatio(_user); return 1.0; end
+
+    def pbMoveFailed?(user, targets, show_message)
+        if user.asleep?
+            @battle.pbDisplay(_INTL("But it failed, since #{user.pbThis(true)} is already asleep!")) if show_message
+            return true
+        end
+        return true unless user.canSleep?(user, show_message, self, true)
+        return true if super
+        return false
+    end
+
+    def pbMoveFailedAI?(user, targets)
+        return true if user.willStayAsleepAI?
+        return true unless user.canSleep?(user, false, self, true)
+        return true if super
+        return false
+    end
+
+    def pbEffectGeneral(user)
+        user.applySleepSelf(_INTL("{1} slept and became healthy!", user.pbThis), 3)
+        super
+    end
+
+    def getEffectScore(user, target)
+        score = super
+        score -= getSleepEffectScore(nil, target) * 0.45
+        score += 45 if user.hasStatusNoSleep?
+        return score
+    end
+
+    def pbCrashDamage(user)
+        return unless user.pbLowerMultipleStatSteps([:DEFENSE, 4, :SPECIAL_DEFENSE, 4], user, move: self)
+        @battle.pbDisplay(_INTL("{1} is left vulnerable!", user.pbThis))
+    end
+end
+
+#===============================================================================
 # Fails if target acted, boosts special attack (Cold Melody)
 #===============================================================================
 class PokeBattle_Move_FailsIfTargetActedUpsSpecialAttack < PokeBattle_StatUpMove
