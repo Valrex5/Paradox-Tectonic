@@ -10,17 +10,6 @@ BattleHandlers::AddedEffectChanceModifierUserAbility.add(:PRIMALECHO,
 )
 
 #===============================================================================
-# Adds the Poison Typing (Ball Mimic)
-#===============================================================================
-
-BattleHandlers::TypeCalcAbility.add(:BALLMIMIC,
-    proc { |ability, battler, types|
-        types.push(:POISON)
-        next types
-    }
-)
-
-#===============================================================================
 # Boosts special attack 50%, but locked to one move (Banshee's Melisma)
 #===============================================================================
 
