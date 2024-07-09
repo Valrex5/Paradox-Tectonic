@@ -259,4 +259,4 @@ Target = BothSides
 FunctionCode = StartBrilliantRain8
 Flags = Empowered
 Description = Summons a brilliant rain for 8 turns, and user becomes Water- and Fairy-type.
-Animation = RAIN
+Animation = RAINSTORM

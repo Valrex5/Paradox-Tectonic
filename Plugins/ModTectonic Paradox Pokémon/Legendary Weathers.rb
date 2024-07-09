@@ -7,7 +7,7 @@ GameData::BattleWeather.register({
 GameData::BattleWeather.register({
   :id        => :BrilliantRain,
   :name      => _INTL("Brilliant Rain"),
-  :animation => "Rain",
+  :animation => "Rainstorm",
 })
 
 class PokeBattle_Battle
@@ -160,7 +160,7 @@ class PokeBattle_Battle
     end
 
   def sunny?
-    return %i[Sun HarshSun DarkenedSun].include?(pbWeather)
+    return %i[Sunshine HarshSun DarkenedSun].include?(pbWeather)
   end
 
   def eclipsed?
@@ -168,7 +168,7 @@ class PokeBattle_Battle
   end
 
   def rainy?
-    return %i[Rain HeavyRain BrilliantRain].include?(pbWeather)
+    return %i[Rainstorm HeavyRain BrilliantRain].include?(pbWeather)
   end 
 
   def moonGlowing?
