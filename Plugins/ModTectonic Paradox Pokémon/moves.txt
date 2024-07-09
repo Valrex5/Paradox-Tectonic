@@ -1,0 +1,238 @@
+#-------------------------------
+[MERCILESSASSAULT]
+Name = Merciless Assault
+Type = FIGHTING
+Category = Physical
+Power = 120
+Accuracy = 100
+TotalPP = 5
+Target = NearOther
+FunctionCode = Basic
+Flags = CanProtect,CanMirrorMove
+Description = The user jumps to the target and attacks with no hesitation.
+Animation = CLOSECOMBAT
+#-------------------------------
+[HIGHPRESSURE]
+Name = High Pressure
+Type = WATER
+Category = Special
+Power = 120
+Accuracy = 100
+TotalPP = 5
+Target = NearOther
+FunctionCode = Basic
+Flags = CanProtect,CanMirrorMove
+Description = The user uses its water reserves to overwhelm the target.
+Animation = HYDROPUMP
+#-------------------------------
+[SHOCKER]
+Name = Shocker
+Type = ELECTRIC
+Category = Physical
+Power = 65
+Accuracy = 100
+TotalPP = 10
+Target = NearOther
+FunctionCode = Numb
+Flags = CanProtect,CanMirrorMove
+EffectChance = 100
+Description = The user uses its electric hands to attack the target, numbing it.
+Animation = NUZZLE
+#-------------------------------
+[MACHTWO]
+Name = Mach Two
+Type = FLYING
+Category = Physical
+Power = 25
+Accuracy = 100
+TotalPP = 20
+Target = NearOther
+Priority = 1
+FunctionCode = HitTwoTimes
+Flags = CanProtect,CanMirrorMove
+Description = The user launches its hands at high speeds to attack two times, it always goes first.
+#-------------------------------
+[HYDROSTEAM]
+Name = Hydro Steam
+Type = WATER
+Category = Special
+Power = 80
+Accuracy = 100
+TotalPP = 20
+Target = NearOther
+FunctionCode = BoostInSun
+Flags = CanProtect,CanMirrorMove
+Description = The user attacks with boiling water. Powers up 50% in sun.
+#-------------------------------
+[PSYBLADE]
+Name = Psyblade
+Type = PSYCHIC
+Category = Physical
+Power = 80
+Accuracy = 100
+TotalPP = 20
+Target = NearOther
+FunctionCode = BoostInMoonglow
+Flags = CanProtect,CanMirrorMove,Blade
+Description = The user attacks with a psychic blade. Powers up 50% in moonglow.
+#-------------------------------
+[BURNINGBULWARK]
+Name = Burning Bulwark
+Type = FIRE
+Category = Status
+Accuracy = 0
+TotalPP = 3
+Target = User
+Priority = 4
+FunctionCode = ProtectUserBurnPhysAttacker
+Description = Protects the user from attacks. Also burns any attacker who physically attacks it.
+#-------------------------------
+[SUDDENSTORM]
+Name = Sudden Storm
+Type = ELECTRIC
+Category = Special
+Power = 70
+Accuracy = 100
+TotalPP = 5
+Target = NearOther
+Priority = 1
+FunctionCode = FailsIfTargetActed
+Flags = CanProtect,CanMirrorMove
+Description = This move enables the user to attack first. It fails if the target is not readying an attack, however. attacks the user.
+#-------------------------------
+[TACHYONCUTTER]
+Name = Tachyon Cutter
+Type = STEEL
+Category = Special
+Power = 50
+Accuracy = 100
+TotalPP = 15
+Target = NearOther
+FunctionCode = HitTwoTimes
+Flags = CanProtect,CanMirrorMove,Blade
+Description = The user slashes the target. The target is hit twice in a row.
+#-------------------------------
+[COLLISIONCOURSE]
+Name = Collision Course
+Type = FIGHTING
+Category = Physical
+Power = 100
+Accuracy = 100
+TotalPP = 8
+Target = NearOther
+FunctionCode = BoostIfSuperEffective
+Flags = CanProtect,CanMirrorMove
+Description = The user crashes into the target. It is boosted by 33% if it's super effective.
+#-------------------------------
+[ELECTRODRIFT]
+Name = Electro Drift
+Type = ELECTRIC
+Category = Special
+Power = 100
+Accuracy = 100
+TotalPP = 8
+Target = NearOther
+FunctionCode = BoostIfSuperEffective
+Flags = CanProtect,CanMirrorMove
+Description = The user crashes into the target. It is boosted by 33% if it's super effective.
+#-------------------------------
+[MIGHTYCLEAVE]
+Name = Mighty Cleave
+Type = ROCK
+Category = Physical
+Power = 90
+Accuracy = 100
+TotalPP = 10
+Target = NearOther
+FunctionCode = RemovesHazardsWeatherRooms
+Flags = CanProtect,CanMirrorMove
+Description = The user slashes target, removing weather, rooms, and hazards in both sides.
+#-------------------------------
+[ATOMICBREATH]
+Name = Atomic Breath
+Type = ELECTRIC
+Category = Special
+Power = 140
+Accuracy = 100
+TotalPP = 10
+Target = NearOther
+FunctionCode = TwoTurnAttackCanChooseOne
+Flags = CanProtect,CanMirrorMove
+Description = The user charges, can used instantly for half of its power.
+Animation = HYPERBEAM
+#-------------------------------
+[ONEWITHTHEEARTH]
+Name = One With The Earth
+Type = GROUND
+Category = Status
+Accuracy = 0
+TotalPP = 5
+Target = User
+FunctionCode = HealUserOneQuartersRemoveHazards
+Flags = CanSnatch
+Description = The user absorbs the ground beneath it, restoring 25% of its max HP and removing hazards on its side.
+#-------------------------------
+[DRAGRACE]
+Name = Drag Race
+Type = STEEL
+Category = Physical
+Power = 60
+Accuracy = 100
+TotalPP = 30
+Target = NearOther
+FunctionCode = DragRace
+Flags = CanProtect,CanMirrorMove
+Description = The user rolls into the target. Gains +30 BP if it hits in succession, with a maximum of 150.
+Animation = ROLLOUT
+#-------------------------------
+[COLDMELODY]
+Name = Cold Melody
+Type = ICE
+Category = Special
+Power = 65
+Accuracy = 100
+TotalPP = 5
+Target = NearOther
+Priority = 1
+FunctionCode = FailsIfTargetActedUpsSpecialAttack
+Flags = CanProtect,CanMirrorMove,Sound
+EffectChance = 100
+Description = This move enables the user to attack first. It fails if the target is not readying an attack. Raises Sp. Atk one step.
+Animation = PERISHSONG
+#-------------------------------
+[ZAPCRESCENT]
+Name = Zap Crescent
+Type = ELECTRIC
+Category = Physical
+Power = 75
+Accuracy = 100
+TotalPP = 15
+Target = NearOther
+FunctionCode = DoublesPowerRemovesMagnetRise
+Flags = CanProtect,CanMirrorMove,Kicking
+Description = The user attacks with a kick from above. Doubles power in Magnet Rise, but removes it.
+Animation = VOLTTACKLE
+#-------------------------------
+[PHOTOVOLTAICGUARD]
+Name = Photovoltaic Guard
+Type = ELECTRIC
+Category = Status
+Accuracy = 0
+TotalPP = 4
+Target = User
+FunctionCode = RaiseUserDefSpDef2Or4InSun
+Flags = CanSnatch
+Description = The user transforms solar energy into an electric shield, raising both defensive stats by two steps, or four steps in sun.
+Animation = SYNTHESIS
+#-------------------------------
+[EXPLOSIVENAP]
+Name = Explosive Nap
+Type = NORMAL
+Category = Special
+Power = 300
+Accuracy = 50
+TotalPP = 3
+Target = NearOther
+FunctionCode = HealUserFullyAndFallAsleepDownDefenses4IfMisses
+Flags = CanProtect,CanMirrorMove
+Description = The user sleeps next to the target, sending it to fly. Lowers the user's defensive stats four steps if it misses.

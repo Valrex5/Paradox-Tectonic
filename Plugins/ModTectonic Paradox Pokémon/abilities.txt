@@ -1,0 +1,71 @@
+#-------------------------------
+[ALLTERRAIN]
+Name = All-Terrain
+Description = Prevents hazard damage and weather downsides.
+Flags = HazardImmunity,AllWeatherSynergy
+#-------------------------------
+[PRIMALECHO]
+Name = Primal Echo
+Description = Random added effects of sound attacks are +50% more likely to occur.
+#-------------------------------
+[BANSHEESMELISMA]
+Name = Banshee's Melisma
+Description = Boosts Special Attack by 50% but the user is locked into the first move they use.
+Flags = ChoiceLocking
+#-------------------------------
+[ANCIENTDANCE]
+Name = Ancient Dance
+Description = Uses Dragon Dance after a Total Eclipse.
+Flags = EclipseSynergy
+#-------------------------------
+[STRONGMAGNETISM]
+Name = Strong Magnetism
+Description = Uses Magnet Rise after losing half of its HP.
+#-------------------------------
+[CRIMSONSKIES]
+Name = Crimson Skies
+Description = Dragon-type moves deal 50% more damage in moonglow.
+Flags = MoonglowSynergy
+#-------------------------------
+[ROCKETHANDS]
+Name = Rocket Hands
+Description = Doubles the speed of Punch-based moves.
+#-------------------------------
+[SOLARPANEL]
+Name = Solar Panel
+Description = Heals 1/8th of its HP and takes 35% less damage under sunlight.
+Flags = SunSynergy
+#-------------------------------
+[THUNDERSTORM]
+Name = Thunderstorm
+Description = Once per switch-in, Charges in sandstorm, doubling the power of its next Electric-type move.
+Flags = SandSynergy
+#-------------------------------
+[IMPENETRABLESHELL]
+Name = Impenetrable Shell
+Description = Immune to Bug-type moves and raises Speed if hit by one.
+#-------------------------------
+[WELLEQUIPPED]
+Name = Well-Equipped
+Description = Can hold two items, but loses 1/10th HP each turn and takes 15% more damage.
+Flags = MultipleItems
+#-------------------------------
+[PROTOINSTINCT]
+Name = Protoinstinct
+Description = On switch-in, raises both offensive stats in eclipse, or lowers the enemy's in sun.
+Flags = EclipseSynergy,SunSynergy
+#-------------------------------
+[ORICHALCHUMPRESENCE]
+Name = Orichalchum Presence
+Description = Summons darkened sun, which combines the effects of sun and eclipse for four turns.
+Flags = EclipseSynergy,SunSynergy
+#-------------------------------
+[QUARKPROTOCOL]
+Name = Quark Protocol
+Description = On switch-in, raises both offensive stats in rain, or lowers the enemy's in moonglow.
+Flags = RainSynergy,MoonglowSynergy
+#-------------------------------
+[HADRONSYSTEM]
+Name = Hadron System
+Description = Summons brilliant rain, which combines the effects of moonglow and rain for four turns.
+Flags = RainSynergy,MoonglowSynergy
