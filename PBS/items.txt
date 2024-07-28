@@ -2893,7 +2893,7 @@ Pocket = 1
 Price = 8000
 FieldUse = OnPokemon
 Flags = EvolutionStone
-Description =  A strange mineral that evokes an ancient power. It evolves certain species.
+Description = A strange mineral that evokes an ancient power. It evolves certain species.
 #-------------------------------
 [FUTURISTICASSET]
 Name = Futuristic Asset

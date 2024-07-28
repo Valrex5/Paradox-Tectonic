@@ -8309,7 +8309,7 @@ BattlerEnemyX = 0
 BattlerEnemyY = 22
 BattlerShadowX = 0
 BattlerShadowSize = 2
-Evolutions = TYRANITAR,Level,47
+Evolutions = TYRANITAR,Level,47,IRONTHORNS,Item,FUTURISTICASSET
 #-------------------------------
 [248]
 Name = Tyranitar
@@ -9996,7 +9996,7 @@ BattlerEnemyX = -4
 BattlerEnemyY = 15
 BattlerShadowX = 0
 BattlerShadowSize = 3
-Evolutions = IRONHANDS,Item,THUNDERSTONE
+Evolutions = IRONHANDS,Item,FUTURISTICASSET
 #-------------------------------
 [298]
 Name = Azurill
