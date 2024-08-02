@@ -194,6 +194,11 @@ class PokeBattle_Scene
         end
       end
       @lastMove[idxBattler] = cw.index
+
+      # Clear the move outcome predictor displays
+      battler.eachOpposing do |opposingBattler|
+        opposingBattler.moveOutcomePredictor&.clear
+      end
     end
   
     #=============================================================================
@@ -522,6 +527,16 @@ class PokeBattle_Scene
         end
         @battle.eachSameSideBattler(idxBattler) do |b|
           next if b.index==idxBattler || !@battle.nearBattlers?(b,idxBattler)
+          return b.index
+        end
+      when :Ally
+        @battle.eachSameSideBattler(idxBattler) do |b|
+          next if b.index==idxBattler
+          next if b.fainted?
+          return b.index
+        end
+        @battle.eachSameSideBattler(idxBattler) do |b|
+          next if b.index==idxBattler
           return b.index
         end
       when :NearFoe, :NearOther

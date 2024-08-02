@@ -74,6 +74,7 @@ def battleMonumentRecievePlayerInLobby
     battleChallenge = pbBattleChallenge
     wins = battleChallenge.battleNumber - 1
     if pbBattleChallenge.decision == 1
+        checkBattleMonumentVictoryAchievements
         pbMessage(_INTL("Congratulations on your victory!"))
         earnBattlePoints(50)
     elsif wins

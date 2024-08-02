@@ -2272,3 +2272,162 @@ Target = NearOther
 FunctionCode = Invalid
 Flags = CanProtect,CanMirrorMove
 Description = The target is crushed with great force. The attack is more powerful the more HP the target has left.
+#-------------------------------
+[PETALBLIZZARD]
+Name = Petal Blizzard
+Type = GRASS
+Category = Special
+Power = 90
+Accuracy = 100
+TotalPP = 12
+Target = AllNearOthers
+FunctionCode = Invalid
+Flags = CanProtect,CanMirrorMove,Wind
+Description = The user stirs up a violent petal blizzard and attacks everything around it.
+#-------------------------------
+[EGGBOMB]
+Name = Egg Bomb
+Type = NORMAL
+Category = Physical
+Power = 100
+Accuracy = 75
+TotalPP = 10
+Target = NearOther
+FunctionCode = Invalid
+Flags = CanProtect,CanMirrorMove
+Description = A large egg is hurled at the target with maximum force to inflict damage.
+#-------------------------------
+[FALSESWIPE]
+Name = False Swipe
+Type = NORMAL
+Category = Physical
+Power = 40
+Accuracy = 100
+TotalPP = 30
+Target = NearOther
+FunctionCode = Invalid
+Flags = CanProtect,CanMirrorMove
+Description = A restrained attack that prevents the target from fainting. The target is left with at least 1 HP.
+#-------------------------------
+[HARDFEELINGS]
+Name = Hard Feelings
+Type = NORMAL
+Category = Special
+Power = 70
+Accuracy = 100
+TotalPP = 12
+Target = NearOther
+FunctionCode = Invalid
+Flags = CanProtect,CanMirrorMove
+Description = Doubles its power if the user has a status condition. Ignores frostbite Sp. Atk reduction.
+#-------------------------------
+[RANSACK]
+Name = Ransack
+Type = NORMAL
+Category = Special
+Power = 60
+Accuracy = 100
+TotalPP = 20
+Target = NearOther
+FunctionCode = Invalid
+Flags = CanProtect,CanMirrorMove
+Description = The user skillfully blasts the target, then steals their item. Items stolen from wild Pokémon are stored.
+#-------------------------------
+[SUMMERDAZE]
+Name = Summer Daze
+Type = GRASS
+Category = Status
+Accuracy = 100
+TotalPP = 8
+Target = NearOther
+FunctionCode = Invalid
+Flags = CanProtect,CanMagicCoat,CanMirrorMove,Sound
+Description = The user plays a melody, making the target drowsy. In Sunlight, lowers the target's Attack and Sp. Atk by two steps.
+Animation = GRASSWHISTLE
+#-------------------------------
+[BANISH]
+Name = Banish
+Type = DRAGON
+Category = Special
+Power = 75
+Accuracy = 100
+TotalPP = 10
+Target = NearOther
+Priority = -1
+FunctionCode = Invalid
+Flags = CanProtect,CanMirrorMove
+Description = The user dismisses the target, forcing it to switch out. Always goes last.
+Animation = ROAR
+#-------------------------------
+[DESTRIERSWHIM]
+Name = Destrier's Whim
+Type = FIRE
+Category = Status
+Accuracy = 100
+TotalPP = 12
+Target = NearOther
+FunctionCode = Invalid
+Flags = CanProtect,CanMagicCoat,CanMirrorMove
+Description = The user burns the target if they're a foe, or raises their Speed by four steps if they're an ally.
+Animation = EMBER
+#-------------------------------
+[JOUST]
+Name = Joust
+Type = STEEL
+Category = Physical
+Power = 130
+Accuracy = 50
+TotalPP = 12
+Target = NearOther
+FunctionCode = Invalid
+Flags = CanProtect,CanMirrorMove
+Description = The user charges at the target to strike it squarely. If it misses, the user's accuracy and Speed is raised.
+Animation = SMARTSTRIKE
+#-------------------------------
+[FLORALHEALING]
+Name = Floral Healing
+Type = FAIRY
+Category = Status
+Accuracy = 0
+TotalPP = 5
+Target = NearAlly
+FunctionCode = Invalid
+Flags = CanProtect,CanMagicCoat
+Description = The user restores the target's HP by 50% of its max hp, or 2/3rds in moonglow.
+#-------------------------------
+[CONTRADICT]
+Name = Contradict
+Type = PSYCHIC
+Category = Special
+Power = 60
+Accuracy = 100
+TotalPP = 12
+Target = NearOther
+FunctionCode = Invalid
+Flags = CanProtect,CanMirrorMove
+EffectChance = 100
+Description = The user questions the existence of the target, dealing psychic damage and dizzying them.
+Animation = AMNESIA
+#-------------------------------
+[TIDALKINESIS]
+Name = Tidalkinesis
+Type = WATER
+Category = Physical
+Power = 100
+Accuracy = 100
+TotalPP = 10
+Target = NearOther
+FunctionCode = Invalid
+Flags = CanProtect,CanMirrorMove,Biting
+EffectChance = 100
+Description = The user bites with added telekinetic force. During eclipse, the target also becomes numbed.
+#-------------------------------
+[RAIN]
+Name = rain
+Type = WATER
+Category = Status
+Accuracy = 0
+TotalPP = 10
+Target = BothSides
+FunctionCode = Invalid
+Description = Summons rainstorm for eight turns, boosting Water-type attacks and hindering most others.

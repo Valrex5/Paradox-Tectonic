@@ -10,12 +10,6 @@ BADGE_NAMES = [
 	]
 TOTAL_BADGES = 8
 BADGE_COUNT_VARIABLE = 27
-ZAIN_2_BADGES_PHONECALL_GLOBAL = 66
-ZAIN_3_BADGES_PHONECALL_GLOBAL = 67
-GROUZ_AVATAR_PHONECALL_GLOBAL = 61
-CATACOMBS_PHONECALL_GLOBAL = 62
-SURFBOARD_PHONECALL_GLOBAL = 54
-WHITEBLOOM_PHONECALL_GLOBAL = 54
 
 # Trigger params are badgeEarned, badgeCount, newLevelCap
 module Events
@@ -35,7 +29,7 @@ def earnBadge(badgeNum)
 	end
 
 	name = BADGE_NAMES[badgeNum-1]
-	pbMessage(_INTL("\\db[{1}]\\me[Badge get]You've earned the {2} Badge!\\wtnp[120]",badgeNum,name))
+	pbMessage(_INTL("\\db[Pictures/Trainer Card/DISPLAY_BADGE_{1}]\\me[Badge get]You've earned the {2} Badge!\\wtnp[120]",badgeNum,name))
 	$Trainer.badges[badgeNum-1] = true
 	$game_switches[3+badgeNum] = true # "Defeated Gym X" switch
 	
@@ -141,37 +135,15 @@ def showGymChoicesBenceZoe(notSureLabel="NotSure",basicTeamLabel="BasicTeam",dou
 end
 
 def doubleBattleBenceZoe()
-	return pbDoubleTrainerBattleCursed([[:LEADER_Zoe_2,"Zoé",0],[:LEADER_Bence_2,"Bence",0]],[[:LEADER_Zoe_2,"Zoé",1],[:LEADER_Bence_2,"Bence",1]])
-end
-
-def receivedGymRewardYet?(index)
-	if $game_variables[78] == 0
-		$game_variables[78] = [false] * 8
-	end
-	
-	return $game_variables[78][index]
-end
-
-def receiveGymReward(badgeNum)
-	index = badgeNum-1
-	case index
-	when 0,1
-		pbReceiveItem(:FULLRESTORE)
-		pbReceiveItem(:MAXREPEL)
-		pbReceiveItem(:ULTRABALL)
-		pbReceiveItem(:MAXREVIVE)
-	else
-		echoln("Gym item #{index} not yet defined!\n")
-	end
-	
-	$game_variables[78][index] = true # Mark the item as having been received
+	return pbDoubleTrainerBattleCursed([[:LEADER_Zoe,"Zoé",0],[:LEADER_Bence,"Bence",0]],[[:LEADER_Zoe,"Zoé",1],[:LEADER_Bence,"Bence",1]])
 end
 
 def healAndGiveRewardIfNotYetGiven(badgeNum)
+    checkGymAchievements(badgeNum)
 	index = badgeNum-1
 	leaderDialogue =
-		["I'll heal up your Pokémon and get out of your way.",
-		"Let me tend to your Pokémon while you bask in your victory."][index] || ""
+		[_INTL("I'll heal up your Pokémon and get out of your way."),
+		_INTL("Let me tend to your Pokémon while you bask in your victory.")][index] || ""
 	pbMessage(leaderDialogue) if !leaderDialogue.blank?
 	healPartyWithDelay()
 end

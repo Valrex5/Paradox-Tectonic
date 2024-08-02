@@ -27,7 +27,7 @@ module GameData
       SCHEMA = {
       "Name"         => [:name,           "s"],
       "Type"         => [:type,           "e", :Type],
-      "Category"     => [:category,       "e", ["Physical", "Special", "Status"]],
+      "Category"     => [:category,       "e", ["Physical", "Special", "Status", "Adaptive"]],
       "Power"        => [:base_damage,    "u"],
       "Accuracy"     => [:accuracy,       "u"],
       "TotalPP"      => [:total_pp,       "u"],
@@ -64,6 +64,7 @@ module GameData
         @zmove              = hash[:zmove] || false
         @cut                = hash[:cut] || false
         @tectonic_new       = hash[:tectonic_new] || false
+        @defined_in_extension  = hash[:defined_in_extension]  || false
 
         @function_code = "Invalid" if @cut
       end
@@ -87,6 +88,11 @@ module GameData
         return false if @base_damage == 0
         return @category == 1
       end
+
+      def adaptive?
+        return false if @base_damage == 0
+        return @category == 2
+      end
   
       def hidden_move?
         GameData::Item.each do |i|
@@ -96,7 +102,7 @@ module GameData
       end
 
       def damaging?
-        return physical? || special?
+        return physical? || special? || adaptive?
       end
 
       def status?
@@ -119,6 +125,7 @@ module GameData
       def categoryLabel
         return _INTL("Physical") if physical?
         return _INTL("Special") if special?
+        return _INTL("Adaptive") if adaptive?
         return _INTL("Status")
       end
 
@@ -201,11 +208,17 @@ module Compiler
     move_descriptions = []
     move_hash         = nil
     idx = 0
-    ["PBS/moves.txt","PBS/moves_new.txt","PBS/moves_primeval.txt","PBS/moves_z.txt","PBS/moves_cut.txt"].each do |path|
+    baseFiles = ["PBS/moves.txt","PBS/moves_new.txt","PBS/moves_primeval.txt","PBS/moves_z.txt","PBS/moves_cut.txt"]
+    moveTextFiles = []
+    moveTextFiles.concat(baseFiles)
+    moveExtensions = Compiler.get_extensions("moves")
+    moveTextFiles.concat(moveExtensions)
+    moveTextFiles.each do |path|
       primeval = path == "PBS/moves_primeval.txt"
       cut = path == "PBS/moves_cut.txt"
-      tectonic_new = path == "PBS/moves_new.txt"
+      tectonic_new = (path == "PBS/moves_new.txt") || moveExtensions.include?(path)
       zmove = path == "PBS/moves_z.txt"
+      baseFile = baseFiles.include?(path)
 
       pbCompilerEachPreppedLine(path) { |line, line_no|
         idx += 1
@@ -217,7 +230,7 @@ module Compiler
               raise _INTL("Move {1} is defined as a Status move with a non-zero base damage.\r\n{2}",
                           move_hash[:name], FileLineData.linereport)
             elsif (move_hash[:category] || 2) != 2 && (move_hash[:base_damage] || 0) == 0
-              print _INTL("Warning: Move {1} was defined as Physical or Special but had a base damage of 0. Changing it to a Status move.\r\n{2}",
+              print _INTL("Warning: Move {1} was defined as a Damaging move but had a base damage of 0. Changing it to a Status move.\r\n{2}",
                           move_hash[:name], FileLineData.linereport)
               move_hash[:category] = 2
             end
@@ -230,12 +243,13 @@ module Compiler
           end
           # Construct move hash
           move_hash = {
-            :id_number        => idx,
-            :id               => move_id,
-            :primeval         => primeval,
-            :cut              => cut,
-            :tectonic_new     => tectonic_new,
-            :zmove            => zmove,
+            :id_number            => idx,
+            :id                   => move_id,
+            :primeval             => primeval,
+            :cut                  => cut,
+            :tectonic_new         => tectonic_new,
+            :zmove                => zmove,
+            :defined_in_extension => !baseFile,
           }
         elsif line[/^\s*(\w+)\s*=\s*(.*)\s*$/]   # XXX=YYY lines
           if !move_hash
@@ -271,7 +285,7 @@ module Compiler
       if (move_hash[:category] || 2) == 2 && (move_hash[:base_damage] || 0) != 0
         raise _INTL("Move {1} is defined as a Status move with a non-zero base damage.\r\n{2}", line[2], FileLineData.linereport)
       elsif (move_hash[:category] || 2) != 2 && (move_hash[:base_damage] || 0) == 0
-        print _INTL("Warning: Move {1} was defined as Physical or Special but had a base damage of 0. Changing it to a Status move.\r\n{2}", line[2], FileLineData.linereport)
+        print _INTL("Warning: Move {1} was defined as a Damaging move but had a base damage of 0. Changing it to a Status move.\r\n{2}", line[2], FileLineData.linereport)
         move_hash[:category] = 2
       end
       GameData::Move.register(move_hash)
@@ -296,35 +310,35 @@ module Compiler
   def write_moves
     File.open("PBS/moves_new.txt", "wb") { |f|
       add_PBS_header_to_file(f)
-      GameData::Move.each do |m|
+      GameData::Move.each_base do |m|
         next unless m.tectonic_new
         write_move(f,m)
       end
     }
     File.open("PBS/moves_cut.txt", "wb") { |f|
       add_PBS_header_to_file(f)
-      GameData::Move.each do |m|
+      GameData::Move.each_base do |m|
         next unless m.cut
         write_move(f,m)
       end
     }
     File.open("PBS/moves_z.txt", "wb") { |f|
       add_PBS_header_to_file(f)
-      GameData::Move.each do |m|
+      GameData::Move.each_base do |m|
         next unless m.zmove
         write_move(f,m)
       end
     }
     File.open("PBS/moves_primeval.txt", "wb") { |f|
       add_PBS_header_to_file(f)
-      GameData::Move.each do |m|
+      GameData::Move.each_base do |m|
         next unless m.primeval
         write_move(f,m)
       end
     }
     File.open("PBS/moves.txt", "wb") { |f|
       add_PBS_header_to_file(f)
-      GameData::Move.each do |m|
+      GameData::Move.each_base do |m|
         next unless m.canon_move?
         write_move(f,m)
       end
@@ -337,7 +351,7 @@ module Compiler
     f.write("[#{move.id}]\r\n")
     f.write("Name = #{move.real_name}\r\n")
     f.write("Type = #{move.type.to_s}\r\n")
-    category = ["Physical", "Special", "Status"][move.category]
+    category = ["Physical", "Special", "Status", "Adaptive"][move.category]
     f.write("Category = #{category}\r\n")
     f.write("Power = #{move.base_damage}\r\n") if move.base_damage > 0
     f.write("Accuracy = #{move.accuracy}\r\n")

@@ -8,7 +8,7 @@ class PokemonStorageScene
         @command = 1
     end
 
-    def pbStartBox(screen, command)
+    def pbStartBox(screen, command, iconFadeProc = nil)
         @screen = screen
         @storage = screen.storage
         @bgviewport = Viewport.new(0, 0, Graphics.width, Graphics.height)
@@ -27,7 +27,8 @@ class PokemonStorageScene
         @choseFromParty = false
         @command = command
         addBackgroundPlane(@sprites, "background", "Storage/bg", @bgviewport)
-        @sprites["box"] = PokemonBoxSprite.new(@storage, @storage.currentBox, @boxviewport)
+        @iconFadeProc = iconFadeProc
+        @sprites["box"] = PokemonBoxSprite.new(@storage, @storage.currentBox, @boxviewport, @iconFadeProc)
         @sprites["boxsides"] = IconSprite.new(0, 0, @boxsidesviewport)
         overlay_path = "Graphics/Pictures/Storage/overlay_main"
         overlay_path += "_dark" if darkMode?
@@ -38,7 +39,7 @@ class PokemonStorageScene
         @sprites["pokemon"].setOffset(PictureOrigin::Center)
         @sprites["pokemon"].x = 90
         @sprites["pokemon"].y = 134
-        @sprites["boxparty"] = PokemonBoxPartySprite.new(@storage.party, @boxsidesviewport)
+        @sprites["boxparty"] = PokemonBoxPartySprite.new(@storage.party, @boxsidesviewport, iconFadeProc)
         if command != 2 # Drop down tab only on Deposit
             @sprites["boxparty"].x = 182
             @sprites["boxparty"].y = Graphics.height
@@ -441,7 +442,7 @@ class PokemonStorageScene
     end
 
     def pbSwitchBoxToRight(newbox)
-        newbox = PokemonBoxSprite.new(@storage, newbox, @boxviewport)
+        newbox = PokemonBoxSprite.new(@storage, newbox, @boxviewport, @iconFadeProc)
         newbox.x = 520
         Graphics.frame_reset
         distancePerFrame = 64 * 20 / Graphics.frame_rate
@@ -461,7 +462,7 @@ class PokemonStorageScene
     end
 
     def pbSwitchBoxToLeft(newbox)
-        newbox = PokemonBoxSprite.new(@storage, newbox, @boxviewport)
+        newbox = PokemonBoxSprite.new(@storage, newbox, @boxviewport, @iconFadeProc)
         newbox.x = -152
         Graphics.frame_reset
         distancePerFrame = 64 * 20 / Graphics.frame_rate
@@ -659,12 +660,7 @@ class PokemonStorageScene
 
     def pbBoxName(helptext, minchars, maxchars)
         oldsprites = pbFadeOutAndHide(@sprites)
-        # TODO: Remove this if when a suitable icon is present on donation boxes
-        if inDonationBox?
-            ret = pbEnterBoxName(helptext, minchars, maxchars-3) + "(D)"
-        else
-            ret = pbEnterBoxName(helptext, minchars, maxchars)
-        end
+        ret = pbEnterBoxName(helptext, minchars, maxchars)
         @storage[@storage.currentBox].name = ret if ret.length > 0
         @sprites["box"].refreshBox = true
         pbRefresh
@@ -918,7 +914,7 @@ class PokemonStorageScene
     def pbHardRefresh
         oldPartyY = @sprites["boxparty"].y
         @sprites["box"].dispose
-        @sprites["box"] = PokemonBoxSprite.new(@storage, @storage.currentBox, @boxviewport)
+        @sprites["box"] = PokemonBoxSprite.new(@storage, @storage.currentBox, @boxviewport, @iconFadeProc)
         @sprites["boxparty"].dispose
         @sprites["boxparty"] = PokemonBoxPartySprite.new(@storage.party, @boxsidesviewport)
         @sprites["boxparty"].y = oldPartyY

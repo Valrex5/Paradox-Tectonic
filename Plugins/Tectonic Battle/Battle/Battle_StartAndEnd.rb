@@ -290,7 +290,7 @@ class PokeBattle_Battle
         end
 
         # Track information for perfecting
-        $game_switches[94] = false
+        trackPerfectBattle(false)
         ableBeforeFight = $Trainer.able_pokemon_count # Record the number of able party members, for perfecting
         skipPerfecting = false
         @opponent&.each do |opp|
@@ -322,7 +322,7 @@ class PokeBattle_Battle
         unless @autoTesting
             # Record if the fight was perfected
             if $Trainer.able_pokemon_count >= ableBeforeFight
-                $game_switches[94] = true
+                trackPerfectBattle(true)
                 if trainerBattle? && @decision == 1 && !skipPerfecting
                     pbMessage(_INTL("\\me[Battle perfected]You perfected the fight!"))
                 end
@@ -378,8 +378,8 @@ class PokeBattle_Battle
         weather_data = GameData::BattleWeather.try_get(@field.weather)
         pbCommonAnimation(weather_data.animation) if weather_data
         case @field.weather
-        when :Sun         then pbDisplay(_INTL("The sunlight is strong."))
-        when :Rain        then pbDisplay(_INTL("It is raining."))
+        when :Sunshine         then pbDisplay(_INTL("The sunlight is strong."))
+        when :Rainstorm   then pbDisplay(_INTL("It is storming."))
         when :Sandstorm   then pbDisplay(_INTL("A sandstorm is raging."))
         when :Hail        then pbDisplay(_INTL("Hail is falling."))
         when :HarshSun    then pbDisplay(_INTL("The sunlight is extremely harsh."))

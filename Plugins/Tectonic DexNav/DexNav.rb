@@ -267,11 +267,10 @@ class NewDexNav
 
 	lineHeight = 94 + visualHeightOffset
 	@pkmnsprites.each_with_index do |groupSpriteArray,groupIndex|
-		checkBoxFileName = "Graphics/Pictures/Pokedex/checkbox"
 		if @encounterTypesCompletion.values[groupIndex]
-			checkBoxFileName = "Graphics/Pictures/Pokedex/checkbox_active"
+			checkBoxFileName = "Graphics/Pictures/checkbox_active"
 		else
-			checkBoxFileName = "Graphics/Pictures/Pokedex/checkbox_inactive"
+			checkBoxFileName = "Graphics/Pictures/checkbox_inactive"
 		end
         checkboxY = lineHeight + 20
 		if checkboxY > 60 && checkboxY < 300 # dunno why these numbers
@@ -326,7 +325,10 @@ class NewDexNav
   end
 
   def generateSearch(species_data)
-	$PokemonTemp.currentDexSearch=[species_data,getRandomMentorMove(species_data.species),rand(2)]
+	move = getRandomMentorMove(species_data.species)
+	item = generateWildHeldItem(species_data.species,herdingActive?)
+	abilityIndex = rand(2)
+	$PokemonTemp.currentDexSearch = [species_data,move,abilityIndex,item]
   end
 end
 
@@ -336,16 +338,16 @@ end
 
 class DexNav_SearchOverlay
 	OVERLAY_WIDTH = 280
-	OVERLAY_HEIGHT = 128
+	OVERLAY_HEIGHT_BASE = 32
+	OVERLAY_HEIGHT_PER_LINE = 32
 
 	def initialize()
 		@sprites = {}
 		@viewport = Viewport.new(0, 0, Graphics.width, Graphics.height)
 		@viewport.z = 999
-
 		searchWindowX = Graphics.width - OVERLAY_WIDTH - 8
-		searchWindowY = Graphics.height - OVERLAY_HEIGHT - 8
-		@sprites["search"] = Window_AdvancedTextPokemon.newWithSize("",searchWindowX,searchWindowY,OVERLAY_WIDTH,OVERLAY_HEIGHT,@viewport)
+		searchWindowY = Graphics.height - OVERLAY_HEIGHT_BASE - 8
+		@sprites["search"] = Window_AdvancedTextPokemon.newWithSize("",searchWindowX,searchWindowY,OVERLAY_WIDTH,OVERLAY_HEIGHT_BASE,@viewport)
 		@sprites["search"].setSkin("Graphics/Windowskins/frlgtextskin")
 		@sprites["search"].opacity = 140
 		@sprites["search"].visible = false
@@ -370,13 +372,6 @@ class DexNav_SearchOverlay
 
 	def drawSearchOverlay()
 		return if !searchActive?
-	
-		if $PokemonTemp.currentDexSearch[1] == nil
-			dexMove = "-"
-		else
-			dexMove = GameData::Move.get($PokemonTemp.currentDexSearch[1]).name
-		end
-		
 		species_data = $PokemonTemp.currentDexSearch[0]
 		navAbil1 = species_data.abilities
 		if navAbil1[1] != nil
@@ -388,11 +383,28 @@ class DexNav_SearchOverlay
 		abilityName = GameData::Ability.get(abilityID).name
 	
 		@sprites["search"].visible = true
-		@sprites["search"].text = _INTL("{1}\n{2}\n{3}",species_data.name,abilityName,dexMove)
+
+		move = getMoveName($PokemonTemp.currentDexSearch[1]) if $PokemonTemp.currentDexSearch[1]
+		if $PokemonTemp.currentDexSearch[3]
+			item = getItemName($PokemonTemp.currentDexSearch[3])
+		else
+			item = _INTL("No item")
+		end
+
+		searchText = "#{species_data.name}\n#{abilityName}\n#{item}\n"
+		searchWindowLines = 3
+		if move
+			searchText += "#{move}\n"
+			searchWindowLines += 1
+		end
+		@sprites["search"].text = searchText
+		@sprites["search"].height = OVERLAY_HEIGHT_BASE + OVERLAY_HEIGHT_PER_LINE * searchWindowLines
+		@sprites["search"].y = Graphics.height - @sprites["search"].height - 8
 		
 		@sprites["searchIcon"].visible = true
 		@sprites["searchIcon"].species = species_data.species
 		@sprites["searchIcon"].form = species_data.form
+		@sprites["searchIcon"].y = @sprites["search"].y - 8
 	
 		Graphics.update
 		pbFadeInAndShow(@sprites) {pbUpdate}
@@ -410,18 +422,18 @@ def getDexNavEncounterDataForMap(mapid = -1)
     return nil if encounters == nil
     encounter_tables = Marshal.load(Marshal.dump(encounters.types))
 	
-	allEncounters = []
-	encounters.types.keys.each do |encounter_type|
-		next if encounter_type == :Special
-		encounterList = encounter_tables[encounter_type]
-		next if !encounterList
-		encounterList.each do |encounter|
-			speciesSym = encounter[1]
-			species_data = GameData::Species.get(speciesSym)
-			next if isLegendary(speciesSym)
-			allEncounters.push([encounter_type,species_data])
+		allEncounters = []
+		encounters.types.keys.each do |encounter_type|
+			next if encounter_type == :Special
+			encounterList = encounter_tables[encounter_type]
+			next if !encounterList
+			encounterList.each do |encounter|
+				speciesSym = encounter[1]
+				species_data = GameData::Species.get(speciesSym)
+				next if isLegendary?(speciesSym)
+				allEncounters.push([encounter_type,species_data])
+			end
 		end
-	end
 	  
     allEncounters.uniq!
     allEncounters.compact!
@@ -461,17 +473,14 @@ Events.onWildPokemonCreate += proc {|sender,e|
 		end
 		if encounterable
 			echoln("Overwriting the discovered wild pokemon with a #{species}!")
-			level = pokemon.level
-			pokemon.species = species
-			pokemon.level = level # Level is reset on species change
-			pokemon.name = GameData::Species.get(pokemon.species).name
+			overwriteWildPokemonSpecies(pokemon,species)
 			pokemon.ability_index = $PokemonTemp.currentDexSearch[2]
 			pokemon.form = species_data.form
 			pokemon.reset_moves
 			pokemon.learn_move($PokemonTemp.currentDexSearch[1]) if $PokemonTemp.currentDexSearch[1]
-			pokemon.setItems(generateWildHeldItem(pokemon,herdingActive?))
+			pokemon.setItems($PokemonTemp.currentDexSearch[3]) if $PokemonTemp.currentDexSearch[3]
 			# There is a higher chance for shininess
-			pokemon.shinyRerolls *= 2
+			pokemon.shinyRolls *= 2
 			$PokemonTemp.currentDexSearch = nil
 			$search_overlay.dispose if $search_overlay
 		else
@@ -479,6 +488,13 @@ Events.onWildPokemonCreate += proc {|sender,e|
 		end
     end
 }
+
+def overwriteWildPokemonSpecies(pokemon,species)
+    level = pokemon.level
+    pokemon.species = species
+    pokemon.level = level # Level is reset on species change
+    pokemon.name = GameData::Species.get(pokemon.species).name
+end
 
 # Gets a random ID of a legal egg move of the given species and returns it as a move object.
 def getRandomMentorMove(species)

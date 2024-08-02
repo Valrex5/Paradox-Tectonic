@@ -15,9 +15,9 @@ class PokeBattle_Battle
         curBoxName = @peer.pbBoxName(currentBox)
         boxName    = @peer.pbBoxName(storedBox)
         if $PokemonStorage[currentBox].isDonationBox?
-            pbDisplayPaused(_INTL("Box \"{1}\" is a donation box.", curBoxName))      
+            pbDisplayPaused(_INTL("Box \"{1}\" on the Pokémon Storage PC is a donation box.", curBoxName))
             pbDisplayPaused(_INTL("{1} was transferred to box \"{2}\".", pkmn.name, boxName))
-        elsif storedBox != currentBox 
+        elsif storedBox != currentBox
             pbDisplayPaused(_INTL("Box \"{1}\" on the Pokémon Storage PC was full.", curBoxName))
             pbDisplayPaused(_INTL("{1} was transferred to box \"{2}\".", pkmn.name, boxName))
         else
@@ -121,6 +121,12 @@ class PokeBattle_Battle
 
             evolutionButtonCheck(pkmn)
         end
+
+        # Mentor moves tutorial
+        if !@caughtPokemon.empty? && $Trainer.pokedex.owned_count >= 4 && !$PokemonGlobal.mentorMovesTutorialized
+            playMentorshipTutorial
+        end
+
         @caughtPokemon.clear
     end
 
@@ -210,6 +216,14 @@ class PokeBattle_Battle
             @scene.pbHideCaptureBall(idxBattler)
             # Save the Pokémon for storage at the end of battle
             @caughtPokemon.push(pkmn)
+        end
+        
+        if numShakes < 4 && !launching && pbHasItem?(:MAGNETICGAUNTLET) && @magneticGauntletBallsRecovered == 0
+            pbDisplayWithFormatting(_INTL("\\i[MAGNETICGAUNTLET]You recovered the lost {1} with the {2}!", getItemName(ball), getItemName(:MAGNETICGAUNTLET)))
+            @magneticGauntletBallsRecovered += 1
+            return false
+        else
+            return true
         end
     end
 

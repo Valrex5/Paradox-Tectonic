@@ -625,7 +625,7 @@ Category = Physical
 Power = 120
 Accuracy = 100
 TotalPP = 10
-Target = RandomNearFoe
+Target = ClosestNearFoe
 FunctionCode = Rampage
 Flags = CanProtect,CanMirrorMove
 Description = The user goes on a wild tantrum for three turns.
@@ -732,24 +732,38 @@ Power = 55
 Accuracy = 100
 TotalPP = 30
 Target = NearOther
-FunctionCode = UserLosesThirdOfCurrentHP
+FunctionCode = UserLosesTenthOfTotalHP
 Flags = CanProtect,CanMirrorMove
 EffectChance = 100
-Description = The user shreads off bits of its own body to launch at the target. The user loses 30% of their current health.
+Description = The user shreds off bits of its own body to launch at the target. The user loses a tenth of its max HP.
 Animation = SPIKECANNON
 #-------------------------------
 [SHRAPNEL]
 Name = Shrapnel
 Type = STEEL
 Category = Special
-Power = 90
+Power = 85
 Accuracy = 100
 TotalPP = 10
 Target = NearOther
-FunctionCode = UserLosesThirdOfCurrentHP
+FunctionCode = UserLosesTenthOfTotalHP
 Flags = CanProtect,CanMirrorMove
 EffectChance = 100
-Description = The user shoots shards of its own body at the target. The user loses 30% of their current health.
+Description = The user shoots shards of its own body at the target. The user loses a tenth of its max HP.
+Animation = SPIKECANNON
+#-------------------------------
+[FRAGMENTATION]
+Name = Fragmentation
+Type = STEEL
+Category = Special
+Power = 115
+Accuracy = 100
+TotalPP = 10
+Target = NearOther
+FunctionCode = UserLosesTenthOfTotalHP
+Flags = CanProtect,CanMirrorMove
+EffectChance = 100
+Description = The user uses explosive force to shoot shards of its own body at the target. The user loses a tenth of its max HP.
 Animation = SPIKECANNON
 #-------------------------------
 [SPITEFULCHANT]
@@ -824,7 +838,7 @@ Accuracy = 100
 TotalPP = 10
 Target = NearOther
 FunctionCode = HealUserByThirdOfDamageDone
-Flags = CanProtect,CanMirrorMove
+Flags = CanProtect,CanMirrorMove,Biting
 Description = The user chomps with venomous teeth. The user's HP is restored by a third of the damage dealt.
 #-------------------------------
 [OMNISCIENTBLOW]
@@ -939,7 +953,7 @@ Category = Special
 Power = 120
 Accuracy = 100
 TotalPP = 10
-Target = RandomNearFoe
+Target = ClosestNearFoe
 FunctionCode = Rampage
 Flags = CanProtect,CanMirrorMove
 Description = The user overloads its mind to attack for three turns.
@@ -1132,18 +1146,6 @@ Flags = CanProtect,CanMirrorMove
 EffectChance = 20
 Description = The user brings down a ruinous power on the target. This has a 20% chance of lowering all the target's stats.
 Animation = JUDGMENT
-#-------------------------------
-[HARDFEELINGS]
-Name = Hard Feelings
-Type = NORMAL
-Category = Special
-Power = 70
-Accuracy = 100
-TotalPP = 12
-Target = NearOther
-FunctionCode = DoubleDamageUserStatused
-Flags = CanProtect,CanMirrorMove
-Description = Doubles its power if the user has a status condition. Ignores frostbite Sp. Atk reduction.
 #-------------------------------
 [SOULEATER]
 Name = Soul Eater
@@ -1342,18 +1344,6 @@ FunctionCode = LowerTargetHighestStat4
 Flags = CanMagicCoat,CanMirrorMove
 Description = The user looms over the target with awful menace, lowering their highest stat by four steps.
 #-------------------------------
-[SUMMERDAZE]
-Name = Summer Daze
-Type = GRASS
-Category = Status
-Accuracy = 100
-TotalPP = 8
-Target = NearOther
-FunctionCode = SleepTargetNextTurnLowerTargetAtkSpAtk2IfInSun
-Flags = CanProtect,CanMagicCoat,CanMirrorMove,Sound
-Description = The user plays a melody, making the target drowsy. In Sunlight, lowers the target's Attack and Sp. Atk by two steps.
-Animation = GRASSWHISTLE
-#-------------------------------
 [PACIFY]
 Name = Pacify
 Type = PSYCHIC
@@ -1462,7 +1452,7 @@ Category = Special
 Power = 75
 Accuracy = 100
 TotalPP = 10
-Target = RandomNearFoe
+Target = ClosestNearFoe
 FunctionCode = RampagePreventSleeping
 Flags = CanProtect,CanMirrorMove,Sound
 Description = The user attacks in an uproar for three turns. Over that time, no one can fall asleep.
@@ -2193,8 +2183,8 @@ Animation = BULLETPUNCH
 [EVERNALIZE]
 Name = Evernalize
 Type = NORMAL
-Category = Special
-Power = 140
+Category = Adaptive
+Power = 150
 Accuracy = 100
 TotalPP = 12
 Target = NearOther
@@ -2378,14 +2368,14 @@ Animation = JUMPKICK
 [MULTISTRIKE]
 Name = Multi-strike
 Type = NORMAL
-Category = Physical
+Category = Adaptive
 Power = 14
 Accuracy = 100
 TotalPP = 30
 Target = NearOther
-FunctionCode = HitTwoToFiveTimesUsesBetterAttackingStat
+FunctionCode = HitTwoToFiveTimes
 Flags = CanProtect,CanMirrorMove
-Description = The target is hit two to five times in a row. Inflicts physical or special damage based on the user's stats.
+Description = The target is hit two to five times in a row.
 #-------------------------------
 [PLANETCRACKER]
 Name = Planetcracker
@@ -2473,18 +2463,6 @@ FunctionCode = AttacksWithTargetsStats
 Flags = CanProtect,CanMirrorMove
 Description = Turns the foe's power against it, dealing damage using the target's Sp. Attack stat.
 Animation = VENOSHOCK
-#-------------------------------
-[RANSACK]
-Name = Ransack
-Type = NORMAL
-Category = Special
-Power = 60
-Accuracy = 100
-TotalPP = 20
-Target = NearOther
-FunctionCode = StealsItem
-Flags = CanProtect,CanMirrorMove
-Description = The user skillfully blasts the target, then steals their item. Items stolen from wild Pokémon are stored.
 #-------------------------------
 [TRAPJAW]
 Name = Trap Jaw
@@ -2913,7 +2891,7 @@ Category = Physical
 Power = 35
 Accuracy = 100
 TotalPP = 10
-Target = RandomNearFoe
+Target = ClosestNearFoe
 FunctionCode = Rampage3HitTwoToFiveTimes
 Flags = CanProtect,CanMirrorMove
 Description = Unveiling its ears, the released psychic power causes the user to attack 2-5 times for three turns.
@@ -2949,7 +2927,7 @@ Name = Oneiromancy
 Type = PSYCHIC
 Category = Status
 Accuracy = 0
-TotalPP = 10
+TotalPP = 4
 Target = User
 FunctionCode = RaiseUserMainStats2IfAsleep
 Flags = CanSnatch
@@ -3154,9 +3132,9 @@ Power = 120
 Accuracy = 100
 TotalPP = 5
 Target = NearOther
-FunctionCode = TwoTurnAttackChargeStartRain5
+FunctionCode = TwoTurnAttackChargeStartRainstorm5
 Flags = CanProtect,CanMirrorMove
-Description = Summons rain for five turns on the first turn, then overwhelms the foe with water on the second.
+Description = Summons rainstorm for five turns on the first turn, then overwhelms the foe with water on the second.
 Animation = SURF
 #-------------------------------
 [SHIMMERINGHEAT]
@@ -3390,7 +3368,7 @@ TotalPP = 15
 Target = User
 FunctionCode = RaiseUserSpd4GainFlyingType
 Flags = CanSnatch
-Description = The user takes off at sonic speeds, raising its Speed by two steps and gaining the Flying type.
+Description = The user takes off at sonic speeds, raising its Speed by four steps and gaining the Flying type.
 Animation = AGILITY
 #-------------------------------
 [CALTROPARTS]
@@ -3444,7 +3422,7 @@ Target = NearOther
 FunctionCode = LowerTargetDef3
 Flags = CanProtect,CanMirrorMove
 EffectChance = 100
-Description = The user spews alkaline bubbles that melt the target, drastically lowering their Defense.
+Description = The user spews alkaline bubbles that melt the target, lowering their Defense by three steps.
 Animation = BUBBLEBEAM
 #-------------------------------
 [COCODROP]
@@ -3546,7 +3524,7 @@ TotalPP = 15
 Target = User
 FunctionCode = RaiseUserAtkDef2SetUserTypesToRock
 Flags = CanSnatch
-Description = The user flexes its rocky skin, raising its Attack and Defense and gaining the Rock type.
+Description = The user flexes its rocky skin, raising its Attack and Defense by two steps each and gaining the Rock type.
 Animation = BULKUP
 #-------------------------------
 [DEATHMARK]
@@ -3611,16 +3589,16 @@ Description = The user dizzies the target, then summons sandstorm for four turns
 Animation = SANDSTORM
 #-------------------------------
 [INVITERAIN]
-Name = Invite Rain
+Name = Invite Rainstorm
 Type = WATER
 Category = Status
 Accuracy = 0
 TotalPP = 10
 Target = NearOther
-FunctionCode = NumbTargetStartRain4
+FunctionCode = NumbTargetStartRainstorm4
 Flags = CanProtect,CanMagicCoat,CanMirrorMove
-Description = The user numbs the target, then welcomes in rain for four turns.
-Animation = RAIN
+Description = The user numbs the target, then welcomes in rainstorm for four turns.
+Animation = RAINSTORM
 #-------------------------------
 [INVITEHAIL]
 Name = Invite Hail
@@ -3656,7 +3634,7 @@ Accuracy = 0
 TotalPP = 1
 Target = None
 FunctionCode = RevivePartyMemberTo1HP
-Description = Restores a fainted party member to 1 HP.
+Description = Restores a fainted party member to 1 HP. Only one use per battle.
 Animation = ELECTRICTERRAIN
 #-------------------------------
 [ABERRANTMOTE]
@@ -3820,9 +3798,9 @@ Power = 60
 Accuracy = 100
 TotalPP = 12
 Target = NearOther
-FunctionCode = HealUserByHalfOfDamageDoneDoubleDamageIfTargetAsleep
+FunctionCode = HealUserByHalfOfDamageDoneDoubleDamageIfTargetAsleepCanOverheal
 Flags = CanProtect,CanMirrorMove
-Description = The user assaults its foe's dreams. It absorbs half the damage dealt, and doubles in power if the foe is asleep.
+Description = Doubles in power if the foe is asleep. User heals for half of damage dealt. This can overheal.
 #-------------------------------
 [CRUELKISS]
 Name = Cruel Kiss
@@ -3845,7 +3823,7 @@ Category = Physical
 Power = 120
 Accuracy = 100
 TotalPP = 10
-Target = RandomNearFoe
+Target = ClosestNearFoe
 FunctionCode = RampageKOsRaiseSpeed1
 Flags = CanProtect,CanMirrorMove
 Description = The user throws a royal fit for three turns. Raises Speed if a target is knocked out by this move.
@@ -4000,14 +3978,14 @@ Description = The user partially dissolves, raising its Sp. Def stat by five ste
 [LONGSHOT]
 Name = Long Shot
 Type = NORMAL
-Category = Physical
+Category = Adaptive
 Power = 110
 Accuracy = 70
 TotalPP = 25
 Target = NearOther
-FunctionCode = UsesBetterAttackingStat
+FunctionCode = Basic
 Flags = CanProtect,CanMirrorMove
-Description = Inflicts physical or special damage based on the user's stats. However, it's likely to miss.
+Description = The user makes a foolhardy, roundabout attack. It misses much of the time.
 #-------------------------------
 [DRYHEAT]
 Name = Dry Heat
@@ -4302,7 +4280,7 @@ Target = NearOther
 Priority = -1
 FunctionCode = SwitchOutUserDamagingMove
 Flags = CanProtect,CanMirrorMove
-Description = The user swaps out using a cruel illusion. This move always goes last.
+Description = The user switches out using a cruel illusion. Always goes last.
 Animation = PURSUIT
 #-------------------------------
 [HAIRCURL]
@@ -4329,20 +4307,6 @@ FunctionCode = StealthRockStartSandstorm5
 Flags = CanMagicCoat
 Description = The user calls all rocks to join it, summoning sandstorm for five turns and laying a trap of levitating stones around the target.
 Animation = STEALTHROCK
-#-------------------------------
-[CONTRADICT]
-Name = Contradict
-Type = PSYCHIC
-Category = Special
-Power = 60
-Accuracy = 100
-TotalPP = 12
-Target = NearOther
-FunctionCode = Dizzy
-Flags = CanProtect,CanMirrorMove
-EffectChance = 100
-Description = The user questions the existence of the target, dealing psychic damage and dizzying them.
-Animation = AMNESIA
 #-------------------------------
 [MOUTHFUL]
 Name = Mouthful
@@ -4392,7 +4356,7 @@ Power = 90
 Accuracy = 100
 TotalPP = 15
 Target = NearOther
-FunctionCode = UsesBetterAttackingStatRaisesUserOtherAttackingStat
+FunctionCode = CategoryDependsOnHigherDamageRaisesUserOtherAttackingStat
 Flags = CanProtect,CanMirrorMove,Punch
 EffectChance = 100
 Description = Inflicts physical or special damage, whichever deals more. Then, raises the attacking stat which wasn't used.
@@ -4641,20 +4605,6 @@ EffectChance = 30
 Description = Changes type based on machine haunted. 30% chance of extra effect based on machine haunted.
 Animation = SHADOWBALL
 #-------------------------------
-[BANISH]
-Name = Banish
-Type = DRAGON
-Category = Special
-Power = 75
-Accuracy = 100
-TotalPP = 10
-Target = NearOther
-Priority = -1
-FunctionCode = SwitchOutTargetDamagingMoveNonRandom
-Flags = CanProtect,CanMirrorMove
-Description = The user dismisses the target, forcing it to switch out.
-Animation = ROAR
-#-------------------------------
 [CHECKMATE]
 Name = Checkmate
 Type = DARK
@@ -4671,14 +4621,14 @@ Animation = NIGHTSLASH
 [WEATHERBURST]
 Name = Weather Burst
 Type = NORMAL
-Category = Physical
+Category = Adaptive
 Power = 100
 Accuracy = 100
 TotalPP = 10
 Target = NearOther
-FunctionCode = TypeDependsOnWeatherUsesBetterAttackingStat
+FunctionCode = TypeDependsOnWeather
 Flags = CanProtect,CanMirrorMove
-Description = Type based on weather. Inflicts physical or special damage based on the user's stats.
+Description = The user causes the air around the target to explode. It's type is changed based on the active weather.
 Animation = WEATHERBALL
 #-------------------------------
 [SHINESHOT]
@@ -5032,7 +4982,7 @@ Animation = STRENGTHSAP
 Name = Classical Physics
 Type = GRASS
 Category = Special
-Power = 40
+Power = 60
 Accuracy = 100
 TotalPP = 10
 Target = NearOther
@@ -5268,9 +5218,9 @@ Power = 120
 Accuracy = 100
 TotalPP = 10
 Target = NearOther
-FunctionCode = TwoTurnAttackOneTurnInRain
+FunctionCode = TwoTurnAttackOneTurnInRainstorm
 Flags = CanProtect,CanMirrorMove
-Description = The user charges, then attacks on the second turn. Charges instantly in Rain.
+Description = The user charges, then attacks on the second turn. Charges instantly in rainstorm.
 Animation = WILDCHARGE
 #-------------------------------
 [MANYNEEDLE]
@@ -5295,9 +5245,9 @@ Power = 50
 Accuracy = 0
 TotalPP = 10
 Target = NearFoe
-FunctionCode = StartRain8
+FunctionCode = StartRainstorm8
 Flags = CanProtect,CanMirrorMove
-Description = Strikes the target with harbor waters, then summons rain for eight turns.
+Description = Strikes the target with harbor waters, then summons rainstorm for eight turns.
 Animation = SURF
 #-------------------------------
 [EXSANGUINATE]
@@ -5340,31 +5290,6 @@ Flags = CanProtect,CanMirrorMove,Biting
 Description = The user bites with playful abandon. This deals double damage on the user's first turn out.
 Animation = CRUNCH
 #-------------------------------
-[DESTRIERSWHIM]
-Name = Destrier's Whim
-Type = FIRE
-Category = Status
-Accuracy = 100
-TotalPP = 12
-Target = NearOther
-FunctionCode = RaiseAllySpd4OrBurnFoe
-Flags = CanProtect,CanMagicCoat,CanMirrorMove
-Description = The user burns the target if they're a foe, or raises their Speed by four steps if they're an ally.
-Animation = EMBER
-#-------------------------------
-[JOUST]
-Name = Joust
-Type = STEEL
-Category = Physical
-Power = 130
-Accuracy = 50
-TotalPP = 12
-Target = NearOther
-FunctionCode = RaiseUserAccSpd1IfMisses
-Flags = CanProtect,CanMirrorMove
-Description = The user charges at the target to strike it squarely. If it misses, the user's accuracy and Speed is raised.
-Animation = SMARTSTRIKE
-#-------------------------------
 [SEASONSEND]
 Name = Season's End
 Type = NORMAL
@@ -5395,14 +5320,14 @@ Animation = POWDER
 Name = Thorn Rattle
 Type = GRASS
 Category = Special
-Power = 75
+Power = 100
 Accuracy = 100
 TotalPP = 10
 Target = NearOther
 Priority = -1
 FunctionCode = SwitchOutTargetDamagingMoveNonRandom
 Flags = CanProtect,CanMirrorMove,Sound
-Description = The user makes a scary sound by shaking, forcing the target to switch out.
+Description = The user makes a scary sound by shaking, forcing the target to switch out. Always goes last.
 Animation = UPROAR
 #-------------------------------
 [CROSSEXAMINE]
@@ -5565,7 +5490,7 @@ Name = Ghoulish Gale
 Type = GHOST
 Category = Special
 Power = 85
-Accuracy = 100
+Accuracy = 0
 TotalPP = 12
 Target = NearOther
 FunctionCode = AlwaysHits
@@ -5674,19 +5599,6 @@ Priority = 4
 FunctionCode = UserEnduresFaintingThisTurnRaiseUserAtk2IfActivates
 Description = The user endures attacks with 1 HP. If so, raises its Attack by two steps. Fails if used in succession.
 Animation = ENDURE
-#-------------------------------
-[TIDALKINESIS]
-Name = Tidalkinesis
-Type = WATER
-Category = Physical
-Power = 100
-Accuracy = 100
-TotalPP = 10
-Target = NearOther
-FunctionCode = NumbTargetIfInEclipse
-Flags = CanProtect,CanMirrorMove,Biting
-EffectChance = 100
-Description = The user bites with added telekinetic force. During eclipse, the target also becomes numbed.
 #-------------------------------
 [MUTATE]
 Name = Mutate
@@ -6065,7 +5977,7 @@ Animation = BULLETPUNCH
 [PRISMATICPOWER]
 Name = Prismatic Power
 Type = NORMAL
-Category = Special
+Category = Adaptive
 Power = 100
 Accuracy = 100
 TotalPP = 10
@@ -6126,7 +6038,7 @@ Target = NearOther
 Priority = -6
 FunctionCode = SwitchOutTargetDamagingMove
 Flags = CanProtect,CanMirrorMove
-Description = The user forces the target to switch out, to be replaced at random. In the wild, the battle ends.
+Description = The user forces the target to switch out, to be replaced at random. Always goes last. Ends wild battles.
 Animation = ROAR
 #-------------------------------
 [DRAFT]
@@ -6211,14 +6123,14 @@ Animation = BOUNCE
 [RISINGPOWER]
 Name = Rising Power
 Type = NORMAL
-Category = Physical
+Category = Adaptive
 Power = 30
 Accuracy = 100
 TotalPP = 10
 Target = NearOther
 FunctionCode = ScalesUsersPositiveStatSteps
 Flags = CanProtect,CanMirrorMove
-Description = Has 10 more base power for each raised stat step. Inflicts physical or special damage based on the user's stats.
+Description = The user attacks the target with stored power. Has 10 more base power for each raised stat step.
 Animation = STOREDPOWER
 #-------------------------------
 [SHARINGSMILES]
@@ -6503,7 +6415,7 @@ Accuracy = 100
 TotalPP = 10
 Target = NearFoe
 FunctionCode = StartSandstorm8
-Flags = CanProtect,CanMirrorMove
+Flags = CanProtect,CanMirrorMove,Wind
 Description = Hits the target with a sandy wind, then summons sandstorm for eight turns.
 Animation = SANDSTORM
 #-------------------------------
@@ -6687,3 +6599,40 @@ Target = NearOther
 FunctionCode = RemoveRoomsIncidental
 Flags = CanProtect,CanMirrorMove
 Description = An unusual shockwave that breaks down all active Rooms.
+#-------------------------------
+[CAVALRYCHARGE]
+Name = Cavalry Charge
+Type = STEEL
+Category = Physical
+Power = 70
+Accuracy = 50
+TotalPP = 10
+Target = NearOther
+Priority = 1
+FunctionCode = SwitchOutUserIfMissesDamagingMove
+Flags = CanProtect,CanMirrorMove
+Description = A reckless charge that forces the user to switch out if it misses. Always goes first.
+Animation = SMARTSTRIKE
+#-------------------------------
+[SELECTIVEMEMORY]
+Name = Selective Memory
+Type = PSYCHIC
+Category = Status
+Accuracy = 100
+TotalPP = 15
+Target = User
+FunctionCode = UseChoiceOf3RandomNonSignatureNonPsychicDamagingMoves
+Flags = CanSnatch
+Description = The user peruses it's kingly stores of knowledge, selecting three random non-Psychic attacks. You choose which one it uses.
+Animation = METRONOME
+#-------------------------------
+[ELEMENTALFANG]
+Name = Elemental Fang
+Type = NORMAL
+Category = Status
+Accuracy = 100
+TotalPP = 20
+Target = NearOther
+FunctionCode = UseChoiceOf3ElementalFangs
+Flags = CanSnatch
+Description = The user chooses between Fire Fang, Thunder Fang, or Ice Fang to use this turn.

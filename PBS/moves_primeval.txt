@@ -36,17 +36,17 @@ Flags = Empowered
 Description = The user summons sunshine for 5 turns, boosts its Atk. and Sp. Atk, and becomes Fire-type.
 Animation = SUNSHINE
 #-------------------------------
-[PRIMEVALRAIN]
-Name = Primeval Rain
+[PRIMEVALRAINSTORM]
+Name = Primeval Rainstorm
 Type = WATER
 Category = Status
 Accuracy = 0
 TotalPP = 1
 Target = BothSides
-FunctionCode = EmpoweredRain
+FunctionCode = EmpoweredRainstorm
 Flags = Empowered
-Description = The user summons rain for 5 turns, surrounds itself with healing water, and becomes Water-type.
-Animation = RAIN
+Description = The user summons rainstorm for 5 turns, surrounds itself with healing water, and becomes Water-type.
+Animation = RAINSTORM
 #-------------------------------
 [PRIMEVALLEECHSEED]
 Name = Primeval Leech Seed
@@ -189,7 +189,7 @@ TotalPP = 1
 Target = AllNearFoes
 FunctionCode = EmpoweredTorment
 Flags = CanProtect,CanMirrorMove,Empowered
-Description = The user torments and enrages the foe, making it incapable of using the same move twice in a row.
+Description = The user torments all near foes, preventing them from repeating moves. The user becomes Dark-type.
 Animation = TORMENT
 #-------------------------------
 [PRIMEVALLASERFOCUS]
@@ -396,7 +396,7 @@ TotalPP = 1
 Target = User
 FunctionCode = EmpoweredDestinyBond
 Flags = Empowered
-Description = Attackers against the user suffer recoil for the rest of the battle. User becomes a Ghost-type.
+Description = Attackers against the user suffer recoil for the rest of the battle. User becomes Ghost-type.
 Animation = DESTINYBOND
 #-------------------------------
 [PRIMEVALSHOREUP]
@@ -408,7 +408,7 @@ TotalPP = 1
 Target = User
 FunctionCode = EmpoweredShoreUp
 Flags = Empowered
-Description = The user restores 1/8th of its HP, TODO, and becomes Ground-type.
+Description = The user restores 1/8th of its HP, but begins eroding. At the end of each turn, its defensive stats are lowered and its attacking stats are raised. User becomes Ground-type.
 Animation = SHOREUP
 #-------------------------------
 [PRIMEVALLOOMOVER]
@@ -507,7 +507,7 @@ Flags = Empowered
 Description = The user summons an allied Abra, raises the Sp. Atk stat of itself and its allies, and becomes Psychic-type.
 #-------------------------------
 [PRIMEVALSTANDTOGETHER]
-Name = Primeval Howl
+Name = Primeval Stand Together
 Type = FIGHTING
 Category = Status
 Accuracy = 0
@@ -560,6 +560,19 @@ Target = User
 FunctionCode = EmpoweredSwordsDance
 Flags = Dance,Empowered
 Description = The user raises their Attack by four steps and becomes Steel-type.
+#-------------------------------
+[PRIMEVALDEEPBREATHING]
+Name = Primeval Deep Breathing
+Type = FIGHTING
+Category = Status
+Accuracy = 0
+TotalPP = 1
+Target = User
+Priority = 4
+FunctionCode = EmpoweredDeepBreathing
+Flags = Empowered
+Description = The user raises their Speed by 4 steps, quadruples their critical hit chance, and becomes Fighting-type.
+Animation = DEEPBREATHING
 #-------------------------------
 [EMPOWEREDMETEORMASH]
 Name = Empowered Meteor Mash
@@ -614,7 +627,7 @@ Target = NearOther
 FunctionCode = EmpoweredAncientPower
 Flags = CanProtect,CanMirrorMove,Empowered
 EffectChance = 100
-Description = The user attacks with a prehistoric power which raises all its stats
+Description = The user attacks with a prehistoric power which raises all its stats.
 Animation = ANCIENTPOWER
 #-------------------------------
 [EMPOWEREDTHUNDERBOLT]
@@ -752,19 +765,6 @@ FunctionCode = EmpoweredFutureSight
 Flags = Empowered
 Description = Two turns after this move is used, a hunk of psychic energy attacks the target.
 Animation = FUTURESIGHT
-#-------------------------------
-[EMPOWEREDDRAGONDARTS]
-Name = Empowered Dragon Darts
-Type = DRAGON
-Category = Physical
-Power = 150
-Accuracy = 100
-TotalPP = 1
-Target = AllNearFoes
-FunctionCode = EmpoweredDragonDarts
-Flags = CanProtect,CanMirrorMove,Empowered
-Description = The user attacks twice using Dreepy, spreading the hits.
-Animation = DRAGONDARTS
 #-------------------------------
 [EMPOWEREDGIGADRAIN]
 Name = Empowered Giga Drain

@@ -765,7 +765,7 @@ Category = Physical
 Power = 120
 Accuracy = 100
 TotalPP = 10
-Target = RandomNearFoe
+Target = ClosestNearFoe
 FunctionCode = Rampage
 Flags = CanProtect,CanMirrorMove
 Description = The user rampages and attacks for three turns.
@@ -866,7 +866,7 @@ Target = NearOther
 Priority = -6
 FunctionCode = SwitchOutTargetDamagingMove
 Flags = CanProtect,CanMirrorMove
-Description = The user forces the target to switch out, to be replaced at random. In the wild, the battle ends.
+Description = The user forces the target to switch out, to be replaced at random. Always goes last. Ends wild battles.
 #-------------------------------
 [DUALCHOP]
 Name = Dual Chop
@@ -1023,10 +1023,10 @@ Power = 110
 Accuracy = 70
 TotalPP = 10
 Target = NearOther
-FunctionCode = NumbTargetAlwaysHitsInRainHitsTargetInSky
+FunctionCode = NumbTargetAlwaysHitsInRainstormHitsTargetInSky
 Flags = CanProtect,CanMirrorMove
 EffectChance = 30
-Description = Can't miss in rain. It has a 30% chance to numb. Can hit targets flying high up.
+Description = Can't miss in rainstorm. It has a 30% chance to numb. Can hit targets flying high up.
 #-------------------------------
 [FUSIONBOLT]
 Name = Fusion Bolt
@@ -1477,17 +1477,6 @@ Target = BothSides
 FunctionCode = TrapAllBattlersForOneTurn
 Flags = CanMirrorMove
 Description = By locking down the battlefield, the user keeps all Pokémon from fleeing during the next turn.
-#-------------------------------
-[FLORALHEALING]
-Name = Floral Healing
-Type = FAIRY
-Category = Status
-Accuracy = 0
-TotalPP = 5
-Target = NearAlly
-FunctionCode = HealTargetDependingOnMoonglow
-Flags = CanProtect,CanMagicCoat
-Description = The user restores the target's HP by 50% of its max hp, or 2/3rds in moonglow.
 #-------------------------------
 [GEOMANCY]
 Name = Geomancy
@@ -2970,7 +2959,7 @@ Category = Special
 Power = 120
 Accuracy = 100
 TotalPP = 10
-Target = RandomNearFoe
+Target = ClosestNearFoe
 FunctionCode = Rampage
 Flags = CanProtect,CanMirrorMove,Dance
 Description = The user attacks by scattering petals for three turns.
@@ -3035,18 +3024,6 @@ Target = NearOther
 FunctionCode = Basic
 Flags = CanProtect,CanMirrorMove,HighCriticalHitRate,Blade
 Description = The user handles a sharp leaf like a sword and attacks by slashing. Critical hits twice as often.
-#-------------------------------
-[PETALBLIZZARD]
-Name = Petal Blizzard
-Type = GRASS
-Category = Special
-Power = 90
-Accuracy = 100
-TotalPP = 12
-Target = AllNearOthers
-FunctionCode = Basic
-Flags = CanProtect,CanMirrorMove,Wind
-Description = The user stirs up a violent petal blizzard and attacks everything around it.
 #-------------------------------
 [GRASSPLEDGE]
 Name = Grass Pledge
@@ -3167,7 +3144,7 @@ Accuracy = 100
 TotalPP = 12
 Target = NearOther
 FunctionCode = HealUserByHalfOfDamageDone
-Flags = CanProtect,CanMirrorMove,HighCriticalHitRate
+Flags = CanProtect,CanMirrorMove
 Description = A nutrient-draining attack. The user's HP is restored by half the damage taken by the target.
 #-------------------------------
 [BULLETSEED]
@@ -3918,7 +3895,7 @@ Description = The user attacks everything around it with the destructive power o
 [LASTRESORT]
 Name = Last Resort
 Type = NORMAL
-Category = Physical
+Category = Adaptive
 Power = 140
 Accuracy = 100
 TotalPP = 5
@@ -3982,22 +3959,10 @@ Category = Physical
 Power = 120
 Accuracy = 100
 TotalPP = 10
-Target = RandomNearFoe
+Target = ClosestNearFoe
 FunctionCode = Rampage
 Flags = CanProtect,CanMirrorMove
 Description = The user rampages and attacks for three turns.
-#-------------------------------
-[EGGBOMB]
-Name = Egg Bomb
-Type = NORMAL
-Category = Physical
-Power = 100
-Accuracy = 75
-TotalPP = 10
-Target = NearOther
-FunctionCode = Basic
-Flags = CanProtect,CanMirrorMove
-Description = A large egg is hurled at the target with maximum force to inflict damage.
 #-------------------------------
 [JUDGMENT]
 Name = Judgment
@@ -4038,7 +4003,7 @@ Description = Cloaking itself in high energy, the user slams into the target. Th
 [REVELATIONDANCE]
 Name = Revelation Dance
 Type = NORMAL
-Category = Special
+Category = Adaptive
 Power = 90
 Accuracy = 100
 TotalPP = 12
@@ -4066,7 +4031,7 @@ Category = Special
 Power = 110
 Accuracy = 100
 TotalPP = 10
-Target = RandomNearFoe
+Target = ClosestNearFoe
 FunctionCode = RampagePreventSleeping
 Flags = CanProtect,CanMirrorMove,Sound
 Description = The user attacks in an uproar for three turns. Over that time, no one can fall asleep.
@@ -4189,14 +4154,14 @@ Description = The target is hit with rhythmically launched punches that have a 2
 [FACADE]
 Name = Facade
 Type = NORMAL
-Category = Physical
+Category = Adaptive
 Power = 70
 Accuracy = 100
 TotalPP = 15
 Target = NearOther
 FunctionCode = DoubleDamageUserStatused
 Flags = CanProtect,CanMirrorMove
-Description = Doubles its power if the user has a status condition. Ignores burn Attack reduction.
+Description = Doubles its power if the user has a status condition. Ignores damage reduction from Burn or Frostbite.
 #-------------------------------
 [HEADBUTT]
 Name = Headbutt
@@ -4214,7 +4179,7 @@ Description = The user sticks out its head and attacks by charging into the foe.
 [RETALIATE]
 Name = Retaliate
 Type = NORMAL
-Category = Physical
+Category = Adaptive
 Power = 70
 Accuracy = 100
 TotalPP = 5
@@ -4226,7 +4191,7 @@ Description = Gets revenge for a fainted ally. If an ally fainted in the last tu
 [SECRETPOWER]
 Name = Secret Power
 Type = NORMAL
-Category = Physical
+Category = Adaptive
 Power = 70
 Accuracy = 100
 TotalPP = 15
@@ -4288,7 +4253,7 @@ Description = The target is stomped with a big foot. It has a 30% chance to make
 [COVET]
 Name = Covet
 Type = NORMAL
-Category = Physical
+Category = Adaptive
 Power = 60
 Accuracy = 100
 TotalPP = 20
@@ -4337,11 +4302,11 @@ Description = An attack that can be used only if the user is asleep. It has a 50
 [STRUGGLE]
 Name = Struggle
 Type = NORMAL
-Category = Physical
+Category = Adaptive
 Power = 50
 Accuracy = 0
 TotalPP = 1
-Target = RandomNearFoe
+Target = ClosestNearFoe
 FunctionCode = Struggle
 Flags = CanProtect,CantForce
 Description = Used only if the user has no PP. Uses the higher of the user's Attack or Sp. Atk stat. It also hurts the user.
@@ -4372,22 +4337,10 @@ Flags = CanProtect,CanMirrorMove
 EffectChance = 100
 Description = An attack that hits first and makes the target flinch. It only works the first turn the user is in battle.
 #-------------------------------
-[FALSESWIPE]
-Name = False Swipe
-Type = NORMAL
-Category = Physical
-Power = 40
-Accuracy = 100
-TotalPP = 30
-Target = NearOther
-FunctionCode = CannotMakeTargetFaint
-Flags = CanProtect,CanMirrorMove
-Description = A restrained attack that prevents the target from fainting. The target is left with at least 1 HP.
-#-------------------------------
 [HOLDBACK]
 Name = Hold Back
 Type = NORMAL
-Category = Special
+Category = Adaptive
 Power = 40
 Accuracy = 100
 TotalPP = 30
@@ -4399,7 +4352,7 @@ Description = The user holds back when it attacks, and the target is left with a
 [PAYDAY]
 Name = Pay Day
 Type = NORMAL
-Category = Physical
+Category = Adaptive
 Power = 50
 Accuracy = 100
 TotalPP = 15
@@ -4584,7 +4537,7 @@ Description = The user flails about aimlessly to attack. It becomes more powerfu
 [NATURALGIFT]
 Name = Natural Gift
 Type = NORMAL
-Category = Physical
+Category = Adaptive
 Power = 120
 Accuracy = 100
 TotalPP = 12
@@ -4633,14 +4586,14 @@ Description = The user chomps hard on the target with its sharp front fangs. It 
 [TRUMPCARD]
 Name = Trump Card
 Type = NORMAL
-Category = Special
-Power = 40
+Category = Adaptive
+Power = 160
 Accuracy = 0
-TotalPP = 5
+TotalPP = 1
 Target = NearOther
-FunctionCode = ScalesWithLostPP
-Flags = CanProtect,CanMirrorMove
-Description = Has 40 more base power for each PP missing.
+FunctionCode = AlwaysHits
+Flags = CanMirrorMove
+Description = The user unleashes its ultimate move. Can't miss and skips protections. Only one use per battle.
 #-------------------------------
 [AFTERYOU]
 Name = After You
@@ -5224,7 +5177,7 @@ Type = NORMAL
 Category = Status
 Accuracy = 0
 TotalPP = 12
-Target = NearOther
+Target = Ally
 Priority = 3
 FunctionCode = RedirectAllMovesToTarget
 Flags = CanProtect,CanMagicCoat
@@ -5469,7 +5422,7 @@ TotalPP = 15
 Target = NearOther
 FunctionCode = Poison
 Flags = CanProtect,CanMirrorMove,HighCriticalHitRate,Blade
-EffectChance = 10
+EffectChance = 20
 Description = A slashing attack with a poisonous blade that has a 20% chance to poison. Critical hits twice as often.
 #-------------------------------
 [SLUDGE]
@@ -5706,14 +5659,14 @@ Description = Heals the user for 50% of the damage caused. Power doubles if the 
 [PHOTONGEYSER]
 Name = Photon Geyser
 Type = PSYCHIC
-Category = Special
+Category = Adaptive
 Power = 100
 Accuracy = 100
 TotalPP = 5
 Target = NearOther
-FunctionCode = CategoryDependsOnHigherDamageIgnoreTargetAbility
+FunctionCode = IgnoreTargetAbility
 Flags = CanProtect,CanMirrorMove
-Description = The user attacks with a pillar of light. Uses the higher of the user's Attack or Sp. Atk stat.
+Description = The user attacks with a pillar of light. This ignores their ability.
 #-------------------------------
 [PSYCHIC]
 Name = Psychic
@@ -6130,7 +6083,7 @@ TotalPP = 15
 Target = User
 Priority = -6
 FunctionCode = SwitchOutUserStatusMove
-Description = Use it to flee from any wild Pokémon, or switch out of other battles.
+Description = The user switches out to a party Pokémon in waiting. Always goes last. Ends wild battles.
 #-------------------------------
 [TRICK]
 Name = Trick
@@ -6469,7 +6422,7 @@ Power = 90
 Accuracy = 100
 TotalPP = 15
 Target = NearOther
-FunctionCode = LowerTargetSpDef2
+FunctionCode = LowerTargetSpDef1
 Flags = CanProtect,CanMirrorMove,Pulse
 EffectChance = 20
 Description = The user gathers all its light energy and releases it at once. It has a 20% chance to lower Sp. Def.
@@ -6745,7 +6698,7 @@ Name = Steam Eruption
 Type = WATER
 Category = Special
 Power = 110
-Accuracy = 95
+Accuracy = 100
 TotalPP = 5
 Target = NearOther
 FunctionCode = Burn
@@ -6979,15 +6932,15 @@ FunctionCode = HitTwoToFiveTimes
 Flags = CanProtect,CanMirrorMove
 Description = The user hits the target with throwing stars 2-5 times in a row. This move always goes first.
 #-------------------------------
-[RAIN]
-Name = Rain
+[RAINSTORM]
+Name = Rainstorm
 Type = WATER
 Category = Status
 Accuracy = 0
 TotalPP = 10
 Target = BothSides
-FunctionCode = StartRain8
-Description = Summons rain for eight turns, boosting Water-type attacks and hindering most others.
+FunctionCode = StartRainstorm8
+Description = Summons rainstorm for eight turns, boosting Water-type attacks and hindering most others.
 #-------------------------------
 [SOAK]
 Name = Soak
@@ -7236,7 +7189,7 @@ Category = Physical
 Power = 135
 Accuracy = 100
 TotalPP = 10
-Target = RandomNearFoe
+Target = ClosestNearFoe
 FunctionCode = Rampage
 Flags = CanProtect,CanMirrorMove
 Description = The user rampages and attacks while spewing flames for three turns.

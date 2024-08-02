@@ -249,7 +249,8 @@ class PokeBattle_Move_UseChoiceOf3RandomNonSignatureStatusMoves < PokeBattle_Mov
     end
 
     def getEffectScore(_user, _target)
-        return 80
+        echoln("The AI will never use Discovered Power")
+        return -1000
     end
 end
 
@@ -285,6 +286,78 @@ class PokeBattle_Move_UseTwoRandomDragonThemedMoves < PokeBattle_Move
 
     def getEffectScore(_user, _target)
         echoln("The AI will never use Dragon Invocation")
+        return -1000
+    end
+end
+
+#===============================================================================
+# The user is given the choice of using one of 3 randomly chosen moves (Selective Memory)
+# in a predetermined list of non-Psychic attacks.
+#===============================================================================
+class PokeBattle_Move_UseChoiceOf3RandomNonSignatureNonPsychicDamagingMoves < PokeBattle_Move
+    def callsAnotherMove?; return true; end
+
+    def initialize(battle, move)
+        super
+        @selectableMoves = %i[
+            HYPERVOICE
+            FLAMETHROWER
+            BUBBLEBLASTER
+            ENERGYBALL
+            THUNDERBOLT
+            ICEBEAM
+            AURASPHERE
+            MIASMA
+            EARTHPOWER
+            COLDFRONT
+            BUGBUZZ
+            POWERGEM
+            SHADOWBALL
+            DRAGONPULSE
+            DARKALLURE
+            FLASHCANNON
+            MOONBLAST
+            CLEARSMOG
+            HEX
+            TRICKYTOXINS
+            CHARGEBEAM
+            BLUSTER
+            BLOSSOM
+            HYPERBEAM
+        ]
+    end
+
+    def resolutionChoice(user)
+        validMoves = []
+        validMoveNames = []
+        until validMoves.length == 3
+            movePossibility = @selectableMoves.sample
+            unless validMoves.include?(movePossibility)
+                validMoves.push(movePossibility)
+                validMoveNames.push(getMoveName(movePossibility))
+            end
+        end
+
+        if @battle.autoTesting
+            @chosenMove = validMoves.sample
+        elsif !user.pbOwnedByPlayer? # Trainer AI
+            @chosenMove = validMoves[0]
+        else
+            chosenIndex = @battle.scene.pbShowCommands(_INTL("Which move should #{user.pbThis(true)} use?"),validMoveNames,0)
+            @chosenMove = validMoves[chosenIndex]
+        end
+    end
+
+    def pbEffectGeneral(user)
+        user.pbUseMoveSimple(@chosenMove) if @chosenMove
+    end
+
+    def resetMoveUsageState
+        @chosenMove = nil
+    end
+
+    def getEffectScore(_user, _target)
+        echoln("The AI will never use Selective Memory")
         return -1000
     end
 end
