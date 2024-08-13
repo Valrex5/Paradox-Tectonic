@@ -4459,3 +4459,12 @@ NamePlural = Fairy Feathers
 Pocket = 5
 Price = 1000
 Description = A gleaming feather that boosts the holder's Fairy-type moves by 20%.
+#-------------------------------
+[IMPERFECTBRACELET]
+Name = Imperfect Bracelet
+NamePlural = Imperfect Bracelet
+Pocket = 8
+Price = 0
+FieldUse = OnPokemon
+Flags = KeyItem
+Description = Use on certain Pokémon to switch it into another one of its forms.
