@@ -4,13 +4,13 @@
 
 BattleHandlers::AbilityOnSwitchIn.add(:DRIZZLE,
   proc { |ability, battler, battle, aiCheck|
-      pbBattleWeatherAbility(ability, :Rain, battler, battle, false, true, aiCheck)
+      pbBattleWeatherAbility(ability, :Rainstorm, battler, battle, false, true, aiCheck)
   }
 )
 
 BattleHandlers::AbilityOnSwitchIn.add(:DROUGHT,
   proc { |ability, battler, battle, aiCheck|
-      pbBattleWeatherAbility(ability, :Sun, battler, battle, false, true, aiCheck)
+      pbBattleWeatherAbility(ability, :Sunshine, battler, battle, false, true, aiCheck)
   }
 )
 
@@ -40,31 +40,31 @@ BattleHandlers::AbilityOnSwitchIn.add(:MOONGAZE,
 
 BattleHandlers::AbilityOnSwitchIn.add(:PRIMORDIALSEA,
   proc { |ability, battler, battle, aiCheck|
-      pbBattleWeatherAbility(ability, :HeavyRain, battler, battle, true, true, aiCheck)
+      pbBattleWeatherAbility(ability, :HeavyRain, battler, battle, true, true, aiCheck, baseDuration: -1)
   }
 )
 
 BattleHandlers::AbilityOnSwitchIn.add(:DESOLATELAND,
   proc { |ability, battler, battle, aiCheck|
-      pbBattleWeatherAbility(ability, :HarshSun, battler, battle, true, true, aiCheck)
+      pbBattleWeatherAbility(ability, :HarshSun, battler, battle, true, true, aiCheck, baseDuration: -1)
   }
 )
 
 BattleHandlers::AbilityOnSwitchIn.add(:DELTASTREAM,
   proc { |ability, battler, battle, aiCheck|
-      pbBattleWeatherAbility(ability, :StrongWinds, battler, battle, true, true, aiCheck)
+      pbBattleWeatherAbility(ability, :StrongWinds, battler, battle, true, true, aiCheck, baseDuration: -1)
   }
 )
 
 BattleHandlers::AbilityOnSwitchIn.add(:SATURNALSKY,
   proc { |ability, battler, battle, aiCheck|
-      pbBattleWeatherAbility(ability, :RingEclipse, battler, battle, true, true, aiCheck)
+      pbBattleWeatherAbility(ability, :RingEclipse, battler, battle, true, true, aiCheck, baseDuration: -1)
   }
 )
 
 BattleHandlers::AbilityOnSwitchIn.add(:STYGIANNIGHT,
   proc { |ability, battler, battle, aiCheck|
-      pbBattleWeatherAbility(ability, :BloodMoon, battler, battle, true, true, aiCheck)
+      pbBattleWeatherAbility(ability, :BloodMoon, battler, battle, true, true, aiCheck, baseDuration: -1)
   }
 )
 
@@ -107,16 +107,18 @@ BattleHandlers::AbilityOnSwitchIn.add(:SCOUREDSILHOUETTE,
 # Ability warnings on entry
 #######################################################
 
-GameData::Ability.getByFlag("MoldBreaking").each do |abilityID|
-    BattleHandlers::AbilityOnSwitchIn.add(abilityID,
-        proc { |ability, battler, battle, aiCheck|
-            next 0 if aiCheck
-            battle.pbShowAbilitySplash(battler, ability)
-            battle.pbDisplay(_INTL("{1} breaks the mold!", battler.pbThis))
-            battle.pbHideAbilitySplash(battler)
-        }
-    )
-end
+BattleHandlers::LoadDataDependentAbilityHandlers += proc {
+  GameData::Ability.getByFlag("MoldBreaking").each do |abilityID|
+      BattleHandlers::AbilityOnSwitchIn.add(abilityID,
+          proc { |ability, battler, battle, aiCheck|
+              next 0 if aiCheck
+              battle.pbShowAbilitySplash(battler, ability)
+              battle.pbDisplay(_INTL("{1} breaks the mold!", battler.pbThis))
+              battle.pbHideAbilitySplash(battler)
+          }
+      )
+  end
+}
 
 BattleHandlers::AbilityOnSwitchIn.add(:PRESSURE,
 proc { |ability, battler, battle, aiCheck|
@@ -225,7 +227,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:KILLJOY,
   proc { |ability, battler, battle, aiCheck|
       next 0 if aiCheck
       battle.pbShowAbilitySplash(battler, ability)
-      battle.pbDisplay(_INTL("{1} is a killjoy! No one is allowed to dance!", battler.pbThis))
+      battle.pbDisplay(_INTL("{1} is a killjoy! No one is allowed to dance or make sound!", battler.pbThis))
       battle.pbHideAbilitySplash(battler)
   }
 )
@@ -327,6 +329,15 @@ BattleHandlers::AbilityOnSwitchIn.add(:SWIFTSTOMPS,
       battle.pbDisplay(_INTL("{1} is ready to stomp the opposition!", battler.pbThis))
       battle.pbHideAbilitySplash(battler)
   }
+)
+
+BattleHandlers::AbilityOnSwitchIn.add(:BREAKTHROUGH,
+proc { |ability, battler, battle, aiCheck|
+    next 0 if aiCheck
+    battle.pbShowAbilitySplash(battler, ability)
+    battle.pbDisplay(_INTL("{1} overpowers type immunities!", battler.pbThis))
+    battle.pbHideAbilitySplash(battler)
+}
 )
 
 ##########################################
@@ -713,7 +724,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:PRIMEVALIMPOSTER,
       battler.boss = false
       battle.bossBattle = false
 
-      trainerClone = NPCTrainer.cloneFromPlayer($Trainer)
+      trainerClone = NPCTrainer.cloneFromPlayer($Trainer,true)
       battle.opponent = [trainerClone]
 
       party = battle.pbParty(battler.index)
@@ -1037,11 +1048,11 @@ BattleHandlers::AbilityOnSwitchIn.add(:HOLIDAYCHEER,
       end
       next 0 unless anyHealing
       score = 0
-      battle.pbShowAbilitySplash(battler, ability)
+      battle.pbShowAbilitySplash(battler, ability) unless aiCheck
       battle.eachSameSideBattler(battler.index) do |b|
             score += b.applyFractionalHealing(0.25, aiCheck: aiCheck)
       end
-      battle.pbHideAbilitySplash(battler)
+      battle.pbHideAbilitySplash(battler) unless aiCheck
       next score if aiCheck
   }
 )
@@ -1049,5 +1060,19 @@ BattleHandlers::AbilityOnSwitchIn.add(:HOLIDAYCHEER,
 BattleHandlers::AbilityOnSwitchIn.add(:EXTRASCOOP,
   proc { |ability, battler, battle, aiCheck|
     next battler.applyFractionalHealing(1.0/4.0, ability: ability, canOverheal: true, aiCheck: aiCheck)
+  }
+)
+
+BattleHandlers::AbilityOnSwitchIn.add(:LASTGASP,
+  proc { |ability, battler, battle, aiCheck|
+    next 0 if aiCheck
+    battler.showMyAbilitySplash(ability)
+    battler.applyEffect(:LastGasp)
+    if battler.boss?
+      battler.applyEffect(:PerishSong, 12)
+    else
+      battler.applyEffect(:PerishSong, 3)
+    end
+    battler.hideMyAbilitySplash
   }
 )

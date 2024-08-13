@@ -607,11 +607,11 @@ def getWeatherSettingEffectScore(weatherType, user, battle, finalDuration = 4, c
     hasSynergyAbility = false
     hasSynergisticType = false
     case weatherType
-    when :Sun
+    when :Sunshine
         weatherMatchesPolicy = true if user.ownersPolicies.include?(:SUN_TEAM)
         hasSynergyAbility = true if user.hasActiveAbilityAI?(GameData::Ability.getByFlag("SunSynergy"))
         hasSynergisticType = true if user.pbHasAttackingType?(:FIRE)
-    when :Rain
+    when :Rainstorm
         weatherMatchesPolicy = true if user.ownersPolicies.include?(:RAIN_TEAM)
         hasSynergyAbility = true if user.hasActiveAbilityAI?(GameData::Ability.getByFlag("RainSynergy"))
         hasSynergisticType = true if user.pbHasAttackingType?(:WATER)
@@ -918,6 +918,18 @@ def getSafeguardEffectScore(user, duration)
         score += duration * 5
         score += 10 if b.hasSpotsForStatus?
     end
+    
+    return score
+end
+
+def getEnchantmentEffectScore(user, duration)
+    score = 0
+    duration -= user.pbOwnSide.countEffect(:NaturalProtection) if user.pbOwnSide.effectActive?(:NaturalProtection)
+    user.battle.eachSameSideBattler(user.index) do |b|
+        score += duration * 5
+        score += 20 if b.burned? || b.frostbitten? || b.poisoned? || b.leeched?
+    end
+    score += 30 if user.battle.sandy? || user.battle.icy?
     
     return score
 end

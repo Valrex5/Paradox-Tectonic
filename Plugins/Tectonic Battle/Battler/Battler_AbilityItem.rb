@@ -263,7 +263,7 @@ class PokeBattle_Battler
     def canConsumePinchBerry?(check_gluttony = true)
         return false unless canConsumeBerry?
         return true if @hp <= @totalhp / 4
-        return true if @hp <= @totalhp / 2 && (!check_gluttony || hasActiveAbility?(:GLUTTONY))
+        return true if @hp <= @totalhp / 2 && (!check_gluttony || hasActiveAbility?(%i[GLUTTONY GOURMAND]))
         return false
     end
 
@@ -296,9 +296,9 @@ class PokeBattle_Battler
         @battle.triggerBattlerConsumedItemDialogue(self, item)
         if recoverable
             setRecycleItem(item)
-            if itemData.is_berry?
+            if itemData.is_berry? && hasActiveAbility?(:CUDCHEW)
                 applyEffect(:CudChew, 2)
-                applyEffect(:CudChewItem, item) if hasActiveAbility?(:CUDCHEW)
+                applyEffect(:CudChewItem, item)
             end
         end
         setBelched if belch && itemData.is_berry?

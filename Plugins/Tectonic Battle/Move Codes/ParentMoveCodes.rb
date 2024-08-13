@@ -84,7 +84,7 @@ class PokeBattle_Struggle < PokeBattle_Move
         @function   = "Struggle"
         @baseDamage = 50
         @type       = nil
-        @category   = 0
+        @category   = 3
         @accuracy   = 0
         @pp         = -1
         @target     = 0
@@ -94,11 +94,6 @@ class PokeBattle_Struggle < PokeBattle_Move
         @calcType   = nil
         @powerBoost = false
         @snatched   = false
-        @calculated_category = 0
-    end
-
-    def calculateCategory(user, _targets)
-        return selectBestCategory(user)
     end
 
     def pbEffectAfterAllHits(user, target)
@@ -480,7 +475,7 @@ end
 class PokeBattle_FixedDamageMove < PokeBattle_Move
     def pbFixedDamage(_user, _target); return 1; end
 
-    def pbCalcTypeModSingle(moveType, defType, user, target)
+    def pbCalcTypeModSingle(moveType, defType, user=nil, target=nil)
         ret = super
         ret = Effectiveness::NORMAL_EFFECTIVE_ONE unless Effectiveness.ineffective?(ret)
         return ret
@@ -1020,10 +1015,13 @@ class PokeBattle_DrainMove < PokeBattle_Move
 
     def shouldDrain?(_user, _target); return true; end
 
+    def canOverheal?(_user, _target); return false; end
+
     def pbEffectAgainstTarget(user, target)
         return if target.damageState.hpLost <= 0 || !shouldDrain?(user, target)
         hpGain = (target.damageState.hpLost * drainFactor(user, target)).round
-        user.pbRecoverHPFromDrain(hpGain, target)
+        canOverheal = canOverheal?(user, target)
+        user.pbRecoverHPFromDrain(hpGain, target, canOverheal: canOverheal)
     end
 
     def getDamageBasedEffectScore(user,target,damage)
@@ -1455,7 +1453,7 @@ end
 
 # Each subclass must have an initialization method that defines the @typeHated variable
 class PokeBattle_TypeSuperMove < PokeBattle_Move
-    def pbCalcTypeModSingle(moveType, defType, user, target)
+    def pbCalcTypeModSingle(moveType, defType, user=nil, target=nil)
         effectiveness = super
         return effectiveness if Effectiveness.ineffective?(effectiveness)
         return Effectiveness::SUPER_EFFECTIVE_ONE if defType == @typeHated
@@ -1486,7 +1484,7 @@ module EmpoweredMove
         if @battle.pbSideSize(user.index) < 3
             summonMessage ||= _INTL("#{user.pbThis} summons another Avatar!")
             @battle.pbDisplay(summonMessage)
-            @battle.summonAvatarBattler(species, user.level, user.index % 2)
+            @battle.summonAvatarBattler(species, user.level, 0, user.index % 2)
         end
     end
 end

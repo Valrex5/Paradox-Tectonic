@@ -10,30 +10,41 @@ end
 def pbWarpToMap
     mapid = pbListScreen(_INTL("WARP TO MAP"), MapLister.new(pbDefaultMap))
     if mapid > 0
-        map = Game_Map.new
-        map.setup(mapid)
-        success = false
-        x = 0
-        y = 0
-        100.times do
-            x = rand(map.width)
-            y = rand(map.height)
-            next unless map.passableStrict?(x, y, 0, $game_player)
-            blocked = false
-            for event in map.events.values
-                blocked = true if event.at_coordinate?(x, y) && !event.through && (event.character_name != "")
-            end
-            next if blocked
-            success = true
-            break
-        end
-        unless success
-            x = rand(map.width)
-            y = rand(map.height)
-        end
+        x, y = getRandomWarpPointOnMap(mapid)
         return [mapid, x, y]
     end
     return nil
+end
+
+def getRandomWarpPointOnMap(mapid, avoidEdges = false)
+    map = Game_Map.new
+    map.setup(mapid)
+    success = false
+    x = 0
+    y = 0
+
+    lowestX = avoidEdges ? 8 : 0
+    lowestY = avoidEdges ? 8 : 0
+    highestX = avoidEdges ? (map.width-8) : map.width
+    highestY = avoidEdges ? (map.height-8) : map.height
+
+    100.times do
+        x = rand(lowestX..highestX)
+        y = rand(lowestY..highestY)
+        next unless map.passableStrict?(x, y, 0, $game_player)
+        blocked = false
+        for event in map.events.values
+            blocked = true if event.at_coordinate?(x, y) && !event.through && (event.character_name != "")
+        end
+        next if blocked
+        success = true
+        break
+    end
+    unless success
+        x = rand(map.width)
+        y = rand(map.height)
+    end
+    return [x,y]
 end
 
 #===============================================================================
@@ -527,7 +538,7 @@ end
 #===============================================================================
 # Text import/export for localisation
 #===============================================================================
-def pbExtractText
+def pbExtractText(untranslatedOnly = false)
     msgwindow = pbCreateMessageWindow
     if safeExists?("intl.txt") &&
        !pbConfirmMessageSerious(_INTL("intl.txt already exists. Overwrite it?"))
@@ -535,7 +546,11 @@ def pbExtractText
         return
     end
     pbMessageDisplay(msgwindow, _INTL("Please wait.\\wtnp[0]"))
-    MessageTypes.extract("PBS\\intl_.txt")
+    if untranslatedOnly
+        MessageTypes.extractUntranslated("PBS\\intl_.txt")
+    else
+        MessageTypes.extract("PBS\\intl_.txt")
+    end
     pbMessageDisplay(msgwindow, _INTL("All text in the game was extracted and saved to PBS\\intl_.txt.\1"))
     pbMessageDisplay(msgwindow,
         _INTL("To localize the text for a particular language, translate every second line in the file.\1"))

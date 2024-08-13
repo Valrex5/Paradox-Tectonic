@@ -199,6 +199,8 @@ BattleHandlers::DamageCalcUserAbility.add(:IRONHEEL,
   }
 )
 
+BattleHandlers::DamageCalcUserAbility.copy(:IRONHEEL, :HEAVYDUTYHOOVES)
+
 BattleHandlers::DamageCalcUserAbility.add(:BADOMEN,
   proc { |ability, user, target, move, mults, _baseDmg, type, aiCheck|
     if move.foretoldMove?
@@ -616,6 +618,25 @@ BattleHandlers::DamageCalcUserAbility.add(:STEEPFLYING,
 BattleHandlers::DamageCalcUserAbility.add(:GRIPSTRENGTH,
   proc { |ability, user, target, move, mults, _baseDmg, type, aiCheck|
     if move.function == "BindTarget3" # 3-turn DOT trapping moves
+      mults[:base_damage_multiplier] *= 1.5
+      user.aiLearnsAbility(ability) unless aiCheck
+    end
+  }
+)
+
+UNCONVENTIONAL_MOVE_CODES = %w[
+    AttacksWithTargetsStats
+    AttacksWithDefense
+    AttacksWithSpDef
+    DoesPhysicalDamage
+    DoesSpecialDamage
+    TargetsAttackDefends
+    TargetsSpAtkDefends
+].freeze
+
+BattleHandlers::DamageCalcUserAbility.add(:UNCONVENTIONAL,
+  proc { |ability, user, target, move, mults, _baseDmg, type, aiCheck|
+    if UNCONVENTIONAL_MOVE_CODES.include?(move.function)
       mults[:base_damage_multiplier] *= 1.5
       user.aiLearnsAbility(ability) unless aiCheck
     end

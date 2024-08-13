@@ -204,7 +204,7 @@ GameData::Move.get(@effects[:GorillaTactics]).name)
         return true if skipAccuracyCheck
 
         # Check status problems and continue their effects/cure them
-        if pbHasStatus?(:SLEEP)
+        if asleep?
             if aiCheck
                 if willStayAsleepAI? && !move.usableWhenAsleep?
                     echoln("\t\t[AI FAILURE CHECK] #{pbThis} rejects the move #{move.id} due to it being predicted to stay asleep this turn")
@@ -419,7 +419,7 @@ animationName, show_message) do
             @battle.triggerImmunityDialogue(user, target, true) if showMessages
             return true
         end
-        if airborneImmunity?(user, target, move, showMessages)
+        if airborneImmunity?(user, target, move, showMessages, aiCheck)
             PBDebug.log("[Target immune] #{target.pbThis}'s immunity due to being airborne")
             return true
         end
@@ -442,9 +442,9 @@ target.pbThis(true)))
         return false
     end
 
-    def airborneImmunity?(user, target, move, showMessages = true)
+    def airborneImmunity?(user, target, move, showMessages = true, aiCheck = false)
         # Airborne-based immunity to Ground moves
-        if move.damagingMove? && move.calcType == :GROUND && target.airborne? && !move.hitsFlyingTargets?
+        if move.damagingMove?(aiCheck) && move.calcType == :GROUND && target.airborne? && !move.hitsFlyingTargets?
             levitationAbility = target.hasLevitate?
             if levitationAbility && !@battle.moldBreaker
                 if showMessages
@@ -519,8 +519,8 @@ target.pbThis(true)))
         end
     end
 
-    def onMoveFailed(move)
-        @lastMoveFailed = true
+    def onMoveFailed(move, affectsTrackers = true)
+        @lastMoveFailed = true if affectsTrackers
         # Slap stick
         eachOpposing do |b|
             next unless b.hasActiveAbility?(:SLAPSTICK)

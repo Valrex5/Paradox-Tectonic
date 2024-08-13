@@ -54,8 +54,7 @@ class PokeBattle_Battler
         aggravate = @battle.pbCheckOpposingAbility(:AGGRAVATE, @index) && !struggle
         damageAmount = getFractionalDamageAmount(fraction,basedOnCurrentHP,aggravate: aggravate,struggle: struggle)
         
-        showDamageAnimation = false if aiCheck
-        if showDamageAnimation
+        if showDamageAnimation && !aiCheck && !@dummy
             @damageState.displayedDamage = damageAmount
             @battle.scene.pbDamageAnimation(self,0,true)
         end
@@ -65,26 +64,33 @@ class PokeBattle_Battler
         else
             oldHP = @hp
             pbReduceHP(damageAmount, false)
-            if entryCheck
-                swapped = pbEntryHealthLossChecks(oldHP)
-                return swapped
-            else
-                pbHealthLossChecks(oldHP)
+            if @dummy
                 return damageAmount
+            else
+                if entryCheck
+                    swapped = pbEntryHealthLossChecks(oldHP)
+                    return swapped
+                else
+                    pbHealthLossChecks(oldHP)
+                    return damageAmount
+                end
             end
         end
     end
 
     def getFractionalDamageAmount(fraction,basedOnCurrentHP=false,aggravate: false,struggle: false)
         return 0 unless takesIndirectDamage?
-        fraction /= BOSS_HP_BASED_EFFECT_RESISTANCE if boss?
+        fraction *= hpBasedEffectResistance if boss?
         fraction *= 1.5 if aggravate
         if basedOnCurrentHP
             damageAmount = @hp * fraction
         else
             damageAmount = @totalhp * fraction
         end
-        damageAmount *= 0.66 if hasTribeBonus?(:ANIMATED) && !struggle
+        unless struggle
+            damageAmount *= 0.66 if hasTribeBonus?(:ANIMATED)
+            damageAmount *= 0.66 if pbOwnSide.effectActive?(:NaturalProtection)
+        end
         damageAmount = damageAmount.ceil
         return damageAmount
     end
@@ -94,6 +100,7 @@ class PokeBattle_Battler
         return if hasActiveAbility?(:ROCKHEAD)
         # return if @battle.pbAllFainted?(@idxOpposingSide)
         damage *= 0.66 if hasTribeBonus?(:ANIMATED)
+        damage *= 0.66 if pbOwnSide.effectActive?(:NaturalProtection)
         damage = damage.round
         damage = 1 if damage < 1
         if !cushionRecoil && hasActiveAbility?(:KICKBACK)
@@ -167,11 +174,17 @@ class PokeBattle_Battler
                     @battle.pbDisplay(_INTL("{1}'s lost HP.", pbThis))
                 end
             end
+
+            if amt.negative?
+                pbItemHPHealCheck
+                pbAbilitiesOnDamageTaken(oldHP)
+                pbFaint if fainted?
+            end
         end
         return amt
     end
 
-    def pbRecoverHPFromDrain(drainAmount, target)
+    def pbRecoverHPFromDrain(drainAmount, target, canOverheal: false)
         if target.hasActiveAbility?(:LIQUIDOOZE)
             @battle.pbShowAbilitySplash(target, :LIQUIDOOZE)
             oldHP = @hp
@@ -181,13 +194,13 @@ class PokeBattle_Battler
             pbItemHPHealCheck
             pbAbilitiesOnDamageTaken(oldHP)
             pbFaint if fainted?
-        elsif canHeal?(hasActiveAbility?(:GORGING))
+        elsif canHeal?(canOverheal || hasActiveAbility?(:GORGING))
             if hasActiveItem?(:BIGROOT)
                 drainAmount = (drainAmount * 1.3).floor
                 aiLearnsItem(:BIGROOT)
             end
-            pbRecoverHP(drainAmount, true, true, false, canOverheal: hasActiveAbility?(:GORGING))
-            if overhealed?
+            pbRecoverHP(drainAmount, true, true, false, canOverheal: canOverheal || hasActiveAbility?(:GORGING))
+            if overhealed? && hasActiveAbility?(:GORGING) && !canOverheal
                 showMyAbilitySplash(:GORGING)
                 @battle.pbDisplay(_INTL("{1} is loaded up with fluids!", pbThis))
                 hideMyAbilitySplash
@@ -249,7 +262,7 @@ class PokeBattle_Battler
     def getFractionalHealingAmount(fraction, canOverheal = false)
         return 0 unless canHeal?(canOverheal)
         healAmount = @totalhp * fraction
-        healAmount /= BOSS_HP_BASED_EFFECT_RESISTANCE.to_f if boss?
+        healAmount *= hpBasedEffectResistance if boss?
         return healAmount
     end
 
@@ -455,8 +468,8 @@ class PokeBattle_Battler
             if hasActiveAbility?(:FORECAST)
                 newForm = 0
                 case @battle.pbWeather
-                when :Sun, :HarshSun   then newForm = 1
-                when :Rain, :HeavyRain then newForm = 2
+                when :Sunshine, :HarshSun   then newForm = 1
+                when :Rainstorm, :HeavyRain then newForm = 2
                 when :Hail             then newForm = 3
                 when :Sandstorm        then newForm = 4
                 end
@@ -604,7 +617,8 @@ class PokeBattle_Battler
         pbChangeTypes(newSpecies)
         refreshDataBox
         @battle.pbDisplay(_INTL("{1} transformed into a {2}!", pbThis, newSpeciesData.name))
-        newAbility = newSpeciesData.legalAbilities[@pokemon.ability_index]
+        legalAbilities = newSpeciesData.legalAbilities
+        newAbility = legalAbilities[@pokemon.ability_index] || legalAbilities[0]
         replaceAbility(newAbility) unless hasAbility?(newAbility)
 
         newStats = @pokemon.getCalculatedStats(newSpecies)
@@ -619,7 +633,8 @@ class PokeBattle_Battler
     def pbHyperMode; end
 
     def getSubLife
-        subLife = @totalhp / 4
+        subLife = @totalhp / 4.0
+        subLife *= hpBasedEffectResistance
         subLife = 1 if subLife < 1
         return subLife.floor
     end

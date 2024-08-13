@@ -3,13 +3,14 @@
 #===============================================================================
 class Trainer
     attr_accessor :trainer_type
+    attr_accessor :trainer_type_label
     attr_accessor :name
     attr_accessor :id
     attr_accessor :language
     attr_accessor :party
-    attr_reader   :nameForHashing
+    attr_reader   :name_for_hashing
     attr_accessor :policies
-    attr_accessor	:tribalBonus
+    attr_accessor :tribalBonus
   
     def inspect
       str = super.chop
@@ -45,7 +46,10 @@ class Trainer
   
     #=============================================================================
   
-    def trainer_type_name; return GameData::TrainerType.get(@trainer_type).name;        end
+    def trainer_type_name
+        return GameData::TrainerType.get(@trainer_type_label).name if @trainer_type_label
+        return GameData::TrainerType.get(@trainer_type).name
+    end
     def base_money;        return GameData::TrainerType.get(@trainer_type).base_money;  end
     def gender;            return GameData::TrainerType.get(@trainer_type).gender;      end
     def male?;             return GameData::TrainerType.get(@trainer_type).male?;       end
@@ -203,13 +207,14 @@ class Trainer
     attr_accessor :lose_text
     attr_accessor :policyStates
     attr_accessor :flags
+    attr_reader   :name_for_hashing
   
-    def initialize(name, trainer_type, nameForHashing = nil)
+    def initialize(name, trainer_type, name_for_hashing = nil)
       super(name, trainer_type)
       @items     = []
       @lose_text = nil
       @policyStates = {}
-      @nameForHashing = nameForHashing || name
+      @name_for_hashing = name_for_hashing || name
       @flags     = []
     end
 
@@ -226,14 +231,36 @@ class Trainer
       return @flags.include?("HideIdentity")
     end
 
-    def self.cloneFromPlayer(playerObject)
+    def self.cloneFromPlayer(playerObject,deepClone)
       trainerClone = NPCTrainer.new("Clone of " + playerObject.name, playerObject.trainer_type)
       trainerClone.id = playerObject.id
 
       playerObject.party.each do |partyMember|
-          trainerClone.party.push(partyMember.clone)
+          trainerClone.party.push(partyMember.deep_clone)
       end
 
       return trainerClone
     end
+end
+
+class Object
+  def deep_clone
+    return @deep_cloning_obj if @deep_cloning
+    @deep_cloning_obj = clone
+    @deep_cloning_obj.instance_variables.each do |var|
+      val = @deep_cloning_obj.instance_variable_get(var)
+      begin
+        @deep_cloning = true
+        val = val.deep_clone
+      rescue TypeError,RuntimeError
+        next
+      ensure
+        @deep_cloning = false
+      end
+      @deep_cloning_obj.instance_variable_set(var, val)
+    end
+    deep_cloning_obj = @deep_cloning_obj
+    @deep_cloning_obj = nil
+    deep_cloning_obj
+  end
 end

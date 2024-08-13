@@ -15,11 +15,16 @@ module GameData
       attr_reader :flags
       attr_reader :real_description
       attr_reader :animation_move
-      attr_reader :signature_of
+      
       attr_reader :primeval
       attr_reader :zmove
       attr_reader :cut
       attr_reader :tectonic_new
+
+      # Metadata
+      attr_accessor :signature_of
+      attr_accessor :level_up_learners
+      attr_accessor :other_learners
   
       DATA = {}
       DATA_FILENAME = "moves.dat"
@@ -27,7 +32,7 @@ module GameData
       SCHEMA = {
       "Name"         => [:name,           "s"],
       "Type"         => [:type,           "e", :Type],
-      "Category"     => [:category,       "e", ["Physical", "Special", "Status"]],
+      "Category"     => [:category,       "e", ["Physical", "Special", "Status", "Adaptive"]],
       "Power"        => [:base_damage,    "u"],
       "Accuracy"     => [:accuracy,       "u"],
       "TotalPP"      => [:total_pp,       "u"],
@@ -64,6 +69,7 @@ module GameData
         @zmove              = hash[:zmove] || false
         @cut                = hash[:cut] || false
         @tectonic_new       = hash[:tectonic_new] || false
+        @defined_in_extension  = hash[:defined_in_extension]  || false
 
         @function_code = "Invalid" if @cut
       end
@@ -87,6 +93,11 @@ module GameData
         return false if @base_damage == 0
         return @category == 1
       end
+
+      def adaptive?
+        return false if @base_damage == 0
+        return @category == 2
+      end
   
       def hidden_move?
         GameData::Item.each do |i|
@@ -96,20 +107,15 @@ module GameData
       end
 
       def damaging?
-        return physical? || special?
+        return physical? || special? || adaptive?
       end
 
       def status?
         return !damaging?
       end
 
-      # The highest evolution of a line
-      def signature_of=(val)
-        @signature_of = val
-      end
-
-      def is_signature?()
-        return !@signature_of.nil?
+      def is_signature?
+        return !@signature_of.nil? || avatarSignature?
       end
 
       def empoweredMove?
@@ -119,6 +125,7 @@ module GameData
       def categoryLabel
         return _INTL("Physical") if physical?
         return _INTL("Special") if special?
+        return _INTL("Adaptive") if adaptive?
         return _INTL("Status")
       end
 
@@ -128,39 +135,40 @@ module GameData
         return priorityLabel
       end
 
+      def self.moveTags
+        return {
+            "Biting"    => _INTL("Bite"),
+            "Punch"     => _INTL("Punch"),
+            "Sound"     => _INTL("Sound"),
+            "Pulse"     => _INTL("Pulse"),
+            "Dance"     => _INTL("Dance"),
+            "Blade"     => _INTL("Blade"),
+            "Wind"      => _INTL("Wind"),
+            "Kicking"   => _INTL("Kick"),
+        }
+      end
+
       def tagLabel
-        category = nil
         @flags.each do |flag|
-          case flag
-          when "Biting"
-              category = _INTL("Bite")
-          when "Punch"
-              category = _INTL("Punch")
-          when "Sound"
-              category = _INTL("Sound")
-          when "Pulse"
-              category = _INTL("Pulse")
-          when "Dance"
-              category = _INTL("Dance")
-          when "Blade"
-              category = _INTL("Blade")
-          when "Wind"
-              category = _INTL("Wind")
-          when "Kicking"
-              category = _INTL("Kick")
-          end
+          next unless GameData::Move.moveTags.key?(flag)
+          return GameData::Move.moveTags[flag]
         end
-        return category
+        return nil
       end
 
       def can_be_forced?
         return !@flags.include?("CantForce")
       end
 
+      def avatarSignature?
+        return @flags.include?("AvatarSignature")
+      end
+
       def learnable?
         return false if @cut
         return false if @primeval
         return false if @zmove
+        return false if avatarSignature?
         return true
       end
 
@@ -170,6 +178,20 @@ module GameData
         return false if @zmove
         return false if @tectonic_new
         return true
+      end
+
+      # Yields all data in order of their id_number.
+      def self.each
+        keys = self::DATA.keys.sort { |a, b|
+            moveDataA = self::DATA[a]
+            moveDataB = self::DATA[b]
+            if moveDataA.type == moveDataB.type
+                moveDataA.id <=> self::DATA[b].id
+            else
+                GameData::Type.get(moveDataA.type).id_number <=> GameData::Type.get(moveDataB.type).id_number
+            end
+        }
+        keys.each { |key| yield self::DATA[key] if !key.is_a?(Integer) }
       end
     end
 end
@@ -201,11 +223,17 @@ module Compiler
     move_descriptions = []
     move_hash         = nil
     idx = 0
-    ["PBS/moves.txt","PBS/moves_new.txt","PBS/moves_primeval.txt","PBS/moves_z.txt","PBS/moves_cut.txt"].each do |path|
+    baseFiles = ["PBS/moves.txt","PBS/moves_new.txt","PBS/moves_primeval.txt","PBS/moves_z.txt","PBS/moves_cut.txt"]
+    moveTextFiles = []
+    moveTextFiles.concat(baseFiles)
+    moveExtensions = Compiler.get_extensions("moves")
+    moveTextFiles.concat(moveExtensions)
+    moveTextFiles.each do |path|
       primeval = path == "PBS/moves_primeval.txt"
       cut = path == "PBS/moves_cut.txt"
-      tectonic_new = path == "PBS/moves_new.txt"
+      tectonic_new = (path == "PBS/moves_new.txt") || moveExtensions.include?(path)
       zmove = path == "PBS/moves_z.txt"
+      baseFile = baseFiles.include?(path)
 
       pbCompilerEachPreppedLine(path) { |line, line_no|
         idx += 1
@@ -217,7 +245,7 @@ module Compiler
               raise _INTL("Move {1} is defined as a Status move with a non-zero base damage.\r\n{2}",
                           move_hash[:name], FileLineData.linereport)
             elsif (move_hash[:category] || 2) != 2 && (move_hash[:base_damage] || 0) == 0
-              print _INTL("Warning: Move {1} was defined as Physical or Special but had a base damage of 0. Changing it to a Status move.\r\n{2}",
+              print _INTL("Warning: Move {1} was defined as a Damaging move but had a base damage of 0. Changing it to a Status move.\r\n{2}",
                           move_hash[:name], FileLineData.linereport)
               move_hash[:category] = 2
             end
@@ -230,12 +258,13 @@ module Compiler
           end
           # Construct move hash
           move_hash = {
-            :id_number        => idx,
-            :id               => move_id,
-            :primeval         => primeval,
-            :cut              => cut,
-            :tectonic_new     => tectonic_new,
-            :zmove            => zmove,
+            :id_number            => idx,
+            :id                   => move_id,
+            :primeval             => primeval,
+            :cut                  => cut,
+            :tectonic_new         => tectonic_new,
+            :zmove                => zmove,
+            :defined_in_extension => !baseFile,
           }
         elsif line[/^\s*(\w+)\s*=\s*(.*)\s*$/]   # XXX=YYY lines
           if !move_hash
@@ -271,7 +300,7 @@ module Compiler
       if (move_hash[:category] || 2) == 2 && (move_hash[:base_damage] || 0) != 0
         raise _INTL("Move {1} is defined as a Status move with a non-zero base damage.\r\n{2}", line[2], FileLineData.linereport)
       elsif (move_hash[:category] || 2) != 2 && (move_hash[:base_damage] || 0) == 0
-        print _INTL("Warning: Move {1} was defined as Physical or Special but had a base damage of 0. Changing it to a Status move.\r\n{2}", line[2], FileLineData.linereport)
+        print _INTL("Warning: Move {1} was defined as a Damaging move but had a base damage of 0. Changing it to a Status move.\r\n{2}", line[2], FileLineData.linereport)
         move_hash[:category] = 2
       end
       GameData::Move.register(move_hash)
@@ -296,36 +325,66 @@ module Compiler
   def write_moves
     File.open("PBS/moves_new.txt", "wb") { |f|
       add_PBS_header_to_file(f)
-      GameData::Move.each do |m|
+      currentType = nil
+      GameData::Move.each_base do |m|
         next unless m.tectonic_new
+        if currentType != m.type
+            currentType = m.type
+            f.write("\#-------------------------------\r\n")
+            f.write("\#\t\t#{currentType} MOVES\r\n")
+        end
         write_move(f,m)
       end
     }
     File.open("PBS/moves_cut.txt", "wb") { |f|
       add_PBS_header_to_file(f)
-      GameData::Move.each do |m|
+      currentType = nil
+      GameData::Move.each_base do |m|
         next unless m.cut
+        if currentType != m.type
+            currentType = m.type
+            f.write("\#-------------------------------\r\n")
+            f.write("\#\t\t#{currentType} MOVES\r\n")
+        end
         write_move(f,m)
       end
     }
     File.open("PBS/moves_z.txt", "wb") { |f|
       add_PBS_header_to_file(f)
-      GameData::Move.each do |m|
+      currentType = nil
+      GameData::Move.each_base do |m|
         next unless m.zmove
+        if currentType != m.type
+            currentType = m.type
+            f.write("\#-------------------------------\r\n")
+            f.write("\#\t\t#{currentType} MOVES\r\n")
+        end
         write_move(f,m)
       end
     }
     File.open("PBS/moves_primeval.txt", "wb") { |f|
       add_PBS_header_to_file(f)
-      GameData::Move.each do |m|
+      currentType = nil
+      GameData::Move.each_base do |m|
         next unless m.primeval
+        if currentType != m.type
+            currentType = m.type
+            f.write("\#-------------------------------\r\n")
+            f.write("\#\t\t#{currentType} MOVES\r\n")
+        end
         write_move(f,m)
       end
     }
     File.open("PBS/moves.txt", "wb") { |f|
       add_PBS_header_to_file(f)
-      GameData::Move.each do |m|
+      currentType = nil
+      GameData::Move.each_base do |m|
         next unless m.canon_move?
+        if currentType != m.type
+            currentType = m.type
+            f.write("\#-------------------------------\r\n")
+            f.write("\#\t\t#{currentType} MOVES\r\n")
+        end
         write_move(f,m)
       end
     }
@@ -337,7 +396,7 @@ module Compiler
     f.write("[#{move.id}]\r\n")
     f.write("Name = #{move.real_name}\r\n")
     f.write("Type = #{move.type.to_s}\r\n")
-    category = ["Physical", "Special", "Status"][move.category]
+    category = ["Physical", "Special", "Status", "Adaptive"][move.category]
     f.write("Category = #{category}\r\n")
     f.write("Power = #{move.base_damage}\r\n") if move.base_damage > 0
     f.write("Accuracy = #{move.accuracy}\r\n")

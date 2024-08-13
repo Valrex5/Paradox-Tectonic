@@ -13,6 +13,8 @@ class PokeBattle_Battle
         pbCalculatePriority           # recalculate speeds
         priority = pbPriority(true)   # in order of fastest -> slowest speeds only
 
+        checkBattleStateAchievements(self)
+
         pbEORHealing(priority)
 
         pbEORWeather(priority)
@@ -40,6 +42,11 @@ class PokeBattle_Battle
         if @decision > 0
             pbGainExp
             return
+        end
+
+        # Curses effects here
+        @curses.each do |curse_policy|
+            triggerEndOfTurnCurseEffect(curse_policy, self)
         end
 
         # Reset the echoed voice counter unless anyone used echoed voice this turn

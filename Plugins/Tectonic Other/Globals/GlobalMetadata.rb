@@ -19,6 +19,9 @@ class PokemonGlobalMetadata
     attr_accessor :pokedexDex      # Dex currently looking at (-1 is National Dex)
     attr_accessor :pokedexIndex    # Last species viewed per Dex
     attr_accessor :pokedexMode     # Search mode
+    attr_accessor :stored_search
+    attr_accessor :dex_forms_shows_shinies
+    attr_accessor :dex_tutor_list_sort_mode
     # Day Care
     attr_accessor :daycare
     attr_accessor :daycareEgg
@@ -51,17 +54,15 @@ class PokemonGlobalMetadata
     attr_accessor :safesave
     # Dexnav
     attr_accessor :dexNavEggMovesUnlocked
-	  attr_accessor :caughtCountsPerMap
+    attr_accessor :caughtCountsPerMap
     # Exp-EZ Dispenser
-    attr_accessor :expJAR
+    attr_reader :expJAR
     # Aid kit
     attr_accessor :teamHealerCurrentUses
     attr_accessor :teamHealerMaxUses
     attr_accessor :teamHealerUpgrades
     # Tarot amulet
     attr_accessor :tarot_amulet_active
-    # MasterDex
-    attr_accessor :stored_search
     # Randomizer
     attr_accessor :randomizedData
     attr_accessor :isRandomizer
@@ -72,6 +73,29 @@ class PokemonGlobalMetadata
     attr_accessor :noise_machine_state # 0 = off, 1 = stopping encounters, 2 = increasing encounter rate
     # Punching bag in player house
     attr_accessor :exp_multiplier
+    # Town map
+    attr_accessor :town_map_waypoints_showing
+    # Achievements
+    attr_accessor :capture_counts_per_ball
+    # Blacking out
+    attr_accessor :respawnPoint
+    # Battle starting
+    attr_accessor :nextBattleBGM
+    attr_accessor :nextBattleME
+    attr_accessor :nextBattleCaptureME
+    attr_accessor :nextBattleBack
+    # Progression phone calls
+    attr_accessor :shouldProc2BadgesZainCall
+    attr_accessor :shouldProc3BadgesZainCall
+    attr_accessor :shouldProcGrouzAvatarCall
+    attr_accessor :shouldProcCatacombsCall
+    attr_accessor :shouldProcWhitebloomCall
+    attr_accessor :shouldProcEstateCall
+    # Tournament
+    attr_accessor :tournament
+    # Dragon flames
+    attr_writer :dragonFlamesCount
+    attr_writer :puzzlesCompleted
 	
 	def initialize
         # Movement
@@ -132,10 +156,18 @@ class PokemonGlobalMetadata
         @teamHealerMaxUses	  = 1
         @teamHealerCurrentUses= 1
         @tarot_amulet_active  = false
+        # Masterdex
         @stored_search		  = nil
+        @dex_forms_shows_shinies = false
+        @dex_tutor_list_sort_mode = 0
+
         @omnitutor_active     = false
         @noise_machine_state  = 0
         @exp_multiplier       = 1.0
+        @town_map_waypoints_showing = false
+
+        # Achievements
+        @capture_counts_per_ball = {}
     end
 
     ####################################################
@@ -213,7 +245,39 @@ class PokemonGlobalMetadata
         return @evolutionButtonTutorialized
     end
 
+    attr_writer :mentorMovesTutorialized
+    def mentorMovesTutorialized
+        @mentorMovesTutorialized = false if @mentorMovesTutorialized.nil?
+        return @mentorMovesTutorialized
+    end
+
+    attr_writer :adaptiveMovesTutorialized
+    def adaptiveMovesTutorialized
+        @adaptiveMovesTutorialized = false if @adaptiveMovesTutorialized.nil?
+        return @adaptiveMovesTutorialized
+    end
+
     ####################################################
-    # Who knows?
+    # Misc.
     ####################################################
+    
+    def expJAR=(value)
+        @expJAR = value
+        unlockAchievement(:STORE_LOTS_OF_EXP) if @expJAR >= 1_000_000
+    end
+
+    def circuitPuzzleStateTracker
+        @circuitPuzzleStateTracker = CircuitPuzzleStateTracker.new if @circuitPuzzleStateTracker.nil?
+        return @circuitPuzzleStateTracker
+    end
+
+    def dragonFlamesCount
+        @dragonFlamesCount = 0 if @dragonFlamesCount.nil?
+        return @dragonFlamesCount
+    end
+
+    def puzzlesCompleted
+        @puzzlesCompleted = [] if @puzzlesCompleted.nil?
+        return @puzzlesCompleted
+    end
 end

@@ -277,6 +277,10 @@ Description = Sound-based attacks turn Ice-type and are boosted by 30%.
 Name = Fungal Flurry
 Description = On the first turn, its attacks leech the target.
 #-------------------------------
+[GARLANDGUARDIAN]
+Name = Garland Guardian
+Description = Creates a Safeguard upon entry, protecting from status conditions for 10 turns.
+#-------------------------------
 [GENERATOR]
 Name = Dynamo
 Description = Whenever it uses a status move, becomes charged, doubling the power of its next Electric-type attack.
@@ -478,6 +482,10 @@ Description = Prevents other Pokémon from lowering its stat steps. Immune to we
 [MINUS]
 Name = Minus
 Description = Ups Sp. Atk if another Pokémon has Plus or Minus.
+#-------------------------------
+[MISTCRAFT]
+Name = Mistcraft
+Description = Sets Fairy Terrain for five turns when hit by an attack.
 #-------------------------------
 [MISTYSURGE]
 Name = Misty Surge
@@ -716,6 +724,10 @@ Description = After knocking out any Pokémon with Waterfall, transforms into it
 [SEASURVIVOR]
 Name = Leviathan
 Description = Protected from critical hits. Can't be burned or frostbitten.
+#-------------------------------
+[SEEDSCATTER]
+Name = Seed Scatter
+Description = Sets Grassy Terrain for five turns when hit by an attack.
 #-------------------------------
 [SELFMENDING]
 Name = Perennial Payload

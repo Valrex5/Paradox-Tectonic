@@ -35,7 +35,7 @@ class PokeBattle_Battle
 
         # If we're resetting an existing weather, don't set the duration to lower than it was before
         if resetExisting
-            @field.weatherDuration = duration if duration > @field.weatherDuration
+            @field.weatherDuration = duration if duration > @field.weatherDuration || duration < 0
         else
             @field.weatherDuration = duration
         end
@@ -73,21 +73,21 @@ class PokeBattle_Battle
 
     def displayResetWeatherMessage
         case @field.weather
-        when :Sun           then pbDisplay(_INTL("The sunshine continues!"))
-        when :Rain          then pbDisplay(_INTL("The rain shows no sign of stopping!"))
+        when :Sunshine      then pbDisplay(_INTL("The sunshine continues!"))
+        when :Rainstorm     then pbDisplay(_INTL("The rainstorm shows no sign of stopping!"))
         when :Sandstorm     then pbDisplay(_INTL("The sandstorm returns to full strength!"))
         when :Hail          then pbDisplay(_INTL("The hail keeps coming!"))
         when :Eclipse       then pbDisplay(_INTL("The eclipse extends unnaturally!"))
         when :Moonglow      then pbDisplay(_INTL("The bright moon doesn't wane!"))
         when :RingEclipse   then pbDisplay(_INTL("The planetary ring tightens its grip!"))
-        when :BloodMoon     then pbDisplay(_INTL("he nightmarish moon is unending!"))
+        when :BloodMoon     then pbDisplay(_INTL("The nightmarish moon is unending!"))
         end
     end
 
     def displayFreshWeatherMessage
         case @field.weather
-        when :Sun           then pbDisplay(_INTL("The sun is shining in the sky!"))
-        when :Rain          then pbDisplay(_INTL("It started to rain!"))
+        when :Sunshine      then pbDisplay(_INTL("The sun is shining in the sky!"))
+        when :Rainstorm     then pbDisplay(_INTL("A rainstorm covers the sky!"))
         when :Sandstorm     then pbDisplay(_INTL("A sandstorm brewed!"))
         when :Hail          then pbDisplay(_INTL("It started to hail!"))
         when :HarshSun      then pbDisplay(_INTL("The sunlight turned extremely harsh!"))
@@ -103,8 +103,8 @@ class PokeBattle_Battle
     def endWeather
         return if @field.weather == :None
         case @field.weather
-        when :Sun           then pbDisplay(_INTL("The sunshine faded."))
-        when :Rain          then pbDisplay(_INTL("The rain stopped."))
+        when :Sunshine      then pbDisplay(_INTL("The sunshine faded."))
+        when :Rainstorm     then pbDisplay(_INTL("The rainstorm stopped."))
         when :Sandstorm     then pbDisplay(_INTL("The sandstorm subsided."))
         when :Hail          then pbDisplay(_INTL("The hail stopped."))
         when :Eclipse       then pbDisplay(_INTL("The eclipse ended."))
@@ -122,35 +122,42 @@ class PokeBattle_Battle
         triggerWeatherChangeDialogue(oldWeather, :None)
     end
 
+    PRIMORDIAL_WEATHER_LINGER_TURNS = 4
+
     # Ability-set Primordial Sea, Desolate Land, Delta Stream begin to run out
     def pbEndPrimordialWeather
         return unless @field.weatherDuration < 0
         case @field.weather
         when :HarshSun
             if !pbCheckGlobalAbility(:DESOLATELAND) && @field.defaultWeather != :HarshSun
-                @field.weatherDuration = 3
+                @field.weatherDuration = PRIMORDIAL_WEATHER_LINGER_TURNS
                 pbDisplay("The harsh sunlight began to fade!")
             end
         when :HeavyRain
             if !pbCheckGlobalAbility(:PRIMORDIALSEA) && @field.defaultWeather != :HeavyRain
-                @field.weatherDuration = 3
+                @field.weatherDuration = PRIMORDIAL_WEATHER_LINGER_TURNS
                 pbDisplay("The heavy rain began to lift!")
             end
         when :StrongWinds
             if !pbCheckGlobalAbility(:DELTASTREAM) && @field.defaultWeather != :StrongWinds
-                @field.weatherDuration = 3
+                @field.weatherDuration = PRIMORDIAL_WEATHER_LINGER_TURNS
                 pbDisplay("The mysterious air current began to dissipate!")
             end
         when :RingEclipse
             if !pbCheckGlobalAbility(:SATURNALSKY) && @field.defaultWeather != :RingEclipse
-                @field.weatherDuration = 3
+                @field.weatherDuration = PRIMORDIAL_WEATHER_LINGER_TURNS
                 pbDisplay("The planetary ring begins to lose its grip!")
             end
-        when :RingEclipse
-            if !pbCheckGlobalAbility(:SATURNALSKY) && @field.defaultWeather != :RingEclipse
-                @field.weatherDuration = 3
+        when :BloodMoon
+            if !pbCheckGlobalAbility(:STYGIANNIGHT) && @field.defaultWeather != :BloodMoon
+                @field.weatherDuration = PRIMORDIAL_WEATHER_LINGER_TURNS
                 pbDisplay("The nightmare moon begins to retreat!")
             end
+        end
+
+        if @field.weatherDuration > 0
+            moreTurns = @field.weatherDuration - 1
+            pbDisplay(_INTL("It'll last for {1} more turns!", moreTurns))
         end
     end
 
@@ -403,11 +410,11 @@ class PokeBattle_Battle
     # Weather helper methods
     #=============================================================================
     def sunny?
-        return %i[Sun HarshSun].include?(pbWeather)
+        return %i[Sunshine HarshSun].include?(pbWeather)
     end
 
     def rainy?
-        return %i[Rain HeavyRain].include?(pbWeather)
+        return %i[Rainstorm HeavyRain].include?(pbWeather)
     end
 
     def sandy?
