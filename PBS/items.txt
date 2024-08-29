@@ -955,7 +955,7 @@ Name = Crystal Veil
 NamePlural = Crystal Veils
 Pocket = 5
 Price = 6000
-Flags = Clothing
+Flags = TypeSetting,Clothing
 Description = A held item. It changes the holder's type in battle. You can change which type between battles.
 #-------------------------------
 [MEMORYSET]
@@ -963,6 +963,7 @@ Name = Memory Set
 NamePlural = Memory Sets
 Pocket = 5
 Price = 0
+Flags = TypeSetting
 Description = A set of memory discs, one for each type. If held by a Silvally, you can change its type between battles.
 #-------------------------------
 [PRISMATICPLATE]
@@ -970,6 +971,7 @@ Name = Prismatic Plate
 NamePlural = Prismatic Plates
 Pocket = 5
 Price = 0
+Flags = TypeSetting
 Description = A tablet that boosts same-type attacks by 20%. If held by Arceus, you can change its type between battles.
 #-------------------------------
 [WILDCARD]
@@ -1377,14 +1379,6 @@ Pocket = 2
 Price = 50000
 FieldUse = Direct
 Description = It revives all fainted Pokémon. In doing so, it also fully restores their HP.
-#-------------------------------
-[STATUSHEAL]
-Name = Status Heal
-NamePlural = Status Heals
-Pocket = 2
-Price = 400
-FieldUse = OnPokemon
-Description = A spray-type medicine. It heals all the status problems of a single Pokémon.
 #-------------------------------
 [LAVACOOKIE]
 Name = Lava Cookie
@@ -2311,7 +2305,7 @@ NamePlural = EXP Charms
 Pocket = 7
 Price = 0
 Flags = KeyItem
-Description = A charm that increases the Exp. Points that Pokémon can get. A machine-like object is inside the charm.
+Description = A charm that increases the Exp. Points that Pokémon can get by 10%. A machine-like object is inside the charm.
 #-------------------------------
 [CATCHINGCHARM]
 Name = Catching Charm
@@ -2451,6 +2445,14 @@ Consumable = true
 Flags = KeyItem
 Description = A stick of dynamite, perfectly suited to destroying small bits of rock.
 #-------------------------------
+[FIGMENT]
+Name = Figment
+NamePlural = Figments
+Pocket = 1
+Price = 8000
+FieldUse = OnPokemon
+Description = A wisp of ideas with infinite potential. Use it on a Pokemon to teach any one of their legal moves.
+#-------------------------------
 [SURFBOARD]
 Name = Surf Board
 NamePlural = Surf Boards
@@ -2474,6 +2476,14 @@ Pocket = 8
 Price = 0
 Flags = KeyItem
 Description = A set of climbing gear, allowing you to climb on white rocks.
+#-------------------------------
+[FLORASCEPTRE]
+Name = Flora Sceptre
+NamePlural = Flora Sceptres
+Pocket = 8
+Price = 0
+Flags = KeyItem
+Description = An ancient kingly rod. You can use it to make certain plants grow.
 #-------------------------------
 [ABRAPORTER]
 Name = Abraporter
@@ -2554,6 +2564,15 @@ Price = 0
 FieldUse = Direct
 Flags = KeyItem
 Description = A small, versatile machine that can be used to repel wild Pokémon, or draw them near.
+#-------------------------------
+[POKEXRAY]
+Name = Poké X-Ray
+NamePlural = Poké X-Rays
+Pocket = 8
+Price = 0
+FieldUse = Direct
+Flags = KeyItem
+Description = A high tech surveillance device. Use it to scout out the teams of nearby trainers.
 #-------------------------------
 [CELLBOOSTER]
 Name = Cell Booster
@@ -2903,3 +2922,22 @@ Price = 8000
 FieldUse = OnPokemon
 Flags = EvolutionStone
 Description = A strange equipment that seems to come from the future. It evolves certain species.
+[SPACETIMESHARD]
+Name = Space-time Shard
+NamePlural = Space-time Shards
+Pocket = 7
+Price = 0
+FieldUse = Direct
+Consumable = true
+Flags = KeyItem
+Description = A sliver of the fragment of the universe. Highly unstable.
+#-------------------------------
+[OLDUSBDRIVE]
+Name = Old USB Drive
+NamePlural = Old USB Drive
+Pocket = 7
+Price = 0
+FieldUse = Direct
+Consumable = true
+Flags = KeyItem
+Description = A USB containing data from a Team Chasm's early days.

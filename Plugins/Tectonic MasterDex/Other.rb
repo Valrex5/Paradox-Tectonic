@@ -134,3 +134,12 @@ def roundUpToRelevantCap(level)
 	end
 	return [minNearestMapCap,minNearestItemCap].min
 end
+
+def speciesInfoViewable?(speciesID)
+    return true if $DEBUG
+    speciesData = GameData::Species.get(speciesID)
+    return false if speciesData.isTest?
+    return true if $Trainer.seen?(speciesID)
+    return false if speciesData.isLegendary?
+    return true
+end

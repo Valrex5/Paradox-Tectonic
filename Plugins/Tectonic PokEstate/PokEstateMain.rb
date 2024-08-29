@@ -6,15 +6,15 @@ SaveData.register(:pokestate_tracker) do
 end
 
 class DexCompletionAwardHandlerHash < HandlerHash2
-	def trigger(symbols, newAwardsArray)
+	def trigger(symbols, newAwardsArray, assumeGranted = false)
 		handlers = @hash.reject{|key,value| symbols.include?(key)}
 		handlers.each do |handlerID,handler|
 			next if handler.nil?
 			begin
-				newAward = handler.call($Trainer.pokedex)
-				if !newAward.nil?
-					newAward.push(handlerID)
-					newAwardsArray.push(newAward)
+				awardInfo = handler.call($Trainer.pokedex)
+				if awardInfo && (assumeGranted || awardInfo[:amount] >= awardInfo[:threshold])
+					awardInfo[:id] = handlerID
+					newAwardsArray.push(awardInfo)
 				end
 			rescue
 				pbMessage(_INTL("A recoverable error has occured. Please report the following to a programmer."))
@@ -98,12 +98,12 @@ class PokEstate
 	
 	def teleportPlayerBack()
 		if @estate_teleport.nil?
-			pbMessage("ERROR: Cannot find location to teleport you back to.")
-			pbMessage("Bringing you to the fallback return position.")
+			pbMessage(_INTL("ERROR: Cannot find location to teleport you back to."))
+			pbMessage(_INTL("Bringing you to the fallback return position."))
 			$game_temp.player_transferring = true
-			$game_temp.player_new_map_id    =  FALLBACK_RETURN_POSION[0]
-			$game_temp.player_new_x         =	FALLBACK_RETURN_POSION[1]
-			$game_temp.player_new_y         = 	FALLBACK_RETURN_POSION[2]
+			$game_temp.player_new_map_id    =  FALLBACK_RETURN_POSITION[0]
+			$game_temp.player_new_x         =	FALLBACK_RETURN_POSITION[1]
+			$game_temp.player_new_y         = 	FALLBACK_RETURN_POSITION[2]
 			$game_temp.player_new_direction = 	Up
 		else
 			tele = @estate_teleport
@@ -174,7 +174,7 @@ class PokEstate
 		if newAwards.length != 0
 			unless inPerson
 				pbMessage(_INTL("..."))
-				pbMessage(_INTL("You notice a voice message from #{CARETAKER}, the PokÉstate caretaker."))
+				pbMessage(_INTL("You notice a voice message from {1}, the PokÉstate caretaker.",CARETAKER))
 			end
 			
 			pbMessage(_INTL("Greetings, young master. I have good news."))
@@ -182,17 +182,17 @@ class PokEstate
 			if newAwards.length == 1
 				pbMessage(_INTL("\\ME[Bug catching 2nd]You've earned a new PokéDex completion reward!\\wtnp[60]"))
 			else
-				pbMessage(_INTL("\\ME[Bug catching 2nd]You've earned #{newAwards.length} new PokéDex completion rewards!\\wtnp[60]"))
+				pbMessage(_INTL("\\ME[Bug catching 2nd]You've earned {1} new PokéDex completion rewards!\\wtnp[60]",newAwards.length))
 			end
 			
 			if newAwards.length == 1
-				awardDescription = newAwards[0][1]
+				awardDescription = newAwards[0][:description]
 				pbMessage(_INTL("For collecting #{awardDescription}, please take this."))
 			elsif newAwards.length <= 5
 				pbMessage(_INTL("I'll list the feats you've accomplished:"))
 				newAwards.each_with_index do |newAwardInfo, index|
-					awardReward = newAwardInfo[0]
-					awardDescription = newAwardInfo[1]
+					awardReward = newAwardInfo[:reward]
+					awardDescription = newAwardInfo[:description]
 					
 					if index == 0
 						pbMessage(_INTL("You've collected #{awardDescription}..."))
@@ -214,8 +214,8 @@ class PokEstate
 
 			itemsToGrantHash = {}
 			newAwards.each do |newAwardInfo|
-				awardReward = newAwardInfo[0]
-				awardDescription = newAwardInfo[1]
+				awardReward = newAwardInfo[:reward]
+				awardDescription = newAwardInfo[:description]
 
 				# Tally the items to give out
 				itemCount = 1
@@ -233,7 +233,7 @@ class PokEstate
 				end
 
 				# Mark this reward as having been granted
-				self.awardsGranted.push(newAwardInfo[2])
+				self.awardsGranted.push(newAwardInfo[:id])
 			end
 			itemsToGrantHash.each do |item,count|
 				pbReceiveItem(item,count)
@@ -248,8 +248,8 @@ class PokEstate
 	def findNewAwards
 		# Load all data dependent events
 		LoadDataDependentAwards.trigger
+        $Trainer.pokedex.resetOwnershipCache
 		newAwardsArray = []
-		$Trainer.pokedex.resetOwnershipCache()
 		newAwardsArray = GrantAwards.trigger(self.awardsGranted,newAwardsArray)
 		return newAwardsArray
 	end
@@ -257,14 +257,24 @@ class PokEstate
 	def resetAwards
 		@awardsGranted = []
 	end
+
+    def getAwardsCompletionState
+        LoadDataDependentAwards.trigger
+        $Trainer.pokedex.resetOwnershipCache
+        awardsArray = []
+        awardsArray = GrantAwards.trigger([],awardsArray,true)
+		return awardsArray
+    end
 	
 	def caretakerChoices()
 		commandLandscape = -1
+        commandCheckRewards = -1
 		commandReceiveUpdate = -1
 		commandCancel = -1
 		commandScrubAwards = -1
 		commands = []
 		commands[commandLandscape = commands.length] = _INTL("Landscape")
+        commands[commandCheckRewards = commands.length] = _INTL("Check Rewards")
 		commands[commandReceiveUpdate = commands.length] = _INTL("Hear Story") if STORIES_FEATURE_AVAILABLE
 		commands[commandCancel = commands.length] = _INTL("Cancel")
 		
@@ -273,6 +283,12 @@ class PokEstate
 		
 		if commandLandscape > -1 && command == commandLandscape
 			changeLandscape()
+        elsif commandCheckRewards > -1 && command == commandCheckRewards
+            pbFadeOutIn do
+                collectionRewardsListScene = CollectionRewardsListScene.new
+                screen = CollectionRewardsListScreen.new(collectionRewardsListScene)
+                screen.pbStartScreen
+            end
 		elsif commandReceiveUpdate > -1 && command == commandReceiveUpdate
 			tryHearStory()
 		end

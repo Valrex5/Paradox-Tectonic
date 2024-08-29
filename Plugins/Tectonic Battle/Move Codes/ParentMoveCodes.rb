@@ -475,7 +475,7 @@ end
 class PokeBattle_FixedDamageMove < PokeBattle_Move
     def pbFixedDamage(_user, _target); return 1; end
 
-    def pbCalcTypeModSingle(moveType, defType, user, target)
+    def pbCalcTypeModSingle(moveType, defType, user=nil, target=nil)
         ret = super
         ret = Effectiveness::NORMAL_EFFECTIVE_ONE unless Effectiveness.ineffective?(ret)
         return ret
@@ -1246,6 +1246,10 @@ end
 class PokeBattle_PartyAttackMove < PokeBattle_Move
     def multiHitMove?; return true; end
 
+    def listEmpty?
+        return @partyAttackerList.nil? || @partyAttackerList.empty?
+    end
+
     def calculatePartyAttackerList(user)
         @partyAttackerList = []
         @battle.eachInTeamFromBattlerIndex(user.index) do |pkmn, i|
@@ -1266,7 +1270,7 @@ class PokeBattle_PartyAttackMove < PokeBattle_Move
     end
 
     def pbNumHits(user, _targets, _checkingForAI = false)
-        calculatePartyAttackerList(user) if @partyAttackerList.empty?
+        calculatePartyAttackerList(user) if listEmpty?
         return @partyAttackerList.length
     end
 
@@ -1281,7 +1285,7 @@ class PokeBattle_PartyAttackMove < PokeBattle_Move
     end
 
     def pbBaseDamageAI(_baseDmg, user, _target)
-        calculatePartyAttackerList(user) if @partyAttackerList.empty?
+        calculatePartyAttackerList(user) if listEmpty?
         totalBaseStat = 0
         @partyAttackerList.each do |i|
             totalBaseStat += @battle.pbParty(user.index)[i].baseStats[@statUsed]
@@ -1453,7 +1457,7 @@ end
 
 # Each subclass must have an initialization method that defines the @typeHated variable
 class PokeBattle_TypeSuperMove < PokeBattle_Move
-    def pbCalcTypeModSingle(moveType, defType, user, target)
+    def pbCalcTypeModSingle(moveType, defType, user=nil, target=nil)
         effectiveness = super
         return effectiveness if Effectiveness.ineffective?(effectiveness)
         return Effectiveness::SUPER_EFFECTIVE_ONE if defType == @typeHated

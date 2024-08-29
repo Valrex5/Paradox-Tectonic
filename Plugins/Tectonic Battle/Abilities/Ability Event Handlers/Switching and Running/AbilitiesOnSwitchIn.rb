@@ -40,31 +40,31 @@ BattleHandlers::AbilityOnSwitchIn.add(:MOONGAZE,
 
 BattleHandlers::AbilityOnSwitchIn.add(:PRIMORDIALSEA,
   proc { |ability, battler, battle, aiCheck|
-      pbBattleWeatherAbility(ability, :HeavyRain, battler, battle, true, true, aiCheck)
+      pbBattleWeatherAbility(ability, :HeavyRain, battler, battle, true, true, aiCheck, baseDuration: -1)
   }
 )
 
 BattleHandlers::AbilityOnSwitchIn.add(:DESOLATELAND,
   proc { |ability, battler, battle, aiCheck|
-      pbBattleWeatherAbility(ability, :HarshSun, battler, battle, true, true, aiCheck)
+      pbBattleWeatherAbility(ability, :HarshSun, battler, battle, true, true, aiCheck, baseDuration: -1)
   }
 )
 
 BattleHandlers::AbilityOnSwitchIn.add(:DELTASTREAM,
   proc { |ability, battler, battle, aiCheck|
-      pbBattleWeatherAbility(ability, :StrongWinds, battler, battle, true, true, aiCheck)
+      pbBattleWeatherAbility(ability, :StrongWinds, battler, battle, true, true, aiCheck, baseDuration: -1)
   }
 )
 
 BattleHandlers::AbilityOnSwitchIn.add(:SATURNALSKY,
   proc { |ability, battler, battle, aiCheck|
-      pbBattleWeatherAbility(ability, :RingEclipse, battler, battle, true, true, aiCheck)
+      pbBattleWeatherAbility(ability, :RingEclipse, battler, battle, true, true, aiCheck, baseDuration: -1)
   }
 )
 
 BattleHandlers::AbilityOnSwitchIn.add(:STYGIANNIGHT,
   proc { |ability, battler, battle, aiCheck|
-      pbBattleWeatherAbility(ability, :BloodMoon, battler, battle, true, true, aiCheck)
+      pbBattleWeatherAbility(ability, :BloodMoon, battler, battle, true, true, aiCheck, baseDuration: -1)
   }
 )
 
@@ -1048,11 +1048,11 @@ BattleHandlers::AbilityOnSwitchIn.add(:HOLIDAYCHEER,
       end
       next 0 unless anyHealing
       score = 0
-      battle.pbShowAbilitySplash(battler, ability)
+      battle.pbShowAbilitySplash(battler, ability) unless aiCheck
       battle.eachSameSideBattler(battler.index) do |b|
             score += b.applyFractionalHealing(0.25, aiCheck: aiCheck)
       end
-      battle.pbHideAbilitySplash(battler)
+      battle.pbHideAbilitySplash(battler) unless aiCheck
       next score if aiCheck
   }
 )

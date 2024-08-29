@@ -43,6 +43,7 @@ NERO = _INTL("Nero")
 
 # Other
 CARETAKER = _INTL("Alondra")
+CARETAKER_FULL = _INTL("Alondra, your servant")
 TECH_NERD = _INTL("Jovan")
 GRIND_RIVAL = _INTL("Vanya")
 SANG = _INTL("Sang")
@@ -50,3 +51,5 @@ MAVIS = _INTL("Mavis")
 LAINIE = _INTL("Lainie")
 HISUIAN_WITCH = _INTL("Dr. Hekata")
 NORA = _INTL("Nora")
+KURT = _INTL("Kurt")
+PEARCE = _INTL("Pearce")

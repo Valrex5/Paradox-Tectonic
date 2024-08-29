@@ -588,20 +588,23 @@ class PokemonStorageScreen
         visitEstateCommand = -1
         cancelCommand = -1
         command = 0
+
+        donationBox = @storage.boxes[@storage.currentBox].isDonationBox?
+
         loop do
             commands = []
             commands[jumpCommand = commands.length]         = _INTL("Jump")
-            unless selectionMode
+            unless selectionMode || donationBox
                 commands[wallPaperCommand = commands.length]    = _INTL("Wallpaper")
                 commands[nameCommand = commands.length]         = _INTL("Name")
             end
             commands[searchCommand = commands.length]       = _INTL("Search")
-            unless selectionMode || @storage.boxes[@storage.currentBox].isDonationBox?
+            unless selectionMode || donationBox
                 commands[sortCommand = commands.length]         = _INTL("Sort")
                 commands[sortAllCommand = commands.length]      = _INTL("Sort All")
                 commands[lockCommand = commands.length]         =
                     @storage.boxes[@storage.currentBox].isLocked? ? _INTL("Sort Unlock") : _INTL("Sort Lock")
-                if defined?(PokEstate) && !$game_switches[ESTATE_DISABLED_SWITCH]
+                if defined?(PokEstate) && !getGlobalSwitch(ESTATE_DISABLED_SWITCH)
                     commands[visitEstateCommand = commands.length] = _INTL("Visit PokÉstate")
                 end
             end

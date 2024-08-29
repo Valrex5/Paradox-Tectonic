@@ -290,7 +290,7 @@ class PokeBattle_Battle
         end
 
         # Track information for perfecting
-        $game_switches[94] = false
+        trackPerfectBattle(false)
         ableBeforeFight = $Trainer.able_pokemon_count # Record the number of able party members, for perfecting
         skipPerfecting = false
         @opponent&.each do |opp|
@@ -322,7 +322,7 @@ class PokeBattle_Battle
         unless @autoTesting
             # Record if the fight was perfected
             if $Trainer.able_pokemon_count >= ableBeforeFight
-                $game_switches[94] = true
+                trackPerfectBattle(true)
                 if trainerBattle? && @decision == 1 && !skipPerfecting
                     pbMessage(_INTL("\\me[Battle perfected]You perfected the fight!"))
                 end
@@ -333,10 +333,10 @@ class PokeBattle_Battle
                     wasOnStreak = pkmn.onHotStreak?
                     if pkmn.fainted? || [2, 3].include?(@decision)
                         pkmn.battlingStreak = 0
-                        pbMessage("#{pkmn.name}'s Hot Streak is now over.") if wasOnStreak
+                        pbMessage(_INTL("#{pkmn.name}'s Hot Streak is now over.")) if wasOnStreak
                     elsif @usedInBattle[0][i]
                         pkmn.battlingStreak += 1
-                        pbMessage("#{pkmn.name} is on a Hot Streak!") if pkmn.onHotStreak? && !wasOnStreak
+                        pbMessage(_INTL("#{pkmn.name} is on a Hot Streak!")) if pkmn.onHotStreak? && !wasOnStreak
                     end
                 end
             end
@@ -393,7 +393,7 @@ class PokeBattle_Battle
             eachBattler do |b|
                 next unless b.boss?
                 loop do
-                    b.pokemon.species = GameData::Avatar::DATA.keys.sample
+                    b.pokemon.species = GameData::Avatar::DATA.values.sample.id[0]
                     break if GameData::Avatar::DATA.has_key?(b.pokemon.species)
                 end
                 setAvatarProperties(b.pokemon)

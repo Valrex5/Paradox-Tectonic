@@ -790,16 +790,16 @@ def pbMessageDisplay(msgwindow, message, letterbyletter = true, commandProc = ni
         for i in 0..signWaitTime
             if atTop
                 msgwindow.y = -msgwindow.height * i / signWaitTime
-                facewindow.y = -facewindow.height * i / signWaitTime
+                facewindow.y = -facewindow.height * i / signWaitTime if facewindow
             else
                 msgwindow.y = Graphics.height - msgwindow.height * (signWaitTime - i) / signWaitTime
-                facewindow.y = Graphics.height - facewindow.height * (signWaitTime - i) / signWaitTime
+                facewindow.y = Graphics.height - facewindow.height * (signWaitTime - i) / signWaitTime if facewindow
             end
             Graphics.update
             Input.update
             pbUpdateSceneMap
             msgwindow.update
-            facewindow.update
+            facewindow.update if facewindow
         end
     end
     facewindow.dispose if facewindow
@@ -1008,4 +1008,19 @@ def pbMessageFreeText(message, currenttext, passwordbox, maxlength, width = 240,
        }, &block)
     pbDisposeMessageWindow(msgwindow)
     return retval
+end
+
+def break_string(str, character_count)
+    arr = []
+    pos = 0     
+    loop do
+        break arr if pos == str.size
+        if str[pos] == ' '
+            pos += 1
+        end
+        m = str.match(/.{1,#{character_count}}(?=[ ]|\z)|.{,#{character_count-1}}[ ]/, pos)
+        return nil if m.nil?
+        arr << m[0]
+        pos += m[0].size
+    end
 end

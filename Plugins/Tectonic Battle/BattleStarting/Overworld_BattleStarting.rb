@@ -1,14 +1,3 @@
-#===============================================================================
-# Battle preparation
-#===============================================================================
-class PokemonGlobalMetadata
-  attr_accessor :nextBattleBGM
-  attr_accessor :nextBattleME
-  attr_accessor :nextBattleCaptureME
-  attr_accessor :nextBattleBack
-end
-
-
 def pbNewBattleScene
   return PokeBattle_Scene.new
 end
@@ -159,6 +148,10 @@ def pbPrepareBattle(battle)
   battle.foeAmbushing = true if battleRules["foeambush"]
   # Auto testing
   battle.autoTesting = battleRules["autotesting"]
+  # Lane battles
+  battle.laneTargeting = battleRules["lanetargeting"]
+  battle.doubleShift = battleRules["doubleshift"]
+  battle.shiftEnabled = true if battleRules["doubleshift"]
 end
 
 #===============================================================================

@@ -83,7 +83,7 @@ class PokemonPokedex_Scene
     end
 
     def searchByMoveLearned
-        learningMethodSelection = pbMessage(_INTL("Which method?"),[_INTL("Any"), _INTL("Level Up"), _INTL("By Specific Level"), _INTL("Tutor"), _INTL("Coverage Type"), _INTL("Cancel")], 6)
+        learningMethodSelection = pbMessage(_INTL("Which method?"),[_INTL("Any"), _INTL("Level Up"), _INTL("By Specific Level"), _INTL("Other"), _INTL("Coverage Type"), _INTL("Cancel")], 6)
         return if learningMethodSelection == 5
 
         if learningMethodSelection == 2
@@ -425,7 +425,6 @@ class PokemonPokedex_Scene
         cmdMapFound = -1
         cmdZooSection	= -1
         cmdWildItem 			    = -1
-        cmdIsQuarantined = -1
         cmdIsLegendary	= -1
         cmdMovesetConformance	= -1
         cmdNoMonumentUses = -1
@@ -441,7 +440,6 @@ class PokemonPokedex_Scene
         miscSearches[cmdCollecting = miscSearches.length] = _INTL("Collecting")
         miscSearches[cmdMapFound = miscSearches.length] = _INTL("Map Found")
         miscSearches[cmdWildItem = miscSearches.length] = _INTL("Wild Items")
-        miscSearches[cmdIsQuarantined = miscSearches.length] = _INTL("Quarantined (D)") if $DEBUG
         miscSearches[cmdIsLegendary = miscSearches.length] = _INTL("Legendary")
         miscSearches[cmdMovesetConformance = miscSearches.length] = _INTL("Moveset Noncomfority (D)") if $DEBUG
         miscSearches[cmdNoMonumentUses = miscSearches.length] = _INTL("No Monument Uses (D)") if $DEBUG
@@ -461,8 +459,6 @@ class PokemonPokedex_Scene
             return searchByMapFound
         elsif cmdZooSection > -1 && searchSelection == cmdZooSection
             return searchByZooSection
-        elsif cmdIsQuarantined > -1 && searchSelection == cmdIsQuarantined
-            return searchByQuarantined
         elsif cmdIsLegendary > -1 && searchSelection == cmdIsLegendary
             return searchByLegendary
         elsif cmdWildItem > -1 && searchSelection == cmdWildItem
@@ -721,23 +717,6 @@ class PokemonPokedex_Scene
         return dexlist
     end
 
-    def searchByQuarantined
-        selection = pbMessage(_INTL("Which search?"), [_INTL("Quarantined"), _INTL("Not Quarantined"), _INTL("Cancel")], 3)
-        if selection != 2
-            dexlist = searchStartingList
-
-            dexlist = dexlist.find_all do |dex_item|
-                if selection == 1
-                    next !isQuarantined?(dex_item[:species])
-                else
-                    next isQuarantined?(dex_item[:species])
-                end
-            end
-            return dexlist
-        end
-        return nil
-    end
-
     def searchByMovesetConformance
         dexlist = searchStartingList
 
@@ -863,9 +842,9 @@ class PokemonPokedex_Scene
 
             dexlist = dexlist.find_all do |dex_item|
                 if selection == 1
-                    next !isLegendary?(dex_item[:species])
+                    next !dex_item[:data].isLegendary?
                 else
-                    next isLegendary?(dex_item[:species])
+                    next dex_item[:data].isLegendary?
                 end
             end
             return dexlist
@@ -884,24 +863,16 @@ class PokemonPokedex_Scene
             generationNumberTextInput = generationNumberTextInput[1..-1] if reversed
 
             generationNumber = generationNumberTextInput.to_i
-            if generationNumber <= 0 || generationNumber >= 9
-                pbMessage("Please choose a generation number between 1 and 8.")
+            if generationNumber < 0
+                pbMessage(_INTL("Negative generation numbers are invalid."))
             else
                 break
             end
         end
 
-        generationFirstNumber = GENERATION_END_IDS[generationNumber - 1]
-        generationLastNumber = GENERATION_END_IDS[generationNumber]
-
         dexlist = dexlist.find_all do |dex_item|
             next false if autoDisqualifyFromSearch(dex_item[:species])
-            id = dex_item[:data].id_number
-
-            isInChosenGeneration = id > generationFirstNumber &&
-                                   id <= generationLastNumber
-
-            next isInChosenGeneration ^ reversed # Boolean XOR
+            next (dex_item[:data].generation == generationNumber) ^ reversed # Boolean XOR
         end
         return dexlist
     end

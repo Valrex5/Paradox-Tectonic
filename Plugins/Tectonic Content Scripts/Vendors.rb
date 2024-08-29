@@ -219,6 +219,7 @@ def createHisuian
 	unless pbHasItem?(:ORIGINORE)
 		setSpeaker(HISUIAN_WITCH)
 		pbMessage(_INTL("I do not spy any Origin Ore among your possessions."))
+		return
 	end
 
 	actualSpecies = [:HGROWLITHE,:HVOLTORB,:HQWILFISH,:HSNEASEL,:HZORUA,:BASCULIN_2]
@@ -290,7 +291,7 @@ def shinifyPokemonVendor
 	gleamPowderRealName = GameData::Item.get(:GLEAMPOWDER).name
 	pbMessage(_INTL("\\PN hands over the #{gleamPowderRealName}, $30,000, and #{pkmn.name}."))
 
-	pbMessage("And so my work begins!")
+	pbMessage(_INTL("And so my work begins!"))
 	blackFadeOutIn(30) {
 		$PokemonBag.pbDeleteItem(:GLEAMPOWDER)
 		pkmn.shiny = true
@@ -306,6 +307,7 @@ def cloneMinorLegend
 	unless pbHasItem?(:ORIGINORE)
 		setSpeaker(HISUIAN_WITCH)
 		pbMessage(_INTL("I do not spy any Origin Ore among your possessions."))
+		return	
 	end
 
 	possibleSpecies = [:PHIONE,:TYPENULL,:COSMOG,:MELTAN,:KUBFU]
@@ -632,7 +634,6 @@ def weirdBallsVendor
 		DISABLEBALL
 		DREAMBALL
 		FASTBALL  HEAVYBALL
-		LOVEBALL
 		LUXURYBALL FRIENDBALL
 		HEALBALL
 		ROYALBALL

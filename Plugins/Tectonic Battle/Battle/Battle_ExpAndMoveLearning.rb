@@ -139,9 +139,10 @@ class PokeBattle_Battle
         if pkmn.onHotStreak? && HOT_STREAKS_ACTIVE
             exp = (exp * 1.3).floor
         end
-        exp  = (exp * 1.1).floor if playerTribalBonus.hasTribeBonus?(:LOYAL)
-        exp  = (exp * 1.5).floor if @field.effectActive?(:Bliss)
-        exp  = (exp * $PokemonGlobal.exp_multiplier).floor if $PokemonGlobal.exp_multiplier
+        exp = (exp * 1.1).floor if playerTribalBonus.hasTribeBonus?(:LOYAL)
+        exp = (exp * 1.5).floor if @field.effectActive?(:Bliss)
+        exp = (exp * (1 + 0.1 * pbQuantity(:EXPCHARM))).floor # Extra 10 percent per EXP charm
+        exp = (exp * $PokemonGlobal.exp_multiplier).floor if $PokemonGlobal.exp_multiplier
         modifiedEXP = exp
         pkmn.items.each do |item|
             modifiedEXP = BattleHandlers.triggerExpGainModifierItem(item, pkmn, modifiedEXP)
@@ -263,20 +264,18 @@ class PokeBattle_Battle
         # Pokémon already knows the maximum number of moves; try to forget one to learn the new move
         loop do
             pbDisplayPaused(_INTL("{1} wants to learn {2}, but it already knows {3} moves.",
-            pkmnName, moveName, pkmn.moves.length.to_word))
+                pkmnName, moveName, pkmn.moves.length.to_word))
             pbDisplayPaused(_INTL("Which move should be forgotten?"))
             forgetMove = @scene.pbForgetMove(pkmn, newMove)
             if forgetMove >= 0
                 oldMoveName = pkmn.moves[forgetMove].name
                 pkmn.moves[forgetMove] = Pokemon::Move.new(newMove)   # Replaces current/total PP
                 battler.moves[forgetMove] = PokeBattle_Move.from_pokemon_move(self, pkmn.moves[forgetMove]) if battler
-                pbDisplayPaused(_INTL("1, 2, and... ... ... Ta-da!"))
                 pbDisplayPaused(_INTL("{1} forgot how to use {2}. And...", pkmnName, oldMoveName))
                 pbDisplay(_INTL("{1} learned {2}!", pkmnName, moveName)) { pbSEPlay("Pkmn move learnt") }
                 battler.pbCheckFormOnMovesetChange if battler
                 break
             else
-                pbDisplay(_INTL("{1} did not learn {2}.", pkmnName, moveName))
                 break
             end
         end

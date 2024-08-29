@@ -215,7 +215,7 @@ class NewDexNav
 				end
 				if debugControl
 					pbAddPokemonSilent(highlightedSpeciesData.species,getLevelCap)
-					pbMessage("Added #{highlightedSpeciesData.species}")
+					pbMessage(_INTL("Added #{highlightedSpeciesData.species}"))
 					next
 				end
 				searchTime = 20 + rand(60)
@@ -267,11 +267,10 @@ class NewDexNav
 
 	lineHeight = 94 + visualHeightOffset
 	@pkmnsprites.each_with_index do |groupSpriteArray,groupIndex|
-		checkBoxFileName = "Graphics/Pictures/Pokedex/checkbox"
 		if @encounterTypesCompletion.values[groupIndex]
-			checkBoxFileName = "Graphics/Pictures/Pokedex/checkbox_active"
+			checkBoxFileName = "Graphics/Pictures/checkbox_active"
 		else
-			checkBoxFileName = "Graphics/Pictures/Pokedex/checkbox_inactive"
+			checkBoxFileName = "Graphics/Pictures/checkbox_inactive"
 		end
         checkboxY = lineHeight + 20
 		if checkboxY > 60 && checkboxY < 300 # dunno why these numbers
@@ -423,18 +422,18 @@ def getDexNavEncounterDataForMap(mapid = -1)
     return nil if encounters == nil
     encounter_tables = Marshal.load(Marshal.dump(encounters.types))
 	
-	allEncounters = []
-	encounters.types.keys.each do |encounter_type|
-		next if encounter_type == :Special
-		encounterList = encounter_tables[encounter_type]
-		next if !encounterList
-		encounterList.each do |encounter|
-			speciesSym = encounter[1]
-			species_data = GameData::Species.get(speciesSym)
-			next if isLegendary(speciesSym)
-			allEncounters.push([encounter_type,species_data])
+		allEncounters = []
+		encounters.types.keys.each do |encounter_type|
+			next if encounter_type == :Special
+			encounterList = encounter_tables[encounter_type]
+			next if !encounterList
+			encounterList.each do |encounter|
+				speciesSym = encounter[1]
+				species_data = GameData::Species.get(speciesSym)
+				next if species_data.isLegendary?
+				allEncounters.push([encounter_type,species_data])
+			end
 		end
-	end
 	  
     allEncounters.uniq!
     allEncounters.compact!
@@ -474,17 +473,15 @@ Events.onWildPokemonCreate += proc {|sender,e|
 		end
 		if encounterable
 			echoln("Overwriting the discovered wild pokemon with a #{species}!")
-			level = pokemon.level
-			pokemon.species = species
-			pokemon.level = level # Level is reset on species change
-			pokemon.name = GameData::Species.get(pokemon.species).name
+			overwriteWildPokemonSpecies(pokemon,species)
 			pokemon.ability_index = $PokemonTemp.currentDexSearch[2]
 			pokemon.form = species_data.form
 			pokemon.reset_moves
 			pokemon.learn_move($PokemonTemp.currentDexSearch[1]) if $PokemonTemp.currentDexSearch[1]
+			pokemon.removeItems
 			pokemon.setItems($PokemonTemp.currentDexSearch[3]) if $PokemonTemp.currentDexSearch[3]
 			# There is a higher chance for shininess
-			pokemon.shinyRerolls *= 2
+			pokemon.shinyRolls *= 2
 			$PokemonTemp.currentDexSearch = nil
 			$search_overlay.dispose if $search_overlay
 		else
@@ -492,6 +489,13 @@ Events.onWildPokemonCreate += proc {|sender,e|
 		end
     end
 }
+
+def overwriteWildPokemonSpecies(pokemon,species)
+    level = pokemon.level
+    pokemon.species = species
+    pokemon.level = level # Level is reset on species change
+    pokemon.name = GameData::Species.get(pokemon.species).name
+end
 
 # Gets a random ID of a legal egg move of the given species and returns it as a move object.
 def getRandomMentorMove(species)

@@ -648,15 +648,131 @@ class Game_Map
         prevCameraX = self.display_x
         prevCameraY = self.display_y
         blackFadeOutIn do
-            self.display_x = (centerX - 7) * 128
-            self.display_y = (centerY - 7) * 128
+            centerCameraOnSpot(centerX, centerY)
+            $scene.updateSpritesets
         end
-        Graphics.update
-        pbWait(Graphics.frame_rate * seconds)
+        frame = 0
+        currentCenterX = centerX
+        currentCenterY = centerY
+        until frame >= Graphics.frame_rate * seconds
+            Graphics.update
+            Input.update
+            pbUpdateSceneMap
+            frame += 1
+        end
         blackFadeOutIn do
             self.display_x = prevCameraX
             self.display_y = prevCameraY
+            $scene.updateSpritesets
         end
+    end
+
+    def controlledCameraPreview(centerX, centerY, maxXOffset = 6, maxYOffset = 3, cameraSpeed = 0.15)
+        prevCameraX = self.display_x
+        prevCameraY = self.display_y
+        blackFadeOutIn do
+            centerCameraOnSpot(centerX, centerY)
+            $scene.updateSpritesets
+        end
+
+        @sprites = {}
+
+        controlArrowsViewport = Viewport.new(0, 0, Graphics.width, Graphics.height)
+        controlArrowsViewport.z = 99999
+        @sprites["scroll_arrow_up"] = AnimatedSprite.new("Graphics/Pictures/uparrow",8,28,40,2,controlArrowsViewport)
+        @sprites["scroll_arrow_up"].x = (Graphics.width - 28) / 2
+        @sprites["scroll_arrow_up"].y = 4
+        @sprites["scroll_arrow_up"].visible = true
+        @sprites["scroll_arrow_up"].play
+
+        @sprites["scroll_arrow_down"] = AnimatedSprite.new("Graphics/Pictures/downarrow",8,28,40,2,controlArrowsViewport)
+        @sprites["scroll_arrow_down"].x = (Graphics.width - 28) / 2
+        @sprites["scroll_arrow_down"].y = Graphics.height - 44
+        @sprites["scroll_arrow_down"].visible = true
+        @sprites["scroll_arrow_down"].play
+
+        @sprites["scroll_arrow_left"] = AnimatedSprite.new("Graphics/Pictures/leftarrow",8,40,28,2,controlArrowsViewport)
+        @sprites["scroll_arrow_left"].x = 4
+        @sprites["scroll_arrow_left"].y = (Graphics.height - 28) / 2
+        @sprites["scroll_arrow_left"].visible = true
+        @sprites["scroll_arrow_left"].play
+
+        @sprites["scroll_arrow_right"] = AnimatedSprite.new("Graphics/Pictures/rightarrow",8,40,28,2,controlArrowsViewport)
+        @sprites["scroll_arrow_right"].x = Graphics.width - 44
+        @sprites["scroll_arrow_right"].y = (Graphics.height - 28) / 2
+        @sprites["scroll_arrow_right"].visible = true
+        @sprites["scroll_arrow_right"].play
+
+        currentCenterX = centerX
+        currentCenterY = centerY
+        loop do
+            Graphics.update
+            Input.update
+            pbUpdateSpriteHash(@sprites)
+            pbUpdateSceneMap
+            break if Input.trigger?(Input::BACK)
+            
+            xDir = 0
+            yDir = 0
+
+            if Input.press?(Input::LEFT)
+                if currentCenterX > centerX - maxXOffset
+                    xDir = -1
+                elsif Input.trigger?(Input::LEFT)
+                    pbSEPlay("Player bump")
+                end
+            elsif Input.press?(Input::RIGHT)
+                if currentCenterX < centerX + maxXOffset
+                    xDir = 1
+                elsif Input.trigger?(Input::RIGHT)
+                    pbSEPlay("Player bump")
+                end
+            end
+
+            if Input.press?(Input::UP)
+                if currentCenterY > centerY - maxYOffset
+                    yDir = -1
+                elsif Input.trigger?(Input::UP)
+                    pbSEPlay("Player bump")
+                end
+            elsif Input.press?(Input::DOWN)
+                if currentCenterY < centerY + maxYOffset
+                    yDir = 1
+                elsif Input.trigger?(Input::DOWN)
+                    pbSEPlay("Player bump")
+                end
+            end
+
+            # Nerf the speed if moving diagonally
+            if xDir != 0 && yDir != 0
+                xDir *= 0.7
+                yDir *= 0.7
+            end
+
+            # Update the position and move the camera
+            currentCenterX += cameraSpeed * xDir
+            currentCenterY += cameraSpeed * yDir
+            centerCameraOnSpot(currentCenterX, currentCenterY)
+
+            # Update the scroll arrows
+            @sprites["scroll_arrow_up"].visible = currentCenterY > centerY - maxYOffset
+            @sprites["scroll_arrow_down"].visible = currentCenterY < centerY + maxYOffset
+            @sprites["scroll_arrow_left"].visible = currentCenterX > centerX - maxXOffset
+            @sprites["scroll_arrow_right"].visible = currentCenterX < centerX + maxXOffset
+        end
+        blackFadeOutIn do
+            pbDisposeSpriteHash(@sprites)
+            controlArrowsViewport.dispose
+
+            self.display_x = prevCameraX
+            self.display_y = prevCameraY
+            $scene.updateSpritesets
+        end
+    end
+
+    def centerCameraOnSpot(centerX, centerY)
+        self.display_x = (centerX - 7) * 128
+        self.display_y = (centerY - 7) * 128
     end
 
     def centerCameraOnPlayer

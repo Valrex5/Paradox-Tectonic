@@ -3,22 +3,41 @@ class PokemonPartyShowcase_Scene
     base   = Color.new(80, 80, 88)
     shadow = Color.new(160, 160, 168)
 
-    def initialize(trainer,snapshot: false,snapShotName: nil,fastSnapshot: false, flags: [])
+    def initialize(trainer,snapshot: false,snapShotName: nil,fastSnapshot: false, npcTrainer: false, illusionsFool: true, flags: [], startWithIndex: 0)
         base = MessageConfig::DARK_TEXT_MAIN_COLOR
         shadow = MessageConfig::DARK_TEXT_SHADOW_COLOR
 
         @sprites = {}
-        @party = trainer.party
+        @party = trainer.party.clone
         @viewport = Viewport.new(0,0,Graphics.width,Graphics.height)
         @viewport.z = 99999
+        @npcTrainer = npcTrainer
 
-        backgroundFileName = "Party/showcase_bg"
-        backgroundFileName += "_postgame" if gameWon?
+        if @npcTrainer
+            backgroundFileName = "Party/showcase_bg_npc"
+        else
+            backgroundFileName = "Party/showcase_bg"
+            backgroundFileName += "_postgame" if gameWon?
+        end
         addBackgroundPlane(@sprites, "bg", backgroundFileName, @viewport)
 
         @sprites["overlay"] = BitmapSprite.new(Graphics.width, Graphics.height, @viewport)
         @overlay = @sprites["overlay"].bitmap
         pbSetSmallFont(@overlay)
+
+        # Fake lead
+        if startWithIndex != 0
+            storage = @party[0]
+            @party[0] = @party[startWithIndex]
+            @party[startWithIndex] = storage
+        end
+
+        # Illusion
+        if illusionsFool && @party[0].hasAbility?(:ILLUSION)
+            storage = @party[0]
+            @party[0] = @party[@party.length - 1]
+            @party[@party.length - 1] = storage
+        end
 
         # Add party Pokémon sprites
         for i in 0...Settings::MAX_PARTY_SIZE
@@ -50,40 +69,45 @@ class PokemonPartyShowcase_Scene
 
         drawFormattedTextEx(@overlay, 32, bottomBarY, Graphics.width, fullDescription, base, shadow)
 
-        # Show player name
-        unless $PokemonSystem.name_on_showcases == 1
+        # Show trainer name
+        if @npcTrainer
+            playerName = "<ar>#{trainer.full_name}</ar>"
+            drawFormattedTextEx(@overlay, Graphics.width - 304, bottomBarY, 300, playerName, base, shadow)
+        elsif $PokemonSystem.name_on_showcases != 1
             playerName = "<ar>#{trainer.name}</ar>"
             drawFormattedTextEx(@overlay, Graphics.width - 164, bottomBarY, 160, playerName, base, shadow)
         end
 
-        # Show game version
-        settingsLabel = "v#{Settings::GAME_VERSION}"
-        settingsLabel += "-dev" if Settings::DEV_VERSION
-        drawFormattedTextEx(@overlay, Graphics.width / 2 + 60, bottomBarY, 160, settingsLabel, base, shadow)
+        unless npcTrainer
+            # Show game version
+            settingsLabel = "v#{Settings::GAME_VERSION}"
+            settingsLabel += "-dev" if Settings::DEV_VERSION
+            drawFormattedTextEx(@overlay, Graphics.width / 2 + 60, bottomBarY, 160, settingsLabel, base, shadow)
 
-        numIcons = 0
-        numIcons += 1 if Randomizer.on?
-        numIcons += 1 if flags.include?("cursed")
-        numIcons += 1 if flags.include?("cursed")
+            numIcons = 0
+            numIcons += 1 if Randomizer.on?
+            numIcons += 1 if flags.include?("cursed")
+            numIcons += 1 if flags.include?("cursed")
 
-        # Show randomizer icon
-        distanceBetweenIcons = 28
-        bottomIconX = Graphics.width / 2 - (numIcons * distanceBetweenIcons) / 2
-        if Randomizer.on?
-            pbDrawImagePositions(@overlay,[["Graphics/Pictures/Party/icon_randomizer",bottomIconX,bottomBarY-4]])
-            bottomIconX += distanceBetweenIcons
-        end
+            # Show randomizer icon
+            distanceBetweenIcons = 28
+            bottomIconX = Graphics.width / 2 - (numIcons * distanceBetweenIcons) / 2
+            if Randomizer.on?
+                pbDrawImagePositions(@overlay,[["Graphics/Pictures/Party/icon_randomizer",bottomIconX,bottomBarY-4]])
+                bottomIconX += distanceBetweenIcons
+            end
 
-        # Show cursed icon
-        if flags.include?("cursed")
-            pbDrawImagePositions(@overlay,[["Graphics/Pictures/Party/icon_cursed",bottomIconX+2,bottomBarY-4]])
-            bottomIconX += distanceBetweenIcons
-        end
+            # Show cursed icon
+            if flags.include?("cursed")
+                pbDrawImagePositions(@overlay,[["Graphics/Pictures/Party/icon_cursed",bottomIconX+2,bottomBarY-4]])
+                bottomIconX += distanceBetweenIcons
+            end
 
-        # Show perfect icon
-        if flags.include?("perfect")
-            pbDrawImagePositions(@overlay,[["Graphics/Pictures/Party/icon_perfect",bottomIconX,bottomBarY-4]])
-            bottomIconX += distanceBetweenIcons
+            # Show perfect icon
+            if flags.include?("perfect")
+                pbDrawImagePositions(@overlay,[["Graphics/Pictures/Party/icon_perfect",bottomIconX,bottomBarY-4]])
+                bottomIconX += distanceBetweenIcons
+            end
         end
 
         pbFadeInAndShow(@sprites) { pbUpdate }
@@ -119,7 +143,7 @@ class PokemonPartyShowcase_Scene
 
         # Display pokemon name
         nameAndLevel = _INTL("#{pokemon.name} Lv. #{pokemon.level.to_s}")
-        drawTextEx(@overlay, displayX + 14, displayY, 200, 1, nameAndLevel, base, shadow)
+        drawTextEx(@overlay, displayX + 4, displayY, 200, 1, nameAndLevel, base, shadow)
 
         # Display item icon
         if pokemon.hasItem?
@@ -137,11 +161,13 @@ class PokemonPartyShowcase_Scene
             end
         end
 
-        # Display ball caught in icon
-        newItemIcon = ItemIconSprite.new(displayX + 200,mainIconY + POKEMON_ICON_SIZE + 16,pokemon.poke_ball,@viewport)
-        newItemIcon.zoom_x = 0.5
-        newItemIcon.zoom_y = 0.5
-        @sprites["ball_#{index}"] = newItemIcon
+        unless @npcTrainer
+            # Display ball caught in icon
+            newItemIcon = ItemIconSprite.new(displayX + 200,mainIconY + POKEMON_ICON_SIZE + 16,pokemon.poke_ball,@viewport)
+            newItemIcon.zoom_x = 0.5
+            newItemIcon.zoom_y = 0.5
+            @sprites["ball_#{index}"] = newItemIcon
+        end
 
         # Display gender
         #genderX = displayX + 2
@@ -210,14 +236,14 @@ class PokemonPartyShowcase_Scene
     end
 end
 
-def enemyTrainerShowcase(trainerClass,trainerName,version=0)
+def enemyTrainerShowcase(trainerClass,trainerName,version=0, illusionsFool: false)
     trainer = pbLoadTrainer(trainerClass,trainerName,version)
-    trainerShowcase(trainer)
+    trainerShowcase(trainer, npcTrainer: true, illusionsFool: illusionsFool)
 end
 
-def trainerShowcase(trainer)
+def trainerShowcase(trainer, npcTrainer: false, illusionsFool: false, flags: [], startWithIndex: 0)
     pbFadeOutIn {
-        PokemonPartyShowcase_Scene.new(trainer)
+        PokemonPartyShowcase_Scene.new(trainer, npcTrainer: npcTrainer, illusionsFool: illusionsFool, flags: flags, startWithIndex: startWithIndex)
     }
 end
 
@@ -227,6 +253,6 @@ def createVisualTrainerDocumentation
         screenshotName = "#{trainerData.trainer_type} #{trainerData.name}"
         screenshotName += " (#{trainerData.version})" if trainerData.version > 0
         screenshotName += " "
-        PokemonPartyShowcase_Scene.new(trainer,snapshot: true,snapShotName: screenshotName,fastSnapshot: true)
+        PokemonPartyShowcase_Scene.new(trainer,snapshot: true,snapShotName: screenshotName,fastSnapshot: true, npcTrainer: true)
     end
 end

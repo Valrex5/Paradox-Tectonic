@@ -349,7 +349,8 @@ class PokeBattle_Move_AddSteelTypeToTargetLowerTargetSpd4 < PokeBattle_Move
     end
 
     def getTargetAffectingEffectScore(user, target)
-        score = 60 if !target.pbHasTypeAI?(:STEEL)
+        score = 0
+        score += 60 unless target.pbHasTypeAI?(:STEEL)
         score += getMultiStatDownEffectScore([:SPEED,4],user,target)
         return score
     end
@@ -416,6 +417,15 @@ class PokeBattle_Move_TypeAndEffectDependsOnUserRotomForm < PokeBattle_Move
             return getLeechEffectScore(user, target)
         end
         return 0
+    end
+
+    def getDetailsForMoveDex(detailsList = [])
+        detailsList << _INTL("Form effects:")
+        detailsList << _INTL("<u>Heat</u>: Burn")
+        detailsList << _INTL("<u>Wash</u>: Numb")
+        detailsList << _INTL("<u>Frost</u>: Frostbite")
+        detailsList << _INTL("<u>Fan</u>: Dizzy")
+        detailsList << _INTL("<u>Mow</u>: Leech")
     end
 end
 

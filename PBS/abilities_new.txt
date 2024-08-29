@@ -4,6 +4,11 @@
 Name = Above It All
 Description = After being attacked, uses Parting Shot to switch out.
 #-------------------------------
+[ACIDRAIN]
+Name = Acid Rain
+Description = At the end of each turn, if in rainstorm, each Pokémon not immune to Rainstorm has their defensive stats lowered by 1 step.
+Flags = RainstormSynergy
+#-------------------------------
 [ADAPTIVESKIN]
 Name = Adaptive Skin
 Description = The user raises the related defensive stat by two steps after each hit taken.
@@ -19,6 +24,10 @@ Description = Grants immunity to Flying-type moves and raises Speed if hit by on
 [AEROSHELL]
 Name = Aeroshell
 Description = After using a wind move, raises both of the Pokémon's defensive stats.
+#-------------------------------
+[AFROTECTION]
+Name = Afrotection
+Description = Protects the Pokémon from recoil damage. The Pokémon doesn't trigger items, abilities, or effects of targets it hits.
 #-------------------------------
 [AFTERIMAGE]
 Name = Afterimage
@@ -318,7 +327,7 @@ Description = When a foe hits the Pokémon, they are warned. If they hit the Pok
 #-------------------------------
 [DARING]
 Name = Daring
-Description = When this Pokémon becomes statused, its Attack is raised by four steps.
+Description = When this Pokémon becomes statused, its Attack is raised by three steps.
 #-------------------------------
 [DARKENEDSKIES]
 Name = Darkened Skies
@@ -726,10 +735,6 @@ Description = Boosts the power of wind-based moves by 50%.
 Name = Gargantuan
 Description = Completely protects allies from foes' multi-target moves.
 #-------------------------------
-[GARLANDGUARDIAN]
-Name = Garland Guardian
-Description = Creates a Safeguard upon entry, protecting from status conditions for 10 turns.
-#-------------------------------
 [GAUSSAFTERSHOCK]
 Name = Gauss Aftershock
 Description = Pokémon that swap in for this have their Speed raised and their PP fully restored.
@@ -752,7 +757,7 @@ Description = Draining moves deal 30% more damage. Can overheal when draining.
 #-------------------------------
 [GOURMAND]
 Name = Gourmand
-Description = Gets a random pinch berry at the end of each turn if it has no item.
+Description = Eats pinch berries earlier than normal. Gets a random pinch berry at the end of each turn if it has no item.
 #-------------------------------
 [GRAVITAS]
 Name = Gravitas
@@ -765,6 +770,10 @@ Description = Moves that bind the opponent deal 50% more damage (on the initial 
 [GRIT]
 Name = Grit
 Description = Boosts Sp. Def by two steps when hit by an attack.
+#-------------------------------
+[GROOVY]
+Name = Groovy
+Description = Raises Attack whenever any Pokémon uses a dance move.
 #-------------------------------
 [GROTESQUEVITALS]
 Name = Grotesque Vitals
@@ -912,7 +921,7 @@ Description = Its same-type attack bonus is based on its party members rather th
 #-------------------------------
 [IMPULSIVE]
 Name = Impulsive
-Description = When this Pokémon becomes statused, its Sp. Atk is raised by four steps.
+Description = When this Pokémon becomes statused, its Sp. Atk is raised by three steps.
 #-------------------------------
 [INDESTRUCTIBLE]
 Name = Indestructible
@@ -1794,6 +1803,11 @@ Name = Summit Spirit
 Description = Boosts Sp. Atk by 30% in hail.
 Flags = HailSynergy
 #-------------------------------
+[SUNBURNING]
+Name = Sun Burning
+Description = At the end of each turn, if in sunshine, each Pokémon not immune to Sunshine has their defensive stats lowered by 1 step.
+Flags = SunSynergy
+#-------------------------------
 [SUNCHASER]
 Name = Sun Chaser
 Description = Boosts Attack by 30% in sunshine.
@@ -1816,11 +1830,6 @@ Description = Powers up Water-type moves by 50%.
 Name = Survivalist
 Description = It avoids hazards and can't be knocked out with one hit.
 Flags = HazardImmunity
-#-------------------------------
-[SUSTAINABLE]
-Name = Sustainable
-Description = Upon entry in sunshine, regenerates its used berry.
-Flags = SunSynergy
 #-------------------------------
 [SWIFTSTOMPS]
 Name = Swift Stomps
@@ -1945,6 +1954,10 @@ Description = If an attacker would activate a random added effect on the Pokémo
 [UNCONQUERABLE]
 Name = Unconquerable
 Description = Blocks random added effects of attacks taken, and prevents critical hits.
+#-------------------------------
+[UNCONVENTIONAL]
+Name = Unconventional
+Description = Moves that use stats other than the default deal 50% more damage.
 #-------------------------------
 [UNFAZED]
 Name = Unfazed

@@ -156,10 +156,6 @@ end
 class PokeBattle_AI_RAYQUAZA < PokeBattle_AI_Boss
     def initialize(user, battle)
         super
-        @beginBattle.push(proc { |user, _battle|
-            user.battle.pbMegaEvolve(user.index)
-        })
-
         @wholeRound += %i[STRATOSPHERESCREAM]
 
         @warnedIFFMove.add(:DRAGONASCENT, {
@@ -176,7 +172,7 @@ class PokeBattle_AI_RAYQUAZA < PokeBattle_AI_Boss
                 next battle.turnCount > 0 && battle.turnCount % 3 == 0
             },
             :warning => proc { |_move, user, _targets, _battle|
-                _INTL("{1}'s rage is at at its peak!",user.pbThis)
+                _INTL("{1}'s rage is at its peak!",user.pbThis)
             },
         })
     end
@@ -886,5 +882,36 @@ class PokeBattle_AI_MAROMATISSE < PokeBattle_AI_Boss
                 _INTL("#{user.pbThis} is warming up its haunting voice!")
             },
         })
+    end
+end
+
+class PokeBattle_AI_GARDEVOIR < PokeBattle_AI_Boss
+    def initialize(user, battle)
+        super
+        secondMoveEveryTurn(:LIFEDEW)
+    end
+end
+
+class PokeBattle_AI_DRUDDIGON < PokeBattle_AI_Boss
+    def initialize(user, battle)
+        super
+        @wholeRound.push(:OCCULTATION)
+
+        @warnedIFFMove.add(:OCCULTATION, {
+            :condition => proc { |_move, _user, _target, battle|
+                next battle.turnCount % 2 == 0
+            },
+            :warning => proc { |_move, user, targets, _battle|
+                _INTL("{1} is haloed in Dragon Energy!",user.pbThis)
+            },
+        })
+    end
+end
+
+class PokeBattle_AI_BELLOSSOM < PokeBattle_AI_Boss
+    def initialize(user, battle)
+        super
+        @firstTurnOnly.push(:HELPINGHAND)
+        @requiredMoves.push(:HELPINGHAND)
     end
 end

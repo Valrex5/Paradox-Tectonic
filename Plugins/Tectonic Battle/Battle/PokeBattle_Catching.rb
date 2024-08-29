@@ -15,9 +15,9 @@ class PokeBattle_Battle
         curBoxName = @peer.pbBoxName(currentBox)
         boxName    = @peer.pbBoxName(storedBox)
         if $PokemonStorage[currentBox].isDonationBox?
-            pbDisplayPaused(_INTL("Box \"{1}\" is a donation box.", curBoxName))      
+            pbDisplayPaused(_INTL("Box \"{1}\" on the Pokémon Storage PC is a donation box.", curBoxName))
             pbDisplayPaused(_INTL("{1} was transferred to box \"{2}\".", pkmn.name, boxName))
-        elsif storedBox != currentBox 
+        elsif storedBox != currentBox
             pbDisplayPaused(_INTL("Box \"{1}\" on the Pokémon Storage PC was full.", curBoxName))
             pbDisplayPaused(_INTL("{1} was transferred to box \"{2}\".", pkmn.name, boxName))
         else
@@ -125,6 +125,11 @@ class PokeBattle_Battle
         # Mentor moves tutorial
         if !@caughtPokemon.empty? && $Trainer.pokedex.owned_count >= 4 && !$PokemonGlobal.mentorMovesTutorialized
             playMentorshipTutorial
+        end
+
+        # Enable the PokEstate with a phonecall
+        if getGlobalSwitch(ESTATE_DISABLED_SWITCH) && !getGlobalSwitch(ESTATE_PHONECALL_GLOBAL) && $Trainer.pokedex.owned_count >= 12
+            $PokemonGlobal.shouldProcEstateCall = true
         end
 
         @caughtPokemon.clear

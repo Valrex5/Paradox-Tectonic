@@ -64,6 +64,9 @@ class PokeBattle_Battle
     attr_accessor :foeAmbushing
     attr_reader   :statItemsAreMetagameRevealed
     attr_reader   :magneticGauntletBallsRecovered
+    attr_accessor :laneTargeting # Whether or not pokemon can only target foes across from them
+    attr_accessor :shiftEnabled # Whether a Pokemon can use an action to switch spots with their ally
+    attr_accessor :doubleShift # Whether shifting is allowed in double battles
 
     #=============================================================================
     # Creating the battle class
@@ -156,6 +159,9 @@ class PokeBattle_Battle
         @playerAmbushing = false
         @foeAmbushing = false
         @magneticGauntletBallsRecovered = 0
+        @laneTargeting = false
+        @shiftEnabled = false
+        @doubleShift = false
         if GameData::Move.exists?(:STRUGGLE)
             @struggle = PokeBattle_Move.from_pokemon_move(self, Pokemon::Move.new(:STRUGGLE))
         else
@@ -164,12 +170,12 @@ class PokeBattle_Battle
         # System for learning the player's abilities
         @knownAbilities = {}
         @party1.each do |pokemon|
-            knownAlready = false
-            knownAlready = true if pokemon.getAbilityList.length == 1
             @knownAbilities[pokemon.personalID] = []
-            abilityToKnow = pokemon.getAbilityList[1]
+
+            next unless pokemon.getAbilityList.length == 1
+            abilityToKnow = pokemon.getAbilityList[0][0]
             @knownAbilities[pokemon.personalID].push(abilityToKnow)
-            echoln("Player's side pokemon #{pokemon.name}'s ability #{abilityToKnow} is known by the AI") if knownAlready
+            echoln("Player's side pokemon #{pokemon.name}'s ability #{abilityToKnow} is known by the AI, since species only has one legal ability.")
         end
 
         # System for learning the player's moves

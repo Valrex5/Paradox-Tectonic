@@ -382,7 +382,20 @@ class PokeBattle_Battler
 
     def activatesTargetAbilities?(aiCheck = false)
         return false if shouldItemApply?(:PROXYFIST,aiCheck)
+        return false if shouldAbilityApply?(:AFROTECTION, aiCheck)
         return false if shouldAbilityApply?(:JUGGERNAUT, aiCheck)
+        return true
+    end
+
+    def activatesTargetItem?(aiCheck = false)
+        return false if shouldItemApply?(:PROXYFIST,aiCheck)
+        return false if shouldAbilityApply?(:AFROTECTION, aiCheck)
+        return true
+    end
+
+    def activatesTargetEffects?(aiCheck = false)
+        return false if shouldItemApply?(:PROXYFIST,aiCheck)
+        return false if shouldAbilityApply?(:AFROTECTION, aiCheck)
         return true
     end
 
@@ -558,6 +571,11 @@ class PokeBattle_Battler
         @pokemon.extraMovesPerTurn = GameData::Avatar.get(@species).num_turns - 1
     end
 
+    def hpBasedEffectResistance
+        return 1.0 unless boss?
+        return 1.0 / (@pokemon.hpMult.to_f || DEFAULT_BOSS_HP_MULT.to_f)
+    end
+
     def evenTurn?
         return @battle.turnCount.even?
     end
@@ -581,7 +599,9 @@ class PokeBattle_Battler
     end
 
     def isLastAlive?
-        return false if @battle.wildBattle? && opposes?
+        if @battle.wildBattle? && opposes?
+            return !hasAlly?
+        end
         return false if fainted?
         return @battle.pbGetOwnerFromBattlerIndex(@index).able_pokemon_count == 1
     end

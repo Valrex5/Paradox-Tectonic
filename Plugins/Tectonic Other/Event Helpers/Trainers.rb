@@ -1,7 +1,3 @@
-def battlePerfected?
-	return $game_switches[94]
-end
-
 def perfectTrainer(maxTrainerLevel=15,giveDrop=true)
 	blackFadeOutIn() {
 		setMySwitch('D',true)
@@ -57,7 +53,7 @@ def perfectDoubleAncientTrainer(event1,event2)
 		setFollowerGone(event2)
 	}
 
-	pbMessage("The fleeing trainers dropped some food!")
+	pbMessage(_INTL("The fleeing trainers dropped some food!"))
 	pbReceiveItem(:VANILLATULUMBA,2)
 end
 
@@ -125,7 +121,7 @@ def candiesForLevel(level)
   when 71..100
 	itemsGiven = [:EXPCANDYXL,1] # 64_000
   else
-	pbMessage("Unassigned level passed to pbTrainerDropsItem: #{maxTrainerLevel}") if $DEBUG
+	pbMessage(_INTL("Unassigned level passed to pbTrainerDropsItem: #{maxTrainerLevel}")) if $DEBUG
 	itemsGiven = [:EXPCANDYXS,2] # 500
   end
   return itemsGiven
@@ -172,7 +168,7 @@ end
 def setFollowerInactive(eventId=0,switch='A')
 	followers = getFollowerPokemon(eventId)
 	if followers.nil? || followers.length == 0
-		pbMessage("ERROR: Could not find follower Pokemon!") if $DEBUG
+		pbMessage(_INTL("ERROR: Could not find follower Pokemon!")) if $DEBUG
 		return
 	end
 	followers.each do |follower|
@@ -185,7 +181,7 @@ end
 def setFollowerGone(eventId=0)
 	followers = getFollowerPokemon(eventId)
 	if followers.nil? || followers.length == 0
-		pbMessage("ERROR: Could not find follower Pokemon!") if $DEBUG
+		pbMessage(_INTL("ERROR: Could not find follower Pokemon!")) if $DEBUG
 		return
 	end
 	followers.each do |follower|
@@ -255,34 +251,73 @@ Events.onMapChange += proc { |_sender,*args|
 	followerEventGraphicSwap
 }
 
-def followerEventGraphicSwap(reset = false)
-	# Followers where the trainer info is in the name
-	for event in $game_map.events.values
-		match = event.name.match(/follower\(:([a-zA-Z0-9_]+),"(.+)"(?:,([0-9]+))?(?:,([0-9]+))?\)/)
+# follower(:TRAINER_TYPE,"Trainer Name", VERSION_NUMBER, PARTY_INDEX*)
+AUTO_FOLLOWER_NAME_FLAG_REGEX = /follower\(:([a-zA-Z0-9_]+),"(.+)"(?:,([0-9]+))?(?:,([0-9]+))?\)/
+
+# villainfollower(VILLAIN_NUMBER, FIGHT_NUMBER, PARTY_INDEX*)
+RANDOM_NPC_FOLLOWER_NAME_FLAG_REGEX = /randomnpcfollower\((?:([0-9]+)),(?:([0-9]+))(?:,([0-9]+))?\)/
+
+# Followers where the trainer info is in the name
+def eachAutoFollowerInMap
+    for event in $game_map.events.values
+		match = event.name.match(AUTO_FOLLOWER_NAME_FLAG_REGEX)
 		next unless match
+        yield event, match
+    end
+end
 
-		cursed = event.name.match(/cursedfollower/)
+def eachRandomNPCAutoFollowerInMap
+    for event in $game_map.events.values
+		match = event.name.match(RANDOM_NPC_FOLLOWER_NAME_FLAG_REGEX)
+		next unless match
+        yield event, match
+    end
+end
 
-		# Parse the event name
-		trainerClass = match[1].to_sym
-		trainerName = match[2]
-		trainerVersion = match[3].to_i || 0
-		partyIndex = match[4].to_i || 0
+def eachTrainerWithAutoFollowerInMap
+    eachAutoFollowerInMap do |event, match|
+        cursed = event.name.match(/cursedfollower/)
 
-		# Don't use the cursed version if it doesnt actually exist
-		if cursed && tarotAmuletActive? && GameData::Trainer.try_get(trainerClass, trainerName, trainerVersion + 1)
-			trainerVersion += 1
-		end
+        # Parse the event name
+        trainerClass = match[1].to_sym
+        trainerName = match[2]
+        trainerVersion = match[3].to_i || 0
+        partyIndex = match[4].to_i || 0
 
+        # Don't use the cursed version if it doesnt actually exist
+        if cursed && tarotAmuletActive? && GameData::Trainer.try_get(trainerClass, trainerName, trainerVersion + 1)
+            trainerVersion += 1
+        end
+
+        trainer = pbLoadTrainer(trainerClass, trainerName, trainerVersion)
+
+        yield event, trainer, partyIndex
+    end
+
+    eachRandomNPCAutoFollowerInMap do |event, match|
+        # Parse the event name
+        villainNumber = match[1].to_i
+        fightVersion = match[2].to_i || 0
+        trainerClass, trainerName, trainerVersion = getRandomNPCTrainerDetails(villainNumber,fightVersion)
+        partyIndex = match[3].to_i || 0
+
+        trainer = pbLoadTrainer(trainerClass, trainerName, trainerVersion)
+
+        yield event, trainer, partyIndex
+    end
+end
+
+def followerEventGraphicSwap(reset = false)
+    eachTrainerWithAutoFollowerInMap do |event, trainer, partyIndex|
 		# Find the pokemon that the event represents
-		pokemon = pbLoadTrainer(trainerClass, trainerName, trainerVersion).displayPokemonAtIndex(partyIndex)
+		pokemon = trainer.displayPokemonAtIndex(partyIndex)
 
 		newPages = {}
 
 		# Find all the pages that need to be replaced
 		event.event.pages.each_with_index do |page,pageIndex|
 			if reset
-				next if page.graphic.character_name.empty?
+				next unless page.graphic.character_name.include?("Followers")
 			else
 				next unless page.graphic.character_name == "00Overworld Placeholder"
 			end

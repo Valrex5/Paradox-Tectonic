@@ -58,6 +58,17 @@ class PokeBattle_Move_StartGravity5 < PokeBattle_Move
     end
 end
 
+# Empowered Gravity
+class PokeBattle_Move_EmpoweredGravity < PokeBattle_Move_StartGravity5
+    def pbEffectGeneral(user)
+        super
+        user.eachOpposing do |b|
+            battle.pbDisplay(_INTL("{1} was slammed into the ground!", user.pbThis))
+            b.applyFractionalDamage(1.0/4.0)
+        end
+    end
+end
+
 #===============================================================================
 # Heals every active battler by 1/8th of their HP for the next 5 turns. (Floral Gramarye)
 #===============================================================================
@@ -120,5 +131,25 @@ class PokeBattle_Move_EmpoweredGreyMist < PokeBattle_Move_StartResetAllBattlersS
         user.giveItem(:BLACKSLUDGE)
 
         transformType(user, :POISON)
+    end
+end
+
+#===============================================================================
+# Reduces the damage the user's side takes from non-attack sources of damage
+# for 4 turns.
+# (Enchantment)
+#===============================================================================
+class PokeBattle_Move_StartUserSideLessDamageFromNonAttackDamage < PokeBattle_Move
+    def initialize(battle, move)
+        super
+        @enchantmentDuration = 4
+    end
+
+    def pbEffectGeneral(user)
+        user.pbOwnSide.applyEffect(:NaturalProtection, @enchantmentDuration)
+    end
+
+    def getEffectScore(user, _target)
+        return getEnchantmentEffectScore(user, @enchantmentDuration)
     end
 end

@@ -1,6 +1,6 @@
 module Settings
     # The version of your game. It has to adhere to the MAJOR.MINOR.PATCH format.
-    GAME_VERSION = "3.2.0"
+    GAME_VERSION = "3.3.0"
     DEV_VERSION  = true
   
     #=============================================================================
@@ -203,16 +203,19 @@ module Settings
     #   * Y coordinate of the graphic on the map, in squares.
     #   * Name of the graphic, found in the Graphics/Pictures folder.
     #   * The graphic will always (true) or never (false) be shown on a wall map.
-    REGION_MAP_EXTRAS = [
-      [0, 51, 0, 0, "Abyssal Cave", false],
-      [0, 52, 0, 0, "Volcanic Shore", false],
-      [0, 55, 0, 0, "Guardian Island", false],
-      [0, 85, 0, 0, "Eventide Isle", false],
-      [0, 87, 0, 0, "Isle of Dragons", false],
-      [0, 98, 0, 0, "Tri Island", false],
-      [0, 100, 0, 0, "Battle Monument", false],
-      [0, 152, 0, 0, "Spirit Atoll", false],
-    ]
+    def self.getRegionMapExtras
+        return [
+            [0, UNDERGROUND_RIVER_VISITED_SWITCH, 0, 0, "Underground River", false],
+            [0, VOLCANIC_SHORE_VISITED_SWITCH, 0, 0, "Volcanic Shore", false],
+            [0, TEMPEST_REALM_VISITED_SWITCH, 0, 0, "Tempest Realm", false],
+            [0, GUARDIAN_ISLAND_VISITED_SWITCH, 0, 0, "Guardian Island", false],
+            [0, EVENTIDE_ISLE_VISITED_SWITCH, 0, 0, "Eventide Isle", false],
+            [0, ISLE_OF_DRAGONS_VISITED_SWITCH, 0, 0, "Isle of Dragons", false],
+            [0, TRI_ISLAND_VISITED_SWITCH, 0, 0, "Tri Island", false],
+            [0, BATTLE_MONUMENT_VISITED_SWITCH, 0, 0, "Battle Monument", false],
+            [0, SPIRIT_ATOLL_VISITED_SWITCH, 0, 0, "Spirit Atoll", false],
+        ]
+    end
   
     #=============================================================================
   
@@ -355,6 +358,8 @@ module Settings
       "choice28"
     ]
 
+    #=============================================================================
+
     # Whether the Exp gained from beating a Pokémon should be scaled depending on
     # the gainer's level.
     SCALED_EXP_FORMULA        = false
@@ -378,4 +383,29 @@ module Settings
     CHECK_EVOLUTION_AFTER_ALL_BATTLES   = true
     # Whether fainted Pokémon can try to evolve after a battle.
     CHECK_EVOLUTION_FOR_FAINTED_POKEMON = true
+
+    #=============================================================================
+
+    def self.achievement_page_names
+        return ["",
+            _INTL("Main Story"),
+            _INTL("Gyms"),
+            _INTL("Avatars"),
+            _INTL("Collection"),
+            _INTL("Exploration"),
+            _INTL("Sidequests"),
+            _INTL("Battle Monument"),
+            _INTL("Battle"),
+            _INTL("Other"),
+        ]
+    end
+
+    def self.collection_reward_page_names
+        return ["",
+            _INTL("Area"),
+            _INTL("Type"),
+            _INTL("Tribe"),
+            _INTL("Generation"),
+        ]
+    end
 end
