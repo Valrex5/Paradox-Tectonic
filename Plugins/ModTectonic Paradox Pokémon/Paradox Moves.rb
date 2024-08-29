@@ -271,7 +271,7 @@ end
 #===============================================================================
 class PokeBattle_Move_BoostIfSuperEffective < PokeBattle_Move
     def pbBaseDamage(baseDmg, user, target)
-        baseDmg *= 1.33 if Effectiveness.super_effective?(typeModToCheck(user.battle, type, user, target, move, aiCheck))
+        baseDmg *= 1.33 if Effectiveness.super_effective?(target.damageState.typeMod)
         return baseDmg
     end
 end

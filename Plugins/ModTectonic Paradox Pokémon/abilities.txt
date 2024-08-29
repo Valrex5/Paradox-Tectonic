@@ -13,6 +13,10 @@ Name = Banshee's Melisma
 Description = Boosts Special Attack by 50% but the user is locked into the first move they use.
 Flags = ChoiceLocking
 #-------------------------------
+[WILDFUNGUS]
+Name = Wild Fungus
+Description = Reduces damage from super-effective attacks by 25%, if hit by one, hits back immediately with Brutal Swing.
+#-------------------------------
 [ANCIENTDANCE]
 Name = Ancient Dance
 Description = Uses Dragon Dance after a Total Eclipse.

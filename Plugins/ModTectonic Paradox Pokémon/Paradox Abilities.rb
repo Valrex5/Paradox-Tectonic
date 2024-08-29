@@ -20,6 +20,28 @@ BattleHandlers::SpecialAttackCalcUserAbility.add(:BANSHEESMELISMA,
   }
 )
 
+#==========================================================================================================================
+# Takes less 25% damage from super-effective moves, if hit by one, attacks immediately with Brutal Swing (Wild Fungus)
+#==========================================================================================================================
+
+BattleHandlers::DamageCalcTargetAbility.add(:WILDFUNGUS,
+  proc { |ability, user, target, move, mults, _baseDmg, type, aiCheck, battle|
+    if Effectiveness.super_effective?(typeModToCheck(user.battle, type, user, target, move, aiCheck))
+      mults[:final_damage_multiplier] *= 0.75
+      target.aiLearnsAbility(ability) unless aiCheck
+    end
+  }
+)
+
+BattleHandlers::TargetAbilityOnHit.add(:WILDFUNGUS,
+  proc { |ability, user, target, move, battle, aiCheck, aiNumHits|
+        next unless Effectiveness.super_effective?(target.damageState.typeMod)
+        next if target.fainted?
+        next -30 * aiNumHits if aiCheck
+        battle.forceUseMove(target, :BRUTALSWING, user.index, ability: ability)
+  }
+)
+
 #===============================================================================
 # Uses Dragon Dance when a Total Eclipse occurs (Ancient Dance)
 #===============================================================================

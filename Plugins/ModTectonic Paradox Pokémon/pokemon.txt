@@ -1,5 +1,5 @@
 #-------------------------------
-[934]
+[6000]
 Name = Megadon
 InternalName = GREATTUSK
 Type1 = GROUND
@@ -32,7 +32,7 @@ BattlerEnemyY = 28
 BattlerShadowX = 1
 BattlerShadowSize = 3
 #-------------------------------
-[935]
+[6001]
 Name = Gigglyruff
 InternalName = SCREAMTAIL
 Type1 = FAIRY
@@ -65,13 +65,13 @@ BattlerEnemyY = 26
 BattlerShadowX = 0
 BattlerShadowSize = 2
 #-------------------------------
-[936]
+[6002]
 Name = Oongaboonguss
 InternalName = BRUTEBONNET
 Type1 = GRASS
 Type2 = DARK
 # HP, Attack, Defense, Speed, Sp. Atk, Sp. Def
-BaseStats = 123,71,76,29,96,89
+BaseStats = 123,96,76,29,71,89
 # Total = 484
 GenderRate = Female50Percent
 GrowthRate = Medium
@@ -79,7 +79,7 @@ BaseEXP = 162
 EffortPoints = 2,0,0,0,0,0
 Rareness = 75
 Happiness = 70
-Abilities = INTIMIDATE,RAINDISH
+Abilities = RAINDISH,WILDFUNGUS
 Moves = 1,ABSORB,1,ASTONISH,4,GROWTH,8,ANESTHETIZE,12,MEGADRAIN,16,SYNTHESIS,20,TEASE,24,INGRAIN,28,SPORE,32,GIGADRAIN,36,DARKALLURE,40,ENERGYBALL,44,HEALBLOCK,48,GREYMIST,52,MASSDESTRUCTION,56,TERADRAIN,60,SCAM
 Compatibility = Grass
 StepsToHatch = 5355
@@ -99,7 +99,7 @@ BattlerEnemyY = 25
 BattlerShadowX = 0
 BattlerShadowSize = 3
 #-------------------------------
-[937]
+[6003]
 Name = Misdreacon
 InternalName = FLUTTERMANE
 Type1 = GHOST
@@ -133,7 +133,7 @@ BattlerEnemyY = 20
 BattlerShadowX = 0
 BattlerShadowSize = 2
 #-------------------------------
-[938]
+[6004]
 Name = Stegatlas
 InternalName = SLITHERWING
 Type1 = BUG
@@ -167,7 +167,7 @@ BattlerEnemyY = 16
 BattlerShadowX = -3
 BattlerShadowSize = 3
 #-------------------------------
-[939]
+[6005]
 Name = Magnexide
 InternalName = SANDYSHOCKS
 Type1 = ELECTRIC
@@ -202,7 +202,7 @@ BattlerEnemyY = 11
 BattlerShadowX = -1
 BattlerShadowSize = 3
 #-------------------------------
-[940]
+[6006]
 Name = Crimsuna
 InternalName = ROARINGMOON
 Type1 = DRAGON
@@ -236,7 +236,7 @@ BattlerEnemyY = 15
 BattlerShadowX = 3
 BattlerShadowSize = 3
 #-------------------------------
-[941]
+[6007]
 Name = Phantire
 InternalName = IRONTREADS
 Type1 = GROUND
@@ -269,7 +269,7 @@ BattlerEnemyY = 26
 BattlerShadowX = 0
 BattlerShadowSize = 3
 #-------------------------------
-[942]
+[6008]
 Name = Snoglobird
 InternalName = IRONBUNDLE
 Type1 = ICE
@@ -302,7 +302,7 @@ BattlerEnemyY = 23
 BattlerShadowX = 0
 BattlerShadowSize = 2
 #-------------------------------
-[943]
+[6009]
 Name = Haritellator
 InternalName = IRONHANDS
 Type1 = FIGHTING
@@ -336,7 +336,7 @@ BattlerEnemyY = 17
 BattlerShadowX = -3
 BattlerShadowSize = 3
 #-------------------------------
-[944]
+[6010]
 Name = Hydreigulum
 InternalName = IRONJUGULIS
 Type1 = DARK
@@ -370,7 +370,7 @@ BattlerEnemyY = 11
 BattlerShadowX = 2
 BattlerShadowSize = 3
 #-------------------------------
-[945]
+[6011]
 Name = Satellatlas
 InternalName = IRONMOTH
 Type1 = FIRE
@@ -404,7 +404,7 @@ BattlerEnemyY = 14
 BattlerShadowX = -7
 BattlerShadowSize = 2
 #-------------------------------
-[946]
+[6012]
 Name = Mechanitar
 InternalName = IRONTHORNS
 Type1 = ROCK
@@ -437,7 +437,7 @@ BattlerEnemyY = 14
 BattlerShadowX = -3
 BattlerShadowSize = 3
 #-------------------------------
-[947]
+[6013]
 Name = Glaivadin
 InternalName = IRONVALIANT
 Type1 = STEEL
@@ -470,7 +470,7 @@ BattlerEnemyY = 14
 BattlerShadowX = -3
 BattlerShadowSize = 3
 #-------------------------------
-[948]
+[6014]
 Name = Walking Wake
 InternalName = WALKINGWAKE
 Type1 = WATER
@@ -503,7 +503,7 @@ BattlerEnemyY = 12
 BattlerShadowX = 9
 BattlerShadowSize = 3
 #-------------------------------
-[949]
+[6015]
 Name = Gouging Fire
 InternalName = GOUGINGFIRE
 Type1 = FIRE
@@ -536,7 +536,7 @@ BattlerEnemyY = 17
 BattlerShadowX = 0
 BattlerShadowSize = 3
 #-------------------------------
-[950]
+[6016]
 Name = Raging Bolt
 InternalName = RAGINGBOLT
 Type1 = ELECTRIC
@@ -569,7 +569,7 @@ BattlerEnemyY = 11
 BattlerShadowX = 0
 BattlerShadowSize = 3
 #-------------------------------
-[951]
+[6017]
 Name = Iron Leaves
 InternalName = IRONLEAVES
 Type1 = GRASS
@@ -602,7 +602,7 @@ BattlerEnemyY = 18
 BattlerShadowX = -2
 BattlerShadowSize = 2
 #-------------------------------
-[952]
+[6018]
 Name = Iron Boulder
 InternalName = IRONBOULDER
 Type1 = ROCK
@@ -635,7 +635,7 @@ BattlerEnemyY = 21
 BattlerShadowX = -7
 BattlerShadowSize = 3
 #-------------------------------
-[953]
+[6019]
 Name = Iron Crown
 InternalName = IRONCROWN
 Type1 = STEEL
@@ -668,7 +668,7 @@ BattlerEnemyY = 12
 BattlerShadowX = -3
 BattlerShadowSize = 3
 #-------------------------------
-[954]
+[6020]
 Name = Koraidon
 InternalName = KORAIDON
 Type1 = FIGHTING
@@ -701,7 +701,7 @@ BattlerEnemyY = 9
 BattlerShadowX = -2
 BattlerShadowSize = 3
 #-------------------------------
-[955]
+[6021]
 Name = Miraidon
 InternalName = MIRAIDON
 Type1 = ELECTRIC
