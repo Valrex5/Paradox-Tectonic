@@ -39,19 +39,9 @@ end
 
 #===============================================================================
 # Power increases with the user's positive stat changes (ignores negative ones). (Rising Power)
-# This move is physical if user's Attack is higher than its Special Attack
 # (after applying stat steps)
 #===============================================================================
 class PokeBattle_Move_ScalesUsersPositiveStatSteps < PokeBattle_Move
-    def initialize(battle, move)
-        super
-        @calculated_category = 1
-    end
-
-    def calculateCategory(user, _targets)
-        return selectBestCategory(user)
-    end
-
     def pbBaseDamage(baseDmg, user, _target)
         mult = 0
         GameData::Stat.each_battle { |s| mult += user.steps[s.id] if user.steps[s.id] > 0 }
@@ -72,7 +62,7 @@ class PokeBattle_Move_ScalesTargetsPositiveStatSteps < PokeBattle_Move
 end
 
 #===============================================================================
-# Power increases the less PP this move has. (Trump Card)
+# Power increases the less PP this move has.
 #===============================================================================
 class PokeBattle_Move_ScalesWithLostPP < PokeBattle_Move
     def pbBaseDamage(_baseDmg, _user, _target)
@@ -119,8 +109,8 @@ end
 class PokeBattle_Move_ScalesTargetsWeight < PokeBattle_Move
     def pbBaseDamage(_baseDmg, user, target)
         ret = 15
-        weight = [target.pbWeight,2000].min
-        ret += ((3 * (weight**0.5)) / 5).floor * 5
+        weight = [target.pbWeight / 10,2000].min
+        ret += ((4 * (weight**0.5)) / 5).floor * 5
         return ret
     end
 end
@@ -162,7 +152,10 @@ class PokeBattle_Move_HardPlace < PokeBattle_Move
             real_defense = ally_battler.pbDefense
             highestDefense = real_defense if real_defense > highestDefense
         end
-        return [highestDefense, 40].max
+        highestDefense = (highestDefense/5)*5 # Round to nearest 5
+        highestDefense = 40 if highestDefense < 40
+        highestDefense = 200 if highestDefense > 200
+        return highestDefense
     end
 end
 

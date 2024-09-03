@@ -4,7 +4,7 @@
 class PokeBattle_Move_StartSunshine8 < PokeBattle_WeatherMove
     def initialize(battle, move)
         super
-        @weatherType = :Sun
+        @weatherType = :Sunshine
     end
 end
 
@@ -22,11 +22,11 @@ end
 #===============================================================================
 # Burns the target and sets Sun
 #===============================================================================
-class PokeBattle_Move_BurnTargetStartSunshine4 < PokeBattle_InviteMove
+class PokeBattle_Move_BurnTargetStartSunshine8 < PokeBattle_InviteMove
     def initialize(battle, move)
         super
-        @weatherType = :Sun
-        @durationSet = 4
+        @weatherType = :Sunshine
+        @durationSet = 8
         @statusToApply = :BURN
     end
 end
@@ -34,15 +34,15 @@ end
 #===============================================================================
 # Starts rainy weather. (Rain)
 #===============================================================================
-class PokeBattle_Move_StartRain8 < PokeBattle_WeatherMove
+class PokeBattle_Move_StartRainstorm8 < PokeBattle_WeatherMove
     def initialize(battle, move)
         super
-        @weatherType = :Rain
+        @weatherType = :Rainstorm
     end
 end
 
 # Empowered Rain
-class PokeBattle_Move_EmpoweredRain < PokeBattle_Move_StartRain8
+class PokeBattle_Move_EmpoweredRainstorm < PokeBattle_Move_StartRainstorm8
     include EmpoweredMove
 
     def pbEffectGeneral(user)
@@ -56,11 +56,11 @@ end
 #===============================================================================
 # Numbs the target and sets Rain
 #===============================================================================
-class PokeBattle_Move_NumbTargetStartRain4 < PokeBattle_InviteMove
+class PokeBattle_Move_NumbTargetStartRainstorm8 < PokeBattle_InviteMove
     def initialize(battle, move)
         super
-        @weatherType = :Rain
-        @durationSet = 4
+        @weatherType = :Rainstorm
+        @durationSet = 8
         @statusToApply = :NUMB
     end
 end
@@ -89,11 +89,11 @@ end
 #===============================================================================
 # Dizzies the target and sets Sandstorm
 #===============================================================================
-class PokeBattle_Move_DizzyTargetStartSandstorm4 < PokeBattle_InviteMove
+class PokeBattle_Move_DizzyTargetStartSandstorm8 < PokeBattle_InviteMove
     def initialize(battle, move)
         super
         @weatherType = :Sandstorm
-        @durationSet = 4
+        @durationSet = 8
         @statusToApply = :DIZZY
     end
 end
@@ -124,11 +124,11 @@ end
 #===============================================================================
 # Frostbites the target and sets Hail
 #===============================================================================
-class PokeBattle_Move_FrostbiteTargetStartHail4 < PokeBattle_InviteMove
+class PokeBattle_Move_FrostbiteTargetStartHail8 < PokeBattle_InviteMove
     def initialize(battle, move)
         super
         @weatherType = :Hail
-        @durationSet = 4
+        @durationSet = 8
         @statusToApply = :FROSTBITE
     end
 end

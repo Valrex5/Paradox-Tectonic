@@ -233,6 +233,16 @@ class PokeBattle_Move_Fling < PokeBattle_Move
     def resetMoveUsageState
         @chosenItem = nil
     end
+
+    def getDetailsForMoveDex(detailsList = [])
+        detailsList << _INTL("<u>150 BP</u>: Pearl of Fate, Iron Ball")
+        detailsList << _INTL("<u>100 BP</u>: Choice Items, Weather Rocks, Life Orb")
+        detailsList << _INTL("<u>75 BP</u>: Everything else")
+        detailsList << _INTL("<u>Poison</u>: Poison Orb")
+        detailsList << _INTL("<u>Burn</u>: Burn Orb")
+        detailsList << _INTL("<u>Frostbite</u>: Frost Orb")
+        detailsList << _INTL("<u>Leech</u>: Big Root, Binding Band")
+    end
 end
 
 #===============================================================================
@@ -352,6 +362,17 @@ class PokeBattle_Move_NaturalGift < PokeBattle_Move
     def resetMoveUsageState
         @chosenItem = nil
     end
+
+    def getDetailsForMoveDex(detailsList = [])
+        @typeArray.each_pair do |typeID, berryList|
+            lineText = "<u>#{GameData::Type.get(typeID).name}</u>: "
+            berryList.each_with_index do |berryID,index|
+                lineText += GameData::Item.get(berryID).name
+                lineText += ", " unless index == berryList.length - 1
+            end
+            detailsList << lineText
+        end
+    end
 end
 
 #===============================================================================
@@ -440,9 +461,15 @@ end
 #===============================================================================
 class PokeBattle_Move_EatBerryRaiseDefenses3 < PokeBattle_Move
     def pbMoveFailed?(user, _targets, show_message)
-        return false if user.hasAnyBerry?
-        @battle.pbDisplay(_INTL("But it failed, because #{user.pbThis(true)} has no berries!")) if show_message
-        return true
+        unless user.hasAnyBerry?
+            @battle.pbDisplay(_INTL("But it failed, because #{user.pbThis(true)} has no berries!")) if show_message
+            return true
+        end
+        unless user.itemActive?
+            @battle.pbDisplay(_INTL("But it failed, because #{user.pbThis(true)} cannot eat its berry!")) if show_message
+            return true
+        end
+        return false
     end
 
     def pbEffectGeneral(user)

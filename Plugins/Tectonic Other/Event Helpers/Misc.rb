@@ -15,7 +15,7 @@ def pbReceiveRandomPokemon(level)
 	possibleSpecies = []
 	GameData::Species.each do |species_data|
 		next if species_data.get_evolutions.length > 0
-		next if isLegendary(species_data.id)
+		next if species_data.isLegendary?
 		possibleSpecies.push(species_data)
 	end
 	speciesDat = possibleSpecies.sample
@@ -48,19 +48,13 @@ def hasPokemonInParty(speciesToCheck)
 end
 
 def playerIsOutdoors?
-	begin
-		return GameData::MapMetadata.get($game_map.map_id).outdoor_map
-	rescue
-		return false
-	end
+	return false unless GameData::MapMetadata.exists?($game_map.map_id)
+	return GameData::MapMetadata.get($game_map.map_id).outdoor_map
 end
 
 def teamEditingAllowed?()
-	begin
-		return !GameData::MapMetadata.get($game_map.map_id).no_team_editing
-	rescue
-		return true
-	end
+	return true unless GameData::MapMetadata.exists?($game_map.map_id)
+	return !GameData::MapMetadata.get($game_map.map_id).no_team_editing
 end
 
 def showNoTeamEditingMessage()

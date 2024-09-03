@@ -1,3 +1,5 @@
+HAZARD_POKEMON_GLOBAL_SWITCH = 255
+
 SaveData.register(:catching_minigame) do
 	ensure_class :CatchingMinigame
 	save_value { $catching_minigame }
@@ -31,7 +33,11 @@ class CatchingMinigame
         @cutSceneLocation = cutSceneLocation
         @returnLocation = returnLocation
         @active = true
-        pbMessage(_INTL("Catch the best Pokemon you can in #{turnsGiven} turns of battle!"))
+        blackFadeOutIn {
+            enableHazardPokemon
+            transferPlayerToEvent(@cutSceneLocation[0],@cutSceneLocation[1],@cutSceneLocation[2])
+        }
+        pbMessage(_INTL("Catch the best Pokemon you can in {1} turns of battle!",turnsGiven))
     end
 
     def active?
@@ -40,7 +46,7 @@ class CatchingMinigame
 
     def submitForScoring(pokemon)
         score = scorePokemon(pokemon,@baseLevelForScoring)
-        pbMessage(_INTL("Your #{pokemon.name} is rated at #{score}."))
+        pbMessage(_INTL("Your {1} is rated at {2}.",pokemon.name,score))
         if score > @currentMaxScore
             @currentMaxScore = score
             @currentMaxScorePokemon = pokemon
@@ -71,22 +77,25 @@ class CatchingMinigame
     end
 
     def endMinigame()
-        transferPlayer(@cutSceneLocation)
+        blackFadeOutIn {
+            disableHazardPokemon
+            transferPlayerToEvent(@cutSceneLocation[0],@cutSceneLocation[1],@cutSceneLocation[2])
+        }
         pbWait(20)
         if @currentMaxScorePokemon.nil?
             pbMessage(_INTL("You caught no Pokemon worth any points."))
         else
-            pbMessage(_INTL("Your best catch was a level #{@currentMaxScorePokemon.level} " + 
-                "#{GameData::Species.get(currentMaxScorePokemon.species).real_name}, which gives you a score of #{@currentMaxScore}."))
+            speciesName = GameData::Species.get(currentMaxScorePokemon.species).name
+            pbMessage(_INTL("Your best catch was a level {1} {2}, which gives you a score of {3}.",@currentMaxScorePokemon.level,speciesName,@currentMaxScore))
             giveReward(@currentMaxScore)
         end
         @currentMaxScore = 0
         @turnsLeft = 0
         pbWait(10)
-        mapName = pbGetMessage(MessageTypes::MapNames,@returnLocation[3])
-        pbMessage(_INTL("Returning to #{mapName}."))
+        mapName = pbGetMessage(MessageTypes::MapNames,@returnLocation[2])
+        pbMessage(_INTL("Returning to {1}.",mapName))
         pbWait(20)
-        transferPlayer(@returnLocation)
+        transferPlayerToEvent(@returnLocation[0],@returnLocation[1],@returnLocation[2])
         @active = false
     end
 
@@ -94,26 +103,32 @@ class CatchingMinigame
         item = nil
         itemCount = 1
         case score
-        when 0..10
+        when 0..9
             item = nil
-        when 11..20
+        when 10..19
             item = :POKEBALL
             itemCount = 2
-        when 21..30
+        when 20..29
             item = :GREATBALL
             itemCount = 2
-        when 31..40
+        when 30..39
             item = :ABILITYCAPSULE
-        when 41..50
+        when 40..49
             item = :ULTRABALL
             itemCount = 2
-        when 51..60
+        when 50..59
             item = :EXPCANDYL
-        when 61..70
+        when 60..69
+            item = :RELICCOPPER
+            itemCount = 2
+        when 70..79
+            item = :EXPCANDYL
+            itemCount = 2
+        when 80..89
+            item = :RELICSILVER
+        when 90..999
             item = :RELICGOLD
-        when 71..999
-            item = :ULTRABALL
-            itemCount = 6
+            unlockAchievement(:WIN_FISHING_CONTEST)
         end
         if !item.nil?
             pbMessage(_INTL("You've earned a reward!"))
@@ -123,16 +138,12 @@ class CatchingMinigame
         end
     end
 
-    def transferPlayer(transferLoc)
-        $game_temp.player_transferring = true
-        $game_temp.player_new_x = transferLoc[0]
-        $game_temp.player_new_y = transferLoc[1]
-        $game_temp.player_new_direction = transferLoc[2]
-        $game_temp.player_new_map_id = transferLoc[3] || $game_map.map_id
-        $game_temp.transition_processing = true
-        $scene.transfer_player
-        $game_map.autoplay
-        $game_map.refresh
+    def enableHazardPokemon
+        setGlobalSwitch(HAZARD_POKEMON_GLOBAL_SWITCH,false)
+    end
+
+    def disableHazardPokemon
+        setGlobalSwitch(HAZARD_POKEMON_GLOBAL_SWITCH,true)
     end
 end
 
@@ -167,7 +178,7 @@ class CatchingMinigameBattle < PokeBattle_Battle
       pbMessage(_INTL("You've ran out of turns!"))
       @decision = 3
     else
-      #pbMessage("You have #{$catching_minigame.turnsLeft} turns left in the contest.")
+      #pbMessage(_INTL("You have #{$catching_minigame.turnsLeft} turns left in the contest."))
     end
   end
 end
@@ -311,9 +322,13 @@ def pbStepTakenCatchingContest(repel_active)
 end
 
 def hearAboutCatchingMinigameHighScore
-  pbMessage(_INTL("It was a #{$catching_minigame.highScorePokemonSpeciesName}, right? At level #{$catching_minigame.highScorePokemonLevel}?"))
+  pbMessage(_INTL("It was a {1}, right? At level {2}?",$catching_minigame.highScorePokemonSpeciesName,$catching_minigame.highScorePokemonLevel))
   score = $catching_minigame.highScore
-  pbMessage(_INTL("That one earned you #{score > 60 ? "a whoppin' " : ""}#{score} points."))
+  if score > 60
+    pbMessage(_INTL("That one earned you a whoppin' {1} points.",score))
+  else
+    pbMessage(_INTL("That one earned you {1} points.",score))
+  end
   if $catching_minigame.highScorePokemonSpeciesName == "Lugia"
     pbMessage(_INTL("..."))
     pbMessage(_INTL("What?! You reeled in the legendary king of the ocean?!"))

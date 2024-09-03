@@ -84,7 +84,7 @@ class PokeBattle_Struggle < PokeBattle_Move
         @function   = "Struggle"
         @baseDamage = 50
         @type       = nil
-        @category   = 0
+        @category   = 3
         @accuracy   = 0
         @pp         = -1
         @target     = 0
@@ -94,11 +94,6 @@ class PokeBattle_Struggle < PokeBattle_Move
         @calcType   = nil
         @powerBoost = false
         @snatched   = false
-        @calculated_category = 0
-    end
-
-    def calculateCategory(user, _targets)
-        return selectBestCategory(user)
     end
 
     def pbEffectAfterAllHits(user, target)
@@ -319,11 +314,12 @@ class PokeBattle_StatUpMove < PokeBattle_Move
     end
 
     def pbEffectGeneral(user)
-        return if damagingMove?
+        return if damagingMove? && !spreadMove?
         user.tryRaiseStat(@statUp[0], user, increment: @statUp[1], move: self)
     end
 
     def pbAdditionalEffect(user, _target)
+        return if spreadMove?
         user.tryRaiseStat(@statUp[0], user, increment: @statUp[1], move: self)
     end
 
@@ -353,11 +349,12 @@ class PokeBattle_MultiStatUpMove < PokeBattle_Move
     end
 
     def pbEffectGeneral(user)
-        return if damagingMove?
+        return if damagingMove? && !spreadMove?
         user.pbRaiseMultipleStatSteps(@statUp, user, move: self)
     end
 
     def pbAdditionalEffect(user, _target)
+        return if spreadMove?
         user.pbRaiseMultipleStatSteps(@statUp, user, move: self)
     end
 
@@ -480,7 +477,7 @@ end
 class PokeBattle_FixedDamageMove < PokeBattle_Move
     def pbFixedDamage(_user, _target); return 1; end
 
-    def pbCalcTypeModSingle(moveType, defType, user, target)
+    def pbCalcTypeModSingle(moveType, defType, user=nil, target=nil)
         ret = super
         ret = Effectiveness::NORMAL_EFFECTIVE_ONE unless Effectiveness.ineffective?(ret)
         return ret
@@ -662,10 +659,11 @@ module Recoilable
     end
 
     def finalRecoilFactor(user, checkingForAI = false)
-        return 0 if user.shouldAbilityApply?(:ROCKHEAD, checkingForAI)
+        return 0 unless user.takesRecoilDamage?(checkingForAI)
         factor = recoilFactor
-        factor /= 2 if user.shouldAbilityApply?(:UNBREAKABLE, checkingForAI)
-        factor *= 2 if user.shouldAbilityApply?(:LINEBACKER, checkingForAI)
+        if checkingForAI
+            factor * user.recoilDamageMult
+        end
         return factor
     end
 
@@ -1020,10 +1018,13 @@ class PokeBattle_DrainMove < PokeBattle_Move
 
     def shouldDrain?(_user, _target); return true; end
 
+    def canOverheal?(_user, _target); return false; end
+
     def pbEffectAgainstTarget(user, target)
         return if target.damageState.hpLost <= 0 || !shouldDrain?(user, target)
         hpGain = (target.damageState.hpLost * drainFactor(user, target)).round
-        user.pbRecoverHPFromDrain(hpGain, target)
+        canOverheal = canOverheal?(user, target)
+        user.pbRecoverHPFromDrain(hpGain, target, canOverheal: canOverheal)
     end
 
     def getDamageBasedEffectScore(user,target,damage)
@@ -1248,6 +1249,10 @@ end
 class PokeBattle_PartyAttackMove < PokeBattle_Move
     def multiHitMove?; return true; end
 
+    def listEmpty?
+        return @partyAttackerList.nil? || @partyAttackerList.empty?
+    end
+
     def calculatePartyAttackerList(user)
         @partyAttackerList = []
         @battle.eachInTeamFromBattlerIndex(user.index) do |pkmn, i|
@@ -1268,7 +1273,7 @@ class PokeBattle_PartyAttackMove < PokeBattle_Move
     end
 
     def pbNumHits(user, _targets, _checkingForAI = false)
-        calculatePartyAttackerList(user) if @partyAttackerList.empty?
+        calculatePartyAttackerList(user) if listEmpty?
         return @partyAttackerList.length
     end
 
@@ -1283,7 +1288,7 @@ class PokeBattle_PartyAttackMove < PokeBattle_Move
     end
 
     def pbBaseDamageAI(_baseDmg, user, _target)
-        calculatePartyAttackerList(user) if @partyAttackerList.empty?
+        calculatePartyAttackerList(user) if listEmpty?
         totalBaseStat = 0
         @partyAttackerList.each do |i|
             totalBaseStat += @battle.pbParty(user.index)[i].baseStats[@statUsed]
@@ -1455,7 +1460,7 @@ end
 
 # Each subclass must have an initialization method that defines the @typeHated variable
 class PokeBattle_TypeSuperMove < PokeBattle_Move
-    def pbCalcTypeModSingle(moveType, defType, user, target)
+    def pbCalcTypeModSingle(moveType, defType, user=nil, target=nil)
         effectiveness = super
         return effectiveness if Effectiveness.ineffective?(effectiveness)
         return Effectiveness::SUPER_EFFECTIVE_ONE if defType == @typeHated
@@ -1486,7 +1491,7 @@ module EmpoweredMove
         if @battle.pbSideSize(user.index) < 3
             summonMessage ||= _INTL("#{user.pbThis} summons another Avatar!")
             @battle.pbDisplay(summonMessage)
-            @battle.summonAvatarBattler(species, user.level, user.index % 2)
+            @battle.summonAvatarBattler(species, user.level, 0, user.index % 2)
         end
     end
 end

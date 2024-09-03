@@ -33,6 +33,7 @@ class PokeBattle_Move
 
     def calculateCategory(user, targets)
         return selectBestCategory(user, targets[0]) if punchingMove? && user.hasActiveAbility?(:MYSTICFIST)
+        return selectBestCategory(user) if adaptiveMove?
         return -1
     end
 
@@ -44,8 +45,10 @@ class PokeBattle_Move
     def pbDisplayUseMessage(user, _targets = [])
         if empoweredMove?
             unless @battle.autoTesting
-                @battle.pbDisplayWithFormatting(_INTL("\\ss{1} used <c2=06644bd2>{2}</c2>!", user.pbThis,
-@name))
+                @battle.pbDisplayWithFormatting(_INTL("\\ss{1} used <c2=06644bd2>{2}</c2>!", user.pbThis, @name))
+                if user.pbOwnedByPlayer?
+                    unlockAchievement(:USE_PRIMEVAL_MOVE)
+                end
             end
         else
             @battle.pbDisplayBrief(_INTL("{1} used {2}!", user.pbThis, @name))
@@ -296,6 +299,12 @@ target.pbThis(true)))
 
         target.damageState.displayedDamage = damage
 
+        # Last Gasp prevents all damage
+        if target.effectActive?(:LastGasp)
+            target.damageState.displayedDamage = 0
+            return
+        end
+
         # Substitute takes the damage
         if target.damageState.substitute
             damage = target.effects[:Substitute] if damage > target.effects[:Substitute]
@@ -433,6 +442,7 @@ target.pbThis(true)))
     #=============================================================================
     def pbEffectivenessMessage(_user, target, numTargets = 1)
         return if target.damageState.disguise
+        return if target.effectActive?(:LastGasp)
         return if defined?($PokemonSystem.effectiveness_messages) && $PokemonSystem.effectiveness_messages == 1
         if Effectiveness.hyper_effective?(target.damageState.typeMod)
             if numTargets > 1

@@ -17,8 +17,9 @@ class PokeBattle_Battler
                 BattleHandlers.triggerUserAbilityOnHit(ability, user, target, move, @battle)
                 user.pbItemHPHealCheck
             end
+
             # Target's item
-            unless user.hasActiveItem?(:PROXYFIST)
+            if user.activatesTargetItem?
                 target.eachActiveItem(true) do |item|
                     oldHP = user.hp
                     BattleHandlers.triggerTargetItemOnHit(item, user, target, move, @battle)
@@ -32,7 +33,7 @@ class PokeBattle_Battler
             # Trackers
             if target.opposes?(user)
                 target.tookPhysicalHit = true if move.physicalMove?
-                target.tookSpecialHit = true if move.physicalMove?
+                target.tookSpecialHit = true if move.specialMove?
             end
 
             # Learn the target's damage affecting abilities
@@ -41,7 +42,7 @@ class PokeBattle_Battler
                 target.aiLearnsAbility(abilityID)
             end
         end
-        if target.opposes?(user) && !user.hasActiveItem?(:PROXYFIST)
+        if target.opposes?(user) && user.activatesTargetEffects?
             # Rage
             if target.effectActive?(:Rage) && !target.fainted? && target.tryRaiseStat(:ATTACK, target, increment: 2)
                 @battle.pbDisplay(_INTL("{1}'s rage is building!", target.pbThis))
@@ -196,26 +197,53 @@ user.pbThis(true)))
             user.consumeItem(user.effects[:GemConsumed])
             user.disableEffect(:GemConsumed,true)
         end
+
+        # NOTE: The consume animation and message for Herbs are shown immediately
+        # after the move's animation, but the item is only consumed now.
+
         # Consume user's empowering Herb
         if user.effectActive?(:EmpoweringHerbConsumed,true)
-            # NOTE: The consume animation and message for Herbs are shown immediately
-            #       after the move's animation, but the item is only consumed now.
             user.consumeItem(user.effects[:EmpoweringHerbConsumed])
             user.disableEffect(:EmpoweringHerbConsumed,true)
         end
         # Consume user's skill Herb
         if user.effectActive?(:SkillHerbConsumed,true)
-            # NOTE: The consume animation and message for Herbs are shown immediately
-            #       after the move's animation, but the item is only consumed now.
             user.consumeItem(:SKILLHERB)
             user.disableEffect(:SkillHerbConsumed,true)
         end
         # Consume user's luck Herb
         if user.effectActive?(:LuckHerbConsumed,true)
-            # NOTE: The consume animation and message for Herbs are shown immediately
-            #       after the move's animation, but the item is only consumed now.
             user.consumeItem(:LUCKHERB)
             user.disableEffect(:LuckHerbConsumed,true)
+        end
+
+        # Herbs on opponents
+        user.eachOpposing do |opp|
+            # Consume opponent's mirror Herb
+            if opp.pointsAt?(:MirrorHerbConsumed,user)
+                @battle.pbCommonAnimation("UseItem", opp)
+                @battle.pbDisplay(_INTL("{1} copies {2}'s stat increases with its {3}!", opp.pbThis, user.pbThis(false), getItemName(:MIRRORHERB)))
+                statsHash = opp.effects[:MirrorHerbCopiedStats]
+                statArray = []
+                GameData::Stat.each_main_battle do |stat|
+                    next unless statsHash.key?(stat.id)
+                    increment = statsHash[stat.id]
+                    statArray.push(stat.id)
+                    statArray.push(increment)
+                end
+                opp.pbRaiseMultipleStatSteps(statArray, opp)
+                opp.consumeItem(:MIRRORHERB)
+                opp.disableEffect(:MirrorHerbConsumed)
+            end
+            # Consume opponent's paradox Herb
+            if opp.pointsAt?(:ParadoxHerbConsumed,user)
+                @battle.pbCommonAnimation("UseItem", opp)
+                @battle.pbDisplay(_INTL("{1} resets {2}'s stats with its {3}!", opp.pbThis, user.pbThis(false), getItemName(:PARADOXHERB)))
+                @battle.pbAnimation(:REFRESH, user, nil)
+                user.resetStatSteps
+                opp.consumeItem(:PARADOXHERB)
+                opp.disableEffect(:ParadoxHerbConsumed)
+            end
         end
     end
 

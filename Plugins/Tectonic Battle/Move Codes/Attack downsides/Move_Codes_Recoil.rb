@@ -143,7 +143,7 @@ class PokeBattle_Move_UserLosesHalfOfCurrentHP < PokeBattle_Move
 end
 
 #===============================================================================
-# User loses one third of their current hp in recoil. (Shred Shot, Shards)
+# User loses one third of their current hp in recoil.
 #===============================================================================
 class PokeBattle_Move_UserLosesThirdOfCurrentHP < PokeBattle_Move
     def pbEffectAfterAllHits(user, target)
@@ -159,36 +159,32 @@ class PokeBattle_Move_UserLosesThirdOfCurrentHP < PokeBattle_Move
 end
 
 #===============================================================================
+# User loses one tenth of their total hp in recoil. (Shred Shot, Shards)
+#===============================================================================
+class PokeBattle_Move_UserLosesTenthOfTotalHP < PokeBattle_Move
+    def pbEffectAfterAllHits(user, target)
+        return if target.damageState.unaffected
+        return unless user.takesIndirectDamage?
+        @battle.pbDisplay(_INTL("{1} lost some of its HP!", user.pbThis))
+        user.applyFractionalDamage(1.0 / 10.0, true)
+    end
+
+    def getEffectScore(user, _target)
+        return getHPLossEffectScore(user, 0.1)
+    end
+end
+
+#===============================================================================
 # Damages user by 1/2 of its max HP, even if this move misses. (Mind Blown)
 #===============================================================================
-class PokeBattle_Move_UserLosesHalfOfTotalHPExplosive < PokeBattle_Move
+class PokeBattle_Move_UserLosesHalfOfTotalHP < PokeBattle_Move
     def worksWithNoTargets?; return true; end
 
-    def pbMoveFailed?(user, _targets, show_message)
-        unless @battle.moldBreaker
-            bearer = @battle.pbCheckGlobalAbility(:DAMP)
-            unless bearer.nil?
-                if show_message
-                    @battle.pbShowAbilitySplash(bearer, :DAMP)
-                    @battle.pbDisplay(_INTL("{1} cannot use {2}!", user.pbThis, @name))
-                    @battle.pbHideAbilitySplash(bearer)
-                end
-                return true
-            end
-        end
-        return false
-    end
-
-    def shouldShade?(_user, _target)
-        return false
-    end
-
-    def pbMoveFailedAI?(_user, _targets); return false; end
-
-    def pbSelfKO(user)
+    def pbEffectAfterAllHits(user, target)
+        return if target.damageState.unaffected
         return unless user.takesIndirectDamage?
-        user.pbReduceHP((user.totalhp / 2.0).round, false)
-        user.pbItemHPHealCheck
+        @battle.pbDisplay(_INTL("{1} loses half its health in recoil!", user.pbThis))
+        user.applyFractionalDamage(1.0 / 2.0, true)
     end
 
     def getEffectScore(user, _target)

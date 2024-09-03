@@ -649,12 +649,12 @@ end
 
 #===============================================================================
 # Grounds the target while it remains active. Hits some semi-invulnerable
-# targets. (Smack Down, Thousand Arrows)
+# targets. (Smack Down, Thousand Arrows, Weigh Anchor)
 #===============================================================================
 class PokeBattle_Move_HitsTargetInSkyGroundsTarget < PokeBattle_Move
     def hitsFlyingTargets?; return true; end
 
-    def pbCalcTypeModSingle(moveType, defType, user, target)
+    def pbCalcTypeModSingle(moveType, defType, user=nil, target=nil)
         return Effectiveness::NORMAL_EFFECTIVE_ONE if moveType == :GROUND && defType == :FLYING
         return super
     end

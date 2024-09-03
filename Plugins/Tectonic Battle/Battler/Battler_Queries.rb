@@ -382,7 +382,20 @@ class PokeBattle_Battler
 
     def activatesTargetAbilities?(aiCheck = false)
         return false if shouldItemApply?(:PROXYFIST,aiCheck)
+        return false if shouldAbilityApply?(:AFROTECTION, aiCheck)
         return false if shouldAbilityApply?(:JUGGERNAUT, aiCheck)
+        return true
+    end
+
+    def activatesTargetItem?(aiCheck = false)
+        return false if shouldItemApply?(:PROXYFIST,aiCheck)
+        return false if shouldAbilityApply?(:AFROTECTION, aiCheck)
+        return true
+    end
+
+    def activatesTargetEffects?(aiCheck = false)
+        return false if shouldItemApply?(:PROXYFIST,aiCheck)
+        return false if shouldAbilityApply?(:AFROTECTION, aiCheck)
         return true
     end
 
@@ -409,15 +422,22 @@ class PokeBattle_Battler
 
     def takesIndirectDamage?(showMsg = false, aiCheck = false)
         return false if fainted?
-        if shouldAbilityApply?(:MAGICGUARD, aiCheck)
+        %i[MAGICGUARD LASTGASP].each do |indirectDamageBlockingAbility|
+            next unless shouldAbilityApply?(indirectDamageBlockingAbility, aiCheck)
             if showMsg
-                showMyAbilitySplash(:MAGICGUARD)
+                showMyAbilitySplash(indirectDamageBlockingAbility)
                 @battle.pbDisplay(_INTL("{1} is unaffected!", pbThis))
                 hideMyAbilitySplash
             end
-            aiLearnsAbility(:MAGICGUARD) unless aiCheck
+            aiLearnsAbility(indirectDamageBlockingAbility) unless aiCheck
             return false
         end
+        return true
+    end
+
+    def takesRecoilDamage?(aiCheck = false)
+        return false if shouldAbilityApply?(%i[ROCKHEAD AFROTECTION], aiCheck)
+        return false unless takesIndirectDamage?(false, aiCheck)
         return true
     end
 
@@ -557,6 +577,11 @@ class PokeBattle_Battler
         @pokemon.extraMovesPerTurn = GameData::Avatar.get(@species).num_turns - 1
     end
 
+    def hpBasedEffectResistance
+        return 1.0 unless boss?
+        return 1.0 / (@pokemon.hpMult.to_f || DEFAULT_BOSS_HP_MULT.to_f)
+    end
+
     def evenTurn?
         return @battle.turnCount.even?
     end
@@ -580,7 +605,9 @@ class PokeBattle_Battler
     end
 
     def isLastAlive?
-        return false if @battle.wildBattle? && opposes?
+        if @battle.wildBattle? && opposes?
+            return !hasAlly?
+        end
         return false if fainted?
         return @battle.pbGetOwnerFromBattlerIndex(@index).able_pokemon_count == 1
     end
@@ -894,4 +921,7 @@ class PokeBattle_Battler
         return false
     end
 
+    def moveOutcomePredictor
+        return @battle.scene.sprites["move_outcome_#{@index}"]
+    end
 end

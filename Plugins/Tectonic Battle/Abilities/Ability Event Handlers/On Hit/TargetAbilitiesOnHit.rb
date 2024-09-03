@@ -11,14 +11,14 @@ BattleHandlers::TargetAbilityOnHit.add(:SANDBURST,
 
 BattleHandlers::TargetAbilityOnHit.add(:INNERLIGHT,
     proc { |ability, user, target, move, battle, aiCheck, aiNumHits|
-        score = pbBattleWeatherAbility(ability, :Sun, target, battle, false, true, aiCheck)
+        score = pbBattleWeatherAbility(ability, :Sunshine, target, battle, false, true, aiCheck)
         next score * -1 if aiCheck
     }
 )
 
 BattleHandlers::TargetAbilityOnHit.add(:STORMBRINGER,
     proc { |ability, user, target, move, battle, aiCheck, aiNumHits|
-        score = pbBattleWeatherAbility(ability, :Rain, target, battle, false, true, aiCheck)
+        score = pbBattleWeatherAbility(ability, :Rainstorm, target, battle, false, true, aiCheck)
         next score * -1 if aiCheck
     }
 )
@@ -344,14 +344,14 @@ BattleHandlers::TargetAbilityOnHit.add(:FRIGIDREFLECTION,
 
 BattleHandlers::TargetAbilityOnHit.add(:HUGGABLE,
     proc { |ability, user, target, move, battle, aiCheck, aiNumHits|
-          next if target.fainted?
-          next unless move.baseDamage >= 95
-          if aiCheck
+        next if target.fainted?
+        next unless move.baseDamage >= 95
+        if aiCheck
             score = -5
             score -= getNumbEffectScore(target, user)
             next score
-          end
-          battle.forceUseMove(target, :NUZZLE, target.index, ability: ability)
+        end
+        battle.forceUseMove(target, :NUZZLE, user.index, ability: ability)
     }
 )
 
@@ -633,9 +633,9 @@ BattleHandlers::TargetAbilityOnHit.add(:ILLUSION,
 )
 
 BattleHandlers::TargetAbilityOnHit.add(:COREPROVENANCE,
-    proc { |ability, target, battler, move, battle, aiCheck, aiNumHits|
+    proc { |ability, user, target, move, battle, aiCheck, aiNumHits|
         next unless move.physicalMove?
-        next if target.pbOpposingSide.effectAtMax?(:ErodedRock)
+        next if target.pbOwnSide.effectAtMax?(:ErodedRock)
         if aiCheck
             next (target.aboveHalfHealth? ? -10 : 0) * aiNumHits
         end

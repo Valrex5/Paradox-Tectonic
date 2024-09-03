@@ -57,6 +57,11 @@ class PokeBattle_Move_UseRandomUserMoveIfAsleep < PokeBattle_Move
         echoln("The AI will never use Sleep talk.")
         return -1000
     end
+
+    def getDetailsForMoveDex(detailsList = [])
+        detailsList << _INTL("Can't call focusing moves, moves that call other moves, " +
+        "Two Turn moves, Mimic, or Sketch.")
+    end
 end
 
 #===============================================================================
@@ -132,6 +137,12 @@ class PokeBattle_Move_UseRandomMoveFromUserParty < PokeBattle_Move
         move = getAssistMoves(user).sample
         user.pbUseMoveSimple(move)
     end
+
+    def getDetailsForMoveDex(detailsList = [])
+        detailsList << _INTL("Can't call moves that alter the moveset, moves that counter, moves that " +
+            "redirect or steal moves, moves that steal items, Focusing moves, moves that force switches, " +
+            "two turn moves, Protect moves, Helping Hand moves, moves that call other moves, or Destiny Bond.")
+    end
 end
 
 #===============================================================================
@@ -162,15 +173,16 @@ class PokeBattle_Move_UseRandomNonSignatureMove < PokeBattle_Move
         @metronomeMoves = []
         GameData::Move::DATA.keys.each do |move_id|
             move_data = GameData::Move.get(move_id)
-            next if move_data.is_signature?
-            next if move_data.cut
+            next if move_data.learnable?
             next unless move_data.can_be_forced?
             next if @moveBlacklist.include?(move_data.function_code)
             next if move_data.empoweredMove?
-            moveObject = @battle.getBattleMoveInstanceFromID(move_id)
-            next if moveObject.is_a?(PokeBattle_ProtectMove)
-            next if moveObject.is_a?(PokeBattle_HelpingMove)
-            next if moveObject.callsAnotherMove?
+            if battle
+                moveObject = battle.getBattleMoveInstanceFromID(move_id)
+                next if moveObject.is_a?(PokeBattle_ProtectMove)
+                next if moveObject.is_a?(PokeBattle_HelpingMove)
+                next if moveObject.callsAnotherMove?
+            end
             @metronomeMoves.push(move_data.id)
         end
     end
@@ -192,6 +204,12 @@ class PokeBattle_Move_UseRandomNonSignatureMove < PokeBattle_Move
         echoln("The AI will never use Metronome")
         return -1000
     end
+
+    def getDetailsForMoveDex(detailsList = [])
+        detailsList << _INTL("Can't call moves that affect the moveset, moves that redirect or steal moves, " +
+            "moves that steal items, Recharge moves, moves that counter, Focus moves, " +
+            "Protect moves, Helping Hand moves, Snore, After You, or Quash.")
+    end
 end
 
 #===============================================================================
@@ -205,16 +223,19 @@ class PokeBattle_Move_UseChoiceOf3RandomNonSignatureStatusMoves < PokeBattle_Mov
         @discoverableMoves = []
         GameData::Move::DATA.keys.each do |move_id|
             move_data = GameData::Move.get(move_id)
+            next unless move_data.category == 2 # Status moves only
             next if move_data.function_code == "Invalid"
-            next unless move_data.category == 2
             next if move_data.is_signature?
-            next if move_data.cut
+            next unless move_data.learnable?
             next unless move_data.can_be_forced?
-            next if move_data.empoweredMove?
-            moveObject = @battle.getBattleMoveInstanceFromID(move_id)
-            next if moveObject.is_a?(PokeBattle_ProtectMove)
-            next if moveObject.is_a?(PokeBattle_HelpingMove)
-            next if moveObject.callsAnotherMove?
+
+            if battle
+                moveObject = battle.getBattleMoveInstanceFromID(move_id)
+                next if moveObject.is_a?(PokeBattle_ProtectMove)
+                next if moveObject.is_a?(PokeBattle_HelpingMove)
+                next if moveObject.callsAnotherMove?
+            end
+
             @discoverableMoves.push(move_data.id)
         end
     end
@@ -249,7 +270,14 @@ class PokeBattle_Move_UseChoiceOf3RandomNonSignatureStatusMoves < PokeBattle_Mov
     end
 
     def getEffectScore(_user, _target)
-        return 80
+        echoln("The AI will never use Discovered Power")
+        return -1000
+    end
+
+    def getDetailsForMoveDex(detailsList = [])
+        detailsList << _INTL("Can't call Signature moves, moves that affect the moveset, " + 
+            "Recharge moves, moves that counter, Focus moves, Protect moves, Helping Hand moves, " +
+            "or moves that call another move.")
     end
 end
 
@@ -286,5 +314,96 @@ class PokeBattle_Move_UseTwoRandomDragonThemedMoves < PokeBattle_Move
     def getEffectScore(_user, _target)
         echoln("The AI will never use Dragon Invocation")
         return -1000
+    end
+
+    def getDetailsForMoveDex(detailsList = [])
+        detailsList << _INTL("Physical moves that can be called:")
+        @invocationMovesPhysical.uniq.each do |moveID|
+            detailsList << GameData::Move.get(moveID).name
+        end
+
+        detailsList << _INTL("Special moves that can be called:")
+        @invocationMovesSpecial.uniq.each do |moveID|
+            detailsList << GameData::Move.get(moveID).name
+        end
+    end
+end
+
+#===============================================================================
+# The user is given the choice of using one of 3 randomly chosen moves (Selective Memory)
+# in a predetermined list of non-Psychic attacks.
+#===============================================================================
+class PokeBattle_Move_UseChoiceOf3RandomNonSignatureNonPsychicDamagingMoves < PokeBattle_Move
+    def callsAnotherMove?; return true; end
+
+    def initialize(battle, move)
+        super
+        @selectableMoves = %i[
+            HYPERVOICE
+            FLAMETHROWER
+            BUBBLEBLASTER
+            ENERGYBALL
+            THUNDERBOLT
+            ICEBEAM
+            AURASPHERE
+            MIASMA
+            EARTHPOWER
+            COLDFRONT
+            BUGBUZZ
+            POWERGEM
+            SHADOWBALL
+            DRAGONPULSE
+            DARKALLURE
+            FLASHCANNON
+            MOONBLAST
+            CLEARSMOG
+            HEX
+            TRICKYTOXINS
+            CHARGEBEAM
+            BLUSTER
+            BLOSSOM
+            HYPERBEAM
+        ]
+    end
+
+    def resolutionChoice(user)
+        validMoves = []
+        validMoveNames = []
+        until validMoves.length == 3
+            movePossibility = @selectableMoves.sample
+            unless validMoves.include?(movePossibility)
+                validMoves.push(movePossibility)
+                validMoveNames.push(getMoveName(movePossibility))
+            end
+        end
+
+        if @battle.autoTesting
+            @chosenMove = validMoves.sample
+        elsif !user.pbOwnedByPlayer? # Trainer AI
+            @chosenMove = validMoves[0]
+        else
+            chosenIndex = @battle.scene.pbShowCommands(_INTL("Which move should #{user.pbThis(true)} use?"),validMoveNames,0)
+            @chosenMove = validMoves[chosenIndex]
+        end
+    end
+
+    def pbEffectGeneral(user)
+        user.pbUseMoveSimple(@chosenMove) if @chosenMove
+    end
+
+    def resetMoveUsageState
+        @chosenMove = nil
+    end
+
+    def getEffectScore(_user, _target)
+        echoln("The AI will never use Selective Memory")
+        return -1000
+    end
+    
+    def getDetailsForMoveDex(detailsList = [])
+        detailsList << _INTL("Moves that can be rolled:")
+        @selectableMoves.each do |moveID|
+            detailsList << GameData::Move.get(moveID).name
+        end
     end
 end

@@ -100,25 +100,12 @@ class TribalBonusScene
         drawPage()
     end
 
-    def break_string(str, n)
-        arr = []
-        pos = 0     
-        loop do
-            break arr if pos == str.size
-            if str[pos] == ' '
-                pos += 1
-            end
-            m = str.match(/.{1,#{n}}(?=[ ]|\z)|.{,#{n-1}}[ ]/, pos)
-            return nil if m.nil?
-            arr << m[0]
-            pos += m[0].size
-        end
-    end
-
     def drawPage()
         # Draw page title
         overlay = @sprites["overlay"].bitmap
         overlay.clear
+
+        pbDrawImagePositions(overlay,[["Graphics/Pictures/icon_tribal_bonus",20,6]])
 
         drawFormattedTextEx(overlay, 50, 4, Graphics.width, _INTL("<outln2>Tribal Bonus Info</outln2>"), @titlebase, @titleshadow, 18)
 

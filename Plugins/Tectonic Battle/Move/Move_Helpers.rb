@@ -1,7 +1,7 @@
 class PokeBattle_Move
     def shouldHighlight?(user, target)
         if damagingMove?(true)
-            bpAgainstTarget = pbBaseDamageAI(@baseDamage, user, target)
+            bpAgainstTarget = predictedBasePower(user, target)
             if @baseDamage == 1
                 return bpAgainstTarget >= 100
             else
@@ -9,6 +9,10 @@ class PokeBattle_Move
             end
         end
         return false
+    end
+
+    def predictedBasePower(user, target)
+        return pbBaseDamageAI(@baseDamage, user, target)
     end
 
     def shouldShade?(user, target)
@@ -84,7 +88,7 @@ class PokeBattle_Move
             next unless validItemProc.nil? || validItemProc.call(item)
             victim.removeItem(item)
             if block_given?
-                yield item
+                yield item, itemName
             else
                 removeMessage = _INTL("{1} forced {2} to drop their {3}!", remover.pbThis,
                     victim.pbThis(true), itemName)

@@ -209,7 +209,9 @@ DebugMenuCommands.register("analyzeitemdistribution", {
     "name"        => _INTL("Analyze Cross-Map Switching"),
     "description" => _INTL("Find the events which affect events on other maps through pbSetSelfSwitch"),
     "effect"      => proc { |sprites, viewport|
-      writeAllCodeInstances(/pbSetSelfSwitch\(([0-9]+),('[A,B,C,D,a,b,c,d]'),((?:true)|(?:false)),([0-9]+)\)/, "Analysis/switching_analysis.txt")
+      writeAllCodeInstances(/pbSetSelfSwitch\(([0-9]+),('[A,B,C,D,a,b,c,d]'),((?:true)|(?:false)),([0-9]+)\)/, "Analysis/switching_analysis.txt") { |event, page, eventcommand, parameter, match|
+        "\tSetting switch #{match[1]} of event ID #{match[0]} on map ID #{match[3]} to #{match[2]}\r\n"
+      }
     }}
   )
   
@@ -217,7 +219,7 @@ DebugMenuCommands.register("analyzeitemdistribution", {
       writeAllCodeInstances(regex, fileName)
   end
   
-  def writeAllCodeInstances(regex, fileName)
+  def writeAllCodeInstances(regex, fileName, &block)
       mapData = Compiler::MapData.new
       File.open(fileName,"wb") { |file|
           for id in mapData.mapinfos.keys.sort
@@ -225,7 +227,9 @@ DebugMenuCommands.register("analyzeitemdistribution", {
               next if !map || !mapData.mapinfos[id]
               mapName = mapData.mapinfos[id].name
               for key in map.events.keys
-                  describeCodeInstances(id,mapName,map.events[key],file,regex)
+                  describeCodeInstances(id,mapName,map.events[key],file,regex) { |event, page, eventcommand, parameter, match|
+                    block.call(event, page, eventcommand, parameter, match) if block_given?
+                  }
               end
           end
       }
@@ -233,7 +237,7 @@ DebugMenuCommands.register("analyzeitemdistribution", {
       pbMessage(_INTL("Code instance analysis written to #{fileName}"))
   end
   
-  def describeCodeInstances(map_id,map_name,event,file,regex)
+  def describeCodeInstances(map_id,map_name,event,file,regex,&block)
       return [] if !event || event.pages.length==0
       event.pages.each do |page|
           page.list.each do |eventCommand|
@@ -243,9 +247,12 @@ DebugMenuCommands.register("analyzeitemdistribution", {
                   if match
                       eventName = event.name.gsub(",","")
   
-                      string = "Map #{map_name} (#{map_id}), event #{eventName} (#{event.id})\r\n"
-                                          
+                      string = "Map \"#{map_name}\" (#{map_id}), event \"#{eventName}\" (#{event.id})\r\n"
                       file.write(string)
+                      file.write("\t#{parameter}\r\n")
+                      file.write(block.call(event, page, eventCommand, parameter, match)) if block_given?
+                                          
+                      
                   end
               end
           end
@@ -268,10 +275,6 @@ def replaceAllCodeInstances(regex, newText)
         end
         mapData.saveMap(id) if changed
     end
-end
-
-def change
-    replaceAllCodeInstances("pbGet\(1\)\.nil\?","!boxPokemonChosen?")
 end
 
 def replaceCodeInstances(map_id,map_name,event,regex,newText)
@@ -619,6 +622,33 @@ end
     }
   })
 
+  DebugMenuCommands.register("listprimevalmoves", {
+    "parent"      => "analysis",
+    "name"        => _INTL("List primeval moves"),
+    "description" => _INTL("List all primeval moves."),
+    "effect"      => proc { |sprites, viewport|
+      
+      moveDataSorted = []
+      GameData::Move.each do |moveData|
+          next unless moveData.primeval
+          moveDataSorted.push(moveData)
+      end
+  
+      moveDataSorted.sort_by! { |data|
+          GameData::Type.get(data.type).id_number * 10_000 + data.category * 1000 + data.base_damage
+      }
+  
+      File.open("Analysis/primeval_moves.txt","wb") { |file|
+          moveDataSorted.each do |moveData|
+              moveLine = describeMove(moveData.id)
+              moveLine += "\r\n"
+              file.write(moveLine)
+          end
+      }
+      pbMessage(_INTL("Primeval moves information written to Analysis/primeval_moves.txt"))
+    }
+  })
+
   DebugMenuCommands.register("listhelditems", {
     "parent"      => "analysis",
     "name"        => _INTL("List held items"),
@@ -731,7 +761,7 @@ end
           end
       end
   
-      pbMessage("Any legality errors written into the console.")
+      pbMessage(_INTL("Any legality errors written into the console."))
     }}
   )
   

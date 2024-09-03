@@ -3,7 +3,7 @@ class PokeBattle_Battle
     # Shifting a battler to another position in a battle larger than double
     #=============================================================================
     def pbCanShift?(idxBattler)
-        return false if pbSideSize(0) <= 2 && pbSideSize(1) <= 2 # Double battle or smaller
+        return false if !@doubleShift && pbSideSize(0) <= 2 && pbSideSize(1) <= 2 # Double battle or smaller
         idxOther = -1
         case pbSideSize(idxBattler)
         when 1
@@ -87,8 +87,14 @@ class PokeBattle_Battle
             pbCommonAnimation("PrimalKyogre2", battler)
         elsif battler.isSpecies?(:GROUDON)
             pbCommonAnimation("PrimalGroudon2", battler)
+        elsif battler.isSpecies?(:RAYQUAZA)
+            pbCommonAnimation("MegaEvolution", battler)
         end
-        pbDisplay(_INTL("{1}'s Primal Reversion!\nIt reverted to its primal form!", battler.pbThis))
+        if battler.isSpecies?(:RAYQUAZA)
+            pbDisplay(_INTL("{1} is inspired by the echo of an ancient wish!", battler.pbThis))
+        else 
+            pbDisplay(_INTL("{1}'s Primal Reversion!\nIt reverted to its primal form!", battler.pbThis))
+        end 
         # Trigger ability
         battler.pbEffectsOnSwitchIn
     end

@@ -164,7 +164,7 @@ class PokeBattle_Move
     def pbCalcWeatherDamageMultipliers(user,target,type,multipliers,checkingForAI=false)
         weather = @battle.pbWeather
         case weather
-        when :Sun, :HarshSun
+        when :Sunshine, :HarshSun
             if type == :FIRE
                 damageBonus = weather == :HarshSun ? 0.5 : 0.3
                 damageBonus *= 2 if @battle.curseActive?(:CURSE_BOOSTED_SUN)
@@ -175,7 +175,7 @@ class PokeBattle_Move
                 damageReduction *= 2 if @battle.curseActive?(:CURSE_BOOSTED_SUN)
                 multipliers[:final_damage_multiplier] *= (1 - damageReduction)
             end
-        when :Rain, :HeavyRain
+        when :Rainstorm, :HeavyRain
             if type == :WATER
                 damageBonus = weather == :HeavyRain ? 0.5 : 0.3
                 damageBonus *= 2 if @battle.curseActive?(:CURSE_BOOSTED_RAIN)
@@ -477,7 +477,7 @@ class PokeBattle_Move
         # Mass Attack
         if @battle.pbCheckGlobalAbility(:MASSATTACK)
             hpFraction = user.hp / user.totalhp.to_f
-            multipliers[:final_damage_multiplier] *= (1 - hpFraction)
+            multipliers[:final_damage_multiplier] *= hpFraction
         end
 
         # Multi-targeting attacks
