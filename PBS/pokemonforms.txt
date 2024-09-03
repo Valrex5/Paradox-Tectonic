@@ -1351,3 +1351,8 @@ BattlerEnemyY = 17
 FormName = Harvest
 BaseStats = 120,130,81,68,130,81
 Abilities = AUTUMNAL
+#-------------------------------
+[DIANCIE,1]
+FormName = Royal
+BaseStats = 50,160,110,110,160,110
+Abilities = MAGICBOUNCE

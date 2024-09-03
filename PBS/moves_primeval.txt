@@ -958,3 +958,13 @@ Target = None
 Priority = 2
 FunctionCode = SummonAvatarRegieleki
 Description = The user creates a Regieleki avatar to join it.
+#-------------------------------
+[DIAMONDCHANGE]
+Name = Diamond Change
+Type = ROCK
+Category = Status
+Accuracy = 0
+TotalPP = 5
+Target = User
+FunctionCode = DiamondChange
+Description = The user creates and equips the Diamond Sword, then transforms.

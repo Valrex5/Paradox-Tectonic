@@ -404,3 +404,10 @@ Pocket = 5
 Price = 0
 Flags = Leftovers
 Description = User heals 1/16th HP every turn. Will sacrifice itself to cure the user of status.
+#-------------------------------
+[DIAMONDSWORD]
+Name = Diamond Sword
+NamePlural = Diamond Swords
+Pocket = 5
+Price = 0
+Description = Diancie will transform when holding this.
