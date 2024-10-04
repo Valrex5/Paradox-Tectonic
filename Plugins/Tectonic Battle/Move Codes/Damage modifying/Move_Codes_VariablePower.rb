@@ -109,8 +109,8 @@ end
 class PokeBattle_Move_ScalesTargetsWeight < PokeBattle_Move
     def pbBaseDamage(_baseDmg, user, target)
         ret = 15
-        weight = [target.pbWeight,2000].min
-        ret += ((3 * (weight**0.5)) / 5).floor * 5
+        weight = [target.pbWeight / 10,2000].min
+        ret += ((4 * (weight**0.5)) / 5).floor * 5
         return ret
     end
 end
@@ -134,6 +134,7 @@ end
 class PokeBattle_Move_ScalesFaintedPartyMembers < PokeBattle_Move
     def pbBaseDamage(baseDmg, user, target)
         user.ownerParty.each do |partyPokemon|
+            next unless partyPokemon
             next if partyPokemon.personalID == user.personalID
             next unless partyPokemon.fainted?
             baseDmg += 20

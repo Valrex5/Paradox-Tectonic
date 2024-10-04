@@ -215,10 +215,33 @@ def styleFurfrou
 	return false
 end
 
+def styleVivillon
+	pbChoosePokemon(1,3,
+		proc { |poke|
+			!poke.egg? && poke.species == :VIVILLON
+		}
+	)
+	return false if pbGet(1) < 0
+	pkmn = $Trainer.party[pbGet(1)]
+	possibleForms, possibleFormNames = getFormSelectionChoices(:VIVILLON,pkmn.form)
+	pbMessage(_INTL("What pattern would you like me to give it?"))
+	choice = pbShowCommands(nil,possibleFormNames,possibleFormNames.length+1)
+	if choice < possibleForms.length
+		pbMessage(_INTL("#{pkmn.name} swapped to #{possibleFormNames[choice]}!"))
+		
+		pkmn.form = possibleForms[choice].form
+		#pkmn.changeHappiness("groom")
+		refreshFollow(false)
+		return true
+	end
+	return false
+end
+
 def createHisuian
 	unless pbHasItem?(:ORIGINORE)
 		setSpeaker(HISUIAN_WITCH)
 		pbMessage(_INTL("I do not spy any Origin Ore among your possessions."))
+		return
 	end
 
 	actualSpecies = [:HGROWLITHE,:HVOLTORB,:HQWILFISH,:HSNEASEL,:HZORUA,:BASCULIN_2]
@@ -290,7 +313,7 @@ def shinifyPokemonVendor
 	gleamPowderRealName = GameData::Item.get(:GLEAMPOWDER).name
 	pbMessage(_INTL("\\PN hands over the #{gleamPowderRealName}, $30,000, and #{pkmn.name}."))
 
-	pbMessage("And so my work begins!")
+	pbMessage(_INTL("And so my work begins!"))
 	blackFadeOutIn(30) {
 		$PokemonBag.pbDeleteItem(:GLEAMPOWDER)
 		pkmn.shiny = true
@@ -306,6 +329,7 @@ def cloneMinorLegend
 	unless pbHasItem?(:ORIGINORE)
 		setSpeaker(HISUIAN_WITCH)
 		pbMessage(_INTL("I do not spy any Origin Ore among your possessions."))
+		return	
 	end
 
 	possibleSpecies = [:PHIONE,:TYPENULL,:COSMOG,:MELTAN,:KUBFU]
@@ -619,7 +643,7 @@ def basicBallVendor
 	]
 	pbPokemonMart(
 		basicBallStock,
-		_INTL("Welcome to the PokeBall Depot! How may I serve you?"),
+		_INTL("Welcome to the Poké Ball Depot! How may I serve you?"),
 		!CAN_SELL_IN_VENDORS
 	)
 end

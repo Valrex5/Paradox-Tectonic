@@ -55,7 +55,7 @@ class PokeBattle_Battle
                 if $Trainer.has_pokedex
                     pbPlayer.pokedex.register_last_seen(pkmn)
                     if $PokemonSystem.dex_shown_register == 0
-                        pbDisplayPaused(_INTL("You register {1} as caught in the Pokédex.", pkmn.name))
+                        pbDisplayPaused(_INTL("You register {1} as caught in the MasterDex.", pkmn.name))
                         @scene.pbShowPokedex(pkmn.species)
                     end
                 end
@@ -125,6 +125,11 @@ class PokeBattle_Battle
         # Mentor moves tutorial
         if !@caughtPokemon.empty? && $Trainer.pokedex.owned_count >= 4 && !$PokemonGlobal.mentorMovesTutorialized
             playMentorshipTutorial
+        end
+
+        # Enable the PokEstate with a phonecall
+        if getGlobalSwitch(ESTATE_DISABLED_SWITCH) && !getGlobalSwitch(ESTATE_PHONECALL_GLOBAL) && $Trainer.pokedex.owned_count >= 12
+            $PokemonGlobal.shouldProcEstateCall = true
         end
 
         @caughtPokemon.clear

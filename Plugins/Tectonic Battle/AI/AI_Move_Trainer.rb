@@ -196,8 +196,7 @@ class PokeBattle_AI
 
         echoln("[MOVE SCORING] Scoring #{user.pbThis(true)}'s #{move.id} against target #{target.pbThis(true)}:")
         
-        move.calculated_category = move.calculateCategory(user, [target])
-        move.calcType = move.pbCalcType(user)
+        move.calculateUsageOverrides(user, [target])
 
         if aiPredictsFailure?(move, user, target, false)
             @precalculatedChoices[scoringKey] = 0
@@ -252,7 +251,7 @@ class PokeBattle_AI
             end
 
             # Account for the items of the target
-            unless user.hasActiveItemAI?(:PROXYFIST)
+            if user.activatesTargetItem?(true)
                 begin
                     scoreModifierTargetItem = 0
                     target.eachAIKnownActiveItem do |item|

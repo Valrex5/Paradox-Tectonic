@@ -19,3 +19,25 @@ PokeBattle_Battle::BattleStartApplyCurse.add(:CURSE_NO_MERCY_2,
         next curses_array
     }
 )
+
+PokeBattle_Battle::BattleStartApplyCurse.add(:CURSE_NO_MERCY_3,
+    proc { |curse_policy, battle, curses_array|
+        battle.amuletActivates(
+            _INTL("Singular Hypocrisy, Repeated Sixfold"),
+            _INTL("Despite making you use 4, Nora is using 6 battlers!")
+        )
+        curses_array.push(curse_policy)
+        next curses_array
+    }
+)
+
+PokeBattle_Battle::BattleStartApplyCurse.add(:CURSE_NO_MERCY_4,
+    proc { |curse_policy, battle, curses_array|
+        battle.amuletActivates(
+            _INTL("A Fool's Errand"),
+            _INTL("Spirit Guardian Sonya is using 12 battlers. This is a huge battle!")
+        )
+        curses_array.push(curse_policy)
+        next curses_array
+    }
+)

@@ -609,15 +609,15 @@ def getWeatherSettingEffectScore(weatherType, user, battle, finalDuration = 4, c
     case weatherType
     when :Sunshine
         weatherMatchesPolicy = true if user.ownersPolicies.include?(:SUN_TEAM)
-        hasSynergyAbility = true if user.hasActiveAbilityAI?(GameData::Ability.getByFlag("SunSynergy"))
+        hasSynergyAbility = true if user.hasActiveAbilityAI?(GameData::Ability.getByFlag("SunshineSynergy"))
         hasSynergisticType = true if user.pbHasAttackingType?(:FIRE)
     when :Rainstorm
         weatherMatchesPolicy = true if user.ownersPolicies.include?(:RAIN_TEAM)
-        hasSynergyAbility = true if user.hasActiveAbilityAI?(GameData::Ability.getByFlag("RainSynergy"))
+        hasSynergyAbility = true if user.hasActiveAbilityAI?(GameData::Ability.getByFlag("RainstormSynergy"))
         hasSynergisticType = true if user.pbHasAttackingType?(:WATER)
     when :Sandstorm
         weatherMatchesPolicy = true if user.ownersPolicies.include?(:SANDSTORM_TEAM)
-        hasSynergyAbility = true if user.hasActiveAbilityAI?(GameData::Ability.getByFlag("SandSynergy"))
+        hasSynergyAbility = true if user.hasActiveAbilityAI?(GameData::Ability.getByFlag("SandstormSynergy"))
         hasSynergisticType = true if user.pbHasTypeAI?(:ROCK)
     when :Hail
         weatherMatchesPolicy = true if user.ownersPolicies.include?(:HAIL_TEAM)
@@ -918,6 +918,19 @@ def getSafeguardEffectScore(user, duration)
         score += duration * 5
         score += 10 if b.hasSpotsForStatus?
     end
+    
+    return score
+end
+
+def getNaturalProtectionEffectScore(user, duration)
+    score = 0
+    duration -= user.pbOwnSide.countEffect(:NaturalProtection) if user.pbOwnSide.effectActive?(:NaturalProtection)
+    user.battle.eachSameSideBattler(user.index) do |b|
+        score += duration * 5
+        score += 20 if b.burned? || b.frostbitten? || b.poisoned? || b.leeched?
+        score += 40 if b.hasRecoilMove?
+    end
+    score += 30 if user.battle.sandy? || user.battle.icy?
     
     return score
 end

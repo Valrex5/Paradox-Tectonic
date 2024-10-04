@@ -88,7 +88,7 @@ class PokeBattle_Move
             next unless validItemProc.nil? || validItemProc.call(item)
             victim.removeItem(item)
             if block_given?
-                yield item
+                yield item, itemName
             else
                 removeMessage = _INTL("{1} forced {2} to drop their {3}!", remover.pbThis,
                     victim.pbThis(true), itemName)
@@ -256,6 +256,7 @@ class PokeBattle_Move
     end
 
     def switchOutUser(user,switchedBattlers=[],disableMoldBreaker=true,randomReplacement=false,batonPass=false)
+        return unless @battle.pbCanSwitch?(user.index)
         return unless @battle.pbCanChooseNonActive?(user.index)
         @battle.pbDisplay(_INTL("{1} went back to {2}!", user.pbThis, @battle.pbGetOwnerName(user.index)))
         @battle.pbPursuit(user.index)

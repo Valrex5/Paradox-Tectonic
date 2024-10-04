@@ -722,6 +722,11 @@ Gender = Male
 BaseMoney = 32
 IntroBGM = CYCLING2
 #-------------------------------
+[IDEALTRAINER]
+Name = Ideal Trainer
+Gender = Unknown
+BaseMoney = 200
+#-------------------------------
 [IDOL]
 Name = Idol
 Gender = Female
@@ -994,6 +999,12 @@ BattleBGM = Battle villain
 #-------------------------------
 [MASKEDVILLAIN_DOUBLE]
 Name = Masked Villains
+Gender = Unknown
+BaseMoney = 0
+BattleBGM = Battle villain
+#-------------------------------
+[MASKEDVILLAIN_Sang]
+Name = Masked Villain
 Gender = Unknown
 BaseMoney = 0
 BattleBGM = Battle villain
@@ -1406,6 +1417,18 @@ Gender = Male
 BaseMoney = 60
 IntroBGM = ELITETRAINER
 #-------------------------------
+[ROLLERSKATER_F]
+Name = Roller Skater
+Gender = Female
+BaseMoney = 32
+IntroBGM = CYCLING2
+#-------------------------------
+[ROLLERSKATER_M]
+Name = Roller Skater
+Gender = Male
+BaseMoney = 32
+IntroBGM = CYCLING2
+#-------------------------------
 [ROUGHNECK]
 Name = Roughneck
 Gender = Male
@@ -1531,6 +1554,13 @@ Name = Scientist
 Gender = Male
 BaseMoney = 32
 IntroBGM = SCIENTIST
+#-------------------------------
+[SEEKER_Nora]
+Name = Seeker
+Gender = Female
+BaseMoney = 40
+IntroBGM = PSYCHIC
+BattleBGM = Battle nora
 #-------------------------------
 [SHADOWMAVIS]
 Name = Shadow

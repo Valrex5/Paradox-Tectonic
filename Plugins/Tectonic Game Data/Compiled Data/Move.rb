@@ -15,11 +15,16 @@ module GameData
       attr_reader :flags
       attr_reader :real_description
       attr_reader :animation_move
-      attr_reader :signature_of
+      
       attr_reader :primeval
       attr_reader :zmove
       attr_reader :cut
       attr_reader :tectonic_new
+
+      # Metadata
+      attr_accessor :signature_of
+      attr_accessor :level_up_learners
+      attr_accessor :other_learners
   
       DATA = {}
       DATA_FILENAME = "moves.dat"
@@ -91,7 +96,7 @@ module GameData
 
       def adaptive?
         return false if @base_damage == 0
-        return @category == 2
+        return @category == 3
       end
   
       def hidden_move?
@@ -109,17 +114,16 @@ module GameData
         return !damaging?
       end
 
-      # The highest evolution of a line
-      def signature_of=(val)
-        @signature_of = val
-      end
-
-      def is_signature?()
-        return !@signature_of.nil?
+      def is_signature?
+        return !@signature_of.nil? || avatarSignature?
       end
 
       def empoweredMove?
         return @flags.include?("Empowered")
+      end
+
+      def testMove?
+        return @flags.include?("Test")
       end
 
       def categoryLabel
@@ -135,39 +139,40 @@ module GameData
         return priorityLabel
       end
 
+      def self.moveTags
+        return {
+            "Biting"    => _INTL("Bite"),
+            "Punch"     => _INTL("Punch"),
+            "Sound"     => _INTL("Sound"),
+            "Pulse"     => _INTL("Pulse"),
+            "Dance"     => _INTL("Dance"),
+            "Blade"     => _INTL("Blade"),
+            "Wind"      => _INTL("Wind"),
+            "Kicking"   => _INTL("Kick"),
+        }
+      end
+
       def tagLabel
-        category = nil
         @flags.each do |flag|
-          case flag
-          when "Biting"
-              category = _INTL("Bite")
-          when "Punch"
-              category = _INTL("Punch")
-          when "Sound"
-              category = _INTL("Sound")
-          when "Pulse"
-              category = _INTL("Pulse")
-          when "Dance"
-              category = _INTL("Dance")
-          when "Blade"
-              category = _INTL("Blade")
-          when "Wind"
-              category = _INTL("Wind")
-          when "Kicking"
-              category = _INTL("Kick")
-          end
+          next unless GameData::Move.moveTags.key?(flag)
+          return GameData::Move.moveTags[flag]
         end
-        return category
+        return nil
       end
 
       def can_be_forced?
         return !@flags.include?("CantForce")
       end
 
+      def avatarSignature?
+        return @flags.include?("AvatarSignature")
+      end
+
       def learnable?
         return false if @cut
         return false if @primeval
         return false if @zmove
+        return false if avatarSignature?
         return true
       end
 
@@ -177,6 +182,20 @@ module GameData
         return false if @zmove
         return false if @tectonic_new
         return true
+      end
+
+      # Yields all data in order of their id_number.
+      def self.each
+        keys = self::DATA.keys.sort { |a, b|
+            moveDataA = self::DATA[a]
+            moveDataB = self::DATA[b]
+            if moveDataA.type == moveDataB.type
+                moveDataA.id <=> self::DATA[b].id
+            else
+                GameData::Type.get(moveDataA.type).id_number <=> GameData::Type.get(moveDataB.type).id_number
+            end
+        }
+        keys.each { |key| yield self::DATA[key] if !key.is_a?(Integer) }
       end
     end
 end
@@ -310,36 +329,66 @@ module Compiler
   def write_moves
     File.open("PBS/moves_new.txt", "wb") { |f|
       add_PBS_header_to_file(f)
+      currentType = nil
       GameData::Move.each_base do |m|
         next unless m.tectonic_new
+        if currentType != m.type
+            currentType = m.type
+            f.write("\#-------------------------------\r\n")
+            f.write("\#\t\t#{currentType} MOVES\r\n")
+        end
         write_move(f,m)
       end
     }
     File.open("PBS/moves_cut.txt", "wb") { |f|
       add_PBS_header_to_file(f)
+      currentType = nil
       GameData::Move.each_base do |m|
         next unless m.cut
+        if currentType != m.type
+            currentType = m.type
+            f.write("\#-------------------------------\r\n")
+            f.write("\#\t\t#{currentType} MOVES\r\n")
+        end
         write_move(f,m)
       end
     }
     File.open("PBS/moves_z.txt", "wb") { |f|
       add_PBS_header_to_file(f)
+      currentType = nil
       GameData::Move.each_base do |m|
         next unless m.zmove
+        if currentType != m.type
+            currentType = m.type
+            f.write("\#-------------------------------\r\n")
+            f.write("\#\t\t#{currentType} MOVES\r\n")
+        end
         write_move(f,m)
       end
     }
     File.open("PBS/moves_primeval.txt", "wb") { |f|
       add_PBS_header_to_file(f)
+      currentType = nil
       GameData::Move.each_base do |m|
         next unless m.primeval
+        if currentType != m.type
+            currentType = m.type
+            f.write("\#-------------------------------\r\n")
+            f.write("\#\t\t#{currentType} MOVES\r\n")
+        end
         write_move(f,m)
       end
     }
     File.open("PBS/moves.txt", "wb") { |f|
       add_PBS_header_to_file(f)
+      currentType = nil
       GameData::Move.each_base do |m|
         next unless m.canon_move?
+        if currentType != m.type
+            currentType = m.type
+            f.write("\#-------------------------------\r\n")
+            f.write("\#\t\t#{currentType} MOVES\r\n")
+        end
         write_move(f,m)
       end
     }

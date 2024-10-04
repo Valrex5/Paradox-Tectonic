@@ -330,13 +330,14 @@ class PokeBattle_Battle
             # Update each of the player's pokemon's battling streak
             if (trainerBattle? || bossBattle?) && HOT_STREAKS_ACTIVE
                 pbParty(0).each_with_index do |pkmn, i|
+                    next unless pkmn
                     wasOnStreak = pkmn.onHotStreak?
                     if pkmn.fainted? || [2, 3].include?(@decision)
                         pkmn.battlingStreak = 0
-                        pbMessage("#{pkmn.name}'s Hot Streak is now over.") if wasOnStreak
+                        pbMessage(_INTL("#{pkmn.name}'s Hot Streak is now over.")) if wasOnStreak
                     elsif @usedInBattle[0][i]
                         pkmn.battlingStreak += 1
-                        pbMessage("#{pkmn.name} is on a Hot Streak!") if pkmn.onHotStreak? && !wasOnStreak
+                        pbMessage(_INTL("#{pkmn.name} is on a Hot Streak!")) if pkmn.onHotStreak? && !wasOnStreak
                     end
                 end
             end
@@ -393,7 +394,7 @@ class PokeBattle_Battle
             eachBattler do |b|
                 next unless b.boss?
                 loop do
-                    b.pokemon.species = GameData::Avatar::DATA.keys.sample
+                    b.pokemon.species = GameData::Avatar::DATA.values.sample.id[0]
                     break if GameData::Avatar::DATA.has_key?(b.pokemon.species)
                 end
                 setAvatarProperties(b.pokemon)
@@ -548,6 +549,7 @@ class PokeBattle_Battle
             autoPilots = []
             [0,1].each do |sideIndex|
                 pbParty(sideIndex).each_with_index do |partyMember,partyIndex|
+                    next unless partyMember
                     next if partyMember.fainted?
                     next unless partyMember.hasAbility?(:AUTOPILOT)
                     next if partyMember.status == :DIZZY

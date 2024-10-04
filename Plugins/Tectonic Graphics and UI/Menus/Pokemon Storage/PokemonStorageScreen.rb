@@ -154,7 +154,7 @@ class PokemonStorageScreen
     end
 
     def pbRefreshSingle(i) # For debug
-        @scene.pbUpdateOverlay(i[1], (i[0] == -1) ? @storage.party : nil)
+        @scene.pbUpdateOverlay(i[1], (i[0] == -1) ? @storage.party : nil, true)
         @scene.pbHardRefresh
     end
 
@@ -501,7 +501,7 @@ class PokemonStorageScreen
             pbDisplay(_INTL("That's your last Pokémon!"))
             return
         end
-        command = pbShowCommands(_INTL("Are you sure you want to release this pokemon?"), [_INTL("No"), _INTL("Yes")])
+        command = pbShowCommands(_INTL("Are you sure you want to release this Pokémon?"), [_INTL("No"), _INTL("Yes")])
         if command == 1
             command = pbShowCommands(_INTL("They will be gone forever. Are you sure?"), [_INTL("No"), _INTL("Yes")])
             if command == 1
@@ -604,7 +604,7 @@ class PokemonStorageScreen
                 commands[sortAllCommand = commands.length]      = _INTL("Sort All")
                 commands[lockCommand = commands.length]         =
                     @storage.boxes[@storage.currentBox].isLocked? ? _INTL("Sort Unlock") : _INTL("Sort Lock")
-                if defined?(PokEstate) && !$game_switches[ESTATE_DISABLED_SWITCH]
+                if defined?(PokEstate) && !getGlobalSwitch(ESTATE_DISABLED_SWITCH)
                     commands[visitEstateCommand = commands.length] = _INTL("Visit PokÉstate")
                 end
             end

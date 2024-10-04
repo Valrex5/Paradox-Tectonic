@@ -107,6 +107,7 @@ module GameData
             @dmg_mult	= hash[:dmg_mult] || DEFAULT_BOSS_DAMAGE_MULT
             @dmg_resist	= hash[:dmg_resist] || 0
             @aggression	= hash[:aggression] || PokeBattle_AI_Boss::DEFAULT_BOSS_AGGRESSION
+            @defined_in_extension   = hash[:defined_in_extension] || false
 
             @pit_avatar  = hash[:pit_avatar] || false
 
@@ -176,9 +177,14 @@ module Compiler
 
     def compile_avatars
         GameData::Avatar::DATA.clear
-
-		["PBS/avatars.txt","PBS/avatars_pit.txt"].each do |path|
+        baseFiles = ["PBS/avatars.txt","PBS/avatars_pit.txt"]
+        avatarTextFiles = []
+        avatarTextFiles.concat(baseFiles)
+        avatarExtensions = Compiler.get_extensions("avatars")
+        avatarTextFiles.concat(avatarExtensions)
+        avatarTextFiles.each do |path|
 			isPit = path == "PBS/avatars_pit.txt"
+            baseFile = baseFiles.include?(path)
 			# Read from PBS file
 			File.open(path, "rb") do |f|
 				FileLineData.file = path # For error reporting
@@ -257,9 +263,10 @@ module Compiler
 					  :health_bars		=> contents["HealthBars"],
 					  :aggression		=> contents["Aggression"],
 					  :pit_avatar		=> isPit,
+                      :defined_in_extension   => !baseFile,
 					}
 					avatar_number += 1
-					# Add trainer avatar's data to records
+					# Add avatar's data to records
 					avatar_hash[:id] = [avatar_hash[:species], avatar_hash[:version]]
 					GameData::Avatar.register(avatar_hash)
 				end
@@ -270,7 +277,7 @@ module Compiler
         GameData::Avatar.save
         Graphics.update
 
-        #createBossSpritesAllSpeciesForms(false)
+        createBossSpritesAllSpeciesForms(false)
     end
 
     def pbEachAvatarFileSection(f)
@@ -290,14 +297,14 @@ module Compiler
     def write_avatars
         File.open("PBS/avatars.txt", "wb") do |f|
             add_PBS_header_to_file(f)
-            GameData::Avatar.each do |avatar|
+            GameData::Avatar.each_base do |avatar|
                 next if avatar.pit_avatar
 				write_avatar_to_file(avatar, f)
             end
         end
 		File.open("PBS/avatars_pit.txt", "wb") do |f|
             add_PBS_header_to_file(f)
-            GameData::Avatar.each do |avatar|
+            GameData::Avatar.each_base do |avatar|
                 next unless avatar.pit_avatar
 				write_avatar_to_file(avatar, f)
             end

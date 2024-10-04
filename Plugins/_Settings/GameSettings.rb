@@ -1,6 +1,6 @@
 module Settings
     # The version of your game. It has to adhere to the MAJOR.MINOR.PATCH format.
-    GAME_VERSION = "3.2.1"
+    GAME_VERSION = "3.3.0"
     DEV_VERSION  = true
   
     #=============================================================================
@@ -20,6 +20,8 @@ module Settings
     EGG_LEVEL            = 1
     # The odds of a newly generated Pokémon being shiny (out of 65536).
     SHINY_POKEMON_CHANCE = 16
+    # The chance that a wild battle will be a double battle (out of 100)
+    DOUBLE_WILD_BATTLE_CHANCE = 20
   
     #=============================================================================
   
@@ -296,7 +298,9 @@ module Settings
     # from.
     LANGUAGES = [
       ["English", "english.dat"],
-      ["Español", "spanish.dat"]
+      ["Español", "spanish.dat"],
+      ["Francais", "french.dat"],
+      ["中文（简体)", "chinese.dat"],
     ]
   
     #=============================================================================
@@ -386,8 +390,7 @@ module Settings
 
     #=============================================================================
 
-     # The names of each pocket of the Bag. Ignore the first entry ("").
-     def self.achievement_page_names
+    def self.achievement_page_names
         return ["",
             _INTL("Main Story"),
             _INTL("Gyms"),
@@ -399,5 +402,14 @@ module Settings
             _INTL("Battle"),
             _INTL("Other"),
         ]
-      end
+    end
+
+    def self.collection_reward_page_names
+        return ["",
+            _INTL("Area"),
+            _INTL("Type"),
+            _INTL("Tribe"),
+            _INTL("Generation"),
+        ]
+    end
 end

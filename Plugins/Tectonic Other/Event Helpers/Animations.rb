@@ -14,6 +14,10 @@ def showNormal(eventID = 0)
 	showAnimation(FollowerSettings::Emo_Normal,eventID)
 end
 
+def showSad(eventID = 0)
+	showAnimation(FollowerSettings::Emo_Sad,eventID)
+end
+
 def showHate(eventID = 0)
 	showAnimation(FollowerSettings::Emo_Hate,eventID)
 end
@@ -46,7 +50,7 @@ def showAnimation(animationID, eventId = 0)
 		event = self
 	end
 	if event.nil?
-		pbMessage("Could not find event to show emote for.") if $DEBUG
+		pbMessage(_INTL("Could not find event to show emote for.")) if $DEBUG
 		return
 	end
 	$scene.spriteset.addUserAnimation(animationID,event.x,event.y)

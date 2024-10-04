@@ -52,12 +52,7 @@ class PokemonPokedex_Scene
         @sprites["search2cursor"] = SpriteWrapper.new(@viewport)
         @sprites["search2cursor"].bitmap = @search2Cursorbitmap.bitmap
         @sprites["search2cursor"].visible = false
-        @searchPopupbitmap = AnimatedBitmap.new(addLanguageSuffix("Graphics/Pictures/Pokedex/z_header_filled"))
-        @sprites["z_header"] = SpriteWrapper.new(@viewport)
-
-        @sprites["z_header"].bitmap = @searchPopupbitmap.bitmap
-        @sprites["z_header"].x = Graphics.width - @searchPopupbitmap.width
-        @sprites["z_header"].visible = false
+        
         @searchParams = [$PokemonGlobal.pokedexMode, -1, -1, -1, -1, -1, -1, -1, -1, -1]
 
         # Load stored search
@@ -173,11 +168,14 @@ class PokemonPokedex_Scene
         ret = []
         regionalSpecies.each_with_index do |species, i|
             next if species.nil?
+            
+            speciesData = GameData::Species.get(species)
+            next if speciesData.isTest? && !$DEBUG
 
             dexListEntry =
 			{
 				:species => species,
-				:data => GameData::Species.get(species),
+				:data => speciesData,
 				:index => i + 1,
 				:shift => shift,
 			}
@@ -192,17 +190,17 @@ class PokemonPokedex_Scene
     end
 
     def autoDisqualifyFromSearch(species_sym)
-        return isLegendary?(species_sym) && !$Trainer.seen?(species_sym) && !$DEBUG
+        return !speciesInfoViewable?(species_sym)
     end
 
     def pbRefreshDexList(index = 0)
         dexlist = pbGetDexList
         # Sort species in ascending order by Regional Dex number
         dexlist.sort! do |a, b|
-            valA = a[4]
-            valB = b[4]
-            valA -= 5000 if $PokemonGlobal.speciesStarred?(a[0])
-            valB -= 5000 if $PokemonGlobal.speciesStarred?(b[0])
+            valA = a[:data].id_number
+            valB = b[:data].id_number
+            valA -= 999_999 if $PokemonGlobal.speciesStarred?(a[:species])
+            valB -= 999_999 if $PokemonGlobal.speciesStarred?(b[:species])
             next valA <=> valB
         end
         @dexlist = dexlist
@@ -227,7 +225,7 @@ class PokemonPokedex_Scene
         zBase = MessageConfig::LIGHT_TEXT_MAIN_COLOR
         zShadow = MessageConfig::LIGHT_TEXT_SHADOW_COLOR
         iconspecies = @sprites["pokedex"].species
-        iconspecies = nil if isLegendary?(iconspecies) && !$Trainer.seen?(iconspecies) && !$DEBUG
+        iconspecies = nil if !speciesInfoViewable?(iconspecies)
         dexname = _INTL("MasterDex")
         textpos = [
             [dexname, Graphics.width / 8, -2, 2, zBase, zShadow],
@@ -679,200 +677,6 @@ class PokemonPokedex_Scene
         pbFadeInAndShow(@sprites, oldsprites)
     end
 
-    def pbDexSearchCommands(mode, selitems, mainindex)
-        cmds = [@orderCommands, @nameCommands, @typeCommands, @heightCommands,
-                @weightCommands, @colorCommands, @shapeCommands,][mode]
-        cols = [2, 7, 4, 1, 1, 3, 5][mode]
-        ret = nil
-        # Set background
-        case mode
-        when 0    then @sprites["searchbg"].setBitmap("Graphics/Pictures/Pokedex/bg_search_order")
-        when 1    then @sprites["searchbg"].setBitmap("Graphics/Pictures/Pokedex/bg_search_name")
-        when 2
-            count = 0
-            GameData::Type.each { |t| count += 1 unless t.pseudo_type }
-            if count == 18
-                @sprites["searchbg"].setBitmap("Graphics/Pictures/Pokedex/bg_search_type_18")
-            else
-                @sprites["searchbg"].setBitmap("Graphics/Pictures/Pokedex/bg_search_type")
-            end
-        when 3, 4 then @sprites["searchbg"].setBitmap("Graphics/Pictures/Pokedex/bg_search_size")
-        when 5    then @sprites["searchbg"].setBitmap("Graphics/Pictures/Pokedex/bg_search_color")
-        when 6    then @sprites["searchbg"].setBitmap("Graphics/Pictures/Pokedex/bg_search_shape")
-        end
-        selindex = selitems.clone
-        index     = selindex[0]
-        oldindex  = index
-        minmax    = 1
-        oldminmax = minmax
-        index = oldindex = selindex[minmax] if [3, 4].include?(mode)
-        @sprites["searchcursor"].mode   = mode
-        @sprites["searchcursor"].cmds   = cmds.length
-        @sprites["searchcursor"].minmax = minmax
-        @sprites["searchcursor"].index  = index
-        nextparam = cmds.length % 2
-        pbRefreshDexSearchParam(mode, cmds, selindex, index)
-        loop do
-            pbUpdate
-            if index != oldindex || minmax != oldminmax
-                @sprites["searchcursor"].minmax = minmax
-                @sprites["searchcursor"].index = index
-                oldindex  = index
-                oldminmax = minmax
-            end
-            Graphics.update
-            Input.update
-            if [3, 4].include?(mode)
-                if Input.trigger?(Input::UP)
-                    if index < -1
-                        minmax = 0
-                        index = selindex[minmax] # From OK/Cancel
-                    elsif minmax == 0
-                        minmax = 1
-                        index = selindex[minmax]
-                    end
-                    if index != oldindex || minmax != oldminmax
-                        pbPlayCursorSE
-                        pbRefreshDexSearchParam(mode, cmds, selindex, index)
-                    end
-                elsif Input.trigger?(Input::DOWN)
-                    if minmax == 1
-                        minmax = 0
-                        index = selindex[minmax]
-                    elsif minmax == 0
-                        minmax = -1
-                        index = -2
-                    end
-                    if index != oldindex || minmax != oldminmax
-                        pbPlayCursorSE
-                        pbRefreshDexSearchParam(mode, cmds, selindex, index)
-                    end
-                elsif Input.repeat?(Input::LEFT)
-                    if index == -3
-                        index = -2
-                    elsif index >= -1
-                        if minmax == 1 && index == -1
-                            index = cmds.length - 1 if selindex[0] < cmds.length - 1
-                        elsif minmax == 1 && index == 0
-                            index = cmds.length if selindex[0] < 0
-                        elsif index > -1 && !(minmax == 1 && index >= cmds.length)
-                            index -= 1 if minmax == 0 || selindex[0] <= index - 1
-                        end
-                    end
-                    if index != oldindex
-                        selindex[minmax] = index if minmax >= 0
-                        pbPlayCursorSE
-                        pbRefreshDexSearchParam(mode, cmds, selindex, index)
-                    end
-                elsif Input.repeat?(Input::RIGHT)
-                    if index == -2
-                        index = -3
-                    elsif index >= -1
-                        if minmax == 1 && index >= cmds.length; index = 0
-                        elsif minmax == 1 && index == cmds.length - 1; index = -1
-                        elsif index < cmds.length && !(minmax == 1 && index < 0)
-                            index += 1 if minmax == 1 || selindex[1] == -1 ||
-                                          (selindex[1] < cmds.length && selindex[1] >= index + 1)
-                        end
-                    end
-                    if index != oldindex
-                        selindex[minmax] = index if minmax >= 0
-                        pbPlayCursorSE
-                        pbRefreshDexSearchParam(mode, cmds, selindex, index)
-                    end
-                end
-            elsif Input.trigger?(Input::UP)
-                if index == -1
-                    index = cmds.length - 1 - (cmds.length - 1) % cols - 1
-                elsif index == -2
-                    index = ((cmds.length - 1) / cols).floor * cols
-                elsif index == -3 && mode == 0
-                    index = cmds.length - 1
-                elsif index == -3
-                    index = -1
-                elsif index >= cols
-                    index -= cols
-                end
-                pbPlayCursorSE if index != oldindex
-            elsif Input.trigger?(Input::DOWN)
-                if index == -1
-                    index = -3
-                elsif index >= 0
-                    if index + cols < cmds.length; index += cols
-                    elsif (index / cols).floor < ((cmds.length - 1) / cols).floor
-                        index = (index % cols < cols / 2.0) ? cmds.length - 1 : -1
-                    else
-                        index = (index % cols < cols / 2.0) ? -2 : -3
-                    end
-                end
-                pbPlayCursorSE if index != oldindex
-            elsif Input.trigger?(Input::LEFT)
-                if index == -3
-                    index = -2
-                elsif index == -1
-                    index = cmds.length - 1
-                elsif index > 0 && index % cols != 0
-                    index -= 1
-                end
-                pbPlayCursorSE if index != oldindex
-            elsif Input.trigger?(Input::RIGHT)
-                if index == -2
-                    index = -3
-                elsif index == cmds.length - 1 && mode != 0
-                    index = -1
-                elsif index >= 0 && index % cols != cols - 1
-                    index += 1
-                end
-                pbPlayCursorSE if index != oldindex
-            end
-            if Input.trigger?(Input::ACTION)
-                index = -2
-                pbPlayCursorSE if index != oldindex
-            elsif Input.trigger?(Input::BACK)
-                pbPlayCloseMenuSE
-                ret = nil
-                break
-            elsif Input.trigger?(Input::USE)
-                if index == -2      # OK
-                    pbPlayDecisionSE
-                    ret = selindex
-                    break
-                elsif index == -3   # Cancel
-                    pbPlayCloseMenuSE
-                    ret = nil
-                    break
-                elsif selindex != index && mode != 3 && mode != 4
-                    if mode == 2
-                        if index == -1
-                            nextparam = (selindex[1] >= 0) ? 1 : 0
-                        elsif index >= 0
-                            nextparam = if selindex[0] < 0
-                                            0
-                                        else
-                                            (selindex[1] < 0) ? 1 : nextparam
-                                        end
-                        end
-                        if index < 0 || selindex[(nextparam + 1) % 2] != index
-                            pbPlayDecisionSE
-                            selindex[nextparam] = index
-                            nextparam = (nextparam + 1) % 2
-                        end
-                    else
-                        pbPlayDecisionSE
-                        selindex[0] = index
-                    end
-                    pbRefreshDexSearchParam(mode, cmds, selindex, index)
-                end
-            end
-        end
-        Input.update
-        # Set background image
-        @sprites["searchbg"].setBitmap("Graphics/Pictures/Pokedex/bg_search")
-        @sprites["searchcursor"].mode = -1
-        @sprites["searchcursor"].index = mainindex
-        return ret
-    end
-
 	SEARCH_METHODS_INDEX = [
 		:searchBySpeciesName,
 		:searchByType,
@@ -1112,7 +916,7 @@ class PokemonPokedex_Scene
                         break
                     end
                 elsif Input.trigger?(Input::USE)
-                    if $Trainer.pokedex.seen?(@sprites["pokedex"].species) || !isLegendary?(@sprites["pokedex"].species) || $DEBUG
+                    if speciesInfoViewable?(@sprites["pokedex"].species)
                         pbPlayDecisionSE
                         pbDexEntry(@sprites["pokedex"].index)
                     end
@@ -1133,17 +937,17 @@ class PokemonPokedex_Scene
                             entrySpecies = dexlist_entry[:species]
                             pbAddPokemonSilent(entrySpecies, getLevelCap)
                         end
-                        pbMessage("Added every species on the current list!")
+                        pbMessage(_INTL("Added every species on the current list!"))
                     else
                         pbAddPokemonSilent(@sprites["pokedex"].species, getLevelCap)
-                        pbMessage("Added #{@sprites['pokedex'].species}")
+                        pbMessage(_INTL("Added #{@sprites['pokedex'].species}"))
                     end
                 elsif Input.pressex?(0x57) && $DEBUG # W, for Wild Pokemon
                     pbWildBattle(@sprites["pokedex"].species, getLevelCap)
                 elsif Input.pressex?(0x42) && $DEBUG # B, for Boss
                     begin
                         species = @sprites["pokedex"].species
-                        if isLegendary?(species)
+                        if GameData::Species.get(species).isLegendary?
                             pbBigAvatarBattle([species.to_sym, getLevelCap])
                         else
                             pbSmallAvatarBattle([species.to_sym, getLevelCap])
@@ -1156,7 +960,7 @@ class PokemonPokedex_Scene
                         entrySpecies = dexlist_entry[:species]
                         $Trainer.pokedex.set_owned(entrySpecies, false)
                     end
-                    pbMessage("Marked as owned every species on current list.")
+                    pbMessage(_INTL("Marked as owned every species on current list."))
                 elsif Input.pressex?(0x50) && $DEBUG # P, for Print
                     echoln("Printing the entirety of the current dex list.")
                     if Input.press?(Input::CTRL)
@@ -1168,7 +972,7 @@ class PokemonPokedex_Scene
                             echoln(GameData::Species.get(dexEntry[:species]).real_name)
                         end
                     end
-                    pbMessage("Printed the current list to the console.")
+                    pbMessage(_INTL("Printed the current list to the console."))
                 elsif Input.pressex?(0x49) && $DEBUG # I, for Investigation
                     printDexListInvestigation
                 elsif Input.pressex?(0x54) && $DEBUG # T, for Tutor
@@ -1197,7 +1001,7 @@ class PokemonPokedex_Scene
     def debugFilterToRegularLine
         dexlist = searchStartingList
         dexlist = dexlist.find_all do |dex_item|
-            next !isLegendary?(dex_item[:species]) && dex_item[:data].get_evolutions.length == 0
+            next !dex_item[:data].isLegendary? && dex_item[:data].get_evolutions.length == 0
         end
         return dexlist
     end
@@ -1306,7 +1110,7 @@ class PokemonPokedex_Scene
                         speciesEdited += 1
                     end
                 end
-                pbMessage("#{speciesEdited} species tutorable movesets edited!")
+                pbMessage(_INTL("#{speciesEdited} species tutorable movesets edited!"))
 
                 GameData::Species.save
                 Compiler.write_pokemon
@@ -1350,8 +1154,8 @@ class PokemonPokedex_Scene
             wholeGameTypesCount[typesData.id] = 0
         end
         pbGetDexList.each do |dexEntry|
-            next if isLegendary?(dexEntry[0])
             speciesData = GameData::Species.get(dexEntry[0])
+            next if speciesData.isLegendary?
             next if speciesData.get_evolutions.length > 0
             wholeGameTypesCount[speciesData.type1] += 1
             wholeGameTypesCount[speciesData.type2] += 1 if speciesData.type2 != speciesData.type1

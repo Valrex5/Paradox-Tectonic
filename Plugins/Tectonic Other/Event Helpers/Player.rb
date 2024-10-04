@@ -9,14 +9,14 @@ end
 
 def stowFollowerIfActive()
 	if $PokemonGlobal.follower_toggled
-		pbToggleFollowingPokemon("off",true)
+		pbToggleFollowingPokemon("off",!$PokemonGlobal.bicycle)
 		pbWait(Graphics.frame_rate)
 	end
 end
 
 def unstowFollowerIfAllowed()
 	if $PokemonSystem.followers == 0
-		pbToggleFollowingPokemon("on",true)
+		pbToggleFollowingPokemon("on",!$PokemonGlobal.bicycle)
 		pbWait(Graphics.frame_rate)
 	end
 end
@@ -82,11 +82,11 @@ def teleportPlayer(map_id,x,y,instant=false,dir = nil)
 	$scene.transfer_player if instant
 end
 
-def healPartyWithDelay()
+def healPartyWithDelay(skipAidKit = false)
 	$Trainer.heal_party
 	pbMEPlay('Pkmn healing')
 	pbWait(68)
-	refillAidKit()
+	refillAidKit unless skipAidKit
 end
 
 def pumpedUp?
@@ -103,7 +103,8 @@ def nonLegendarySpeciesCount(owned = false)
     count = 0
     GameData::Species.each do |speciesData|
         next unless speciesData.form == 0
-        next if isLegendary?(speciesData.id)
+        next if speciesData.isLegendary?
+        next if speciesData.isTest?
         next if owned && !$Trainer.pokedex.owned?(speciesData.species)
         count += 1
     end
@@ -129,4 +130,51 @@ end
 def unlockPlayerInput
 	$game_player.unlock
 	$game_system.menu_disabled = false
+end
+
+def playerOffsetX
+    return $game_player.x - get_self.x
+end
+
+def playerOffsetY
+    return $game_player.y - get_self.y
+end
+
+def playerCirclesThisToFaceNorth
+    return if playerFacingNorth? && playerOffsetX == 0
+    eventWidth = get_self.width
+    eventHeight = get_self.width
+
+    new_move_route = getNewMoveRoute()
+    
+    xMovement = -playerOffsetX - 1
+    yMovement = playerOffsetY - 1
+
+    echoln("#{playerOffsetX},#{playerOffsetY}")
+
+    if playerOffsetX >= eventWidth || playerFacingNorth?
+        yDir = yMovement > 0 ? Up/2 : Down/2
+        (yMovement.abs).times do |i|
+            new_move_route.list.push(RPG::MoveCommand.new(yDir))
+        end
+        xDir = xMovement > 0 ? Right/2 : Left/2
+        (xMovement.abs - 1).times do |i|
+            new_move_route.list.push(RPG::MoveCommand.new(xDir))
+        end
+    else
+        xDir = xMovement > 0 ? Right/2 : Left/2
+        (xMovement.abs).times do |i|
+            new_move_route.list.push(RPG::MoveCommand.new(xDir))
+        end
+        yDir = yMovement > 0 ? Up/2 : Down/2
+        (yMovement.abs).times do |i|
+            new_move_route.list.push(RPG::MoveCommand.new(yDir))
+        end
+        new_move_route.list.push(RPG::MoveCommand.new(Right/2))
+    end
+    
+    new_move_route.list.push(RPG::MoveCommand.new(PBMoveRoute::TurnUp))
+
+    new_move_route.list.push(RPG::MoveCommand.new(0)) # End of move route
+    get_player.force_move_route(new_move_route)
 end

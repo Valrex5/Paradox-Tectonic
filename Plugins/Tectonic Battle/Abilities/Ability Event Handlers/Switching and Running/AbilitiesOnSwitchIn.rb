@@ -40,31 +40,31 @@ BattleHandlers::AbilityOnSwitchIn.add(:MOONGAZE,
 
 BattleHandlers::AbilityOnSwitchIn.add(:PRIMORDIALSEA,
   proc { |ability, battler, battle, aiCheck|
-      pbBattleWeatherAbility(ability, :HeavyRain, battler, battle, true, true, aiCheck)
+      pbBattleWeatherAbility(ability, :HeavyRain, battler, battle, true, true, aiCheck, baseDuration: -1)
   }
 )
 
 BattleHandlers::AbilityOnSwitchIn.add(:DESOLATELAND,
   proc { |ability, battler, battle, aiCheck|
-      pbBattleWeatherAbility(ability, :HarshSun, battler, battle, true, true, aiCheck)
+      pbBattleWeatherAbility(ability, :HarshSun, battler, battle, true, true, aiCheck, baseDuration: -1)
   }
 )
 
 BattleHandlers::AbilityOnSwitchIn.add(:DELTASTREAM,
   proc { |ability, battler, battle, aiCheck|
-      pbBattleWeatherAbility(ability, :StrongWinds, battler, battle, true, true, aiCheck)
+      pbBattleWeatherAbility(ability, :StrongWinds, battler, battle, true, true, aiCheck, baseDuration: -1)
   }
 )
 
 BattleHandlers::AbilityOnSwitchIn.add(:SATURNALSKY,
   proc { |ability, battler, battle, aiCheck|
-      pbBattleWeatherAbility(ability, :RingEclipse, battler, battle, true, true, aiCheck)
+      pbBattleWeatherAbility(ability, :RingEclipse, battler, battle, true, true, aiCheck, baseDuration: -1)
   }
 )
 
 BattleHandlers::AbilityOnSwitchIn.add(:STYGIANNIGHT,
   proc { |ability, battler, battle, aiCheck|
-      pbBattleWeatherAbility(ability, :BloodMoon, battler, battle, true, true, aiCheck)
+      pbBattleWeatherAbility(ability, :BloodMoon, battler, battle, true, true, aiCheck, baseDuration: -1)
   }
 )
 
@@ -580,6 +580,19 @@ BattleHandlers::AbilityOnSwitchIn.add(:DRIFTINGMIST,
   }
 )
 
+BattleHandlers::AbilityOnSwitchIn.add(:FITTOSURVIVE,
+  proc { |ability, battler, battle, aiCheck|
+      if aiCheck
+          next getGravityEffectScore(battler, 4)
+      else
+          battle.pbShowAbilitySplash(battler, ability)
+          battle.pbAnimation(:NATURALPROTECTION, battler, nil, 0)
+          battler.pbOwnSide.applyEffect(:NaturalProtection, 4)
+          battle.pbHideAbilitySplash(battler)
+      end
+  }
+)
+
 ##########################################
 # Free move use
 ##########################################
@@ -732,12 +745,13 @@ BattleHandlers::AbilityOnSwitchIn.add(:PRIMEVALIMPOSTER,
 
       # Give each cloned pokemon a stat boost to each stat
       trainerClone.party.each do |partyMember|
-          next if partyMember.fainted?
-          party.push(partyMember)
-          partyMember.ev = partyMember.ev.each_with_object({}) do |(statID, evValue), evArray|
-              evArray[statID] = evValue + 10
-          end
-          partyMember.calc_stats
+        next unless partyMember
+        next if partyMember.fainted?
+        party.push(partyMember)
+        partyMember.ev = partyMember.ev.each_with_object({}) do |(statID, evValue), evArray|
+            evArray[statID] = evValue + 10
+        end
+        partyMember.calc_stats
       end
 
       partyOrder = battle.pbPartyOrder(battler.index)

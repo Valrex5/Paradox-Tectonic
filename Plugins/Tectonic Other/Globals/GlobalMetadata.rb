@@ -56,13 +56,15 @@ class PokemonGlobalMetadata
     attr_accessor :dexNavEggMovesUnlocked
     attr_accessor :caughtCountsPerMap
     # Exp-EZ Dispenser
-    attr_accessor :expJAR
+    attr_reader :expJAR
     # Aid kit
     attr_accessor :teamHealerCurrentUses
     attr_accessor :teamHealerMaxUses
     attr_accessor :teamHealerUpgrades
     # Tarot amulet
     attr_accessor :tarot_amulet_active
+    # Ragged journal
+    attr_accessor :ragged_journal_pages_collected
     # Randomizer
     attr_accessor :randomizedData
     attr_accessor :isRandomizer
@@ -77,6 +79,25 @@ class PokemonGlobalMetadata
     attr_accessor :town_map_waypoints_showing
     # Achievements
     attr_accessor :capture_counts_per_ball
+    # Blacking out
+    attr_accessor :respawnPoint
+    # Battle starting
+    attr_accessor :nextBattleBGM
+    attr_accessor :nextBattleME
+    attr_accessor :nextBattleCaptureME
+    attr_accessor :nextBattleBack
+    # Progression phone calls
+    attr_accessor :shouldProc2BadgesZainCall
+    attr_accessor :shouldProc3BadgesZainCall
+    attr_accessor :shouldProcGrouzAvatarCall
+    attr_accessor :shouldProcCatacombsCall
+    attr_accessor :shouldProcWhitebloomCall
+    attr_accessor :shouldProcEstateCall
+    # Tournament
+    attr_accessor :tournament
+    # Dragon flames
+    attr_writer :dragonFlamesCount
+    attr_writer :puzzlesCompleted
 	
 	def initialize
         # Movement
@@ -131,12 +152,17 @@ class PokemonGlobalMetadata
         @happinessSteps       = 0
         # Save file
         @safesave             = false
+        # EXP-EZ Dispenser
         @expJAR				  = 0
+        # DexNav
         @caughtCountsPerMap	  = {}
+        # Aid Kit
         @teamHealerUpgrades   = 0
         @teamHealerMaxUses	  = 1
         @teamHealerCurrentUses= 1
+        # Tarot Amulet
         @tarot_amulet_active  = false
+        @ragged_journal_pages_collected  = []
         # Masterdex
         @stored_search		  = nil
         @dex_forms_shows_shinies = false
@@ -149,6 +175,8 @@ class PokemonGlobalMetadata
 
         # Achievements
         @capture_counts_per_ball = {}
+
+        @tournament = RandomTournament.new
     end
 
     ####################################################
@@ -239,6 +267,26 @@ class PokemonGlobalMetadata
     end
 
     ####################################################
-    # Who knows?
+    # Misc.
     ####################################################
+    
+    def expJAR=(value)
+        @expJAR = value
+        unlockAchievement(:STORE_LOTS_OF_EXP) if @expJAR >= 1_000_000
+    end
+
+    def circuitPuzzleStateTracker
+        @circuitPuzzleStateTracker = CircuitPuzzleStateTracker.new if @circuitPuzzleStateTracker.nil?
+        return @circuitPuzzleStateTracker
+    end
+
+    def dragonFlamesCount
+        @dragonFlamesCount = 0 if @dragonFlamesCount.nil?
+        return @dragonFlamesCount
+    end
+
+    def puzzlesCompleted
+        @puzzlesCompleted = [] if @puzzlesCompleted.nil?
+        return @puzzlesCompleted
+    end
 end

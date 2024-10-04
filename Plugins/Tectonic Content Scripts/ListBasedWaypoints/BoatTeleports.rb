@@ -65,7 +65,7 @@ def unlockBoatingSpot(dockID,ignoreAlreadyActive=false)
     return if getGlobalSwitch(dockInfo[:unlock_switch]) && !ignoreAlreadyActive
     mapName = _INTL(dockInfo[:map_name])
     text = _INTL("You can now travel to <imp>{1}</imp> on your boat!",mapName)
-    pbMessage("\\wm#{text}\\me[Slots win]\\wtnp[80]\1")
+    pbMessage(_INTL("\\wm#{text}\\me[Slots win]\\wtnp[80]\1"))
     pbSetGlobalSwitch(dockInfo[:unlock_switch])
 end
 
@@ -74,7 +74,7 @@ def unlockAllBoatingSpots
         next unless dockInfo[:unlock_switch]
         pbSetGlobalSwitch(dockInfo[:unlock_switch])
     end
-    pbMessage("All boating spots were unlocked.")
+    pbMessage(_INTL("All boating spots were unlocked."))
 end
 
 def boatTravel(currentDock = nil)
@@ -89,7 +89,7 @@ def boatTravel(currentDock = nil)
     end
 
     if commands.empty?
-        pbMessage("There are no other places you can travel to.")
+        pbMessage(_INTL("There are no other places you can travel to."))
         return
     end
 
@@ -102,6 +102,15 @@ def boatTravel(currentDock = nil)
     chosenDockID = validDockIDs[choiceNumber]
 
     warpToBoatWaypoint(chosenDockID)
+end
+
+def boatWaypointUnlocked?(dockID)
+    dockInfo = DOCK_LOCATIONS[dockID]
+    if dockInfo[:unlock_switch]
+        return getGlobalSwitch(dockInfo[:unlock_switch])
+    else
+        return true
+    end
 end
 
 def warpToBoatWaypoint(dockID)

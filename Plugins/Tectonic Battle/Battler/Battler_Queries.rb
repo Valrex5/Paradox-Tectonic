@@ -382,7 +382,20 @@ class PokeBattle_Battler
 
     def activatesTargetAbilities?(aiCheck = false)
         return false if shouldItemApply?(:PROXYFIST,aiCheck)
+        return false if shouldAbilityApply?(:AFROTECTION, aiCheck)
         return false if shouldAbilityApply?(:JUGGERNAUT, aiCheck)
+        return true
+    end
+
+    def activatesTargetItem?(aiCheck = false)
+        return false if shouldItemApply?(:PROXYFIST,aiCheck)
+        return false if shouldAbilityApply?(:AFROTECTION, aiCheck)
+        return true
+    end
+
+    def activatesTargetEffects?(aiCheck = false)
+        return false if shouldItemApply?(:PROXYFIST,aiCheck)
+        return false if shouldAbilityApply?(:AFROTECTION, aiCheck)
         return true
     end
 
@@ -419,6 +432,12 @@ class PokeBattle_Battler
             aiLearnsAbility(indirectDamageBlockingAbility) unless aiCheck
             return false
         end
+        return true
+    end
+
+    def takesRecoilDamage?(aiCheck = false)
+        return false if shouldAbilityApply?(%i[ROCKHEAD AFROTECTION], aiCheck)
+        return false unless takesIndirectDamage?(false, aiCheck)
         return true
     end
 
@@ -558,6 +577,11 @@ class PokeBattle_Battler
         @pokemon.extraMovesPerTurn = GameData::Avatar.get(@species).num_turns - 1
     end
 
+    def hpBasedEffectResistance
+        return 1.0 unless boss?
+        return 1.0 / (@pokemon.hpMult.to_f || DEFAULT_BOSS_HP_MULT.to_f)
+    end
+
     def evenTurn?
         return @battle.turnCount.even?
     end
@@ -581,7 +605,9 @@ class PokeBattle_Battler
     end
 
     def isLastAlive?
-        return false if @battle.wildBattle? && opposes?
+        if @battle.wildBattle? && opposes?
+            return !hasAlly?
+        end
         return false if fainted?
         return @battle.pbGetOwnerFromBattlerIndex(@index).able_pokemon_count == 1
     end
@@ -746,6 +772,7 @@ class PokeBattle_Battler
         return @battle.pbGetOwnerFromBattlerIndex(@index)
     end
 
+    # Checks for trainer ID match, so won't return yes if e.g. the pokemon was traded for
     def ownedByPlayer?
         return false unless @pokemon
         return @pokemon.ownedByPlayer?
@@ -756,11 +783,12 @@ class PokeBattle_Battler
     end
 
     def ownerLevelCap
-        if ownedByPlayer?
+        if pbOwnedByPlayer?
             return getLevelCap
         else
             highestLevel = 0
             ownerParty.each do |pkmn|
+                next unless pkmn
                 next unless pkmn.level > highestLevel
                 highestLevel = pkmn.level
             end

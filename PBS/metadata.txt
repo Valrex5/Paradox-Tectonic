@@ -931,7 +931,7 @@ BattleBack = cave1
 Environment = Volcano
 #-------------------------------
 [126]
-# Vibrant Cave
+# Carnation Stockpile
 Outdoor = false
 ShowArea = false
 Bicycle = false
@@ -949,7 +949,7 @@ Bicycle = false
 # Monument Lobby
 Outdoor = false
 ShowArea = false
-Bicycle = true
+Bicycle = false
 HealingSpot = 357,31,29
 #-------------------------------
 [129]
@@ -1067,10 +1067,12 @@ ShowArea = true
 Bicycle = false
 #-------------------------------
 [143]
-# River Crossing Buildings
+# Pillar of Creation
 Outdoor = false
-ShowArea = false
+ShowArea = true
 Bicycle = false
+BattleBack = wcave
+WildBattleBGM = BATTLEDIALGAPALKIA.ogg
 #-------------------------------
 [144]
 # Artist's House
@@ -1467,7 +1469,7 @@ Environment = Cave
 # Emma's Empolorium
 Outdoor = false
 ShowArea = false
-Bicycle = true
+Bicycle = false
 #-------------------------------
 [201]
 # Nature's Gallery
@@ -2148,7 +2150,7 @@ Bicycle = false
 Outdoor = false
 ShowArea = false
 Bicycle = false
-HealingSpot = 59,28,19
+HealingSpot = 59,37,19
 BattleBack = field
 Environment = Grass
 #-------------------------------
@@ -3094,3 +3096,9 @@ Bicycle = true
 Outdoor = false
 ShowArea = false
 Bicycle = true
+#-------------------------------
+[443]
+# Team Chasm Archive
+Outdoor = false
+ShowArea = false
+Bicycle = false
