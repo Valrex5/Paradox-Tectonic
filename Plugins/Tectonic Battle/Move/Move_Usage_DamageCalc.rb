@@ -304,6 +304,7 @@ class PokeBattle_Move
         if user.shouldAbilityApply?(:IMPRESSIONABLE,checkingForAI)
             anyPartyMemberHasType = false
             user.ownerParty.each do |partyMember|
+                next unless partyMember
                 next if partyMember.personalID == user.personalID
                 next unless type && partyMember.hasType?(type)
                 anyPartyMemberHasType = true
@@ -477,7 +478,7 @@ class PokeBattle_Move
         # Mass Attack
         if @battle.pbCheckGlobalAbility(:MASSATTACK)
             hpFraction = user.hp / user.totalhp.to_f
-            multipliers[:final_damage_multiplier] *= (1 - hpFraction)
+            multipliers[:final_damage_multiplier] *= hpFraction
         end
 
         # Multi-targeting attacks

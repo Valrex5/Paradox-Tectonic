@@ -88,7 +88,7 @@ class PokeBattle_Move
             next unless validItemProc.nil? || validItemProc.call(item)
             victim.removeItem(item)
             if block_given?
-                yield item
+                yield item, itemName
             else
                 removeMessage = _INTL("{1} forced {2} to drop their {3}!", remover.pbThis,
                     victim.pbThis(true), itemName)
@@ -120,8 +120,8 @@ class PokeBattle_Move
             @battle.pbDisplay(_INTL("{1} stole {2}'s {3}!", stealer.pbThis,
               victim.pbThis(true), oldVictimItemName))
             # Permanently steal items from wild pokemon
-            if @battle.wildBattle? && victim.opposes? && !@battle.bossBattle?
-                victim.setInitialItem(nil)
+            if victim.shouldStoreStolenItem?(item)
+                victim.setInitialItems(nil)
                 pbReceiveItem(item)
                 @battle.pbHideAbilitySplash(stealer) if ability
             else
@@ -256,6 +256,7 @@ class PokeBattle_Move
     end
 
     def switchOutUser(user,switchedBattlers=[],disableMoldBreaker=true,randomReplacement=false,batonPass=false)
+        return unless @battle.pbCanSwitch?(user.index)
         return unless @battle.pbCanChooseNonActive?(user.index)
         @battle.pbDisplay(_INTL("{1} went back to {2}!", user.pbThis, @battle.pbGetOwnerName(user.index)))
         @battle.pbPursuit(user.index)

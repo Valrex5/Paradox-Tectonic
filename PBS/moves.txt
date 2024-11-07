@@ -1449,7 +1449,7 @@ TotalPP = 10
 Target = NearOther
 FunctionCode = HealUserByThirdOfDamageDone
 Flags = CanProtect,CanMirrorMove,Punch
-Description = An energy-draining punch. The user's HP is restored by one third the damage taken by the target.
+Description = An energy-draining punch. The user's HP is restored by 33% of the damage dealt.
 #-------------------------------
 [DYNAMICPUNCH]
 Name = Dynamic Punch
@@ -1607,6 +1607,7 @@ Category = Status
 Accuracy = 0
 TotalPP = 3
 Target = UserSide
+Priority = 4
 FunctionCode = ProtectUserSideFromDamagingMovesIfUserFirstTurn
 Flags = CanSnatch
 Description = The user protects itself and allies from damaging moves. It only works the first turn the user is in battle.
@@ -1893,7 +1894,7 @@ Accuracy = 80
 TotalPP = 10
 Target = AllNearFoes
 FunctionCode = Frostbite
-Flags = CanProtect,CanMirrorMove
+Flags = CanProtect,CanMirrorMove,Wind
 EffectChance = 30
 Description = The user attacks foes with savagely cold winds. It has a 30% chance to frostbite.
 Animation = HURRICANE
@@ -2507,19 +2508,7 @@ Accuracy = 0
 TotalPP = 5
 Target = BothSides
 FunctionCode = StartGravity5
-Description = Gravity is intensified for five turns, forcing Pokemon down from the air and doubling all move accuracy.
-#-------------------------------
-[HIGHHORSEPOWER]
-Name = High Horsepower
-Type = GROUND
-Category = Physical
-Power = 95
-Accuracy = 100
-TotalPP = 10
-Target = NearOther
-FunctionCode = Basic
-Flags = CanProtect,CanMirrorMove
-Description = The user fiercely attacks the target using its entire body.
+Description = Gravity is intensified for five turns, forcing Pokémon down from the air and doubling all move accuracy.
 #-------------------------------
 [LANDSWRATH]
 Name = Land's Wrath
@@ -2567,22 +2556,10 @@ Accuracy = 80
 TotalPP = 10
 Target = AllNearFoes
 FunctionCode = Burn
-Flags = CanProtect,CanMirrorMove
+Flags = CanProtect,CanMirrorMove,Wind
 EffectChance = 30
 Description = The user wraps foes in fierce winds and searingly hot sand. It has a 30% chance to burn.
 Animation = SCORCHINGSANDS
-#-------------------------------
-[SANDTOMB]
-Name = Sand Tomb
-Type = GROUND
-Category = Physical
-Power = 50
-Accuracy = 100
-TotalPP = 15
-Target = NearOther
-FunctionCode = BindTarget3
-Flags = CanProtect,CanMirrorMove
-Description = The user spins a sandstorm around the target, trapping and damaging it for three turns.
 #-------------------------------
 [SCORCHINGSANDS]
 Name = Scorching Sands
@@ -2826,7 +2803,7 @@ Accuracy = 0
 TotalPP = 10
 Target = BothSides
 FunctionCode = StartSandstorm8
-Description = Summons sandstorm for eight turns. Damages non-Rock, non-Ground Pokemon every turn.
+Description = Summons sandstorm for eight turns. Damages non-Rock, non-Ground Pokémon every turn.
 #-------------------------------
 [SMACKDOWN]
 Name = Smack Down
@@ -2985,7 +2962,7 @@ TotalPP = 10
 Target = User
 FunctionCode = HealUserThreeFifthsOfTotalHP
 Flags = CanSnatch
-Description = The user calls out its underlings to heal it. The user regains 3/5ths of its max HP.
+Description = The user calls out its underlings to heal it. The user regains 60% of its max HP.
 #-------------------------------
 [INFESTATION]
 Name = Infestation
@@ -3009,7 +2986,7 @@ TotalPP = 10
 Target = NearOther
 FunctionCode = HealUserByHalfOfDamageDone
 Flags = CanProtect,CanMirrorMove
-Description = The user drains the target's blood. The user's HP is restored by half the damage taken by the target.
+Description = The user drains the target's blood. The user's HP is restored by 50% the damage dealt.
 #-------------------------------
 [LUNGE]
 Name = Lunge
@@ -4122,7 +4099,7 @@ Power = 150
 Accuracy = 100
 TotalPP = 5
 Target = AllNearOthers
-FunctionCode = UserLosesHalfOfTotalHPExplosive
+FunctionCode = UserLosesHalfOfTotalHP
 Flags = CanProtect,CanMirrorMove
 Description = The user attacks everything by causing its own head to explode. This also damages the user.
 #-------------------------------
@@ -4640,7 +4617,7 @@ TotalPP = 20
 Target = NearOther
 FunctionCode = HealUserByHalfOfDamageDone
 Flags = CanProtect,CanMirrorMove
-Description = A nutrient-draining attack. The user's HP is restored by half the damage taken by the target.
+Description = A nutrient-draining attack. The user's HP is restored by 50% the damage dealt.
 #-------------------------------
 [AROMATHERAPY]
 Name = Aromatherapy
@@ -4759,7 +4736,7 @@ TotalPP = 10
 Target = NearOther
 FunctionCode = HealUserByHalfOfDamageDone
 Flags = CanProtect,CanMirrorMove
-Description = A nutrient-draining attack. The user's HP is restored by half the damage taken by the target.
+Description = A nutrient-draining attack. The user's HP is restored by 50% the damage dealt.
 #-------------------------------
 [GRASSKNOT]
 Name = Grass Knot
@@ -4886,7 +4863,7 @@ TotalPP = 12
 Target = NearOther
 FunctionCode = HealUserByHalfOfDamageDone
 Flags = CanProtect,CanMirrorMove
-Description = A nutrient-draining attack. The user's HP is restored by half the damage taken by the target.
+Description = A nutrient-draining attack. The user's HP is restored by 50% the damage dealt.
 #-------------------------------
 [NEEDLEARM]
 Name = Needle Arm
@@ -5247,7 +5224,7 @@ TotalPP = 15
 Target = AllNearOthers
 FunctionCode = HealUserByHalfOfDamageDone
 Flags = CanProtect,CanMirrorMove
-Description = The user attacks everything around it. The user's HP is restored by half the damage dealt.
+Description = The user attacks everything around it. The user's HP is restored by 50% the damage dealt.
 #-------------------------------
 [PLASMAFISTS]
 Name = Plasma Fists
@@ -5397,7 +5374,7 @@ Accuracy = 80
 TotalPP = 10
 Target = AllNearFoes
 FunctionCode = Numb
-Flags = CanProtect,CanMirrorMove
+Flags = CanProtect,CanMirrorMove,Wind
 EffectChance = 30
 Description = The user savagely attacks foes with lightning and wind. It has a 30% chance to numb.
 Animation = THUNDER
@@ -5507,7 +5484,7 @@ TotalPP = 12
 Target = NearOther
 FunctionCode = HealUserByHalfOfDamageDoneDoubleDamageIfTargetAsleep
 Flags = CanProtect,CanMirrorMove
-Description = Heals the user for 50% of the damage caused. Power doubles if the foe is asleep.
+Description = The user's HP is restored by 50% of the damage dealt. Power doubles if the foe is asleep.
 #-------------------------------
 [EERIESPELL]
 Name = Eerie Spell
@@ -5651,7 +5628,7 @@ TotalPP = 5
 Target = NearOther
 FunctionCode = RemoveProtectionsBypassSubstituteAlwaysHits
 Flags = CanMirrorMove
-Description = Using a hyperspace hole, the user appears right next to the target and strikes. Skips and destroys protections and substitutes. Always hits.
+Description = Using a hyperspace hole, the user appears next to the target and strikes. Skips and destroys protections and substitutes. Always hits.
 #-------------------------------
 [INSTRUCT]
 Name = Instruct
@@ -6077,10 +6054,10 @@ Description = The user blows a cold breath on the target. This attack always res
 Name = Glacial Lance
 Type = ICE
 Category = Physical
-Power = 130
+Power = 120
 Accuracy = 100
 TotalPP = 5
-Target = NearOther
+Target = AllNearFoes
 FunctionCode = Basic
 Flags = CanProtect,CanMirrorMove
 Description = The user attacks by hurling a blizzard-cloaked icicle lance at opposing Pokémon.
@@ -7206,7 +7183,7 @@ Accuracy = 80
 TotalPP = 10
 Target = AllNearFoes
 FunctionCode = LowerTargetAtkSpAtk1
-Flags = CanProtect,CanMirrorMove
+Flags = CanProtect,CanMirrorMove,Wind
 EffectChance = 30
 Description = The user attacks foes with love and hate. It has a 30% chance to lower both attacking stats.
 Animation = HURRICANE

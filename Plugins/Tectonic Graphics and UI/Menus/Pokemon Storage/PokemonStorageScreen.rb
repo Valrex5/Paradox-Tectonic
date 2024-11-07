@@ -1,3 +1,5 @@
+PC_STORAGE_HEALS = false
+
 #===============================================================================
 # Pokémon storage mechanics
 #===============================================================================
@@ -154,7 +156,7 @@ class PokemonStorageScreen
     end
 
     def pbRefreshSingle(i) # For debug
-        @scene.pbUpdateOverlay(i[1], (i[0] == -1) ? @storage.party : nil)
+        @scene.pbUpdateOverlay(i[1], (i[0] == -1) ? @storage.party : nil, true)
         @scene.pbHardRefresh
     end
 
@@ -231,7 +233,7 @@ class PokemonStorageScreen
                     if heldpoke || selected[0] == -1
                         p = heldpoke || @storage[-1, index]
                         p.time_form_set = nil
-                        p.heal
+                        p.heal if PC_STORAGE_HEALS
                         promptToTakeItems(p)
                     end
                     @scene.pbStore(selected, heldpoke, destbox, firstfree)
@@ -278,7 +280,7 @@ class PokemonStorageScreen
         end
         if box >= 0
             @heldpkmn.time_form_set = nil
-            @heldpkmn.heal
+            @heldpkmn.heal if PC_STORAGE_HEALS
             promptToTakeItems(@heldpkmn)
         end
         @scene.pbPlace(selected, @heldpkmn)
@@ -476,7 +478,7 @@ class PokemonStorageScreen
         end
         if box >= 0
             @heldpkmn.time_form_set = nil
-            @heldpkmn.heal
+            @heldpkmn.heal if PC_STORAGE_HEALS
             promptToTakeItems(@heldpkmn)
         end
         @scene.pbSwap(selected, @heldpkmn)
@@ -501,7 +503,7 @@ class PokemonStorageScreen
             pbDisplay(_INTL("That's your last Pokémon!"))
             return
         end
-        command = pbShowCommands(_INTL("Are you sure you want to release this pokemon?"), [_INTL("No"), _INTL("Yes")])
+        command = pbShowCommands(_INTL("Are you sure you want to release this Pokémon?"), [_INTL("No"), _INTL("Yes")])
         if command == 1
             command = pbShowCommands(_INTL("They will be gone forever. Are you sure?"), [_INTL("No"), _INTL("Yes")])
             if command == 1

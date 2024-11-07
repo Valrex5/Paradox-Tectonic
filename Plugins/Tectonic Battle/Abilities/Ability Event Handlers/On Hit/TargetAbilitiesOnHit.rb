@@ -483,7 +483,7 @@ BattleHandlers::TargetAbilityOnHit.add(:SEALINGBODY,
         next if user.effectActive?(:Disable)
         next -15 if aiCheck
         battle.pbShowAbilitySplash(target, ability)
-        user.applyEffect(:Disable, 3) if user.canBeDisabled?(true)
+        user.applyEffect(:Disable, 2) if user.canBeDisabled?(true)
         battle.pbHideAbilitySplash(target)
     }
 )
@@ -633,9 +633,9 @@ BattleHandlers::TargetAbilityOnHit.add(:ILLUSION,
 )
 
 BattleHandlers::TargetAbilityOnHit.add(:COREPROVENANCE,
-    proc { |ability, target, battler, move, battle, aiCheck, aiNumHits|
+    proc { |ability, user, target, move, battle, aiCheck, aiNumHits|
         next unless move.physicalMove?
-        next if target.pbOpposingSide.effectAtMax?(:ErodedRock)
+        next if target.pbOwnSide.effectAtMax?(:ErodedRock)
         if aiCheck
             next (target.aboveHalfHealth? ? -10 : 0) * aiNumHits
         end
