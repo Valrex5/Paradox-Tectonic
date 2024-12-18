@@ -1,0 +1,10 @@
+[KAIOKEN]
+Name = Kaioken
+Type = FIGHTING
+Category = Status
+Accuracy = 0
+TotalPP = 10
+Target = User
+FunctionCode = Kaioken
+Flags = CanSnatch
+Description = Kaio-what?

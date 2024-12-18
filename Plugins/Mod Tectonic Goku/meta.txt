@@ -1,0 +1,3 @@
+﻿Name      = Goku
+Requires  = Tectonic Modding Base
+Credits   = Valrex

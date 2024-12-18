@@ -1090,3 +1090,33 @@ FormName = White-Striped
 Kind = Mellow
 Pokedex = It differs from other Basculin in several respects, including demeanor. It is much gentler than other color variants.
 Evolutions = BASCULEGION,Level,42
+#-------------------------------
+[GOKU,1]
+FormName = Super Saiyan
+#-------------------------------
+[GOKU,2]
+FormName = Super Saiyan 2
+#-------------------------------
+[GOKU,3]
+FormName = Super Saiyan 3
+#-------------------------------
+[GOKU,4]
+FormName = Super Saiyan God
+#-------------------------------
+[GOKU,5]
+FormName = Super Saiyan Blue
+#-------------------------------
+[GOKU,6]
+FormName = Ultra Instinct Sign
+#-------------------------------
+[GOKU,7]
+FormName = Mastered Ultra Instinct
+#-------------------------------
+[GOKU,8]
+FormName = Oozaru
+#-------------------------------
+[GOKU,9]
+FormName = Golden Oozaru
+#-------------------------------
+[GOKU,10]
+FormName = Super Saiyan 4

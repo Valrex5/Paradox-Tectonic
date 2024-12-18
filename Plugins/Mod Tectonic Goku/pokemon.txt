@@ -1,0 +1,24 @@
+[6000]
+Name = Goku
+InternalName = GOKU
+Type1 = FIGHTING
+# HP, Attack, Defense, Speed, Sp. Atk, Sp. Def
+BaseStats = 64,78,52,81,78,52
+# Total = 405
+GenderRate = AlwaysMale
+GrowthRate = Medium
+BaseEXP = 142
+EffortPoints = 0,0,0,1,1,0
+Rareness = 100
+Happiness = 70
+Abilities = MYSTICFIST
+Moves = 1,KARATECHOP,1,KAIOKEN,1,GROWL
+Compatibility = Field,Humanlike
+Tribes = WARRIOR
+StepsToHatch = 5355
+Height = 1.75
+Weight = 62.0
+Color = Brown
+Shape = Head
+Kind = Saiyan
+Pokedex = Goku
