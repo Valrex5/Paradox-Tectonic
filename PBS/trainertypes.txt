@@ -710,6 +710,21 @@ Gender = Male
 BaseMoney = 32
 IntroBGM = BACKPACKER
 #-------------------------------
+[HOODED]
+Name = Hooded
+Gender = Unknown
+BaseMoney = 16
+#-------------------------------
+[HOODED2]
+Name = Hooded
+Gender = Unknown
+BaseMoney = 16
+#-------------------------------
+[HOODED3]
+Name = Hooded
+Gender = Unknown
+BaseMoney = 16
+#-------------------------------
 [HOOLIGANS]
 Name = Hooligans
 Gender = Unknown

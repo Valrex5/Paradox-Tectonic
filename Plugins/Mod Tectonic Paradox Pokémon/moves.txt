@@ -158,7 +158,7 @@ TotalPP = 10
 Target = NearOther
 FunctionCode = TwoTurnAttackCanChooseOne
 Flags = CanProtect,CanMirrorMove
-Description = The user charges, can used instantly for half of its power.
+Description = The user charges, attacking on the second turn. It can be used instantly for half of its power.
 Animation = HYPERBEAM
 #-------------------------------
 [ONEWITHTHEEARTH]
@@ -260,3 +260,15 @@ FunctionCode = StartBrilliantRain8
 Flags = Empowered
 Description = Summons a brilliant rain for 8 turns, and user becomes Water- and Fairy-type.
 Animation = RAINSTORM
+#-------------------------------
+[OPTIMIZEDHIT]
+Name = Optimized Hit
+Type = NORMAL
+Category = Adaptive
+Power = 80
+Accuracy = 100
+TotalPP = 15
+Target = NearOther
+FunctionCode = ChangeTypeDependsOnCategory
+Flags = CanProtect,CanMirrorMove
+Description = The user analyzes its own strong points, then attacks accordingly. Changes type depending on its category.
