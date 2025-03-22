@@ -1,0 +1,9 @@
+﻿#-------------------------------
+[UNIVERSALRING]
+Name = Universal Ring
+NamePlural = Universal Rings
+Pocket = 8
+Price = 0
+FieldUse = OnPokemon
+Flags = KeyItem
+Description = Use on a Pokémon to switch it into another one of its forms.
