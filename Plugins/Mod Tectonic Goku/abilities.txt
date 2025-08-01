@@ -1,0 +1,4 @@
+#-------------------------------
+[SAIYANWARRIOR]
+Name = Saiyan Warrior
+Description = Has different effects depending on the user's form.

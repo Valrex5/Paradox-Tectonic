@@ -8,3 +8,25 @@ Target = User
 FunctionCode = Kaioken
 Flags = CanSnatch
 Description = Kaio-what?
+#-------------------------------
+[SOLARFLARE]
+Name = Solar Flare
+Type = NORMAL
+Category = Status
+Accuracy = 100
+TotalPP = 3
+Target = AllNearOthers
+FunctionCode = Flinch
+Flags = CanSnatch
+Description = We solar in this
+#-------------------------------
+[SUPERSAIYAN]
+Name = Super Saiyan
+Type = FIGHTING
+Category = Status
+Accuracy = 0
+TotalPP = 10
+Target = User
+FunctionCode = ChangeUserGokuForm
+Flags = CanSnatch
+Description = Kaio-what?
