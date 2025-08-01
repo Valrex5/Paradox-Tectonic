@@ -228,22 +228,26 @@ class PokeBattle_Scene
         cmdSummary = -1
         cmdPokedex = -1
         commands = []
-        commands[cmdSwitch  = commands.length] = _INTL("Switch In") if modParty[idxParty].able?
+        commands[cmdSwitch  = commands.length] = _INTL("Switch In") if modParty[idxParty].able?(true)
         commands[cmdSummary = commands.length] = _INTL("Summary")
         commands[cmdPokedex = commands.length] = _INTL("MasterDex") if !modParty[idxParty].egg? && $Trainer.has_pokedex
         commands[commands.length]              = _INTL("Cancel")
         command = scene.pbShowCommands(_INTL("Do what with {1}?",modParty[idxParty].name),commands)
-        if cmdSwitch>=0 && command==cmdSwitch        # Switch In
-          idxPartyRet = -1
-          partyPos.each_with_index do |pos,i|
-            next if pos!=idxParty+partyStart
-            idxPartyRet = i
-            break
+        if cmdSwitch >= 0 && command==cmdSwitch        # Switch In
+          if modParty[idxParty].hasAbility?(:PACIFIST)
+            pbMessage(_INTL("{1} refuses to join the battle. It's a pacifist!", modParty[idxParty].name))
+          else
+            idxPartyRet = -1
+            partyPos.each_with_index do |pos,i|
+              next if pos!=idxParty+partyStart
+              idxPartyRet = i
+              break
+            end
+            break if yield idxPartyRet, switchScreen
           end
-          break if yield idxPartyRet, switchScreen
-        elsif cmdSummary>=0 && command==cmdSummary   # Summary
+        elsif cmdSummary >= 0 && command==cmdSummary   # Summary
           scene.pbSummary(idxParty,@battle)
-      elsif cmdPokedex && command==cmdPokedex
+        elsif cmdPokedex >= 0 && command==cmdPokedex
           openSingleDexScreen(modParty[idxParty])
         end
       end
@@ -309,13 +313,14 @@ class PokeBattle_Scene
           trueChance = @battle.captureChanceCalc(ballTarget.pokemon,ballTarget,nil,itemSym)
           chance = (trueChance*100/5).floor * 5
           chance = 100 if chance > 100
+          chance = 0 if chance < 0
           case chance
           when 0
-            pbMessage(_INTL("This ball has a very low chance to capture the wild Pokémon.",chance))
+            pbMessage(_INTL("This ball has a very low chance to capture {1}.",ballTarget.pbThis(true)))
           when 100
-            pbMessage(_INTL("This ball is guaranteed to capture the wild Pokémon!",chance))
+            pbMessage(_INTL("This ball is guaranteed to capture {1}!",ballTarget.pbThis(true)))
           else
-            pbMessage(_INTL("This ball has a close to {1}% chance of capturing the wild Pokémon.",chance))
+            pbMessage(_INTL("This ball has a close to {1}% chance of capturing {2}.",chance,ballTarget.pbThis(true)))
           end
           next
         end

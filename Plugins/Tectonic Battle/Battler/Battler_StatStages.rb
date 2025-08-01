@@ -3,8 +3,10 @@ ALL_STATS_2 = [:ATTACK, 2, :SPECIAL_ATTACK, 2, :DEFENSE, 2, :SPECIAL_DEFENSE, 2,
 ALL_STATS_3 = [:ATTACK, 3, :SPECIAL_ATTACK, 3, :DEFENSE, 3, :SPECIAL_DEFENSE, 3, :SPEED, 3].freeze
 ATTACKING_STATS_1 = [:ATTACK, 1, :SPECIAL_ATTACK, 1].freeze
 ATTACKING_STATS_2 = [:ATTACK, 2, :SPECIAL_ATTACK, 2].freeze
+ATTACKING_STATS_3 = [:ATTACK, 3, :SPECIAL_ATTACK, 3].freeze
 DEFENDING_STATS_1 = [:DEFENSE, 1, :SPECIAL_DEFENSE, 1].freeze
 DEFENDING_STATS_2 = [:DEFENSE, 2, :SPECIAL_DEFENSE, 2].freeze
+DEFENDING_STATS_3 = [:DEFENSE, 3, :SPECIAL_DEFENSE, 3].freeze
 
 class PokeBattle_Battler
     def validateStat(stat)
@@ -289,9 +291,19 @@ class PokeBattle_Battler
                 end
                 return false
             end
+            if hasActiveItem?(:CLEARAMULET)
+                if showFailMsg
+                    @battle.pbDisplay(_INTL("{1} is protected by its Clear Amulet!", pbThis))
+                end
+                return false
+            end
         elsif effectActive?(:EmpoweredFlowState)
             @battle.pbDisplay(_INTL("{1} is in a state of total focus!", pbThis)) if showFailMsg
             return false
+        else # Block self-inflicted drops
+            eachActiveAbility do |ability|
+                return false if BattleHandlers.triggerStatLossImmunitySelfAbility(ability, self, stat, @battle, showFailMsg)
+            end
         end
         # Check the stat step
         if statStepAtMin?(stat)
@@ -566,14 +578,16 @@ class PokeBattle_Battler
 
     def pbCanLowerAnyOfStats?(statArray, user, move: nil, showFailMsg: false)
         for i in 0...statArray.length / 2
-            return true if pbCanLowerStatStep?(statArray[i * 2], user, move, showFailMsg)
+            canLowerThisStat = pbCanLowerStatStep?(statArray[i * 2], user, move, showFailMsg)
+            return true if canLowerThisStat
+            showFailMsg = false
         end
         return false
     end
 
     # Pass in array of form
     # [statToRaise, stepsToRaise, statToRaise2, stepsToRaise2, ...]
-    def pbRaiseMultipleStatSteps(statArray, user, move: nil, showFailMsg: false, showAnim: true, ability: nil, item: nil, ignoreContrary: false)
+    def pbRaiseMultipleStatSteps(statArray, user, move: nil, showFailMsg: false, showAnim: true, ability: nil, item: nil, ignoreContrary: false, statStepCaps: {})
         return unless pbCanRaiseAnyOfStats?(statArray, user, move: move, showFailMsg: showFailMsg)
         @battle.pbShowAbilitySplash(user, ability) if ability
 
@@ -609,6 +623,9 @@ class PokeBattle_Battler
         for i in 0...statArray.length / 2
             stat = statArray[i * 2]
             increment = statArray[i * 2 + 1]
+            if statStepCaps && statStepCaps[stat]
+                increment = [increment,statStepCaps[stat]-@steps[stat]].min
+            end
             next unless pbCanRaiseStatStep?(stat, user, move, false, false)
             increment = raiseStatStepEX(stat, increment, user: user, showMessages: false, showAnim: false)
             next if increment == false
@@ -631,7 +648,7 @@ class PokeBattle_Battler
 
     # Pass in array of form
     # [statToRaise, stepsToRaise, statToRaise2, stepsToRaise2, ...]
-    def pbLowerMultipleStatSteps(statArray, user, move: nil, showFailMsg: false, showAnim: true, ability: nil, item: nil, ignoreContrary: false, ignoreMirrorArmor: false)
+    def pbLowerMultipleStatSteps(statArray, user = nil, move: nil, showFailMsg: false, showAnim: true, ability: nil, item: nil, ignoreContrary: false, ignoreMirrorArmor: false)
         return unless pbCanLowerAnyOfStats?(statArray, user, move: move, showFailMsg: showFailMsg)
         @battle.pbShowAbilitySplash(user, ability) if ability
 
@@ -648,7 +665,7 @@ class PokeBattle_Battler
                 @battle.pbDisplay(_INTL("{1}'s Mirror Armor activated!", pbThis))
                 unless user
                     battle.pbHideAbilitySplash(self)
-                    return false
+                    return false    
                 end
                 if user.pbCanLowerAnyOfStats?(statArray, nil, move: move, showFailMsg: showFailMsg)
                     user.pbLowerMultipleStatSteps(statArray, user, showFailMsg: showFailMsg, showAnim: showAnim, ignoreContrary: ignoreContrary, ignoreMirrorArmor: true)

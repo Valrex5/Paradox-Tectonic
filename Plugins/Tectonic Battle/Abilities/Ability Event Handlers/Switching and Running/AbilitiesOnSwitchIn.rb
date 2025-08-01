@@ -113,7 +113,11 @@ BattleHandlers::LoadDataDependentAbilityHandlers += proc {
           proc { |ability, battler, battle, aiCheck|
               next 0 if aiCheck
               battle.pbShowAbilitySplash(battler, ability)
-              battle.pbDisplay(_INTL("{1} breaks the mold!", battler.pbThis))
+              if ability == :UNBOUND
+                battle.pbDisplay(_INTL("{1} breaks the mold and overpowers type immunities!", battler.pbThis))
+              else
+                battle.pbDisplay(_INTL("{1} breaks the mold!", battler.pbThis))
+              end
               battle.pbHideAbilitySplash(battler)
           }
       )
@@ -332,12 +336,21 @@ BattleHandlers::AbilityOnSwitchIn.add(:SWIFTSTOMPS,
 )
 
 BattleHandlers::AbilityOnSwitchIn.add(:BREAKTHROUGH,
-proc { |ability, battler, battle, aiCheck|
-    next 0 if aiCheck
-    battle.pbShowAbilitySplash(battler, ability)
-    battle.pbDisplay(_INTL("{1} overpowers type immunities!", battler.pbThis))
-    battle.pbHideAbilitySplash(battler)
-}
+  proc { |ability, battler, battle, aiCheck|
+      next 0 if aiCheck
+      battle.pbShowAbilitySplash(battler, ability)
+      battle.pbDisplay(_INTL("{1} overpowers type immunities!", battler.pbThis))
+      battle.pbHideAbilitySplash(battler)
+  }
+)
+
+BattleHandlers::AbilityOnSwitchIn.add(:PACIFIST,
+  proc { |ability, battler, battle, aiCheck|
+      next 0 if aiCheck
+      battle.pbShowAbilitySplash(battler, ability)
+      battle.pbDisplay(_INTL("{1} refuses to fight!", battler.pbThis))
+      battle.pbHideAbilitySplash(battler)
+  }
 )
 
 ##########################################
@@ -379,7 +392,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:PUZZLING,
   proc { |ability, battler, battle, aiCheck|
       battle.pbShowAbilitySplash(battler, ability) unless aiCheck
       battle.pbAnimation(:TRICKROOM, battler, nil, 0) unless aiCheck
-      score = battle.pbStartRoom(:PuzzleRoom, battler, aiCheck)
+      score = battle.pbStartRoom(:PuzzleRoom, battler, ability, aiCheck)
       battle.pbHideAbilitySplash(battler) unless aiCheck
       next score
   }
@@ -389,7 +402,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:ODDITY,
   proc { |ability, battler, battle, aiCheck|
       battle.pbShowAbilitySplash(battler, ability) unless aiCheck
       battle.pbAnimation(:TRICKROOM, battler, nil, 0) unless aiCheck
-      score = battle.pbStartRoom(:OddRoom, battler, aiCheck)
+      score = battle.pbStartRoom(:OddRoom, battler, ability, aiCheck)
       battle.pbHideAbilitySplash(battler) unless aiCheck
       next score
   }
@@ -399,7 +412,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:SUBSPACESCHISM,
   proc { |ability, battler, battle, aiCheck|
       battle.pbShowAbilitySplash(battler, ability) unless aiCheck
       battle.pbAnimation(:TRICKROOM, battler, nil, 0) unless aiCheck
-      score = battle.pbStartRoom(:TrickRoom, battler, aiCheck)
+      score = battle.pbStartRoom(:TrickRoom, battler, ability, aiCheck)
       battle.pbHideAbilitySplash(battler) unless aiCheck
       next score
   }
@@ -409,7 +422,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:POLARIZING,
   proc { |ability, battler, battle, aiCheck|
       battle.pbShowAbilitySplash(battler, ability) unless aiCheck
       battle.pbAnimation(:TRICKROOM, battler, nil, 0) unless aiCheck
-      score = battle.pbStartRoom(:PolarizedRoom, battler, aiCheck)
+      score = battle.pbStartRoom(:PolarizedRoom, battler, ability, aiCheck)
       battle.pbHideAbilitySplash(battler) unless aiCheck
       next score
   }
@@ -419,7 +432,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:INSIGHTAURA,
   proc { |ability, battler, battle, aiCheck|
       battle.pbShowAbilitySplash(battler, ability) unless aiCheck
       battle.pbAnimation(:TRICKROOM, battler, nil, 0) unless aiCheck
-      score = battle.pbStartRoom(:InsightRoom, battler, aiCheck)
+      score = battle.pbStartRoom(:InsightRoom, battler, ability, aiCheck)
       battle.pbHideAbilitySplash(battler) unless aiCheck
       next score
   }
@@ -429,7 +442,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:EMOTIONAURA,
   proc { |ability, battler, battle, aiCheck|
       battle.pbShowAbilitySplash(battler, ability) unless aiCheck
       battle.pbAnimation(:TRICKROOM, battler, nil, 0) unless aiCheck
-      score = battle.pbStartRoom(:EmotionRoom, battler, aiCheck)
+      score = battle.pbStartRoom(:EmotionRoom, battler, ability, aiCheck)
       battle.pbHideAbilitySplash(battler) unless aiCheck
       next score
   }
@@ -439,7 +452,7 @@ BattleHandlers::AbilityOnSwitchIn.add(:WILLAURA,
   proc { |ability, battler, battle, aiCheck|
       battle.pbShowAbilitySplash(battler, ability) unless aiCheck
       battle.pbAnimation(:TRICKROOM, battler, nil, 0) unless aiCheck
-      score = battle.pbStartRoom(:WillfulRoom, battler, aiCheck)
+      score = battle.pbStartRoom(:WillfulRoom, battler, ability, aiCheck)
       battle.pbHideAbilitySplash(battler) unless aiCheck
       next score
   }
@@ -790,18 +803,6 @@ BattleHandlers::AbilityOnSwitchIn.add(:TOLLTHEBELLS,
   }
 )
 
-BattleHandlers::AbilityOnSwitchIn.add(:PEARLSEEKER,
-  proc { |ability, battler, battle, aiCheck|
-      next 0 unless battle.eclipsed?
-      next 0 unless battler.canAddItem?(:PEARLOFFATE)
-      next 8 if aiCheck
-      battle.pbShowAbilitySplash(battler, ability)
-      battler.giveItem(:PEARLOFFATE)
-      battle.pbDisplay(_INTL("{1} discovers the {2}!", battler.pbThis, getItemName(:PEARLOFFATE)))
-      battle.pbHideAbilitySplash(battler)
-  }
-)
-
 BattleHandlers::AbilityOnSwitchIn.add(:GYRESPINNER,
   proc { |ability, battler, battle, aiCheck|
       next entryTrappingAbility(ability, battler, battle, :WHIRLPOOL, aiCheck: aiCheck) { |trappedFoe|
@@ -857,7 +858,8 @@ BattleHandlers::AbilityOnSwitchIn.add(:TESLACOILS,
           end
       end
       battle.pbShowAbilitySplash(battler, ability)
-      battler.applyEffect(:Charge)
+      battle.pbAnimation(:CHARGE, battler, nil)
+      battler.applyEffect(:EnergyCharge)
       battle.pbHideAbilitySplash(battler)
   }
 )
@@ -906,6 +908,26 @@ BattleHandlers::AbilityOnSwitchIn.add(:HAUNTED,
       battle.pbHideAbilitySplash(battler)
   }
 )
+
+BattleHandlers::AbilityOnSwitchIn.add(:BRUTEFORCE,
+  proc { |ability, battler, battle, aiCheck|
+      next 0 if aiCheck
+      battle.pbShowAbilitySplash(battler, ability)
+      battle.pbDisplay(_INTL("{1} forces its moves to be physical!", battler.pbThis))
+      battle.pbHideAbilitySplash(battler)
+  }
+)
+
+BattleHandlers::AbilityOnSwitchIn.add(:TIMEINTERLOPER,
+  proc { |ability, battler, battle, aiCheck|
+      next 0 if aiCheck
+      battle.pbShowAbilitySplash(battler, ability)
+      battle.pbDisplay(_INTL("{1} is an interloper! All its moves are special!", battler.pbThis))
+      battle.pbHideAbilitySplash(battler)
+  }
+)
+
+BattleHandlers::AbilityOnSwitchIn.copy(:TIMEINTERLOPER, :SPACEINTERLOPER)
 
 BattleHandlers::AbilityOnSwitchIn.add(:SLUMBERINGDRAKE,
   proc { |ability, battler, battle, aiCheck|
@@ -1082,11 +1104,33 @@ BattleHandlers::AbilityOnSwitchIn.add(:LASTGASP,
     next 0 if aiCheck
     battler.showMyAbilitySplash(ability)
     battler.applyEffect(:LastGasp)
-    if battler.boss?
-      battler.applyEffect(:PerishSong, 12)
-    else
-      battler.applyEffect(:PerishSong, 3)
-    end
+    battler.applyEffect(:PerishSong, 3)
     battler.hideMyAbilitySplash
+  }
+)
+
+BattleHandlers::AbilityOnSwitchIn.add(:UNBOUND,
+  proc { |ability, battler, battle, aiCheck|
+      next 0 if aiCheck
+      battle.pbShowAbilitySplash(battler, ability)
+      battle.pbDisplay(_INTL("{1} overpowers type immunities!", battler.pbThis))
+      battle.pbHideAbilitySplash(battler)
+  }
+)
+
+CASHOUT_HEALING_DIVISOR = 10
+
+BattleHandlers::AbilityOnSwitchIn.add(:CASHOUT,
+  proc { |ability, battler, battle, aiCheck|
+      next unless battler.pbOwnedByPlayer?
+      next unless battle.field.effectActive?(:PayDay)
+      maxCoinsCanHealFrom = battler.maxOverhealingPossible * CASHOUT_HEALING_DIVISOR
+      coinsToConsume = [battle.field.countEffect(:PayDay),maxCoinsCanHealFrom].min
+      healingAmt = coinsToConsume / CASHOUT_HEALING_DIVISOR
+      battler.showMyAbilitySplash(ability)
+      healingMessage = _INTL("{1} gobbles up the scattered coins!",battler.pbThis)
+      battler.pbRecoverHP(healingAmt, true, true, true, healingMessage, canOverheal: true)
+      battle.field.effects[:PayDay] -= coinsToConsume
+      battler.hideMyAbilitySplash
   }
 )

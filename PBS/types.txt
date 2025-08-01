@@ -70,8 +70,8 @@ Immunities = NORMAL,FIGHTING
 [8]
 Name = Steel
 InternalName = STEEL
-Color = 184,184,208
-DarkColor = 88,88,72
+Color = 169,169,186
+DarkColor = 80,80,90
 Weaknesses = FIGHTING,GROUND,FIRE,PSYCHIC
 Resistances = NORMAL,FLYING,ROCK,BUG,STEEL,GRASS,ICE,DRAGON,FAIRY
 Immunities = POISON
@@ -79,6 +79,8 @@ Immunities = POISON
 [9]
 Name = ???
 InternalName = QMARKS
+Color = 104,160,144
+DarkColor = 32,104,96
 IsPseudoType = true
 #-------------------------------
 [10]
@@ -106,7 +108,7 @@ Color = 120,200,80
 DarkColor = 48,96,24
 IsSpecialType = true
 Weaknesses = FLYING,POISON,BUG,FIRE,ICE
-Resistances = GROUND,WATER,GRASS,ELECTRIC,FAIRY,PSYCHIC,GHOST
+Resistances = GROUND,WATER,GRASS,ELECTRIC,FAIRY,GHOST
 #-------------------------------
 [13]
 Name = Electric

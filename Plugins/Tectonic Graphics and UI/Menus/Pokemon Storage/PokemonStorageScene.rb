@@ -271,6 +271,9 @@ class PokemonStorageScene
             key = Input::RIGHT if Input.repeat?(Input::RIGHT)
             key = Input::LEFT if Input.repeat?(Input::LEFT)
             key = Input::UP if Input.repeat?(Input::UP)
+
+            currentBox = @storage.currentBox
+
             if key >= 0
                 pbPlayCursorSE
                 selection = pbChangeSelection(key, selection)
@@ -328,6 +331,10 @@ class PokemonStorageScene
                 elsif selection == -3   # Close Box
                     return [-3, -1]
                 end
+            end
+
+            if @storage.currentBox != currentBox
+                donationBoxTutorialCheck  
             end
         end
     end
@@ -459,8 +466,6 @@ class PokemonStorageScene
         @sprites["box"].x -= diff
         @sprites["box"].dispose
         @sprites["box"] = newbox
-
-        donationBoxTutorialCheck
     end
 
     def pbSwitchBoxToLeft(newbox)
@@ -481,8 +486,6 @@ class PokemonStorageScene
         @sprites["box"].x -= diff
         @sprites["box"].dispose
         @sprites["box"] = newbox
-
-        donationBoxTutorialCheck
     end
 
     def donationBoxTutorialCheck
@@ -499,6 +502,7 @@ class PokemonStorageScene
                 pbSwitchBoxToLeft(newbox)
             end
             @storage.currentBox = newbox
+            donationBoxTutorialCheck
         end
     end
 
@@ -655,8 +659,13 @@ class PokemonStorageScene
         return pbShowCommands(msg, searchMethods)
     end
 
-    def pbChooseSort(msg)
+    def pbChooseBoxSort(msg)
         sortMethods = [_INTL("Cancel"), _INTL("Name"), _INTL("Species"), _INTL("Dex ID"), _INTL("Type"), _INTL("Level")]
+        return pbShowCommands(msg, sortMethods)
+    end
+
+    def pbChooseAllSort(msg)
+        sortMethods = [_INTL("Cancel"), _INTL("Name"), _INTL("Species"), _INTL("Dex ID"), _INTL("Type"), _INTL("Level"), _INTL("Living Dex")]
         return pbShowCommands(msg, sortMethods)
     end
 
@@ -700,7 +709,7 @@ class PokemonStorageScene
                         if search
                             fitsSearch = curpkmn.hasType?(search.id)
                         else
-                            pbDisplay(_INTL("\"#{ret}\" is not a valid type."))
+                            pbDisplay(_INTL("\"{1}\" is not a valid type.", ret))
                             return false
                         end
                     elsif searchMethod == 4 # Tribe
@@ -712,7 +721,7 @@ class PokemonStorageScene
                                 break
                             end
                         else
-                            pbDisplay(_INTL("\"#{ret}\" is not a valid tribe."))
+                            pbDisplay(_INTL("\"{1}\" is not a valid tribe.", ret))
                             return false
                         end
                     end
@@ -1019,16 +1028,8 @@ class PokemonStorageScene
             end
 
             # Show status/fainted/Pokérus infected icon
-            status = 0
-            if pokemon.afraid?
-                status = GameData::Status::DATA.keys.length / 2 + 1
-            elsif pokemon.fainted?
-                status = GameData::Status::DATA.keys.length / 2
-            elsif pokemon.status != :NONE
-                status = GameData::Status.get(pokemon.status).id_number
-            end
-            status -= 1
-            imagepos.push([addLanguageSuffix("Graphics/Pictures/statuses"), 120, 68, 0, 16 * status, 44, 16]) if status >= 0
+            statusImageIndex = pokemon.getStatusImageIndex
+            imagepos.push([addLanguageSuffix("Graphics/Pictures/statuses"), 120, 68, 0, 16 * statusImageIndex, 44, 16]) if statusImageIndex >= 0
             
             pbDrawImagePositions(overlay, imagepos)
         end

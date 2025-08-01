@@ -31,7 +31,7 @@ class PokemonLoadScreen
         )
         delete_save_data
         $game_system   = Game_System.new
-        $PokemonSystem = PokemonSystem.new
+        $Options = Options.new
     end
 
     def pbStartDeleteScreen
@@ -92,7 +92,8 @@ class PokemonLoadScreen
         cmd_load_game       = -1
         cmd_new_game        = -1
         cmd_achievements    = -1
-        cmd_debug           = -1
+        cmd_options         = -1
+        cmd_player_survey   = -1
         cmd_website         = -1
         cmd_discord         = -1
         cmd_wiki            = -1
@@ -103,7 +104,9 @@ class PokemonLoadScreen
             commands[cmd_load_game = commands.length]   = _INTL("Load Game")
         end
         commands[cmd_new_game = commands.length]        = _INTL("New Game")
+        commands[cmd_options = commands.length]         = _INTL("Options")
         commands[cmd_achievements = commands.length]    = _INTL("Achievements")
+        commands[cmd_player_survey = commands.length]   = _INTL("Player Survey")
         commands[cmd_website = commands.length]         = _INTL("Website")
         commands[cmd_discord = commands.length]         = _INTL("Discord")
         commands[cmd_wiki = commands.length]            = _INTL("Wiki")
@@ -132,12 +135,20 @@ class PokemonLoadScreen
                 @scene.pbEndScene
                 Game.start_new
                 return
+            when cmd_options
+                pbFadeOutIn {
+                    optionScene = PokemonOption_Scene.new
+					optionScreen = PokemonOptionMenu.new(optionScene)
+					optionScreen.pbStartPokemonMenu
+                }
             when cmd_achievements
                 pbFadeOutIn do
                     achievementsListScene = AchievementsListScene.new
                     screen = AchievementsListScreen.new(achievementsListScene)
                     screen.pbStartScreen
                 end
+            when cmd_player_survey
+                System.launch("https://forms.gle/PFJLiUVEq6SmnqFT9")
             when cmd_website
                 System.launch("https://www.tectonic-game.com/")
             when cmd_discord

@@ -83,7 +83,7 @@ BattleHandlers::EOREffectAbility.add(:LUXURYTASTE,
   proc { |ability, battler, battle|
       next unless battler.hasActiveItem?(GameData::Item.getByFlag("Clothing"))
       healingMessage = _INTL("{1} luxuriated in its fine clothing.", battler.pbThis)
-      battler.applyFractionalHealing(1.0 / 8.0, ability: ability, customMessage: healingMessage)
+      battler.applyFractionalHealing(1.0 / 12.0, ability: ability, customMessage: healingMessage)
   }
 )
 
@@ -124,6 +124,15 @@ BattleHandlers::EOREffectAbility.add(:TENDERIZE,
   }
 )
 
+BattleHandlers::EOREffectAbility.add(:SINKINGFEELING,
+  proc { |ability, battler, _battle|
+      battler.eachOther do |b|
+          next unless b.waterlogged?
+          b.pbLowerMultipleStatSteps(ATTACKING_STATS_2, battler, ability: ability)
+      end
+  }
+)
+
 BattleHandlers::EOREffectAbility.add(:VITALRHYTHM,
   proc { |ability, battler, battle|
       canHealAny = false
@@ -149,14 +158,14 @@ BattleHandlers::EOREffectAbility.add(:FLOURISHING,
       next unless %i[PUMPKABOO GOURGEIST].include?(battler.species)
       next if battler.form == 3
       battle.pbShowAbilitySplash(battler, ability)
-      formChangeMessage = _INTL("#{battler.pbThis} grows one size bigger!")
+      formChangeMessage = _INTL("{1} grows one size bigger!", battler.pbThis)
       battler.pbChangeForm(battler.form + 1, formChangeMessage)
-      battle.pbDisplay(_INTL("#{battler.pbThis} is fully grown!")) if battler.form == 3
+      battle.pbDisplay(_INTL("{1} is fully grown!", battler.pbThis)) if battler.form == 3
       battle.pbHideAbilitySplash(battler)
   }
 )
 
-EOT_ABILITY_HEALING_FRACTION = 1.0 / 12.0
+EOT_ABILITY_HEALING_FRACTION = 1.0 / 16.0
 
 BattleHandlers::EOREffectAbility.add(:FIGHTINGVIGOR,
   proc { |ability, battler, _battle|
@@ -178,7 +187,7 @@ BattleHandlers::EOREffectAbility.add(:SELFSUFFICIENT,
 
 BattleHandlers::EOREffectAbility.add(:LIVINGARMOR,
   proc { |ability, battler, battle|
-      battler.applyFractionalHealing(EOT_ABILITY_HEALING_FRACTION, ability: ability)
+      battler.applyFractionalHealing(1.0 / 12.0, ability: ability) unless battler.lastAttacker.empty?
   }
 )
 
@@ -205,7 +214,7 @@ BattleHandlers::EOREffectAbility.add(:LIFELINE,
         end
         unless potentialHeals.empty?
             healTarget = potentialHeals.sample
-            battle.pbDisplay(_INTL("#{battler.pbThis} also heals #{healTarget.name}!"))
+            battle.pbDisplay(_INTL("{1} also heals {2}!", battler.pbThis, healTarget.name))
             healTarget.healBy(healingAmount)
         end
     end

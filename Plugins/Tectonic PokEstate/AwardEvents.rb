@@ -43,8 +43,9 @@ PokEstate::LoadDataDependentAwards += proc {
 ##############################################
 # ROUTE REWARDS (45  of them)
 ##############################################
-# 0
+# 1
 SMALL_ROUTES_CASABA = [
+    67, # Old Ice Cream Shop
 ]
 
 # 13
@@ -76,12 +77,13 @@ SMALL_ROUTES_POST_SURF = [
     316, # Sandstone Estuary
 ]
  
-# 5
+# 6
 MEDIUM_ROUTES_CASABA = [
     136, # Casaba Villa
     138, # Scenic Trail
     30, # Windy Way
     51, # Foreclosed Tunnel
+    38, # Bluepoint Beach
     26, # Bluepoint Grotto
 ]
 
@@ -107,9 +109,8 @@ MEDIUM_ROUTES_POST_SURF = [
     218, # Abyssal Cavern
 ]
 
-# 1
+# 0
 BIG_ROUTES_CASABA = [
-    38, # Bluepoint Beach
 ]
 
 # 2
@@ -242,6 +243,65 @@ PokEstate::LoadDataDependentAwards += proc {
         proc { |pokedex|
             reward = [:EXPCANDYXL,15]
             next areaReward(239,reward)
+        }
+    )
+}
+
+##############################################
+# OVERALL DEX COMPLETION
+##############################################
+PokEstate::LoadDataDependentAwards += proc {
+
+    threshold100Percent = nonLegendarySpeciesCount(false)
+    threshold25Percent = (threshold100Percent / 4.0).floor
+    threshold50Percent = (threshold100Percent / 2.0).floor
+    threshold75Percent = (3.0 * threshold100Percent / 4.0).floor
+
+    PokEstate::GrantAwards.add(:DEXCOMPLETION25PERCENT,
+        proc { |pokedex|
+            next {
+                reward: [:MASTERBALL,3],
+                description: _INTL("{1} non-legendary species (25%)",threshold25Percent),
+                page: 4,
+                threshold: threshold25Percent,
+                amount: nonLegendarySpeciesCount(true),
+            }
+        }
+    )
+
+    PokEstate::GrantAwards.add(:DEXCOMPLETION50PERCENT,
+        proc { |pokedex|
+            next {
+                reward: [:BALLLAUNCHER],
+                description: _INTL("{1} non-legendary species (50%)",threshold50Percent),
+                page: 4,
+                threshold: threshold50Percent,
+                amount: nonLegendarySpeciesCount(true),
+            }
+        }
+    )
+
+    PokEstate::GrantAwards.add(:DEXCOMPLETION75PERCENT,
+        proc { |pokedex|
+            next {
+                reward: [:GLEAMPOWDER],
+                description: _INTL("{1} non-legendary species (75%)",threshold75Percent),
+                page: 4,
+                threshold: threshold75Percent,
+                amount: nonLegendarySpeciesCount(true),
+            }
+        }
+    )
+
+    PokEstate::GrantAwards.add(:DEXCOMPLETION100PERCENT,
+        proc { |pokedex|
+            next {
+                reward: [:SHINYCHARM],
+                description: _INTL("{1} non-legendary species (100%)",threshold100Percent),
+                page: 4,
+                threshold: threshold100Percent,
+                amount: nonLegendarySpeciesCount(true),
+            }
         }
     )
 }

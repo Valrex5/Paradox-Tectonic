@@ -1,7 +1,7 @@
 CHASM_CREDITs = <<_END_
 
 Major Contributors
-Brickbat<s>Zeu
+Brickbat<s>Zinnia
 Divock<s>Agentbla
 Wakarimasensei<s>Drawingbox
 IgnitedxSoul<s>LucaSantosSims
@@ -9,8 +9,8 @@ Darlvon<s>Jaggedthorn
 Splitmoon<s>TikiShades
 Valrex<s>Steeb
 Tirankin<s>Ci
-Yufeng
-
+Yufeng<s>Riptidecord
+LunaFlare
 
 Other Contributors
 Arenastellez<s>Zufaix
@@ -27,8 +27,9 @@ ali760<s>papper
 lichenprincess<s>Enigma
 princessroxie<s>Joaquín Arellano
 M1ntyFr3shD4n<s>pechapanda
-zombygoast<s>Riptidecord
-LunaFlare<s>elusivestowaway
+zombygoast<s>elusivestowaway
+Kei<s>Atteathesilly
+noodleman
 
 {INSERTS_PLUGIN_CREDITS_DO_NOT_REMOVE}
 
@@ -92,6 +93,7 @@ Somersault
 Megas/Gigantamax Overworld Sprites
 Kidkatt<s>Larryturbo
 Princess-Phoenix<s>Sagedeoxys
+Lasse00
 
 Other Overworld Sprites
 Larryturbo<s>Kyle Dove
@@ -211,6 +213,9 @@ Hematite<s>SelenaArmorclaw
 Castform Sandy
 Jumpy<s>Noel
 The FnF Showdown community
+
+Eclipse and Moonglow Castform
+Atteathesilly
 
 Spanish PokeDex Translations
 Everson

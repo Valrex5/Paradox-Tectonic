@@ -173,7 +173,7 @@ class PokemonPokedex_Scene
 
                     # By level up
                     if [0, 1].include?(learningMethodSelection)
-                        species_data.moves.each do |learnset_entry|
+                        species_data.level_moves.each do |learnset_entry|
                             if learnset_entry[1] == actualMove
                                 contains = true
                                 break
@@ -183,7 +183,7 @@ class PokemonPokedex_Scene
 
                     # By specific level
                     if learningMethodSelection == 2
-                        species_data.moves.each do |learnset_entry|
+                        species_data.level_moves.each do |learnset_entry|
                             break if learnset_entry[0] > levelIntAttempt
                             if learnset_entry[1] == actualMove
                                 contains = true
@@ -333,7 +333,7 @@ class PokemonPokedex_Scene
             levelIntAttempt = levelTextInput.to_i
             return nil if levelIntAttempt == 0
 
-            levelCheck = roundUpToRelevantCap(levelIntAttempt)
+            levelCheck = roundUpToNextCap(levelIntAttempt)
 
             dexlist = searchStartingList
             dexlist = dexlist.find_all do |dex_item|
@@ -409,8 +409,12 @@ class PokemonPokedex_Scene
             when 0..5
                 statToCompareA = species_data.base_stats[comparitorA]
             when 6
-                statToCompareA = species_data.physical_ehp
+                species_data.base_stats.each do |statName, statValue|
+                    statToCompareA += statValue
+                end
             when 7
+                statToCompareA = species_data.physical_ehp
+            when 8
                 statToCompareA = species_data.special_ehp
             end
 
@@ -532,6 +536,7 @@ class PokemonPokedex_Scene
         commands = []
         tribes = []
         GameData::Tribe.each do |tribe|
+            next if tribe.id == :DEBUG_TESTTRIBE && !$DEBUG
             tribes.push(tribe.id)
             commands.push(getTribeName(tribe.id))
         end
@@ -605,17 +610,8 @@ class PokemonPokedex_Scene
 
                 hasSignatureMove = false
                 autoDisqualifyFromSearch(dex_item[:species])
-                # By level up
-                dex_item[:data].moves.each do |learnset_entry|
-                    if GameData::Move.get(learnset_entry[1]).is_signature?
-                        hasSignatureMove = true
-                        break
-                    end
-                end
 
-                next true if hasSignatureMove && !reversed
-
-                # Egg moves
+                # All moves
                 dex_item[:data].learnable_moves.each do |move|
                     if GameData::Move.get(move).is_signature?
                         hasSignatureMove = true
@@ -774,7 +770,7 @@ class PokemonPokedex_Scene
             end
 
             dexlist = dexlist.find_all do |dex_item|
-                lvlmoves = dex_item[:data].moves
+                lvlmoves = dex_item[:data].level_moves
                 types = [dex_item[:data].type1, dex_item[:data].type2 || dex_item[:data].type1]
                 types.uniq!
                 types.compact!

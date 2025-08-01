@@ -20,10 +20,11 @@ ShowArea = false
 Bicycle = false
 #-------------------------------
 [002]
-# Sandstone System
-Outdoor = false
-ShowArea = false
-Bicycle = false
+# Windborn Island
+Outdoor = true
+ShowArea = true
+Bicycle = true
+Humidity = Wet
 #-------------------------------
 [003]
 # Kilna Turf
@@ -39,7 +40,7 @@ Environment = TallGrass
 # Scientist's House
 Outdoor = false
 ShowArea = false
-Bicycle = true
+Bicycle = false
 BattleBack = indoor1
 Environment = None
 #-------------------------------
@@ -115,7 +116,8 @@ Environment = Forest
 # Chamber of Regieleki
 Outdoor = false
 ShowArea = false
-Bicycle = false
+Bicycle = true
+BattleBack = cave1
 WildBattleBGM = Tectonic_Epitaph_of_the_Demiurge.ogg
 #-------------------------------
 [013]
@@ -127,12 +129,6 @@ HealingSpot = 37,43,16
 #-------------------------------
 [014]
 # LuxTech Buildings
-Outdoor = false
-ShowArea = false
-Bicycle = false
-#-------------------------------
-[015]
-# LuxTech Mart
 Outdoor = false
 ShowArea = false
 Bicycle = false
@@ -199,6 +195,7 @@ Bicycle = false
 Outdoor = false
 ShowArea = false
 Bicycle = true
+MapPosition = 0,10,10
 BattleBack = wcave
 Environment = Cave
 #-------------------------------
@@ -220,6 +217,13 @@ Bicycle = true
 BicycleAlways = false
 BattleBack = cave1
 Environment = Cave
+#-------------------------------
+[027]
+# The Catacombs B4
+Outdoor = false
+ShowArea = true
+Bicycle = true
+BattleBack = distortion
 #-------------------------------
 [028]
 # Professor's House
@@ -513,9 +517,10 @@ ShowArea = true
 Bicycle = false
 #-------------------------------
 [067]
+# Old Ice Cream Shop
 Outdoor = false
-ShowArea = false
-Bicycle = false
+ShowArea = true
+Bicycle = true
 #-------------------------------
 [068]
 # Room 104
@@ -555,11 +560,6 @@ Bicycle = false
 #-------------------------------
 [074]
 # Room 202
-Outdoor = false
-ShowArea = false
-Bicycle = false
-#-------------------------------
-[075]
 Outdoor = false
 ShowArea = false
 Bicycle = false
@@ -1293,6 +1293,12 @@ Bicycle = false
 BattleBack = indoor2
 Environment = None
 #-------------------------------
+[180]
+# Blustery Bosk
+Outdoor = true
+ShowArea = true
+Bicycle = true
+#-------------------------------
 [181]
 # Casaba Island
 Outdoor = false
@@ -1369,7 +1375,7 @@ Environment = None
 Outdoor = false
 ShowArea = true
 Bicycle = true
-MapPosition = 0,14,3
+MapPosition = 0,14,2
 BattleBack = indoor3
 Environment = None
 #-------------------------------
@@ -1384,7 +1390,13 @@ Bicycle = false
 Outdoor = false
 ShowArea = false
 Bicycle = false
-HealingSpot = 187,67,30
+HealingSpot = 187,63,30
+#-------------------------------
+[192]
+# Field of Spires
+Outdoor = true
+ShowArea = true
+Bicycle = true
 #-------------------------------
 [193]
 # Volcanic Shore
@@ -1737,13 +1749,13 @@ Bicycle = false
 # Grouz Mine Sinkhole
 Outdoor = false
 ShowArea = false
-Bicycle = false
+Bicycle = true
 #-------------------------------
 [242]
 # Goomy Den
 Outdoor = false
 ShowArea = false
-Bicycle = false
+Bicycle = true
 #-------------------------------
 [243]
 # Chasm Base Mess Hall
@@ -1755,37 +1767,37 @@ Bicycle = false
 # Gible Den
 Outdoor = false
 ShowArea = false
-Bicycle = false
+Bicycle = true
 #-------------------------------
 [245]
 # Deino Den
 Outdoor = false
 ShowArea = false
-Bicycle = false
+Bicycle = true
 #-------------------------------
 [246]
 # Jangmo-o Den
 Outdoor = false
 ShowArea = false
-Bicycle = false
+Bicycle = true
 #-------------------------------
 [247]
 # Dreepy Den
 Outdoor = false
 ShowArea = false
-Bicycle = false
+Bicycle = true
 #-------------------------------
 [248]
 # Bagon Den
 Outdoor = false
 ShowArea = false
-Bicycle = false
+Bicycle = true
 #-------------------------------
 [249]
 # Dratini Den
 Outdoor = false
 ShowArea = false
-Bicycle = false
+Bicycle = true
 #-------------------------------
 [250]
 # Chasm Base Lab
@@ -1846,6 +1858,7 @@ Bicycle = true
 Temperature = Cold
 Humidity = Wet
 MapPosition = 0,5,3
+BattleBack = field
 #-------------------------------
 [259]
 # Casey's House
@@ -1867,7 +1880,7 @@ Environment = Cave
 # Dratini Den 2
 Outdoor = false
 ShowArea = false
-Bicycle = false
+Bicycle = true
 #-------------------------------
 [262]
 # Sweetrock Harbor Buildings
@@ -1881,6 +1894,14 @@ Outdoor = false
 ShowArea = false
 Bicycle = false
 HealingSpot = 217,27,29
+#-------------------------------
+[264]
+# Thunder Point
+Outdoor = true
+ShowArea = true
+Bicycle = true
+Weather = Storm,100
+BattleBack = forest_night
 #-------------------------------
 [265]
 # Lightkeeper's House
@@ -2005,7 +2026,7 @@ Environment = None
 Outdoor = false
 ShowArea = true
 Bicycle = true
-MapPosition = 0,14,2
+MapPosition = 0,14,1
 BattleBack = distortion
 #-------------------------------
 [283]
@@ -2182,7 +2203,7 @@ Bicycle = false
 # Gible Den 2
 Outdoor = false
 ShowArea = false
-Bicycle = false
+Bicycle = true
 #-------------------------------
 [309]
 # Cave of Hatching F2
@@ -2400,7 +2421,7 @@ HealingSpot = 315,28,31
 # Underpeak Escape B1
 Outdoor = false
 ShowArea = false
-Bicycle = false
+Bicycle = true
 #-------------------------------
 [340]
 # Illuminant Helix
@@ -2414,7 +2435,7 @@ BattleBack = wcave
 # Underpeak Escape B2
 Outdoor = false
 ShowArea = false
-Bicycle = false
+Bicycle = true
 #-------------------------------
 [342]
 # Carnation Tower F1
@@ -2462,7 +2483,7 @@ Bicycle = false
 # UB Portal
 Outdoor = false
 ShowArea = true
-Bicycle = false
+Bicycle = true
 #-------------------------------
 [350]
 # Forgotten Grave Site
@@ -2473,7 +2494,7 @@ Bicycle = true
 [351]
 # Lainie's Mansion
 Outdoor = false
-ShowArea = false
+ShowArea = true
 Bicycle = false
 #-------------------------------
 [352]
@@ -2593,6 +2614,7 @@ Outdoor = false
 ShowArea = true
 Bicycle = true
 Weather = TimeSandstorm,100
+MapPosition = 0,5,14
 BattleBack = cave1
 #-------------------------------
 [369]
@@ -2645,7 +2667,7 @@ BattleBack = cave2
 # Cavern of Knowledge
 Outdoor = false
 ShowArea = false
-Bicycle = false
+Bicycle = true
 #-------------------------------
 [376]
 # Islands
@@ -2696,6 +2718,7 @@ BattleBack = cave1
 Outdoor = false
 ShowArea = true
 Bicycle = true
+BattleBack = cave1
 #-------------------------------
 [383]
 # Mirror Tundra
@@ -2723,25 +2746,25 @@ HealingSpot = 377,50,36
 # Cave of Conflict
 Outdoor = false
 ShowArea = true
-Bicycle = false
+Bicycle = true
 #-------------------------------
 [387]
 # Cave of Life
 Outdoor = false
 ShowArea = true
-Bicycle = false
+Bicycle = true
 #-------------------------------
 [388]
 # Cave of Abundance
 Outdoor = false
 ShowArea = true
-Bicycle = false
+Bicycle = true
 #-------------------------------
 [389]
 # Cave of Hope
 Outdoor = false
 ShowArea = true
-Bicycle = false
+Bicycle = true
 #-------------------------------
 [390]
 # Novo-Turf Gatehouse
@@ -2855,22 +2878,24 @@ Bicycle = false
 Weather = Sandstorm,100
 #-------------------------------
 [406]
-# Sandstone Switchbox
+# Oasis System
 Outdoor = false
 ShowArea = true
 Bicycle = true
+BattleBack = cave1
 #-------------------------------
 [407]
 # Wave Lengths
 Outdoor = false
 ShowArea = true
 Bicycle = true
+BattleBack = cave1
 #-------------------------------
 [408]
 # Tournament Grounds EQ
 Outdoor = true
 ShowArea = false
-Bicycle = false
+Bicycle = true
 Weather = Overcast,100
 #-------------------------------
 [409]
@@ -2878,12 +2903,14 @@ Weather = Overcast,100
 Outdoor = false
 ShowArea = true
 Bicycle = true
+BattleBack = cave1
 #-------------------------------
 [410]
 # Terminal Confusion
 Outdoor = false
 ShowArea = true
 Bicycle = true
+BattleBack = cave1
 #-------------------------------
 [411]
 # Tri Island
@@ -2993,8 +3020,8 @@ BattleBack = indoor2
 Environment = None
 #-------------------------------
 [425]
-# Sandstone Switchbox Draft
-Outdoor = false
+# Shimmer Haven
+Outdoor = true
 ShowArea = true
 Bicycle = true
 #-------------------------------
@@ -3065,8 +3092,70 @@ Outdoor = false
 ShowArea = false
 Bicycle = true
 #-------------------------------
+[437]
+# Bogdan Cement Lobby
+Outdoor = false
+ShowArea = false
+Bicycle = false
+#-------------------------------
+[438]
+# Bogdan Cement Plant
+Outdoor = false
+ShowArea = false
+Bicycle = false
+#-------------------------------
+[439]
+# Knowledge Elder's Home
+Outdoor = false
+ShowArea = false
+Bicycle = false
+#-------------------------------
+[440]
+# Emotion Elder's Home
+Outdoor = false
+ShowArea = false
+Bicycle = false
+#-------------------------------
+[441]
+# Knowledge Elder's Home
+Outdoor = false
+ShowArea = false
+Bicycle = false
+#-------------------------------
+[442]
+# Bence's House
+Outdoor = false
+ShowArea = false
+Bicycle = false
+#-------------------------------
 [443]
 # Team Chasm Archive
 Outdoor = false
 ShowArea = false
 Bicycle = false
+#-------------------------------
+[444]
+# Crown Chamber
+Outdoor = false
+ShowArea = false
+Bicycle = true
+#-------------------------------
+[445]
+# Battle Monument Secret
+Outdoor = false
+ShowArea = false
+Bicycle = true
+#-------------------------------
+[446]
+# Goomy Den 2
+Outdoor = false
+ShowArea = false
+Bicycle = true
+#-------------------------------
+[447]
+# Empty Island
+Outdoor = true
+ShowArea = true
+Bicycle = true
+Weather = Stillness,100
+MapPosition = 0,20,7

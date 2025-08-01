@@ -78,10 +78,10 @@ class TilingCardsPokemonMenu_Scene < TilingCardsMenu_Scene
                   :MASTERDEX => {
                       :label => _INTL("MasterDex"),
                       :active_proc => proc do
-                          $Trainer.has_pokedex
+                          $Trainer.has_pokedex || $DEBUG
                       end,
                       :press_proc => proc do |_scene|
-                          openSingleDexScreen(@pkmn)
+                            openPartyDexScreen(@pkmn,@pkmnid)
                       end,
                   },
                   :SEND_PC => {
@@ -90,7 +90,7 @@ class TilingCardsPokemonMenu_Scene < TilingCardsMenu_Scene
                           @party.length > 1 && ($Trainer.able_pokemon_count > 1 || !@pkmn.able?)
                       end,
                       :press_proc => proc do |_scene|
-                          if pbConfirm(_INTL("Are you sure you'd like to send back #{@pkmn.name}?"))
+                          if pbConfirm(_INTL("Are you sure you'd like to send back {1}?", @pkmn.name))
                               promptToTakeItems(@pkmn)
                               pbStorePokemonInPC(@pkmn)
                               @party[@pkmnid] = nil
@@ -204,11 +204,11 @@ class TilingCardsPokemonMenu_Scene < TilingCardsMenu_Scene
         end
         typeCommands.push("Cancel")
         existingIndex = typesArray.find_index(@pkmn.itemTypeChosen)
-        chosenNumber = @partyScene.pbShowCommands(_INTL("What type should #{@pkmn.name} become?"), typeCommands,
+        chosenNumber = @partyScene.pbShowCommands(_INTL("What type should {1} become?", @pkmn.name), typeCommands,
 existingIndex)
         if chosenNumber > -1 && chosenNumber < typeCommands.length - 1
             typeSettingItem = @pkmn.hasTypeSetterItem?
-            pbDisplay(_INTL("#{@pkmn.name} changed its #{getItemName(typeSettingItem)} to #{typeCommands[chosenNumber]}-type!"))
+            pbDisplay(_INTL("{1} changed its {2} to {3}-type!", @pkmn.name, getItemName(typeSettingItem), typeCommands[chosenNumber]))
             @pkmn.itemTypeChosen = typesArray[chosenNumber]
         end
     end
@@ -216,11 +216,15 @@ existingIndex)
     def modifyCommandMenu
         commands   = []
         cmdRename  = -1
+        cmdSwapPokeBall = -1
+        cmdDeleteMove = -1
         cmdEvolve  = -1
         cmdStyle = -1
 
         # Build the commands
         commands[cmdRename = commands.length]       = _INTL("Rename")
+        commands[cmdSwapPokeBall = commands.length]   = _INTL("Swap Ball")
+        commands[cmdDeleteMove = commands.length] = _INTL("Delete Move") if @pkmn.numMoves > 1
         commands[cmdStyle = commands.length]        = _INTL("Set Style") if pbHasItem?(:STYLINGKIT)
         newspecies = @pkmn.check_evolution_on_level_up(false)
         commands[cmdEvolve = commands.length]       = _INTL("Evolve") if newspecies
@@ -229,12 +233,16 @@ existingIndex)
         modifyCommand = @partyScene.pbShowCommands(_INTL("Do what with {1}?", @pkmn.name), commands)
         if cmdRename >= 0 && modifyCommand == cmdRename
             currentName = @pkmn.name
-            pbTextEntry("#{currentName}'s nickname?", 0, Pokemon::MAX_NAME_SIZE, 5)
+            pbTextEntry(_INTL("{1}'s nickname?", currentName), 0, Pokemon::MAX_NAME_SIZE, 5)
             if pbGet(5) == "" || pbGet(5) == currentName
                 @pkmn.name = currentName
             else
                 @pkmn.name = pbGet(5)
             end
+        elsif cmdSwapPokeBall >= 0 && modifyCommand == cmdSwapPokeBall
+			@pkmn.switchBall
+        elsif cmdDeleteMove >= 0 && modifyCommand == cmdDeleteMove
+            moveDeletion(@pkmn)
         elsif cmdEvolve >= 0 && modifyCommand == cmdEvolve
             newspecies = @pkmn.check_evolution_on_level_up(true)
             return false if newspecies.nil?

@@ -78,7 +78,7 @@ class PokeBattle_Battler
     def abilityActive?(ignore_fainted = false, ignore_gas = false)
         return false if fainted? && !ignore_fainted
         return false if !ignore_gas && @battle.abilitiesNeutralized?
-        return false if effectActive?(:GastroAcid)
+        return false if effectActive?(:AbilitySupressed)
         return false if dizzy?
         return true
     end
@@ -215,7 +215,7 @@ class PokeBattle_Battler
         # TODO: replace this check with an event-subscription
         # also use that same event trigger in the Pokemon class
         if itemCheck == :CRYSTALVEIL && hasActiveAbility?(:WONDERGUARD)
-            pbMessage(_INTL("#{pbThis} can't hold a #{getItemName(:CRYSTALVEIL)}!")) if showMessages
+            pbMessage(_INTL("{1} can't hold a {2}!", pbThis, getItemName(:CRYSTALVEIL))) if showMessages
             return true
         end
         return false
@@ -306,6 +306,14 @@ class PokeBattle_Battler
         return false
     end
 
+    def hasNonInitialItem?
+        items.each do |item|
+            next if hasInitialItem?(item)
+            return true
+        end
+        return false
+    end
+
     def hasItem?(checkitem)
         items.each do |item|
             if checkitem.is_a?(Array)
@@ -337,7 +345,7 @@ class PokeBattle_Battler
             end
         end
         if %i[FRAGILELOCKET LUNCHBOX].include?(checkitem)
-            @battle.pbDisplay(_INTL("But #{pbThis(false)} hold's tightly onto its #{getItemName(checkitem)}!")) if showMessages
+            @battle.pbDisplay(_INTL("But {1} hold's tightly onto its {2}!", pbThis(false), getItemName(checkitem))) if showMessages
             return true
         end
         # Other unlosable items
@@ -401,6 +409,29 @@ class PokeBattle_Battler
 
     def canChangeType?
         return !hasActiveAbility?(%i[MULTITYPE RKSSYSTEM])
+    end
+
+    def canChangeTypeTo?(type, showMoveFailure = false)
+        typeData = GameData::Type.try_get(type)
+        if typeData.nil?
+            if showMoveFailure
+                yield _INTL("{1}-type doesn't exist!", type)
+            end
+            return false
+        end
+        if pbHasType?(type)
+            if showMoveFailure
+                yield _INTL("{1} is already {2}-type!", pbThis(true), typeData.name)
+            end
+            return false
+        end
+        unless canChangeType?
+            if showMoveFailure
+                yield _INTL("{1} can't have its type changed!", pbThis(true))
+            end
+            return false
+        end
+        return true
     end
 
     def airborne?(checkingForAI = false)
@@ -515,7 +546,7 @@ class PokeBattle_Battler
     end
 
     def initialItems
-        return @battle.initialItems[@index & 1][@pokemonIndex]
+        return @battle.initialItems[@index & 1][@pokemonIndex] || []
     end
 
     def setInitialItems(newItem)
@@ -658,19 +689,17 @@ class PokeBattle_Battler
         return shouldAbilityApply?(:BUNKERDOWN, checkingForAI) && @hp == @totalhp
     end
 
-    def getRoomDuration(aiCheck = false)
-        if shouldItemApply?(:REINFORCINGROD,aiCheck)
-            return 8
-        else
-            return 5
-        end
+    def getRoomDuration(baseDuration = 8, aiCheck: false)
+        ret = baseDuration
+        ret *= 2 if shouldItemApply?(:REINFORCINGROD,aiCheck)
+        return ret
     end
 
     def getScreenDuration(baseDuration = 5,aiCheck: false)
         ret = baseDuration
         ret += 3 if shouldItemApply?(:LIGHTCLAY,aiCheck)
         ret += 6 if shouldItemApply?(:BRIGHTCLAY,aiCheck)
-        ret *= 2 if shouldAbilityApply?(:PLANARVEIL,aiCheck) && @battle.eclipsed?
+        ret += 2 if shouldAbilityApply?(:PLANARVEIL,aiCheck)
         return ret
     end
 
@@ -695,6 +724,11 @@ class PokeBattle_Battler
         raise _INTL("#{@name} isn't an avatar, but something is requesting its Phase Lower Health Bound!") unless boss?
         hpFraction = 1 - (@avatarPhase / avatarData.num_phases.to_f)
         return (@totalhp * hpFraction).floor
+    end
+
+    def avatarHealthPerPhase
+        raise _INTL("#{@name} isn't an avatar, but something is requesting its Health Per Phase!") unless boss?
+        return (@totalhp / avatarData.num_phases.to_f).ceil
     end
 
     #=============================================================================
@@ -848,6 +882,10 @@ class PokeBattle_Battler
         return @hp <= @totalhp / 2
     end
 
+    def maxOverhealingPossible
+        return (@totalhp * 2) - @hp  
+    end
+
     def overhealed?
         return @hp > @totalhp
     end
@@ -948,5 +986,35 @@ class PokeBattle_Battler
 
     def moveOutcomePredictor
         return @battle.scene.sprites["move_outcome_#{@index}"]
+    end
+
+    def hasEmpoweredStatusMove?
+        getMoves.each do |move|
+            next unless move
+            next if move.damagingMove?(true)
+            next unless move.empoweredMove?
+            return true
+        end
+        return false
+    end
+
+    def getEmpoweredStatusMoves
+        empoweredStatusMoves = []
+        getMoves.each do |move|
+            next unless move
+            next if move.damagingMove?(true)
+            next unless move.empoweredMove?
+            empoweredStatusMoves.push(move)
+        end
+        return empoweredStatusMoves
+    end
+
+    def eachEmpoweredStatusMove
+        getMoves.each_with_index do |move, index|
+            next unless move
+            next if move.damagingMove?(true)
+            next unless move.empoweredMove?
+            yield move, index
+        end
     end
 end

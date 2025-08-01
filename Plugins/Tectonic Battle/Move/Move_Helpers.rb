@@ -16,6 +16,7 @@ class PokeBattle_Move
     end
 
     def shouldShade?(user, target)
+        return true if @pp == 0
         return true if pbMoveFailed?(user, [target], false)
         return true if pbFailsAgainstTargetAI?(user, target)
         return false
@@ -223,7 +224,7 @@ class PokeBattle_Move
     # Chooses a move category based on which attacking stat is higher (if no target is provided)
     # Or which will deal more damage to the target
     def selectBestCategory(user, target = nil)
-        if target && target.hasActiveAbility?(:UNAWARE)
+        if target && targetIsUnaware?(target)
             real_attack = user.getFinalStat(:ATTACK, false, 0)
             real_special_attack = user.getFinalStat(:SPECIAL_ATTACK, false, 0)
         else
@@ -231,7 +232,7 @@ class PokeBattle_Move
             real_special_attack = user.getFinalStat(:SPECIAL_ATTACK)
         end
         if target
-            if user.hasActiveAbility?(:UNAWARE)
+            if userIsUnaware?(user)
                 real_defense = target.getFinalStat(:DEFENSE, false, 0)
                 real_special_defense = target.getFinalStat(:SPECIAL_DEFENSE, false, 0)
             else
@@ -249,7 +250,7 @@ class PokeBattle_Move
             end
         elsif real_attack == real_special_attack
             # Determine move's category
-            return @battle.pbRandom(2)
+            return 0
         else
             return (real_attack > real_special_attack) ? 0 : 1
         end
@@ -282,7 +283,7 @@ class PokeBattle_Move
                 next if b.damageState.unaffected
             end
             next if switchedBattlers.include?(b.index)
-            next if b.effectActive?(:Ingrain)
+            next if b.effectActive?(:Ingrain) || b.effectActive?(:EvilRoots)
             next if substituteBlocks && b.damageState.substitute
             next unless @battle.pbCanChooseNonActive?(b.index)
             @battle.pbShowAbilitySplash(user, ability) if ability

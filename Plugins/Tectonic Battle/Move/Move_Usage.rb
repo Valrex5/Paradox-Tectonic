@@ -40,7 +40,10 @@ class PokeBattle_Move
 
     def calculateCategoryOverride(user, targets)
         return selectBestCategory(user, targets[0]) if punchingMove? && user.hasActiveAbility?(:MYSTICFIST)
+        return selectBestCategory(user, targets[0]) if rampagingMove? && user.hasActiveAbility?(:WREAKHAVOC)
         return selectBestCategory(user) if adaptiveMove?
+        return 0 if @category == 1 && user.hasActiveAbility?(:BRUTEFORCE)
+        return 1 if @category == 0 && user.hasActiveAbility?(%i[TIMEINTERLOPER SPACEINTERLOPER])
         return nil
     end
 
@@ -70,12 +73,12 @@ class PokeBattle_Move
     end
 
     def displayDamagingMoveMessages(user, move, targets = [])
-        if $PokemonSystem.move_clarifying_messages == 0
+        if $Options.move_clarifying_messages == 0
             displayBPAdjustmentMessage(user, targets) unless multiHitMove?
             displayCategoryChangeMessage(move.category_override) if move.category_override
         end
         # Display messages letting the player know that weather is debuffing a move (if it is)
-        displayWeatherDebuffMessages(user, move.calcType) if $PokemonSystem.weather_messages == 0
+        displayWeatherDebuffMessages(user, move.calcType) if $Options.weather_messages == 0
     end
 
     def displayBPAdjustmentMessage(user, targets)
@@ -253,11 +256,11 @@ target.pbThis(true)))
     def pbMoveFailedTargetAlreadyMoved?(target, showMessage = true)
         if (@battle.choices[target.index][0] != :UseMove &&
            @battle.choices[target.index][0] != :Shift)
-            @battle.pbDisplay(_INTL("But it failed, since #{target.pbThis(true)} didn't choose to use a move!")) if showMessage
+            @battle.pbDisplay(_INTL("But it failed, since {1} didn't choose to use a move!", target.pbThis(true))) if showMessage
             return true
         end
         if target.movedThisRound?
-             @battle.pbDisplay(_INTL("But it failed, since #{target.pbThis(true)} already move this turn!")) if showMessage
+             @battle.pbDisplay(_INTL("But it failed, since {1} already move this turn!", target.pbThis(true))) if showMessage
              return true
         end
         return false
@@ -299,6 +302,18 @@ target.pbThis(true)))
             target.damageState.disguise = true
             return
         end
+        # Thief's Diversion will take the damage
+        if target.hasActiveAbility?(:THIEFSDIVERSION) && target.hasAnyItem? && target.itemActive? && target.hasNonInitialItem? && !@battle.moldBreaker
+            target.damageState.thiefsDiversion = true
+            return
+        end 
+    end
+
+    def damageNegated?(user, target, aiCheck = false)
+        return true if target.effectActive?(:LastGasp)
+        return false if aiCheck
+        return true if target.damageState.disguise
+        return true if target.damageState.thiefsDiversion
     end
 
     def pbReduceDamage(user, target)
@@ -306,8 +321,7 @@ target.pbThis(true)))
 
         target.damageState.displayedDamage = damage
 
-        # Last Gasp prevents all damage
-        if target.effectActive?(:LastGasp)
+        if damageNegated?(user, target)
             target.damageState.displayedDamage = 0
             return
         end
@@ -317,12 +331,8 @@ target.pbThis(true)))
             damage = target.effects[:Substitute] if damage > target.effects[:Substitute]
             target.damageState.hpLost       = damage
             target.damageState.totalHPLost += damage
+            target.damageState.totalHPLostCritical += damage if target.damageState.critical
             target.damageState.displayedDamage = damage
-            return
-        end
-        # Disguise takes the damage
-        if target.damageState.disguise
-            target.damageState.displayedDamage = 0
             return
         end
 
@@ -403,6 +413,7 @@ target.pbThis(true)))
         target.damageState.displayedDamage = 0 if target.damageState.displayedDamage < 0
         target.damageState.hpLost       = damage
         target.damageState.totalHPLost += damage
+        target.damageState.totalHPLostCritical += damage if target.damageState.critical
     end
 
     #=============================================================================
@@ -449,8 +460,9 @@ target.pbThis(true)))
     #=============================================================================
     def pbEffectivenessMessage(_user, target, numTargets = 1)
         return if target.damageState.disguise
+        return if target.damageState.thiefsDiversion
         return if target.effectActive?(:LastGasp)
-        return if defined?($PokemonSystem.effectiveness_messages) && $PokemonSystem.effectiveness_messages == 1
+        return if defined?($Options.effectiveness_messages) && $Options.effectiveness_messages == 1
         if Effectiveness.hyper_effective?(target.damageState.typeMod)
             if numTargets > 1
                 @battle.pbDisplay(_INTL("It's hyper effective on {1}!", target.pbThis(true)))
@@ -489,15 +501,16 @@ target.pbThis(true)))
 
     def pbHitEffectivenessMessages(user, target, numTargets = 1)
         return if target.damageState.disguise
+        return if target.damageState.thiefsDiversion
         if target.damageState.substitute
             @battle.pbDisplay(_INTL("The substitute took damage for {1}!", target.pbThis(true)))
         end
         if target.damageState.critical
-            onAddendum = numTargets > 1 ? " on #{target.pbThis(true)}" : ""
+            onAddendum = numTargets > 1 ? _INTL(" on {1}", target.pbThis(true)) : ""
             if target.damageState.forced_critical
-                @battle.pbDisplay(_INTL("It was a guaranteed critical hit#{onAddendum}!"))
+                @battle.pbDisplay(_INTL("It was a guaranteed critical hit{1}!", onAddendum))
             else
-                @battle.pbDisplay(_INTL("A critical hit#{onAddendum}!"))
+                @battle.pbDisplay(_INTL("A critical hit{1}!", onAddendum))
             end
         end
         # Effectiveness message, for moves with 1 hit
@@ -547,7 +560,12 @@ target.pbThis(true)))
             @battle.pbShowAbilitySplash(user,:ARCHVILLAIN)
             @battle.pbDisplay(_INTL("{1} lets out an arrogant laugh!", user.pbThis))
             @battle.pbHideAbilitySplash(user)
-        end
+        elsif target.damageState.thiefsDiversion
+            @battle.pbShowAbilitySplash(target, :THIEFSDIVERSION)
+            @battle.pbDisplay(_INTL("{1} blocked the hit with its item!", target.pbThis))
+            target.removeNonInitialItems
+            @battle.pbHideAbilitySplash(target)
+        end        
     end
 
     # Used by Counter/Mirror Coat/Metal Burst/Revenge/Focus Punch/Bide/Assurance.
@@ -567,7 +585,7 @@ target.pbThis(true)))
             target.pointAt(:MirrorCoatTarget, user)
         end
         if target.effectActive?(:Bide)
-            target.effects[:BideDamage] += damage
+            target.effects[:BideDamage] += damage * 2
             target.pointAt(:BideTarget, user) if user.index != target.index
         end
         target.damageState.fainted = true if target.fainted? || target.damageState.fear
@@ -576,7 +594,7 @@ target.pbThis(true)))
         target.lastAttacker.push(user.index) # For Revenge
         if target.opposes?(user)
             target.lastHPLostFromFoe = damage # For Metal Burst
-            target.lastFoeAttacker.push(user.index)        # For Metal Burst
+            target.lastFoeAttacker.push(user.index) unless target.lastFoeAttacker.include?(user.index) # For Metal Burst
             if target.damageState.typeMod > target.lastRoundHighestTypeModFromFoe
                 target.lastRoundHighestTypeModFromFoe = target.damageState.typeMod
             end

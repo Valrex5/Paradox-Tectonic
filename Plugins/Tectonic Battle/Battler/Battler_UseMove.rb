@@ -124,16 +124,19 @@ class PokeBattle_Battler
         @battle.eachBattler { |b| b.pbContinualAbilityChecks } # Trace, end primordial weathers
     end
 
-    def pbConfusionDamage(msg, charm = false, superEff = false, basePower = 50)
+    def pbConfusionDamage(msg, superEff = false, basePower = 50, category: 3)
         @damageState.reset
         @damageState.initialHP = @hp
-        confusionMove = if charm
-                            PokeBattle_Charm.new(@battle, nil,
-                          basePower)
-                        else
-                            PokeBattle_Confusion.new(@battle, nil, basePower)
-                        end
+        confusionMove = case category
+        when 0
+            PokeBattle_SelfHitPhysical.new(@battle, nil, basePower)
+        when 1
+            PokeBattle_SelfHitSpecial.new(@battle, nil, basePower)
+        when 3
+            PokeBattle_SelfHit.new(@battle, nil, basePower)
+        end
         confusionMove.calcType = confusionMove.pbCalcType(self) # nil
+        confusionMove.calculateUsageOverrides(self, [self])
         @damageState.typeMod = confusionMove.pbCalcTypeMod(confusionMove.calcType, self, self) # 8
         @damageState.typeMod *= 2.0 if superEff
         confusionMove.pbCheckDamageAbsorption(self, self)
@@ -280,6 +283,7 @@ class PokeBattle_Battler
         # Record move as having been used
         aiSeesMove(move) if pbOwnedByPlayer? && !boss? # Enemy trainers now know of this move's existence
         aiLearnsAbility(:ILLUSION) if hasActiveAbility?(:ILLUSION) && effectActive?(:Illusion)
+        aiLearnsAbility(:INCOGNITO) if hasActiveAbility?(:INCOGNITO) && effectActive?(:Illusion)
         increaseMoveUsageCount(move.id)
 
         trackMoveUsage(move: move,specialUsage: specialUsage, target: choice[3])
@@ -318,7 +322,7 @@ class PokeBattle_Battler
             @battle.pbPriority(true).each do |b|
                 next unless b
                 b.eachActiveAbility do |ability|
-                    next unless BattleHandlers.triggerMoveBlockingAbility(ability, b, user, targets, move, @battle)
+                    next unless BattleHandlers.triggerMoveBlockingAbility(ability, b, user, targets, move, @battle, false)
                     @battle.pbDisplayBrief(_INTL("{1} tried to use {2}!", user.pbThis, move.name))
                     @battle.pbShowAbilitySplash(b, ability)
                     @battle.pbDisplay(_INTL("But, {1} cannot use {2}!", user.pbThis, move.name))
@@ -430,6 +434,9 @@ class PokeBattle_Battler
                         magicCoater = b.index
                         b.disableEffect(:MagicCoat)
                         break
+                    elsif b.effectActive?(:EmpoweredMagicCoat)
+                        magicCoater = b.index
+                        break
                     elsif b.hasActiveAbility?(:MAGICBOUNCE) && !@battle.moldBreaker
                         magicBouncer = b.index
                         b.applyEffect(:MagicBounce)
@@ -531,7 +538,7 @@ class PokeBattle_Battler
             if move.damagingMove?
                 targets.each do |b|
                     next unless b.damageState.fear
-                    @battle.pbDisplay(_INTL("#{user.pbThis} showed mercy on #{b.pbThis(true)}!", realNumHits)) if $PokemonSystem.avatar_mechanics_messages == 0
+                    @battle.pbDisplay(_INTL("{1} showed mercy on {2}!", user.pbThis, b.pbThis(true))) if $Options.avatar_mechanics_messages == 0
                     b.pokemon.becomeAfraid
                 end
             end
@@ -698,7 +705,7 @@ class PokeBattle_Battler
                 end
             end
             # Echo
-            if !effectActive?(:Echo) && move.soundMove?
+            if !effectActive?(:Echo) && (move.soundMove? || move.pulseMove?)
                 echoers = []
                 @battle.pbPriority(true).each do |b|
                     echoers.push(b) if b.index != user.index && b.hasActiveAbility?(:ECHO)
@@ -708,6 +715,19 @@ class PokeBattle_Battler
                     preTarget = choice[3]
                     preTarget = user.index if nextUser.opposes?(user) || !nextUser.opposes?(preTarget)
                     @battle.forceUseMove(nextUser, move.id, preTarget, moveUsageEffect: :Echo, ability: :ECHO)
+                end
+            end
+            # Martial Discipline
+            if !effectActive?(:MartialDiscipline) && (move.punchingMove? || move.kickingMove?)
+                discipliners = []
+                @battle.pbPriority(true).each do |b|
+                    discipliners.push(b) if b.index != user.index && b.hasActiveAbility?(:MARTIALDISCIPLINE)
+                end
+                while discipliners.length > 0
+                    nextUser = discipliners.pop
+                    preTarget = choice[3]
+                    preTarget = user.index if nextUser.opposes?(user) || !nextUser.opposes?(preTarget)
+                    @battle.forceUseMove(nextUser, move.id, preTarget, moveUsageEffect: :MartialDiscipline, ability: :MARTIALDISCIPLINE)
                 end
             end
         end
@@ -753,6 +773,11 @@ class PokeBattle_Battler
         all_targets = targets
         targets = move.pbDesignateTargetsForHit(targets, hitNum) # For Dragon Darts
         targets.each { |b| b.damageState.resetPerHit }
+        # Tracked whether the Pokemon is trapped
+        targets.each { |b|
+            next unless b.trapped?
+            b.damageState.trapped = true
+        }
         #---------------------------------------------------------------------------
         # Pre effects
         if move.damagingMove?
@@ -817,17 +842,8 @@ class PokeBattle_Battler
             @battle.pbDisplay(_INTL("{1}'s patience pays off!", user.pbThis))
             @battle.pbHideTribeSplash(user)
         end
-        # Volatile Toxin proc message
-        if move.damagingMove?
-            targets.each do |b|
-                next unless b.effectActive?(:VolatileToxin)
-                @battle.pbCommonAnimation("Toxic", b)
-                effectName = GameData::BattleEffect.get(:VolatileToxin).name
-                @battle.pbDisplay(_INTL("The {1} burst, causing {2} to deal double damage!", effectName, move.name))
-            end
-        end
-        # Volatile Toxin proc message
-        if user.effectActive?(:ChargeExpended) && hitNum == 0
+        # Energy Charge expended message
+        if user.effectActive?(:EnergyChargeExpended) && hitNum == 0
             @battle.pbDisplay(_INTL("{1} expended its charge to empower {2}!", user.pbThis, move.name))
         end
         # Bubble Barrier proc message

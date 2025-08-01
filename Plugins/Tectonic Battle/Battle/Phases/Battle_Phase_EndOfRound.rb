@@ -26,6 +26,7 @@ class PokeBattle_Battle
                 possibleAbilitySwitches = []
                 b.legalAbilities.each do |abil|
                     next if b.hasAbility?(abil)
+                    next if GameData::Ability.get(abil).is_immutable_ability?
                     possibleAbilitySwitches.push(abil)
                 end
                 next unless possibleAbilitySwitches.length >= 1
@@ -110,8 +111,8 @@ class PokeBattle_Battle
 
     def damageFromDOTStatus(battler, status, aiCheck = false)
         if battler.takesIndirectDamage? && !battler.hasActiveAbility?(:PLACIDITY)
-            if %i[POISON LEECHED].include?(status)
-                fraction = 1.0 / 10.0
+            if status == :LEECHED || status == :POISON
+                fraction = 1.0 / 12.0
             else
                 fraction = 1.0 / 8.0
             end
@@ -165,7 +166,7 @@ class PokeBattle_Battle
             if b.getStatusCount(:POISON) % POISON_DOUBLING_TURNS == 0 && !b.fainted?
                 b.eachOpposing do |opposingB|
                     next unless opposingB.hasActiveAbility?(:VENOMGORGER)
-                    healingMessage = _INTL("{1} slurped up venom leaking from #{b.pbThis(true)}.", opposingB.pbThis)
+                    healingMessage = _INTL("{1} slurped up venom leaking from {2}.", opposingB.pbThis, b.pbThis(true))
                     opposingB.applyFractionalHealing(0.5 / 2.0, ability: :VENOMGORGER, customMessage: healingMessage)
                 end
             end
@@ -174,6 +175,7 @@ class PokeBattle_Battle
             if damageDealt > 0
                 priority.each do |b|
                     next unless b.hasActiveAbility?(:TOXINTAX)
+                    next unless b.canHeal?
                     pbShowAbilitySplash(b, :TOXINTAX)
                     healingMessage = _INTL("{1} absorbs the damage from the poison.", b.pbThis)
                     b.pbRecoverHP(damageDealt, true, true, true, healingMessage)
@@ -201,9 +203,9 @@ class PokeBattle_Battle
             b.eachOpposing do |opposingBattler|
                 enemyCount += 1
             end
-            next if enemyCount == 0
             leechedHP = damageFromDOTStatus(b, :LEECHED)
             next if leechedHP <= 0
+            next if enemyCount == 0
             healthRestore = leechedHP / enemyCount.to_f
             b.eachOpposing do |opposingBattler|
                 opposingBattler.pbRecoverHPFromDrain(healthRestore, b)

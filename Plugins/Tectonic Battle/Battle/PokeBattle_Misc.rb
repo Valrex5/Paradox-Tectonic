@@ -101,35 +101,47 @@ class PokeBattle_Battle
         # Have bosses use empowered moves if appropriate
         eachBattler do |b|
             next unless b.boss?
+            next unless b.hasEmpoweredStatusMove?
             avatarData = GameData::Avatar.get(b.species.to_sym)
             next if b.avatarPhase == avatarData.num_phases
             next if b.hp > b.avatarPhaseLowerHealthBound
             usedEmpoweredMove = false
-            b.eachMoveWithIndex do |move, index|
-                next if move.damagingMove?(true)
-                next unless move.empoweredMove?
-                b.bossAI.startPhaseChange(b,self)
-                showMessages = $PokemonSystem.avatar_mechanics_messages == 0
 
-                if PRIMEVAL_MOVES_RESET_DEBUFFS
-                    pbAnimation(:REFRESH,b,b)
-                    pbDisplaySlower(_INTL("{1} wiped the slate clean.", b.pbThis)) if showMessages
-                    b.pbCureStatus
-                    b.pbCureStatus # Duplicated intentionally
-                    b.pbResetLoweredStatSteps(true)
-                    b.resetAbilities
-                    b.eachEffect(true) do |effect, _value, data|
-                        next unless data.avatars_purge
-                        b.disableEffect(effect)
-                    end
+            # Begin the phase change
+            b.bossAI.startPhaseChange(b,self)
+            showMessages = $Options.avatar_mechanics_messages == 0
+
+            # Reset debuffs
+            if PRIMEVAL_MOVES_RESET_DEBUFFS
+                pbAnimation(:REFRESH,b,b)
+                pbDisplaySlower(_INTL("{1} wiped the slate clean.", b.pbThis)) if showMessages
+                b.pbCureStatus
+                b.pbCureStatus # Duplicated intentionally
+                b.pbResetLoweredStatSteps(true)
+                b.resetAbilities
+                b.eachEffect(true) do |effect, _value, data|
+                    next unless data.avatars_purge
+                    b.disableEffect(effect)
                 end
-                pbDisplaySlower(_INTL("A great energy rises up from inside {1}!", b.pbThis(true))) if showMessages
-                b.lastRoundMoved = 0
-                b.pbCancelMoves # Cancels multi-turn moves
+            end
+
+            b.lastRoundMoved = 0
+            b.pbCancelMoves # Cancels multi-turn moves
+
+            # Use each empowered status move
+            b.eachEmpoweredStatusMove do |move, index|               
+                if showMessages
+                  if usedEmpoweredMove
+                    pbDisplaySlower(_INTL("What?! Even more energy rises up from inside {1}!!", b.pbThis(true)))
+                  else
+                    pbDisplaySlower(_INTL("A great energy rises up from inside {1}!", b.pbThis(true)))
+                  end
+                end
+                
                 b.pbUseMove([:UseMove, index, move, -1, 0])
                 usedEmpoweredMove = true
-                break
             end
+            
             next unless usedEmpoweredMove
 
             # Swap to post-empowerment moveset
@@ -390,4 +402,24 @@ end
 
 def getBattleMoveInstanceFromID(move_id)
     return PokeBattle_Move.from_pokemon_move(nil, Pokemon::Move.new(move_id))
+end
+
+# Is it allowed to be called from other moves
+def canInvokeMove?(move)
+    if move.is_a?(PokeBattle_Move)
+        battleMoveInstance = move
+    elsif move.is_a?(Pokemon::Move)
+        battleMoveInstance = getBattleMoveInstanceFromID(move.id)
+    else
+        battleMoveInstance = getBattleMoveInstanceFromID(move)
+    end
+    return false if battleMoveInstance.function == "Invalid"
+    return false if battleMoveInstance.callsAnotherMove?
+    return false if battleMoveInstance.forceSwitchMove?
+    return false if battleMoveInstance.switchOutMove?
+    return false if battleMoveInstance.is_a?(PokeBattle_TwoTurnMove)
+    return false if battleMoveInstance.is_a?(PokeBattle_HelpingMove)
+    return false if battleMoveInstance.is_a?(PokeBattle_ProtectMove)
+    return false if GameData::Move.get(battleMoveInstance.id).uninvocable?
+    return true
 end

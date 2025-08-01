@@ -173,7 +173,7 @@ class PokemonStorageScreen
     end
 
     def pbAble?(pokemon)
-        pokemon && !pokemon.egg? && pokemon.hp > 0
+        pokemon && pokemon.able?
     end
 
     def pbAbleCount
@@ -312,10 +312,10 @@ class PokemonStorageScreen
         box = @storage.boxes[boxNumber]
         if box.isLocked?
             box.unlock
-            pbDisplay("Box #{boxNumber + 1} is no longer locked to sorting.")
+            pbDisplay(_INTL("Box {1} is no longer locked to sorting.", boxNumber + 1))
         else
             box.lock
-            pbDisplay("Box #{boxNumber + 1} is now locked to sorting.")
+            pbDisplay(_INTL("Box {1} is now locked to sorting.", boxNumber + 1))
         end
     end
 
@@ -346,7 +346,7 @@ class PokemonStorageScreen
         validBoxes.each do |box|
             for indexInBox in 0...PokemonBox::BOX_SIZE
                 pokemonToStore = allPokemonInValidBoxes.shift
-                break unless pokemonToStore
+                next unless pokemonToStore
                 box[indexInBox] = pokemonToStore
             end
             break if allPokemonInValidBoxes.length == 0
@@ -365,34 +365,21 @@ class PokemonStorageScreen
         return false if box.empty?
         nitems = box.nitems - 1
         listOfPokemon = []
-        dicttosort = {}
         for i in 0..PokemonBox::BOX_SIZE
             listOfPokemon.push(box[i]) if box[i]
         end
 
         sortPokemonList(listOfPokemon,sortingType)
 
-        for i in 0..nitems
-            dicttosort[listOfPokemon[i]] = i
-        end
+        # Store all pokemon back into storage
+        box.clear
 
 		anyMoved = false
         for i in 0..PokemonBox::BOX_SIZE
-            while dicttosort[@storage[boxNumber, i]] != i
-                break unless @storage[boxNumber, i]
-                toswap = box[i]
-                destination = dicttosort[toswap]
-
-				next if destination == i # No swap to happen
-
-				# Actually perform the swap
-                temp = box[destination]
-                box[destination] = toswap
-                box[i] = temp
-
-				anyMoved = true
-            end
+            anyMoved = true if box[i] != listOfPokemon[i]
+            box[i] = listOfPokemon[i]
         end
+        
         @scene.pbHardRefresh
         return anyMoved
     end
@@ -455,8 +442,8 @@ class PokemonStorageScreen
                 if a.level != b.level
                     b.level <=> a.level # Order inverted so higher level is earlier
                 elsif a.species != b.species
-                    idNumberA = GameData::Species.get(a.species).id_number
-                    idNumberB = GameData::Species.get(b.species).id_number
+                    idNumberA = a.species_data.id_number
+                    idNumberB = b.species_data.id_number
                     idNumberA <=> idNumberB
                 elsif a.form != b.form
                     a.form <=> b.form
@@ -464,6 +451,30 @@ class PokemonStorageScreen
                     a.personalID <=> b.personalID
                 end
             }
+        elsif sortingType == 6 # Living Dex
+            sortedList = listToSort.sort { |a, b|
+                if a.species != b.species
+                    idNumberA = a.species_data.id_number
+                    idNumberB = b.species_data.id_number
+                    idNumberA <=> idNumberB
+                elsif a.form != b.form
+                    a.form <=> b.form
+                else
+                    a.personalID <=> b.personalID
+                end
+            }
+
+            listToSort.clear
+
+            GameData::Species.each do |species_data|
+                anyForThisID = false
+                while sortedList[0] && sortedList[0].species_data.id == species_data.id
+                    listToSort.push(sortedList.shift) # Pluck the first element off and move it to the other array
+                    anyForThisID = true
+                end
+                break if sortedList.empty?
+                listToSort.push(nil) unless anyForThisID
+            end
         end
     end
 
@@ -533,7 +544,7 @@ class PokemonStorageScreen
                 pbDisplay(_INTL("It didn't earn enough XP for you to earn any candies back."))
             else
                 percentile = (CANDY_EXCHANGE_EFFICIENCY * 100).to_i
-                pbDisplay(_INTL("You are reimbursed for #{percentile} percent of the EXP it earned."))
+                pbDisplay(_INTL("You are reimbursed for {1} percent of the EXP it earned.", percentile))
                 pbReceiveItem(:EXPCANDYM, mCandyTotal) if mCandyTotal > 0
                 pbReceiveItem(:EXPCANDYS, sCandyTotal) if sCandyTotal > 0
                 pbReceiveItem(:EXPCANDYXS, xsCandyTotal) if xsCandyTotal > 0
@@ -670,7 +681,7 @@ class PokemonStorageScreen
                     @scene.pbDisplay(_INTL("The box is empty."))
                     next
                 end
-                sortMethod = @scene.pbChooseSort(_INTL("How will you sort?"))
+                sortMethod = @scene.pbChooseBoxSort(_INTL("How will you sort?"))
                 next unless sortMethod > 0
                 unless pbSortBox(sortMethod, @storage.currentBox)
 					@scene.pbDisplay(_INTL("Each Pokémon is already in the right place!"))
@@ -680,7 +691,7 @@ class PokemonStorageScreen
                     @scene.pbDisplay(_INTL("Can't sort while you have a Pokémon in your hand!"))
                     next
                 end
-                sortMethod = @scene.pbChooseSort(_INTL("How will you sort?"))
+                sortMethod = @scene.pbChooseAllSort(_INTL("How will you sort?"))
                 next unless sortMethod > 0
                 boxesSorted = pbSortAll(sortMethod)
                 if boxesSorted == 0
@@ -688,7 +699,7 @@ class PokemonStorageScreen
                 elsif boxesSorted == 1
                     @scene.pbDisplay(_INTL("Only one box was sorted."))
                 else
-                    @scene.pbDisplay(_INTL("#{boxesSorted} boxes were sorted!"))
+                    @scene.pbDisplay(_INTL("{1} boxes were sorted!", boxesSorted))
                 end
             end
             break
