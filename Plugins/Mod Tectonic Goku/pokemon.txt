@@ -1,6 +1,5 @@
-[6000]
+[GOKU]
 Name = Goku
-InternalName = GOKU
 Type1 = FIGHTING
 # HP, Attack, Defense, Speed, Sp. Atk, Sp. Def
 BaseStats = 95,65,50,65,65,50
@@ -12,7 +11,7 @@ EffortPoints = 0,0,0,1,1,0
 Rareness = 100
 Happiness = 70
 Abilities = SAIYANWARRIOR
-Moves = 1,KARATECHOP,1,KAIOKEN,1,GROWL,1,SOLARFLARE,1,SUPERSAIYAN
+Moves = 1,KARATECHOP,1,KAIOKEN,1,GROWL,1,SOLARFLARE,1,SUPERSAIYAN,1,INSTANTTRANSMISSION,1,DRAGONFIST
 Compatibility = Field,Humanlike
 Tribes = WARRIOR
 StepsToHatch = 5355

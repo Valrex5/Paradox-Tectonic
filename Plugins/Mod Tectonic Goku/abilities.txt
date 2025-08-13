@@ -2,3 +2,9 @@
 [SAIYANWARRIOR]
 Name = Saiyan Warrior
 Description = Has different effects depending on the user's form.
+Flags = MoonglowSynergy
+#-------------------------------
+[GREATAPE]
+Name = Great Ape
+Description = Has different effects depending on the user's form.
+Flags = MoonglowSynergy

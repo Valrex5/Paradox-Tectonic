@@ -29,4 +29,27 @@ TotalPP = 10
 Target = User
 FunctionCode = ChangeUserGokuForm
 Flags = CanSnatch
-Description = Kaio-what?
+Description = Suppa
+#-------------------------------
+[INSTANTTRANSMISSION]
+Name = Instant Transmission
+Type = NORMAL
+Category = Status
+Accuracy = 0
+TotalPP = 10
+Target = User
+Priority = 3
+FunctionCode = SwitchOutUserPassOnEffects
+Description = The user switches out to a party Pokémon in waiting. Always goes first.
+#-------------------------------
+[DRAGONFIST]
+Name = Dragon Fist
+Type = DRAGON
+Category = Physical
+Power = 100
+Accuracy = 100
+TotalPP = 5
+Target = NearOther
+FunctionCode = DoubleAgainstAvatarsButRecharges
+Flags = CanProtect
+Description = The user attacks with the wrath of a dragon. Doubles power against Avatars, but has to recharge.
