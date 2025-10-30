@@ -27,8 +27,48 @@ Category = Status
 Accuracy = 0
 TotalPP = 10
 Target = User
-FunctionCode = ChangeUserGokuForm
+FunctionCode = GokuSuperSaiyan
 Flags = CanSnatch
+Description = Suppa
+#-------------------------------
+[POWERUP]
+Name = Power Up
+Type = FIGHTING
+Category = Status
+Accuracy = 0
+TotalPP = 10
+Target = User
+FunctionCode = UseChoiceOfForms
+Description = Suppa
+#-------------------------------
+[REVERTTOBASE]
+Name = Revert To Base
+Type = FIGHTING
+Category = Status
+Accuracy = 0
+TotalPP = 10
+Target = User
+FunctionCode = GokuBase
+Description = Suppa
+#-------------------------------
+[GODFORM]
+Name = God Form
+Type = FIGHTING
+Category = Status
+Accuracy = 0
+TotalPP = 10
+Target = User
+FunctionCode = GokuGod
+Description = Suppa
+#-------------------------------
+[ULTRAINSTINCT]
+Name = Ultra Instict
+Type = FIGHTING
+Category = Status
+Accuracy = 0
+TotalPP = 10
+Target = User
+FunctionCode = GokuUltraInstinct
 Description = Suppa
 #-------------------------------
 [INSTANTTRANSMISSION]
@@ -53,3 +93,15 @@ Target = NearOther
 FunctionCode = DoubleAgainstAvatarsButRecharges
 Flags = CanProtect
 Description = The user attacks with the wrath of a dragon. Doubles power against Avatars, but has to recharge.
+#-------------------------------
+[KAMEHAMEHA]
+Name = Kamehameha
+Type = FIGHTING
+Category = Special
+Power = 1
+Accuracy = 100
+TotalPP = 10
+Target = NearOther
+FunctionCode = ScalesWithGokuForm
+Flags = CanProtect
+Description = kA ME HAME HAAAAAAAAAAAAA

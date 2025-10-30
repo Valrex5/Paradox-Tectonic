@@ -24,10 +24,13 @@ BattleHandlers::AbilityOnSwitchIn.add(:SAIYANWARRIOR,
     form1Name = GameData::Species.get_species_form(:GOKU,1).form_name
     form2Name = GameData::Species.get_species_form(:GOKU,2).form_name
     form3Name = GameData::Species.get_species_form(:GOKU,4).form_name
+    form4Name = GameData::Species.get_species_form(:GOKU,6).form_name
     if battler.level >= 25 && battler.level <= 39
       choices = [form0Name,form1Name]
     elsif battler.level >= 40 && battler.level <= 59
       choices = [form0Name,form1Name,form2Name]
+    elsif battler.level == 70 && tournamentWon?
+      choices = [form0Name,form1Name,form2Name,form3Name,form4Name]
     elsif battler.level >= 60
       choices = [form0Name,form1Name,form2Name,form3Name]
     end 
@@ -40,13 +43,14 @@ BattleHandlers::AbilityOnSwitchIn.add(:SAIYANWARRIOR,
     end 
     if choice == 3
       @chosenForm = choice + 1
+    elsif choice == 4
+      @chosenForm = choice + 2
     else
       @chosenForm = choice
     end 
     battler.pbChangeForm(@chosenForm, _INTL("{1} transforms!", battler.pbThis))
   }
 )
-
 
 BattleHandlers::AbilityChangeOnBattlerFainting.add(:SAIYANWARRIOR,
     proc { |ability, battler, fainted, battle|

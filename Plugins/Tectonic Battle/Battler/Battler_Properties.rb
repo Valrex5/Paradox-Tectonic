@@ -110,8 +110,17 @@ class PokeBattle_Battler
         if @battle.field.effectActive?(:InsightRoom)
             insightMove = getInsightMove
             movesArray.push(insightMove) if insightMove
+        elsif @pokemon.isSpecies?(:GOKU)
+            powerUp = getPowerUp
+            movesArray.push(powerUp) if powerUp
         end
         return movesArray
+    end
+
+    def getPowerUp
+        return nil if @pokemon.nil?
+        move = :POWERUP
+        return @battle.getBattleMoveInstanceFromID(:POWERUP)
     end
 
     def getInsightMove
