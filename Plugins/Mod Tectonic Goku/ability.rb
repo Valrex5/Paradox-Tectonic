@@ -118,3 +118,14 @@ BattleHandlers::UserAbilityEndOfMove.add(:GREATAPE,
   }
 )
 
+BattleHandlers::EOREffectAbility.add(:ULTRAINSTINCT,
+  proc { |ability, battler, battle|
+      next unless battler.species == :GOKU
+      next unless battler.form == 6
+      next unless battler.belowHalfHealth?
+      battle.pbShowAbilitySplash(battler, ability)
+      battler.pbChangeForm(7, _INTL("{1} calms down in the face of danger.", battler.pbThis))
+      battle.pbHideAbilitySplash(battler)
+  }
+)
+      

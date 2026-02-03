@@ -22,10 +22,12 @@ BaseStats = 95,120,80,90,100,95
 [GOKU,6]
 FormName = Ultra Instinct Sign
 BaseStats = 95,100,95,110,100,95
+Abilities = ULTRAINSTINCT
 #-------------------------------
 [GOKU,7]
 FormName = Mastered Ultra Instinct
 BaseStats = 95,100,110,130,100,100
+Abilities = ADAPTED
 #-------------------------------
 [GOKU,8]
 FormName = Oozaru

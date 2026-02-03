@@ -8,3 +8,8 @@ Flags = MoonglowSynergy
 Name = Great Ape
 Description = Has different effects depending on the user's form.
 Flags = MoonglowSynergy
+#-------------------------------
+[ULTRAINSTINCT]
+Name = Ultra Instinct
+Description = Has different effects depending on the user's form.
+#-------------------------------
